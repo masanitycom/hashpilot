@@ -361,7 +361,7 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md bg-gray-800 border-gray-700">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-6">
-            <img src="/images/hash-pilot-logo.png" alt="HashPilot" className="h-16 w-16 rounded-xl shadow-lg" />
+            <img src="/images/hash-pilot-logo.png" alt="HashPilot" className="h-16 rounded-xl shadow-lg" />
           </div>
           <CardTitle className="text-2xl text-white">新規登録</CardTitle>
           {referrerCode && (
