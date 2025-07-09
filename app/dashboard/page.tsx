@@ -29,6 +29,9 @@ interface UserStats {
   total_referral_investment: number
   level4_plus_referrals: number
   level4_plus_investment: number
+  level1_investment: number
+  level2_investment: number
+  level3_investment: number
 }
 
 export default function DashboardPage() {
@@ -122,7 +125,7 @@ export default function DashboardPage() {
       // 個人投資額
       const totalInvestment = Math.floor((userRecord.total_purchases || 0) / 1000) * 1000
 
-      // 直接紹介者数を取得
+      // 直接紹介者数を取得（Level1）
       const { data: directReferrals, error: directError } = await supabase
         .from("users")
         .select("user_id, total_purchases")
@@ -133,13 +136,15 @@ export default function DashboardPage() {
       }
 
       const directCount = directReferrals ? directReferrals.length : 0
-      const directInvestment = directReferrals
+      const level1Investment = directReferrals
         ? directReferrals.reduce((sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000, 0)
         : 0
 
       // 間接紹介者数を取得（レベル2とレベル3）
       let totalReferrals = directCount
-      let totalReferralInvestment = directInvestment
+      let totalReferralInvestment = level1Investment
+      let level2Investment = 0
+      let level3Investment = 0
       let level4PlusReferrals = 0
       let level4PlusInvestment = 0
 
@@ -153,10 +158,12 @@ export default function DashboardPage() {
 
           if (!level2Error && level2Refs) {
             totalReferrals += level2Refs.length
-            totalReferralInvestment += level2Refs.reduce(
+            const level2InvestmentAmount = level2Refs.reduce(
               (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
               0,
             )
+            level2Investment += level2InvestmentAmount
+            totalReferralInvestment += level2InvestmentAmount
 
             // レベル3
             for (const level2Ref of level2Refs) {
@@ -167,10 +174,12 @@ export default function DashboardPage() {
 
               if (!level3Error && level3Refs) {
                 totalReferrals += level3Refs.length
-                totalReferralInvestment += level3Refs.reduce(
+                const level3InvestmentAmount = level3Refs.reduce(
                   (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
                   0,
                 )
+                level3Investment += level3InvestmentAmount
+                totalReferralInvestment += level3InvestmentAmount
 
                 // レベル4以降の計算
                 for (const level3Ref of level3Refs) {
@@ -217,6 +226,9 @@ export default function DashboardPage() {
         total_referral_investment: totalReferralInvestment,
         level4_plus_referrals: level4PlusReferrals,
         level4_plus_investment: level4PlusInvestment,
+        level1_investment: level1Investment,
+        level2_investment: level2Investment,
+        level3_investment: level3Investment,
       })
     } catch (error) {
       console.error("Stats calculation error:", error)
@@ -227,6 +239,9 @@ export default function DashboardPage() {
         total_referral_investment: 0,
         level4_plus_referrals: 0,
         level4_plus_investment: 0,
+        level1_investment: 0,
+        level2_investment: 0,
+        level3_investment: 0,
       })
     }
   }
@@ -418,42 +433,88 @@ export default function DashboardPage() {
           <ReferralTree userId={userData?.user_id || ""} />
         </div>
 
-        {/* Level4以降の統計セクション */}
+        {/* レベル別投資額統計セクション */}
         <div className="mb-8">
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
-                <TrendingUp className="h-6 w-6 text-purple-400" />
-                <span>Level4以降の統計</span>
+                <TrendingUp className="h-6 w-6 text-green-400" />
+                <span>レベル別投資額統計</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Level4以降の人数 */}
-                <div className="bg-gradient-to-r from-cyan-900/20 to-blue-900/20 border border-cyan-600/30 rounded-lg p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                {/* Level1投資額 */}
+                <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-600/30 rounded-lg p-6">
                   <div className="flex items-center space-x-3 mb-3">
-                    <Users className="h-8 w-8 text-cyan-400" />
+                    <DollarSign className="h-8 w-8 text-green-400" />
                     <div>
-                      <h3 className="text-lg font-semibold text-cyan-400">Level4以降の人数</h3>
-                      <p className="text-sm text-gray-400">Level4以降の合計人数</p>
+                      <h3 className="text-lg font-semibold text-green-400">Level1投資額</h3>
+                      <p className="text-sm text-gray-400">報酬率: 25%</p>
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-cyan-400">
-                    {userStats?.level4_plus_referrals || 0}人
+                  <div className="text-3xl font-bold text-green-400">
+                    ${userStats?.level1_investment.toLocaleString()}.00
                   </div>
                 </div>
 
-                {/* Level4以降の投資額 */}
-                <div className="bg-gradient-to-r from-pink-900/20 to-purple-900/20 border border-pink-600/30 rounded-lg p-6">
+                {/* Level2投資額 */}
+                <div className="bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border border-blue-600/30 rounded-lg p-6">
                   <div className="flex items-center space-x-3 mb-3">
-                    <DollarSign className="h-8 w-8 text-pink-400" />
+                    <DollarSign className="h-8 w-8 text-blue-400" />
                     <div>
-                      <h3 className="text-lg font-semibold text-pink-400">Level4以降の投資額</h3>
-                      <p className="text-sm text-gray-400">Level4以降の投資合計</p>
+                      <h3 className="text-lg font-semibold text-blue-400">Level2投資額</h3>
+                      <p className="text-sm text-gray-400">報酬率: 10%</p>
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-pink-400">
-                    ${userStats?.level4_plus_investment.toLocaleString()}.00
+                  <div className="text-3xl font-bold text-blue-400">
+                    ${userStats?.level2_investment.toLocaleString()}.00
+                  </div>
+                </div>
+
+                {/* Level3投資額 */}
+                <div className="bg-gradient-to-r from-purple-900/20 to-violet-900/20 border border-purple-600/30 rounded-lg p-6">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <DollarSign className="h-8 w-8 text-purple-400" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-purple-400">Level3投資額</h3>
+                      <p className="text-sm text-gray-400">報酬率: 5%</p>
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold text-purple-400">
+                    ${userStats?.level3_investment.toLocaleString()}.00
+                  </div>
+                </div>
+              </div>
+
+              {/* Level4以降の統計 */}
+              <div className="border-t border-gray-600/30 pt-6">
+                <h3 className="text-lg font-semibold text-gray-300 mb-4">Level4以降（報酬対象外）</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gradient-to-r from-gray-900/20 to-slate-900/20 border border-gray-600/30 rounded-lg p-6">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <Users className="h-8 w-8 text-gray-400" />
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-400">Level4以降の人数</h3>
+                        <p className="text-sm text-gray-500">Level4以降の合計人数</p>
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-400">
+                      {userStats?.level4_plus_referrals || 0}人
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-gray-900/20 to-slate-900/20 border border-gray-600/30 rounded-lg p-6">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <DollarSign className="h-8 w-8 text-gray-400" />
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-400">Level4以降の投資額</h3>
+                        <p className="text-sm text-gray-500">Level4以降の投資合計</p>
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-400">
+                      ${userStats?.level4_plus_investment.toLocaleString()}.00
+                    </div>
                   </div>
                 </div>
               </div>
