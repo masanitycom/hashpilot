@@ -105,7 +105,7 @@ export default function HomePage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full px-12 py-6 text-xl bg-gradient-to-r from-yellow-400/10 via-yellow-500/10 to-yellow-600/10 text-yellow-300 border-2 border-yellow-400 hover:bg-gradient-to-r hover:from-yellow-400/20 hover:via-yellow-500/20 hover:to-yellow-600/20 hover:text-yellow-200 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
+                  className="w-full px-12 py-6 text-xl bg-black/60 text-white border-2 border-yellow-400 hover:bg-yellow-500/20 hover:text-yellow-100 hover:border-yellow-300 font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 backdrop-blur-md"
                 >
                   ログイン
                 </Button>
