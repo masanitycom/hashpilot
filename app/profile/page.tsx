@@ -199,7 +199,7 @@ export default function ProfilePage() {
                 <img 
                   src="/images/hash-pilot-logo.png" 
                   alt="HashPilot"
-                  className="h-12 w-12 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  className="h-12 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
                 />
               </Link>
               <Badge variant="outline" className="hidden sm:block text-blue-400 border-blue-400/50">
