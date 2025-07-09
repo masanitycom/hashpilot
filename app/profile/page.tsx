@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode, User as UserIcon, LogOut, Home, Settings, TrendingUp } from "lucide-react"
+import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode, User as UserIcon, LogOut, Home, Settings, TrendingUp, Menu } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
 
@@ -38,10 +38,23 @@ export default function ProfilePage() {
     nft_receive_address: "",
   })
   const [showQR, setShowQR] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     fetchProfile()
   }, [])
+
+  // モバイルメニューの外側クリックで閉じる
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuOpen && !(event.target as Element).closest('header')) {
+        setMobileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [mobileMenuOpen])
 
   const fetchProfile = async () => {
     try {
@@ -182,10 +195,17 @@ export default function ProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-                HashPilot
+              <div className="flex items-center space-x-3">
+                <img 
+                  src="/images/hash-pilot-logo.png" 
+                  alt="HashPilot"
+                  className="h-8 w-8 rounded-lg"
+                />
+                <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
+                  HashPilot
+                </div>
               </div>
-              <Badge variant="outline" className="text-blue-400 border-blue-400/50">
+              <Badge variant="outline" className="hidden sm:block text-blue-400 border-blue-400/50">
                 Profile
               </Badge>
             </div>
@@ -208,10 +228,53 @@ export default function ProfilePage() {
             </nav>
 
             <div className="md:hidden">
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="text-red-400">
-                <LogOut className="h-4 w-4" />
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-gray-300 hover:text-white hover:bg-gray-700/50"
+              >
+                <Menu className="h-5 w-5" />
               </Button>
             </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`md:hidden bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+          <div className="px-4 py-3 space-y-2">
+            <Link href="/dashboard">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Home className="h-4 w-4 mr-3" />
+                ダッシュボード
+              </Button>
+            </Link>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full justify-start text-blue-400 bg-blue-900/20 cursor-default"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <UserIcon className="h-4 w-4 mr-3" />
+              プロフィール
+            </Button>
+            <Button 
+              onClick={() => {
+                handleLogout()
+                setMobileMenuOpen(false)
+              }}
+              variant="ghost" 
+              size="sm" 
+              className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors"
+            >
+              <LogOut className="h-4 w-4 mr-3" />
+              ログアウト
+            </Button>
           </div>
         </div>
       </header>
