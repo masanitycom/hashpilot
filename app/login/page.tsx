@@ -163,10 +163,10 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-gray-800 border-gray-700">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-12" />
+          <div className="flex justify-center mb-6">
+            <img src="/images/hash-pilot-logo.png" alt="HashPilot" className="h-16 w-16 rounded-xl shadow-lg" />
           </div>
-          <CardTitle className="text-2xl text-white">HASH PILOT ログイン</CardTitle>
+          <CardTitle className="text-2xl text-white">ログイン</CardTitle>
           <CardDescription className="text-gray-300">アカウントにログインしてください</CardDescription>
         </CardHeader>
         <CardContent>
