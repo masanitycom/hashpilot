@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { User } from "@supabase/supabase-js"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,7 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode } from "lucide-react"
 import { supabase } from "@/lib/supabase"
-import QRCode from "qrcode.react"
 
 interface UserProfile {
   id: string
@@ -25,6 +25,7 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -168,10 +169,19 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black p-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">プロフィール</h1>
-          <p className="text-gray-400">アカウント情報を確認・編集できます</p>
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">プロフィール</h1>
+            <p className="text-gray-400">アカウント情報を確認・編集できます</p>
+          </div>
+          <Button
+            onClick={() => router.push("/dashboard")}
+            variant="outline"
+            className="text-gray-300 border-gray-600 hover:bg-gray-700 bg-transparent"
+          >
+            ダッシュボードに戻る
+          </Button>
         </div>
 
         {error && (
@@ -320,55 +330,77 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-900/50 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center space-x-2">
-              <Share2 className="h-5 w-5" />
-              <span>紹介リンク</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label className="text-gray-300">あなたの紹介リンク</Label>
-              <div className="flex items-center space-x-2 mt-2">
-                <div className="flex-1 bg-gray-800 border border-gray-600 rounded-md p-3 text-white break-all">
-                  {getReferralLink()}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-blue-700/50">
+            <CardHeader>
+              <CardTitle className="text-blue-300 flex items-center space-x-2">
+                <Share2 className="h-5 w-5" />
+                <span>紹介リンク</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-gray-300">あなたの紹介リンク</Label>
+                <div className="flex items-center space-x-2 mt-2">
+                  <div className="flex-1 bg-gray-800 border border-gray-600 rounded-md p-3 text-white break-all text-sm">
+                    {getReferralLink()}
+                  </div>
+                  <Button
+                    onClick={() => copyToClipboard(getReferralLink(), "紹介リンク")}
+                    variant="outline"
+                    size="sm"
+                    className="text-blue-300 border-blue-600 hover:bg-blue-900/20 bg-transparent"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
                 </div>
+              </div>
+
+              <div className="text-sm text-gray-400 text-center">
+                このリンクから登録されたユーザーがあなたの紹介者となります
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border-green-700/50">
+            <CardHeader>
+              <CardTitle className="text-green-300 flex items-center space-x-2">
+                <QrCode className="h-5 w-5" />
+                <span>QRコード共有</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center">
                 <Button
-                  onClick={() => copyToClipboard(getReferralLink(), "紹介リンク")}
+                  onClick={() => setShowQR(!showQR)}
                   variant="outline"
-                  size="sm"
-                  className="text-gray-300 border-gray-600 hover:bg-gray-700 bg-transparent"
+                  className="text-green-300 border-green-600 hover:bg-green-900/20 bg-transparent"
                 >
-                  <Copy className="h-4 w-4" />
+                  <QrCode className="h-4 w-4 mr-2" />
+                  {showQR ? "非表示" : "QRコードを表示"}
                 </Button>
               </div>
-            </div>
 
-            <div className="flex justify-center">
-              <Button
-                onClick={() => setShowQR(!showQR)}
-                variant="outline"
-                className="text-gray-300 border-gray-600 hover:bg-gray-700 bg-transparent"
-              >
-                <QrCode className="h-4 w-4 mr-2" />
-                {showQR ? "QRコードを非表示" : "QRコードを表示"}
-              </Button>
-            </div>
-
-            {showQR && (
-              <div className="flex justify-center mt-4">
-                <div className="bg-white p-4 rounded-lg">
-                  <QRCode value={getReferralLink()} size={200} />
+              {showQR && (
+                <div className="text-center">
+                  <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
+                    <div className="text-gray-300 mb-2">QRコード</div>
+                    <div className="text-sm text-gray-400">
+                      QRコード機能は準備中です
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      現在は紹介リンクをコピーしてご利用ください
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="text-sm text-gray-400 text-center">
-              このリンクから登録されたユーザーがあなたの紹介者となります
-            </div>
-          </CardContent>
-        </Card>
+              <div className="text-sm text-gray-400 text-center">
+                QRコードで簡単に紹介リンクを共有できます
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )
