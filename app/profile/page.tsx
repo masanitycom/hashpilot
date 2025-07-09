@@ -195,16 +195,13 @@ export default function ProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
+              <Link href="/dashboard" className="flex items-center">
                 <img 
                   src="/images/hash-pilot-logo.png" 
                   alt="HashPilot"
-                  className="h-8 w-8 rounded-lg"
+                  className="h-12 w-12 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
                 />
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-                  HashPilot
-                </div>
-              </div>
+              </Link>
               <Badge variant="outline" className="hidden sm:block text-blue-400 border-blue-400/50">
                 Profile
               </Badge>
