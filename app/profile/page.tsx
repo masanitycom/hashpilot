@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2, Edit, Save, X, Copy, Check } from "lucide-react"
+import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import QRCode from "qrcode.react"
 
 interface UserProfile {
   id: string
@@ -18,6 +19,8 @@ interface UserProfile {
   created_at: string
   total_purchases: number
   referral_count: number
+  reward_address_bep20: string | null
+  nft_receive_address: string | null
 }
 
 export default function ProfilePage() {
@@ -30,7 +33,10 @@ export default function ProfilePage() {
   const [editForm, setEditForm] = useState({
     full_name: "",
     coinw_uid: "",
+    reward_address_bep20: "",
+    nft_receive_address: "",
   })
+  const [showQR, setShowQR] = useState(false)
 
   useEffect(() => {
     fetchProfile()
@@ -56,7 +62,9 @@ export default function ProfilePage() {
           full_name,
           coinw_uid,
           created_at,
-          total_purchases
+          total_purchases,
+          reward_address_bep20,
+          nft_receive_address
         `)
         .eq("id", user.id)
         .single()
@@ -78,6 +86,8 @@ export default function ProfilePage() {
       setEditForm({
         full_name: userData.full_name || "",
         coinw_uid: userData.coinw_uid || "",
+        reward_address_bep20: userData.reward_address_bep20 || "",
+        nft_receive_address: userData.nft_receive_address || "",
       })
     } catch (error: any) {
       console.error("Profile fetch error:", error)
@@ -104,6 +114,8 @@ export default function ProfilePage() {
         .update({
           full_name: editForm.full_name,
           coinw_uid: editForm.coinw_uid,
+          reward_address_bep20: editForm.reward_address_bep20,
+          nft_receive_address: editForm.nft_receive_address,
         })
         .eq("id", user.id)
 
@@ -123,6 +135,11 @@ export default function ProfilePage() {
     navigator.clipboard.writeText(text)
     setSuccess(`${label}をコピーしました`)
     setTimeout(() => setSuccess(""), 2000)
+  }
+
+  const getReferralLink = () => {
+    if (!profile?.user_id) return ""
+    return `https://hashpilot.net/register?ref=${profile.user_id}`
   }
 
   if (loading) {
@@ -251,6 +268,34 @@ export default function ProfilePage() {
                   {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('ja-JP') : "不明"}
                 </div>
               </div>
+
+              <div>
+                <Label className="text-gray-300">報酬受取アドレス (USDT BEP20)</Label>
+                {editing ? (
+                  <Input
+                    value={editForm.reward_address_bep20}
+                    onChange={(e) => setEditForm({ ...editForm, reward_address_bep20: e.target.value })}
+                    className="bg-gray-800 border-gray-600 text-white"
+                    placeholder="0x... (BEP20アドレス)"
+                  />
+                ) : (
+                  <div className="text-white mt-1 break-all">{profile?.reward_address_bep20 || "未設定"}</div>
+                )}
+              </div>
+
+              <div>
+                <Label className="text-gray-300">NFT受取アドレス</Label>
+                {editing ? (
+                  <Input
+                    value={editForm.nft_receive_address}
+                    onChange={(e) => setEditForm({ ...editForm, nft_receive_address: e.target.value })}
+                    className="bg-gray-800 border-gray-600 text-white"
+                    placeholder="0x... (NFT受取用アドレス)"
+                  />
+                ) : (
+                  <div className="text-white mt-1 break-all">{profile?.nft_receive_address || "未設定"}</div>
+                )}
+              </div>
             </div>
 
             {editing && (
@@ -272,6 +317,56 @@ export default function ProfilePage() {
                 </Button>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-900/50 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center space-x-2">
+              <Share2 className="h-5 w-5" />
+              <span>紹介リンク</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label className="text-gray-300">あなたの紹介リンク</Label>
+              <div className="flex items-center space-x-2 mt-2">
+                <div className="flex-1 bg-gray-800 border border-gray-600 rounded-md p-3 text-white break-all">
+                  {getReferralLink()}
+                </div>
+                <Button
+                  onClick={() => copyToClipboard(getReferralLink(), "紹介リンク")}
+                  variant="outline"
+                  size="sm"
+                  className="text-gray-300 border-gray-600 hover:bg-gray-700 bg-transparent"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <Button
+                onClick={() => setShowQR(!showQR)}
+                variant="outline"
+                className="text-gray-300 border-gray-600 hover:bg-gray-700 bg-transparent"
+              >
+                <QrCode className="h-4 w-4 mr-2" />
+                {showQR ? "QRコードを非表示" : "QRコードを表示"}
+              </Button>
+            </div>
+
+            {showQR && (
+              <div className="flex justify-center mt-4">
+                <div className="bg-white p-4 rounded-lg">
+                  <QRCode value={getReferralLink()} size={200} />
+                </div>
+              </div>
+            )}
+
+            <div className="text-sm text-gray-400 text-center">
+              このリンクから登録されたユーザーがあなたの紹介者となります
+            </div>
           </CardContent>
         </Card>
       </div>
