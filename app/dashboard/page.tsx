@@ -27,6 +27,8 @@ interface UserStats {
   direct_referrals: number
   total_referrals: number
   total_referral_investment: number
+  level4_plus_referrals: number
+  level4_plus_investment: number
 }
 
 export default function DashboardPage() {
@@ -138,6 +140,8 @@ export default function DashboardPage() {
       // 間接紹介者数を取得（レベル2とレベル3）
       let totalReferrals = directCount
       let totalReferralInvestment = directInvestment
+      let level4PlusReferrals = 0
+      let level4PlusInvestment = 0
 
       if (directReferrals && directReferrals.length > 0) {
         for (const directRef of directReferrals) {
@@ -167,7 +171,40 @@ export default function DashboardPage() {
                   (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
                   0,
                 )
+
+                // レベル4以降の計算
+                for (const level3Ref of level3Refs) {
+                  await calculateDeepLevels(level3Ref.user_id, 4)
+                }
               }
+            }
+          }
+        }
+      }
+
+      // レベル4以降の再帰計算関数
+      async function calculateDeepLevels(userId: string, currentLevel: number) {
+        const { data: refs, error } = await supabase
+          .from("users")
+          .select("user_id, total_purchases")
+          .eq("referrer_user_id", userId)
+
+        if (!error && refs && refs.length > 0) {
+          level4PlusReferrals += refs.length
+          level4PlusInvestment += refs.reduce(
+            (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
+            0,
+          )
+          totalReferrals += refs.length
+          totalReferralInvestment += refs.reduce(
+            (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
+            0,
+          )
+
+          // 更に深いレベルを計算（最大10レベルまで）
+          if (currentLevel < 10) {
+            for (const ref of refs) {
+              await calculateDeepLevels(ref.user_id, currentLevel + 1)
             }
           }
         }
@@ -178,6 +215,8 @@ export default function DashboardPage() {
         direct_referrals: directCount,
         total_referrals: totalReferrals,
         total_referral_investment: totalReferralInvestment,
+        level4_plus_referrals: level4PlusReferrals,
+        level4_plus_investment: level4PlusInvestment,
       })
     } catch (error) {
       console.error("Stats calculation error:", error)
@@ -186,6 +225,8 @@ export default function DashboardPage() {
         direct_referrals: 0,
         total_referrals: 0,
         total_referral_investment: 0,
+        level4_plus_referrals: 0,
+        level4_plus_investment: 0,
       })
     }
   }
@@ -304,7 +345,7 @@ export default function DashboardPage() {
         {/* 統計カードと日利グラフ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* 統計カード */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* 個人投資額 */}
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader className="pb-3">
@@ -362,6 +403,36 @@ export default function DashboardPage() {
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">紹介者の投資合計</p>
+              </CardContent>
+            </Card>
+
+            {/* Level4以降の人数 */}
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-gray-300 text-sm font-medium">Level4以降の人数</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-2">
+                  <Users className="h-5 w-5 text-cyan-400" />
+                  <span className="text-2xl font-bold text-cyan-400">{userStats?.level4_plus_referrals || 0}</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Level4以降の合計人数</p>
+              </CardContent>
+            </Card>
+
+            {/* Level4以降の投資額 */}
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-gray-300 text-sm font-medium">Level4以降の投資額</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="h-5 w-5 text-pink-400" />
+                  <span className="text-2xl font-bold text-pink-400">
+                    ${userStats?.level4_plus_investment.toLocaleString()}.00
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Level4以降の投資合計</p>
               </CardContent>
             </Card>
           </div>
