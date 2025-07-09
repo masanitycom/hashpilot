@@ -345,7 +345,7 @@ export default function DashboardPage() {
         {/* 統計カードと日利グラフ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* 統計カード */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 個人投資額 */}
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader className="pb-3">
@@ -405,36 +405,6 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 mt-1">紹介者の投資合計</p>
               </CardContent>
             </Card>
-
-            {/* Level4以降の人数 */}
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-gray-300 text-sm font-medium">Level4以降の人数</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-5 w-5 text-cyan-400" />
-                  <span className="text-2xl font-bold text-cyan-400">{userStats?.level4_plus_referrals || 0}</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Level4以降の合計人数</p>
-              </CardContent>
-            </Card>
-
-            {/* Level4以降の投資額 */}
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-gray-300 text-sm font-medium">Level4以降の投資額</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="h-5 w-5 text-pink-400" />
-                  <span className="text-2xl font-bold text-pink-400">
-                    ${userStats?.level4_plus_investment.toLocaleString()}.00
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">Level4以降の投資合計</p>
-              </CardContent>
-            </Card>
           </div>
 
           {/* 日利グラフ */}
@@ -446,6 +416,49 @@ export default function DashboardPage() {
         {/* 紹介ツリーセクション */}
         <div className="mb-8">
           <ReferralTree userId={userData?.user_id || ""} />
+        </div>
+
+        {/* Level4以降の統計セクション */}
+        <div className="mb-8">
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
+                <TrendingUp className="h-6 w-6 text-purple-400" />
+                <span>Level4以降の統計</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Level4以降の人数 */}
+                <div className="bg-gradient-to-r from-cyan-900/20 to-blue-900/20 border border-cyan-600/30 rounded-lg p-6">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <Users className="h-8 w-8 text-cyan-400" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-cyan-400">Level4以降の人数</h3>
+                      <p className="text-sm text-gray-400">Level4以降の合計人数</p>
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold text-cyan-400">
+                    {userStats?.level4_plus_referrals || 0}人
+                  </div>
+                </div>
+
+                {/* Level4以降の投資額 */}
+                <div className="bg-gradient-to-r from-pink-900/20 to-purple-900/20 border border-pink-600/30 rounded-lg p-6">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <DollarSign className="h-8 w-8 text-pink-400" />
+                    <div>
+                      <h3 className="text-lg font-semibold text-pink-400">Level4以降の投資額</h3>
+                      <p className="text-sm text-gray-400">Level4以降の投資合計</p>
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold text-pink-400">
+                    ${userStats?.level4_plus_investment.toLocaleString()}.00
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
