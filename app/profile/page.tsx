@@ -16,7 +16,6 @@ interface UserProfile {
   id: string
   user_id: string
   email: string
-  full_name: string
   coinw_uid: string
   created_at: string
   total_purchases: number
@@ -34,7 +33,6 @@ export default function ProfilePage() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [editForm, setEditForm] = useState({
-    full_name: "",
     coinw_uid: "",
     reward_address_bep20: "",
     nft_receive_address: "",
@@ -62,7 +60,6 @@ export default function ProfilePage() {
           id,
           user_id,
           email,
-          full_name,
           coinw_uid,
           created_at,
           total_purchases,
@@ -87,7 +84,6 @@ export default function ProfilePage() {
 
       setProfile(profileData)
       setEditForm({
-        full_name: userData.full_name || "",
         coinw_uid: userData.coinw_uid || "",
         reward_address_bep20: userData.reward_address_bep20 || "",
         nft_receive_address: userData.nft_receive_address || "",
@@ -115,7 +111,6 @@ export default function ProfilePage() {
       const { error: updateError } = await supabase
         .from("users")
         .update({
-          full_name: editForm.full_name,
           coinw_uid: editForm.coinw_uid,
           reward_address_bep20: editForm.reward_address_bep20,
           nft_receive_address: editForm.nft_receive_address,
@@ -302,22 +297,6 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-300">氏名</Label>
-                {editing ? (
-                  <Input
-                    value={editForm.full_name}
-                    onChange={(e) => setEditForm({ ...editForm, full_name: e.target.value })}
-                    className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500/20"
-                    placeholder="氏名を入力"
-                  />
-                ) : (
-                  <div className="bg-gray-800/50 border border-gray-600/50 rounded-lg p-3 text-white">
-                    {profile?.full_name || "未設定"}
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-2">
                 <Label className="text-sm font-medium text-gray-300">CoinW UID</Label>
                 {editing ? (
                   <Input
@@ -435,55 +414,55 @@ export default function ProfilePage() {
 
           {/* 紹介リンク & QRコード */}
           <div className="space-y-6">
-            <Card className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 border-blue-600/30 backdrop-blur-sm">
+            <Card className="bg-gray-900/80 border-gray-700/50 backdrop-blur-sm">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-bold text-blue-300 flex items-center space-x-2">
-                  <Share2 className="h-5 w-5" />
+                <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
+                  <Share2 className="h-5 w-5 text-blue-400" />
                   <span>紹介リンク</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <Label className="text-sm font-medium text-gray-300">あなたの専用リンク</Label>
-                  <div className="bg-gray-800/50 border border-gray-600/50 rounded-lg p-3">
-                    <div className="text-xs text-gray-400 mb-1">URL:</div>
-                    <div className="text-white text-sm break-all font-mono">
+                  <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
+                    <div className="text-xs text-gray-400 mb-2">URL:</div>
+                    <div className="text-white text-sm break-all font-mono leading-relaxed">
                       {getReferralLink()}
                     </div>
                   </div>
                   <Button
                     onClick={() => copyToClipboard(getReferralLink(), "紹介リンク")}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3"
                   >
                     <Copy className="h-4 w-4 mr-2" />
                     リンクをコピー
                   </Button>
                 </div>
                 
-                <div className="text-xs text-gray-400 text-center px-2">
+                <div className="text-sm text-gray-400 text-center px-2">
                   このリンクから登録されたユーザーがあなたの紹介者になります
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border-green-600/30 backdrop-blur-sm">
+            <Card className="bg-gray-900/80 border-gray-700/50 backdrop-blur-sm">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-bold text-green-300 flex items-center space-x-2">
-                  <QrCode className="h-5 w-5" />
+                <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
+                  <QrCode className="h-5 w-5 text-green-400" />
                   <span>QRコード</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  <div className="bg-white rounded-lg p-4 inline-block shadow-lg">
+                  <div className="bg-white rounded-xl p-6 inline-block shadow-xl border-4 border-gray-600">
                     <img 
                       src={generateQRCode(getReferralLink())} 
                       alt="紹介リンクQRコード"
-                      className="w-48 h-48"
+                      className="w-48 h-48 rounded-lg"
                     />
                   </div>
                 </div>
-                <div className="text-xs text-gray-400 text-center px-2">
+                <div className="text-sm text-gray-400 text-center px-2">
                   QRコードをスキャンして簡単に紹介リンクにアクセスできます
                 </div>
               </CardContent>
