@@ -39,7 +39,9 @@ export function ReferralTree({ userId }: { userId: string }) {
         throw new Error("Supabase client is not configured")
       }
 
-      // Fallback: Get direct referrals manually
+      console.log('ReferralTree: Fetching data for userId:', userId)
+
+      // Fallback: Get direct referrals manually (キャッシュ無効化)
       const { data: level1, error: level1Error } = await supabase
         .from("users")
         .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
@@ -53,6 +55,8 @@ export function ReferralTree({ userId }: { userId: string }) {
 
       if (level1 && level1.length > 0) {
         for (const user1 of level1) {
+          console.log('Level1 user:', user1.user_id, 'total_purchases:', user1.total_purchases, 'converted:', Number(user1.total_purchases))
+          
           const node1: ReferralNode = {
             user_id: user1.user_id,
             email: user1.email,
