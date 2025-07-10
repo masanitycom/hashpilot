@@ -209,7 +209,9 @@ export function ReferralTree({ userId }: { userId: string }) {
       // Only include Level 1-3 nodes
       if (levelNum > 3) return
 
-      const investment = Number(dbNode.personal_investment) || Number(dbNode.total_purchases) || 0
+      const investment = Number(dbNode.personal_purchases) || Number(dbNode.personal_investment) || Number(dbNode.total_purchases) || 0
+      console.log('Building node for:', dbNode.user_id, 'personal_purchases:', dbNode.personal_purchases, 'converted:', investment)
+      
       const node: ReferralNode = {
         user_id: dbNode.user_id || '',
         email: dbNode.email || '',
