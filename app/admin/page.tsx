@@ -21,6 +21,7 @@ import {
   ArrowRight,
   BarChart3,
   Coins,
+  Wallet,
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
@@ -145,7 +146,7 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    router.push("/login")
+    router.push("/")
   }
 
   if (loading) {
@@ -371,24 +372,24 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          {/* 報酬管理 */}
+          {/* 出金管理 */}
           <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
             <CardHeader className="pb-4 border-b border-gray-700">
               <CardTitle className="text-white flex items-center text-lg">
-                <DollarSign className="w-5 h-5 mr-3 text-emerald-400" />
-                報酬管理
+                <Wallet className="w-5 h-5 mr-3 text-emerald-400" />
+                出金管理
               </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">月次報酬の集計と支払い管理</p>
+              <p className="text-gray-400 text-sm mt-1">ユーザーの出金申請管理</p>
             </CardHeader>
             <CardContent className="pt-4">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">月次報酬</span>
-                  <Badge className="bg-emerald-600 text-white px-3 py-1 text-sm font-semibold">報酬集計</Badge>
+                  <span className="text-gray-300 font-medium">出金申請</span>
+                  <Badge className="bg-emerald-600 text-white px-3 py-1 text-sm font-semibold">管理</Badge>
                 </div>
-                <Link href="/admin/rewards">
+                <Link href="/admin/withdrawals">
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 font-medium mt-6">
-                    報酬管理画面へ
+                    出金管理画面へ
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
@@ -452,6 +453,12 @@ export default function AdminDashboard() {
                   <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 font-medium mt-4">
                     <Database className="w-4 h-4 mr-2" />
                     データベース確認
+                  </Button>
+                </Link>
+                <Link href="/admin/logs">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 font-medium mt-2">
+                    <Activity className="w-4 h-4 mr-2" />
+                    システムログ
                   </Button>
                 </Link>
                 <Link href="/admin/data-migration">
