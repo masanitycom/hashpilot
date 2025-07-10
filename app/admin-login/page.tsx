@@ -110,22 +110,44 @@ export default function AdminLoginPage() {
       setDebugInfo("管理者権限を確認中...")
 
       try {
-        const { data: isAdminResult, error: adminError } = await supabase.rpc("is_admin", {
-          user_email: trimmedEmail,
-          user_uuid: userUUID, // pass uuid to pick the (text, uuid) overload
-        })
+        // まず直接adminsテーブルをチェック
+        const { data: directAdminCheck, error: directError } = await supabase
+          .from("admins")
+          .select("email, is_active")
+          .eq("email", trimmedEmail)
+          .eq("is_active", true)
+          .single()
 
-        if (adminError) {
-          console.error("Admin check error:", adminError)
-          setDebugInfo(`管理者権限確認エラー: ${JSON.stringify(adminError, null, 2)}`)
-          setError(`管理者権限の確認でエラーが発生しました: ${adminError.message}`)
-          setLoading(false)
-          return
+        if (directError && directError.code !== 'PGRST116') {
+          console.error("Direct admin check error:", directError)
+          setDebugInfo(`直接管理者確認エラー: ${JSON.stringify(directError, null, 2)}`)
         }
 
-        setDebugInfo(`管理者権限チェック結果: ${isAdminResult}`)
+        const isDirectAdmin = !!directAdminCheck
+        setDebugInfo(`直接管理者チェック結果: ${isDirectAdmin} (${directAdminCheck?.email || 'not found'})`)
 
-        if (!isAdminResult) {
+        // 関数呼び出しもテスト
+        let isFunctionAdmin = false
+        try {
+          const { data: isAdminResult, error: adminError } = await supabase.rpc("is_admin", {
+            user_email: trimmedEmail,
+            user_uuid: userUUID,
+          })
+
+          if (adminError) {
+            console.error("Admin function error:", adminError)
+            setDebugInfo(`管理者権限確認エラー: ${JSON.stringify(adminError, null, 2)}`)
+          } else {
+            isFunctionAdmin = !!isAdminResult
+            setDebugInfo(`関数管理者チェック結果: ${isFunctionAdmin}`)
+          }
+        } catch (funcError) {
+          console.error("Admin function exception:", funcError)
+          setDebugInfo(`関数エラー: ${JSON.stringify(funcError, null, 2)}`)
+        }
+
+        // どちらかの方法で管理者と確認できれば通す
+        if (!isDirectAdmin && !isFunctionAdmin) {
           setError("管理者権限がありません。一般ユーザーとしてログインしてください。")
           setDebugInfo("管理者権限なし、ログアウト中...")
           // 管理者でない場合はログアウト
