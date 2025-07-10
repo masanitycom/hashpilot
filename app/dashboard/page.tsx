@@ -475,7 +475,7 @@ export default function DashboardPage() {
                     <DollarSign className="h-8 w-8 text-green-400" />
                     <div>
                       <h3 className="text-lg font-semibold text-green-400">Level1投資額</h3>
-                      <p className="text-sm text-gray-400">報酬率: 25%</p>
+                      <p className="text-sm text-gray-400">報酬率: 20%</p>
                     </div>
                   </div>
                   <div className="text-3xl font-bold text-green-400">

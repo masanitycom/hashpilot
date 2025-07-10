@@ -203,6 +203,7 @@ export default function AdminYieldPage() {
           p_yield_rate: Number.parseFloat(yieldRate) / 100,
           p_margin_rate: Number.parseFloat(marginRate) / 100,
           p_is_test_mode: true,
+          p_is_month_end: isMonthEnd,
         })
 
         if (error) throw error
@@ -221,6 +222,7 @@ export default function AdminYieldPage() {
           p_yield_rate: Number.parseFloat(yieldRate) / 100,
           p_margin_rate: Number.parseFloat(marginRate) / 100,
           p_is_test_mode: false,
+          p_is_month_end: isMonthEnd,
         })
 
         if (error) throw error
