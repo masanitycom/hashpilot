@@ -255,10 +255,10 @@ export default function DashboardPage() {
       if (supabase) {
         await supabase.auth.signOut()
       }
-      router.push("/login")
+      router.push("/")
     } catch (error) {
       console.error("Logout error:", error)
-      router.push("/login")
+      router.push("/")
     }
   }
 
