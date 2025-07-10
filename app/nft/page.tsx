@@ -101,10 +101,7 @@ export default function NFTPage() {
         .insert({
           user_id: userData.id,
           amount_usd: NFT_PRICE, // $1000 investment amount
-          investment_amount: NFT_PRICE, // $1000 actual investment
-          fee_amount: FEE_AMOUNT, // $100 fee
           admin_approved: false,
-          created_at: new Date().toISOString(),
         })
         .select()
         .single()
