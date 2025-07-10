@@ -6,8 +6,8 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "HASH PILOT Database",
-  description: "HASH PILOT紹介システムのダッシュボード",
+  title: "HashPilot Database",
+  description: "HashPilot紹介システムのダッシュボード",
     generator: 'v0.dev'
 }
 

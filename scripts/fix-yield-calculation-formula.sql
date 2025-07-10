@@ -1,79 +1,7 @@
--- Phase 2: 日利システムの実装
+-- 日利計算式の修正
+-- 正しい計算式: (日利率 - 30%) × 0.6 = ユーザー受取率
 
--- 1. user_daily_profitテーブル
-CREATE TABLE IF NOT EXISTS user_daily_profit (
-    id SERIAL PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    date DATE NOT NULL,
-    yield_rate DECIMAL(5,4) NOT NULL,
-    user_rate DECIMAL(5,4) NOT NULL,
-    base_amount DECIMAL(10,2) NOT NULL, -- NFT数 × 1100
-    daily_profit DECIMAL(10,2) NOT NULL,
-    phase VARCHAR(10) NOT NULL CHECK (phase IN ('USDT', 'HOLD')),
-    is_paid BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    UNIQUE(user_id, date),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
--- 2. company_daily_profitテーブル
-CREATE TABLE IF NOT EXISTS company_daily_profit (
-    id SERIAL PRIMARY KEY,
-    date DATE NOT NULL UNIQUE,
-    total_user_profit DECIMAL(12,2) NOT NULL DEFAULT 0,
-    total_company_profit DECIMAL(12,2) NOT NULL DEFAULT 0,
-    margin_rate DECIMAL(3,2) NOT NULL,
-    total_base_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
-    user_count INTEGER NOT NULL DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- 3. affiliate_rewardテーブル
-CREATE TABLE IF NOT EXISTS affiliate_reward (
-    id SERIAL PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    referral_user_id TEXT NOT NULL,
-    date DATE NOT NULL,
-    level INTEGER NOT NULL CHECK (level IN (1, 2, 3)),
-    reward_rate DECIMAL(4,3) NOT NULL, -- 0.250, 0.100, 0.050
-    base_profit DECIMAL(10,2) NOT NULL,
-    reward_amount DECIMAL(10,2) NOT NULL,
-    phase VARCHAR(10) NOT NULL CHECK (phase IN ('USDT', 'HOLD')),
-    is_paid BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    UNIQUE(user_id, referral_user_id, date, level),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (referral_user_id) REFERENCES users(user_id)
-);
-
--- インデックス作成
-CREATE INDEX IF NOT EXISTS idx_user_daily_profit_user_date ON user_daily_profit(user_id, date);
-CREATE INDEX IF NOT EXISTS idx_user_daily_profit_date ON user_daily_profit(date);
-CREATE INDEX IF NOT EXISTS idx_company_daily_profit_date ON company_daily_profit(date);
-CREATE INDEX IF NOT EXISTS idx_affiliate_reward_user_date ON affiliate_reward(user_id, date);
-CREATE INDEX IF NOT EXISTS idx_affiliate_reward_referral_date ON affiliate_reward(referral_user_id, date);
-
--- RLS設定
-ALTER TABLE user_daily_profit ENABLE ROW LEVEL SECURITY;
-ALTER TABLE company_daily_profit ENABLE ROW LEVEL SECURITY;
-ALTER TABLE affiliate_reward ENABLE ROW LEVEL SECURITY;
-
--- 既存ポリシーを削除してから作成
-DROP POLICY IF EXISTS "user_daily_profit_select" ON user_daily_profit;
-DROP POLICY IF EXISTS "company_daily_profit_select" ON company_daily_profit;
-DROP POLICY IF EXISTS "affiliate_reward_select" ON affiliate_reward;
-
--- RLSポリシー
-CREATE POLICY "user_daily_profit_select" ON user_daily_profit FOR SELECT 
-USING (user_id = auth.uid()::text OR EXISTS (SELECT 1 FROM admins WHERE user_id = auth.uid()::text));
-
-CREATE POLICY "company_daily_profit_select" ON company_daily_profit FOR SELECT 
-USING (EXISTS (SELECT 1 FROM admins WHERE user_id = auth.uid()::text));
-
-CREATE POLICY "affiliate_reward_select" ON affiliate_reward FOR SELECT 
-USING (user_id = auth.uid()::text OR EXISTS (SELECT 1 FROM admins WHERE user_id = auth.uid()::text));
-
--- 4. 日利投稿関数（管理者用）
+-- 1. admin_post_yield関数の修正
 CREATE OR REPLACE FUNCTION admin_post_yield(
     p_date DATE,
     p_yield_rate DECIMAL(5,4),
@@ -86,6 +14,7 @@ DECLARE
     v_total_base_amount DECIMAL(12,2);
     v_total_user_profit DECIMAL(12,2);
     v_total_company_profit DECIMAL(12,2);
+    v_total_affiliate_profit DECIMAL(12,2);
     v_result JSON;
 BEGIN
     -- 管理者権限チェック
@@ -188,7 +117,7 @@ BEGIN
         reward_amount = EXCLUDED.reward_amount,
         phase = EXCLUDED.phase;
     
-    -- 会社利益計算
+    -- 統計計算
     SELECT 
         COUNT(*),
         SUM(base_amount),
@@ -197,8 +126,15 @@ BEGIN
     FROM user_daily_profit
     WHERE date = p_date;
     
+    -- アフィリエイト報酬総額を計算
+    SELECT 
+        COALESCE(SUM(reward_amount), 0)
+    INTO v_total_affiliate_profit
+    FROM affiliate_reward
+    WHERE date = p_date;
+    
     -- 会社利益計算（修正版）
-    -- 実効利率の残り10%（プール金）+ 30%（会社マージン）
+    -- 会社マージン30% + 実効利率の残り10%（プール金）
     v_total_company_profit := v_total_base_amount * p_margin_rate + v_total_base_amount * (p_yield_rate - p_margin_rate) * 0.1;
     
     INSERT INTO company_daily_profit (date, total_user_profit, total_company_profit, margin_rate, total_base_amount, user_count)
@@ -214,17 +150,85 @@ BEGIN
         'success', true,
         'date', p_date,
         'yield_rate', p_yield_rate,
+        'margin_rate', p_margin_rate,
         'user_rate', v_user_rate,
         'total_users', v_total_users,
         'total_user_profit', v_total_user_profit,
-        'total_company_profit', v_total_company_profit
+        'total_affiliate_profit', v_total_affiliate_profit,
+        'total_company_profit', v_total_company_profit,
+        'calculation_breakdown', json_build_object(
+            'effective_rate', p_yield_rate - p_margin_rate,
+            'user_portion', 0.6,
+            'affiliate_portion', 0.3,
+            'pool_portion', 0.1
+        )
     );
     
     RETURN v_result;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-COMMENT ON TABLE user_daily_profit IS 'ユーザー日利記録';
-COMMENT ON TABLE company_daily_profit IS '会社日利記録';
-COMMENT ON TABLE affiliate_reward IS '紹介報酬記録';
-COMMENT ON FUNCTION admin_post_yield IS '管理者用日利投稿関数';
+-- テストモード関数も同様に修正
+CREATE OR REPLACE FUNCTION admin_post_yield_test_mode(
+    p_date DATE,
+    p_yield_rate DECIMAL(5,4),
+    p_margin_rate DECIMAL(3,2),
+    p_is_month_end BOOLEAN DEFAULT FALSE
+) RETURNS JSON AS $$
+DECLARE
+    v_user_rate DECIMAL(5,4);
+    v_total_users INTEGER;
+    v_total_base_amount DECIMAL(12,2);
+    v_total_user_profit DECIMAL(12,2);
+    v_total_company_profit DECIMAL(12,2);
+    v_total_affiliate_profit DECIMAL(12,2);
+    v_result JSON;
+BEGIN
+    -- 管理者権限チェック
+    IF NOT EXISTS (SELECT 1 FROM admins WHERE user_id = auth.uid()::text) THEN
+        RAISE EXCEPTION 'Admin access required';
+    END IF;
+    
+    -- ユーザー利率計算（修正版）
+    v_user_rate := (p_yield_rate - p_margin_rate) * 0.6;
+    
+    -- テストモード: 実際の計算結果を返すが、データベースには保存しない
+    SELECT 
+        COUNT(*),
+        SUM(ac.total_nft_count * 1100.00),
+        SUM(ac.total_nft_count * 1100.00 * v_user_rate)
+    INTO v_total_users, v_total_base_amount, v_total_user_profit
+    FROM affiliate_cycle ac
+    WHERE ac.total_nft_count > 0;
+    
+    -- アフィリエイト報酬総額を計算
+    v_total_affiliate_profit := v_total_base_amount * (p_yield_rate - p_margin_rate) * 0.3;
+    
+    -- 会社利益計算
+    v_total_company_profit := v_total_base_amount * p_margin_rate + v_total_base_amount * (p_yield_rate - p_margin_rate) * 0.1;
+    
+    v_result := json_build_object(
+        'success', true,
+        'test_mode', true,
+        'date', p_date,
+        'yield_rate', p_yield_rate,
+        'margin_rate', p_margin_rate,
+        'user_rate', v_user_rate,
+        'total_users', v_total_users,
+        'total_user_profit', v_total_user_profit,
+        'total_affiliate_profit', v_total_affiliate_profit,
+        'total_company_profit', v_total_company_profit,
+        'calculation_breakdown', json_build_object(
+            'effective_rate', p_yield_rate - p_margin_rate,
+            'user_portion', 0.6,
+            'affiliate_portion', 0.3,
+            'pool_portion', 0.1
+        )
+    );
+    
+    RETURN v_result;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+COMMENT ON FUNCTION admin_post_yield IS '修正済み日利投稿関数: (日利率 - マージン率) × 0.6 = ユーザー受取率';
+COMMENT ON FUNCTION admin_post_yield_test_mode IS '修正済みテストモード関数: 実際にデータベースに保存しない';

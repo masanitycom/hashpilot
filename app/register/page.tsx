@@ -360,10 +360,10 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-gray-800 border-gray-700">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-12" />
+          <div className="flex justify-center mb-6">
+            <img src="/images/hash-pilot-logo.png" alt="HashPilot" className="h-16 rounded-xl shadow-lg" />
           </div>
-          <CardTitle className="text-2xl text-white">HASH PILOT 新規登録</CardTitle>
+          <CardTitle className="text-2xl text-white">新規登録</CardTitle>
           {referrerCode && (
             <div className="bg-green-900 border border-green-700 rounded-lg p-3 mt-4">
               <p className="text-sm text-green-200">

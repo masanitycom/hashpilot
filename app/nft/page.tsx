@@ -99,12 +99,10 @@ export default function NFTPage() {
       const { data: purchase, error: purchaseError } = await supabase
         .from("purchases")
         .insert({
-          user_id: userData.id,
+          user_id: userData.user_id,
           amount_usd: NFT_PRICE, // $1000 investment amount
-          investment_amount: NFT_PRICE, // $1000 actual investment
-          fee_amount: FEE_AMOUNT, // $100 fee
+          nft_quantity: 1, // 1 NFT購入
           admin_approved: false,
-          created_at: new Date().toISOString(),
         })
         .select()
         .single()
@@ -113,10 +111,9 @@ export default function NFTPage() {
         throw purchaseError
       }
 
-      setSuccess("NFT購入リクエストが送信されました。管理者の承認をお待ちください。")
-
-      // ユーザーデータを再取得
-      await fetchUserData(userData.id)
+      // 購入成功後、支払い画面にリダイレクト
+      router.push(`/nft-payment?id=${purchase.id}`)
+      return
     } catch (error: any) {
       console.error("Purchase error:", error)
       setError(`購入に失敗しました: ${error.message}`)
@@ -276,22 +273,9 @@ export default function NFTPage() {
                   </div>
                 </div>
 
-                {!userData?.nft_address && (
-                  <Alert className="bg-yellow-900 border-yellow-700">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-yellow-200">
-                      NFT受け取りアドレスが設定されていません。
-                      <Link href="/profile" className="underline ml-1">
-                        プロフィールページ
-                      </Link>
-                      で設定してください。
-                    </AlertDescription>
-                  </Alert>
-                )}
-
                 <Button
                   onClick={handlePurchase}
-                  disabled={purchasing || !userData?.nft_address}
+                  disabled={purchasing}
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg"
                 >
                   {purchasing ? (

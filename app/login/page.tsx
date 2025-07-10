@@ -163,10 +163,10 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-gray-800 border-gray-700">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-12" />
+          <div className="flex justify-center mb-6">
+            <img src="/images/hash-pilot-logo.png" alt="HashPilot" className="h-16 rounded-xl shadow-lg" />
           </div>
-          <CardTitle className="text-2xl text-white">HASH PILOT ログイン</CardTitle>
+          <CardTitle className="text-2xl text-white">ログイン</CardTitle>
           <CardDescription className="text-gray-300">アカウントにログインしてください</CardDescription>
         </CardHeader>
         <CardContent>
@@ -220,7 +220,11 @@ export default function LoginPage() {
               </Alert>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3" 
+              disabled={loading}
+            >
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -237,7 +241,7 @@ export default function LoginPage() {
               <Button
                 onClick={resendConfirmation}
                 variant="outline"
-                className="w-full text-white border-white hover:bg-gray-700 bg-transparent"
+                className="w-full text-white border-white hover:bg-gray-700 hover:text-white bg-transparent font-medium"
                 disabled={loading}
               >
                 確認メールを再送信
@@ -247,13 +251,13 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center text-sm text-white">
             アカウントをお持ちでない方は{" "}
-            <Link href="/pre-register" className="text-blue-400 hover:underline">
+            <Link href="/pre-register" className="text-blue-400 hover:text-blue-300 hover:underline font-medium">
               新規登録
             </Link>
           </div>
 
           <div className="mt-4 text-center text-sm">
-            <Link href="/admin-login" className="text-red-400 hover:underline">
+            <Link href="/admin-login" className="text-red-400 hover:text-red-300 hover:underline font-medium">
               管理者ログイン
             </Link>
           </div>
