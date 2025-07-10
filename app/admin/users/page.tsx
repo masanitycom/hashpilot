@@ -53,23 +53,21 @@ export default function AdminUsersPage() {
   const checkAdminAuth = async () => {
     try {
       const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession()
+        data: { user },
+      } = await supabase.auth.getUser()
 
-      if (sessionError || !session?.user) {
+      if (!user) {
         router.push("/admin-login")
         return
       }
 
-      // 管理者権限チェック
-      const { data: adminData, error: adminError } = await supabase
-        .from("admins")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .single()
+      // 管理者権限チェック（他の管理ページと統一）
+      const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
+        p_email: user.email,
+      })
 
-      if (adminError || !adminData) {
+      if (adminError || !adminCheck) {
+        console.error("Admin check failed:", adminError)
         router.push("/admin-login")
         return
       }
