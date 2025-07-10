@@ -242,7 +242,7 @@ export default function WithdrawalPage() {
                 <span className="text-blue-400 font-bold">1.</span>
                 <div>
                   <p className="font-medium text-white">処理タイミング</p>
-                  <p>毎月月末の日利設定完了後、翌1日にリセットと同時に出金処理を実行します。</p>
+                  <p>毎月月末の日利設定完了後、翌月5日以内に出金処理を実行します。</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
