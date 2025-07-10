@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User } from "lucide-react"
+import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { ReferralTree } from "@/components/referral-tree"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
@@ -47,6 +47,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [authChecked, setAuthChecked] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -309,17 +310,22 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
       {/* ヘッダー */}
-      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <img src="/images/hash-pilot-logo.png" alt="HashPilot" className="h-12 rounded-xl shadow-lg" />
-              <div>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/images/hash-pilot-logo.png" 
+                alt="HashPilot" 
+                className="h-8 md:h-10 lg:h-12 w-auto object-contain aspect-[3/1] rounded-lg shadow-lg" 
+              />
+              <div className="hidden sm:block">
                 <p className="text-sm text-gray-400">ダッシュボード</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            {/* デスクトップメニュー */}
+            <div className="hidden md:flex items-center space-x-3">
               <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
@@ -352,25 +358,89 @@ export default function DashboardPage() {
                 ログアウト
               </Button>
             </div>
+
+            {/* モバイルメニューボタン */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
+
+          {/* モバイルメニュー */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 space-y-2">
+              <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-green-500 text-green-400 hover:bg-green-600 bg-transparent justify-start"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  📱 公式LINE
+                </Button>
+              </Link>
+              <Link href="/nft">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-gray-600 text-white hover:bg-gray-700 bg-transparent justify-start"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  NFT購入
+                </Button>
+              </Link>
+              <Link href="/withdrawal">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-purple-600 text-purple-400 hover:bg-purple-700 bg-transparent justify-start"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  出金状況
+                </Button>
+              </Link>
+              <Link href="/profile">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-blue-600 text-blue-400 hover:bg-blue-700 bg-transparent justify-start"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  プロフィール
+                </Button>
+              </Link>
+              <Button 
+                onClick={handleLogout} 
+                variant="ghost" 
+                size="sm" 
+                className="w-full text-red-400 hover:text-red-300 hover:bg-red-900/20 justify-start"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                ログアウト
+              </Button>
+            </div>
+          )}
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-8">
         {/* ヒーローセクション */}
-        <div className="mb-8 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/50 rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center space-x-4 mb-4">
-                <h2 className="text-2xl font-bold text-white">こんにちは、{userData?.user_id}さん</h2>
-                <div className="flex items-center space-x-2">
-                  <Badge className="bg-blue-600 text-white">ID: {userData?.user_id}</Badge>
-                  {userData?.coinw_uid && <Badge className="bg-green-600 text-white">CoinW認証済み</Badge>}
+        <div className="mb-6 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/50 rounded-lg p-4 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+                <h2 className="text-xl md:text-2xl font-bold text-white">こんにちは、{userData?.user_id}さん</h2>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge className="bg-blue-600 text-white text-xs">ID: {userData?.user_id}</Badge>
+                  {userData?.coinw_uid && <Badge className="bg-green-600 text-white text-xs">CoinW認証済み</Badge>}
                 </div>
               </div>
-              <p className="text-gray-400">{userData?.email}</p>
+              <p className="text-gray-400 text-sm md:text-base break-all">{userData?.email}</p>
             </div>
-            <div>
+            <div className="hidden md:block">
               <Link href="/profile">
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   <User className="h-4 w-4 mr-2" />
@@ -382,19 +452,19 @@ export default function DashboardPage() {
         </div>
 
         {/* 統計カードと日利グラフ */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
           {/* 統計カード */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
             {/* 個人投資額 */}
             <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-gray-300 text-sm font-medium">個人投資額</CardTitle>
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">個人投資額</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2">
-                  <DollarSign className="h-5 w-5 text-green-400" />
-                  <span className="text-2xl font-bold text-green-400">
-                    ${userStats?.total_investment.toLocaleString()}.00
+              <CardContent className="p-3 pt-0">
+                <div className="flex items-center space-x-1">
+                  <DollarSign className="h-4 w-4 text-green-400 flex-shrink-0" />
+                  <span className="text-base md:text-xl lg:text-2xl font-bold text-green-400 truncate">
+                    ${userStats?.total_investment.toLocaleString()}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">{nftCount} NFT保有</p>
@@ -412,13 +482,13 @@ export default function DashboardPage() {
 
             {/* 直接紹介者数 */}
             <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-gray-300 text-sm font-medium">直接紹介</CardTitle>
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">直接紹介</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-5 w-5 text-blue-400" />
-                  <span className="text-2xl font-bold text-blue-400">{userStats?.direct_referrals || 0}</span>
+              <CardContent className="p-3 pt-0">
+                <div className="flex items-center space-x-1">
+                  <Users className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                  <span className="text-base md:text-xl lg:text-2xl font-bold text-blue-400">{userStats?.direct_referrals || 0}</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">直接紹介した人数</p>
               </CardContent>
@@ -426,13 +496,13 @@ export default function DashboardPage() {
 
             {/* 総紹介者数 */}
             <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-gray-300 text-sm font-medium">総紹介者</CardTitle>
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">総紹介者</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="h-5 w-5 text-purple-400" />
-                  <span className="text-2xl font-bold text-purple-400">{userStats?.total_referrals || 0}</span>
+              <CardContent className="p-3 pt-0">
+                <div className="flex items-center space-x-1">
+                  <TrendingUp className="h-4 w-4 text-purple-400 flex-shrink-0" />
+                  <span className="text-base md:text-xl lg:text-2xl font-bold text-purple-400">{userStats?.total_referrals || 0}</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">全レベル合計</p>
               </CardContent>
@@ -440,14 +510,14 @@ export default function DashboardPage() {
 
             {/* 紹介者投資総額 */}
             <Card className="bg-gray-800 border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-gray-300 text-sm font-medium">紹介者投資総額</CardTitle>
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">紹介者投資総額</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2">
-                  <Gift className="h-5 w-5 text-orange-400" />
-                  <span className="text-2xl font-bold text-orange-400">
-                    ${userStats?.total_referral_investment.toLocaleString()}.00
+              <CardContent className="p-3 pt-0">
+                <div className="flex items-center space-x-1">
+                  <Gift className="h-4 w-4 text-orange-400 flex-shrink-0" />
+                  <span className="text-base md:text-xl lg:text-2xl font-bold text-orange-400 truncate">
+                    ${userStats?.total_referral_investment.toLocaleString()}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">紹介者の投資合計</p>
@@ -462,7 +532,7 @@ export default function DashboardPage() {
         </div>
 
         {/* NFTサイクルと購入履歴 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
           {/* NFTサイクル状況 */}
           <CycleStatusCard userId={userData?.user_id || ""} />
           
@@ -471,12 +541,12 @@ export default function DashboardPage() {
         </div>
 
         {/* 紹介ツリーセクション */}
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           <ReferralTree userId={userData?.user_id || ""} />
         </div>
 
         {/* レベル別投資額統計セクション */}
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           <Card className="bg-gray-800 border-gray-700">
             <CardHeader className="pb-4">
               <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
@@ -485,77 +555,77 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-6">
                 {/* Level1投資額 */}
-                <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-600/30 rounded-lg p-6">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <DollarSign className="h-8 w-8 text-green-400" />
+                <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-600/30 rounded-lg p-4 md:p-6">
+                  <div className="flex items-center space-x-2 mb-2 md:mb-3">
+                    <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-green-400 flex-shrink-0" />
                     <div>
-                      <h3 className="text-lg font-semibold text-green-400">Level1投資額</h3>
-                      <p className="text-sm text-gray-400">報酬率: 20%</p>
+                      <h3 className="text-sm md:text-lg font-semibold text-green-400">Level1投資額</h3>
+                      <p className="text-xs md:text-sm text-gray-400">報酬率: 20%</p>
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-green-400">
-                    ${userStats?.level1_investment.toLocaleString()}.00
+                  <div className="text-xl md:text-3xl font-bold text-green-400 truncate">
+                    ${userStats?.level1_investment.toLocaleString()}
                   </div>
                 </div>
 
                 {/* Level2投資額 */}
-                <div className="bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border border-blue-600/30 rounded-lg p-6">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <DollarSign className="h-8 w-8 text-blue-400" />
+                <div className="bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border border-blue-600/30 rounded-lg p-4 md:p-6">
+                  <div className="flex items-center space-x-2 mb-2 md:mb-3">
+                    <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-blue-400 flex-shrink-0" />
                     <div>
-                      <h3 className="text-lg font-semibold text-blue-400">Level2投資額</h3>
-                      <p className="text-sm text-gray-400">報酬率: 10%</p>
+                      <h3 className="text-sm md:text-lg font-semibold text-blue-400">Level2投資額</h3>
+                      <p className="text-xs md:text-sm text-gray-400">報酬率: 10%</p>
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-blue-400">
-                    ${userStats?.level2_investment.toLocaleString()}.00
+                  <div className="text-xl md:text-3xl font-bold text-blue-400 truncate">
+                    ${userStats?.level2_investment.toLocaleString()}
                   </div>
                 </div>
 
                 {/* Level3投資額 */}
-                <div className="bg-gradient-to-r from-purple-900/20 to-violet-900/20 border border-purple-600/30 rounded-lg p-6">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <DollarSign className="h-8 w-8 text-purple-400" />
+                <div className="bg-gradient-to-r from-purple-900/20 to-violet-900/20 border border-purple-600/30 rounded-lg p-4 md:p-6">
+                  <div className="flex items-center space-x-2 mb-2 md:mb-3">
+                    <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-purple-400 flex-shrink-0" />
                     <div>
-                      <h3 className="text-lg font-semibold text-purple-400">Level3投資額</h3>
-                      <p className="text-sm text-gray-400">報酬率: 5%</p>
+                      <h3 className="text-sm md:text-lg font-semibold text-purple-400">Level3投資額</h3>
+                      <p className="text-xs md:text-sm text-gray-400">報酬率: 5%</p>
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-purple-400">
-                    ${userStats?.level3_investment.toLocaleString()}.00
+                  <div className="text-xl md:text-3xl font-bold text-purple-400 truncate">
+                    ${userStats?.level3_investment.toLocaleString()}
                   </div>
                 </div>
               </div>
 
               {/* Level4以降の統計 */}
-              <div className="border-t border-gray-600/30 pt-6">
-                <h3 className="text-lg font-semibold text-orange-400 mb-4">Level4以降の総計</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-6">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Users className="h-8 w-8 text-orange-400" />
+              <div className="border-t border-gray-600/30 pt-4 md:pt-6">
+                <h3 className="text-base md:text-lg font-semibold text-orange-400 mb-3 md:mb-4">Level4以降の総計</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-4 md:p-6">
+                    <div className="flex items-center space-x-2 mb-2 md:mb-3">
+                      <Users className="h-6 w-6 md:h-8 md:w-8 text-orange-400 flex-shrink-0" />
                       <div>
-                        <h3 className="text-lg font-semibold text-orange-400">Level4以降の人数</h3>
-                        <p className="text-sm text-gray-300">Level4以降の合計人数</p>
+                        <h3 className="text-sm md:text-lg font-semibold text-orange-400">Level4以降の人数</h3>
+                        <p className="text-xs md:text-sm text-gray-300">Level4以降の合計人数</p>
                       </div>
                     </div>
-                    <div className="text-3xl font-bold text-orange-400">
+                    <div className="text-xl md:text-3xl font-bold text-orange-400">
                       {userStats?.level4_plus_referrals || 0}人
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-6">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <DollarSign className="h-8 w-8 text-orange-400" />
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-4 md:p-6">
+                    <div className="flex items-center space-x-2 mb-2 md:mb-3">
+                      <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-orange-400 flex-shrink-0" />
                       <div>
-                        <h3 className="text-lg font-semibold text-orange-400">Level4以降の投資額</h3>
-                        <p className="text-sm text-gray-300">Level4以降の投資合計</p>
+                        <h3 className="text-sm md:text-lg font-semibold text-orange-400">Level4以降の投資額</h3>
+                        <p className="text-xs md:text-sm text-gray-300">Level4以降の投資合計</p>
                       </div>
                     </div>
-                    <div className="text-3xl font-bold text-orange-400">
-                      ${userStats?.level4_plus_investment.toLocaleString()}.00
+                    <div className="text-xl md:text-3xl font-bold text-orange-400 truncate">
+                      ${userStats?.level4_plus_investment.toLocaleString()}
                     </div>
                   </div>
                 </div>
