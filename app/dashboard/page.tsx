@@ -338,6 +338,15 @@ export default function DashboardPage() {
                   NFT購入
                 </Button>
               </Link>
+              <Link href="/withdrawal">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-purple-600 text-purple-400 hover:bg-purple-700 bg-transparent"
+                >
+                  出金状況
+                </Button>
+              </Link>
               <Button onClick={handleLogout} variant="ghost" size="sm" className="text-gray-300 hover:text-white">
                 <LogOut className="h-4 w-4 mr-2" />
                 ログアウト

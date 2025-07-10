@@ -209,325 +209,237 @@ export default function AdminDashboard() {
 
       <main className="container mx-auto px-6 py-8">
         {/* 統計サマリー */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-green-500 to-green-600 border-0 text-white shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card className="bg-gradient-to-br from-green-500 to-green-600 border-0 text-white shadow-lg">
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-3">
+                <DollarSign className="w-10 h-10 text-white opacity-80" />
                 <div>
-                  <p className="text-green-100 text-sm font-medium mb-1">総売上</p>
-                  <p className="text-3xl font-bold mb-1">${stats.totalRevenue.toFixed(2)}</p>
-                  <p className="text-green-100 text-xs">承認済み購入の合計</p>
-                </div>
-                <div className="bg-white bg-opacity-20 p-3 rounded-lg">
-                  <DollarSign className="w-8 h-8 text-white" />
+                  <p className="text-green-100 text-xs font-medium">総売上</p>
+                  <p className="text-xl font-bold">${stats.totalRevenue.toFixed(0)}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 text-white shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 text-white shadow-lg">
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-3">
+                <Users className="w-10 h-10 text-white opacity-80" />
                 <div>
-                  <p className="text-blue-100 text-sm font-medium mb-1">総ユーザー</p>
-                  <p className="text-3xl font-bold mb-1">{stats.totalUsers}</p>
-                  <p className="text-blue-100 text-xs">
-                    アクティブ: {stats.activeUsers} / NFT承認: {stats.nftApproved}
-                  </p>
-                </div>
-                <div className="bg-white bg-opacity-20 p-3 rounded-lg">
-                  <Users className="w-8 h-8 text-white" />
+                  <p className="text-blue-100 text-xs font-medium">総ユーザー</p>
+                  <p className="text-xl font-bold">{stats.totalUsers}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 border-0 text-white shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 border-0 text-white shadow-lg">
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-3">
+                <ShoppingCart className="w-10 h-10 text-white opacity-80" />
                 <div>
-                  <p className="text-purple-100 text-sm font-medium mb-1">総購入数</p>
-                  <p className="text-3xl font-bold mb-1">{stats.totalPurchases}</p>
-                  <p className="text-purple-100 text-xs">承認済み: {stats.approvedPurchases}</p>
+                  <p className="text-purple-100 text-xs font-medium">総購入数</p>
+                  <p className="text-xl font-bold">{stats.totalPurchases}</p>
                 </div>
-                <div className="bg-white bg-opacity-20 p-3 rounded-lg">
-                  <ShoppingCart className="w-8 h-8 text-white" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 border-0 text-white shadow-lg">
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-3">
+                <Activity className="w-10 h-10 text-white opacity-80" />
+                <div>
+                  <p className="text-orange-100 text-xs font-medium">確認待ち</p>
+                  <p className="text-xl font-bold">{stats.pendingPurchases}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* メイン管理セクション - 3x3グリッド */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* メイン管理セクション */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {/* ユーザー管理 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Users className="w-5 h-5 mr-3 text-blue-400" />
-                ユーザー管理
-              </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">ユーザーの詳細情報、削除、CoinW UID管理</p>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">総ユーザー数</span>
-                  <Badge className="bg-blue-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.totalUsers}ユーザー
-                  </Badge>
+          <Link href="/admin/users">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-blue-600 rounded-lg group-hover:bg-blue-700 transition-colors">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">ユーザー管理</h3>
+                    <p className="text-gray-400 text-sm">総 {stats.totalUsers} ユーザー</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
-                <Link href="/admin/users">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 font-medium mt-6">
-                    ユーザー管理画面へ
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
 
           {/* 購入・入金管理 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <CreditCard className="w-5 h-5 mr-3 text-green-400" />
-                購入・入金管理
-              </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">NFT購入の確認、入金承認、トランザクション管理</p>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">確認待ち</span>
-                  <Badge className="bg-orange-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.pendingPurchases}件待ち
-                  </Badge>
+          <Link href="/admin/purchases">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-green-600 rounded-lg group-hover:bg-green-700 transition-colors">
+                    <CreditCard className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">購入管理</h3>
+                    <p className="text-gray-400 text-sm">確認待ち {stats.pendingPurchases} 件</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">承認済み</span>
-                  <Badge className="bg-green-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.approvedPurchases}件承認
-                  </Badge>
-                </div>
-                <Link href="/admin/purchases">
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 font-medium mt-6">
-                    購入管理画面へ
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
 
           {/* 紹介関係管理 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Network className="w-5 h-5 mr-3 text-purple-400" />
-                紹介関係管理
-              </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">紹介ツリー、紹介関係の確認・変更</p>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">アクティブユーザー</span>
-                  <Badge className="bg-purple-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.activeUsers}人
-                  </Badge>
+          <Link href="/admin/referrals">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-purple-600 rounded-lg group-hover:bg-purple-700 transition-colors">
+                    <Network className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">紹介ネットワーク</h3>
+                    <p className="text-gray-400 text-sm">アクティブ {stats.activeUsers} 人</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
-                <Link href="/admin/referrals">
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 font-medium mt-6">
-                    紹介ネットワーク
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
 
           {/* 日利管理 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Coins className="w-5 h-5 mr-3 text-yellow-400" />
-                日利管理
-              </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">日次利益の配布と管理</p>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">配布状況</span>
-                  <Badge className="bg-yellow-600 text-white px-3 py-1 text-sm font-semibold">日利配布</Badge>
+          <Link href="/admin/yield">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-yellow-600 rounded-lg group-hover:bg-yellow-700 transition-colors">
+                    <Coins className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">日利管理</h3>
+                    <p className="text-gray-400 text-sm">日利配布・設定</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
-                <Link href="/admin/yield">
-                  <Button className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-3 font-medium mt-6">
-                    日利管理画面へ
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
 
           {/* 出金管理 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Wallet className="w-5 h-5 mr-3 text-emerald-400" />
-                出金管理
-              </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">ユーザーの出金申請管理</p>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">月末出金管理</span>
-                  <Badge className="bg-emerald-600 text-white px-3 py-1 text-sm font-semibold">自動処理</Badge>
+          <Link href="/admin/withdrawals">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-emerald-600 rounded-lg group-hover:bg-emerald-700 transition-colors">
+                    <Wallet className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">月末出金管理</h3>
+                    <p className="text-gray-400 text-sm">自動出金処理</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
-                <Link href="/admin/withdrawals">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 font-medium mt-6">
-                    月末出金管理画面へ
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
 
           {/* システム設定 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Settings className="w-5 h-5 mr-3 text-orange-400" />
-                システム設定
-              </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">送金アドレス、システム設定の管理</p>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">設定状況</span>
-                  <Badge className="bg-orange-600 text-white px-3 py-1 text-sm font-semibold">設定管理</Badge>
+          <Link href="/admin/settings">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-orange-600 rounded-lg group-hover:bg-orange-700 transition-colors">
+                    <Settings className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">システム設定</h3>
+                    <p className="text-gray-400 text-sm">アドレス・設定管理</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
-                <Link href="/admin/settings">
-                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 font-medium mt-6">
-                    設定画面へ
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
-        {/* 下段セクション */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* システム状況 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Database className="w-5 h-5 mr-3 text-cyan-400" />
-                システム状況
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">データベース</span>
-                  <Badge className="bg-green-600 text-white px-3 py-1 text-sm font-semibold">正常</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">認証システム</span>
-                  <Badge className="bg-green-600 text-white px-3 py-1 text-sm font-semibold">正常</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">入金確認待ち</span>
-                  <Badge className="bg-orange-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.pendingApprovals}件
-                  </Badge>
-                </div>
-                <Link href="/admin/database-check">
-                  <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 font-medium mt-4">
-                    <Database className="w-4 h-4 mr-2" />
-                    データベース確認
-                  </Button>
-                </Link>
-                <Link href="/admin/logs">
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 font-medium mt-2">
-                    <Activity className="w-4 h-4 mr-2" />
-                    システムログ
-                  </Button>
-                </Link>
-                <Link href="/admin/data-migration">
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 font-medium mt-2">
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    データ移行
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 今日の活動 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <Activity className="w-5 h-5 mr-3 text-green-400" />
-                今日の活動
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">新規登録</span>
-                  <Badge className="bg-blue-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.newRegistrations}件
-                  </Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">新規購入</span>
-                  <Badge className="bg-green-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.newPurchases}件
-                  </Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">入金確認</span>
-                  <Badge className="bg-orange-600 text-white px-3 py-1 text-sm font-semibold">
-                    {stats.pendingApprovals}件
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 分析 */}
-          <Card className="bg-gray-800 border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-4 border-b border-gray-700">
-              <CardTitle className="text-white flex items-center text-lg">
-                <BarChart3 className="w-5 h-5 mr-3 text-indigo-400" />
-                分析
-              </CardTitle>
-              <p className="text-gray-400 text-sm mt-1">システム分析とレポート</p>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">レポート</span>
-                  <Badge className="bg-indigo-600 text-white px-3 py-1 text-sm font-semibold">分析データ</Badge>
-                </div>
-                <Link href="/admin/analytics">
-                  <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 font-medium mt-6">
-                    分析画面へ
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+        {/* クイックアクション */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-white mb-4">クイックアクション</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <Link href="/admin/database-check">
+              <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white p-4 h-auto flex flex-col items-center space-y-2">
+                <Database className="w-6 h-6" />
+                <span className="text-xs">DB確認</span>
+              </Button>
+            </Link>
+            <Link href="/admin/logs">
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white p-4 h-auto flex flex-col items-center space-y-2">
+                <Activity className="w-6 h-6" />
+                <span className="text-xs">ログ</span>
+              </Button>
+            </Link>
+            <Link href="/admin/data-migration">
+              <Button className="w-full bg-green-600 hover:bg-green-700 text-white p-4 h-auto flex flex-col items-center space-y-2">
+                <RefreshCw className="w-6 h-6" />
+                <span className="text-xs">データ移行</span>
+              </Button>
+            </Link>
+            <Link href="/admin/analytics">
+              <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white p-4 h-auto flex flex-col items-center space-y-2">
+                <BarChart3 className="w-6 h-6" />
+                <span className="text-xs">分析</span>
+              </Button>
+            </Link>
+            <Button
+              onClick={fetchStats}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white p-4 h-auto flex flex-col items-center space-y-2"
+            >
+              <RefreshCw className="w-6 h-6" />
+              <span className="text-xs">更新</span>
+            </Button>
+            <Button
+              onClick={handleLogout}
+              className="w-full bg-red-600 hover:bg-red-700 text-white p-4 h-auto flex flex-col items-center space-y-2"
+            >
+              <LogOut className="w-6 h-6" />
+              <span className="text-xs">ログアウト</span>
+            </Button>
+          </div>
         </div>
+
+        {/* 今日の活動 */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center space-x-2">
+              <Activity className="w-5 h-5 text-green-400" />
+              <span>今日の活動</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-blue-900/20 rounded-lg">
+                <p className="text-2xl font-bold text-blue-400">{stats.newRegistrations}</p>
+                <p className="text-sm text-gray-400">新規登録</p>
+              </div>
+              <div className="text-center p-4 bg-green-900/20 rounded-lg">
+                <p className="text-2xl font-bold text-green-400">{stats.newPurchases}</p>
+                <p className="text-sm text-gray-400">新規購入</p>
+              </div>
+              <div className="text-center p-4 bg-orange-900/20 rounded-lg">
+                <p className="text-2xl font-bold text-orange-400">{stats.pendingApprovals}</p>
+                <p className="text-sm text-gray-400">確認待ち</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </main>
 
       {/* フッター */}
