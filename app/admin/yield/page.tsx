@@ -197,16 +197,12 @@ export default function AdminYieldPage() {
 
     try {
       if (isTestMode) {
-        // テストモード: 実際の計算をシミュレーション
-        await simulateYieldCalculation()
-      } else {
-        // 本番モード: 実際のデータベース更新
-        // 一時的にsimple_admin_post_yield関数を使用
-        const { data, error } = await supabase.rpc("simple_admin_post_yield", {
+        // テストモード: サイクル処理のシミュレーション
+        const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
           p_date: date,
           p_yield_rate: Number.parseFloat(yieldRate) / 100,
           p_margin_rate: Number.parseFloat(marginRate) / 100,
-          p_is_month_end: isMonthEnd,
+          p_is_test_mode: true,
         })
 
         if (error) throw error
@@ -215,7 +211,25 @@ export default function AdminYieldPage() {
           const result = data[0]
           setMessage({
             type: "success",
-            text: result.message || `日利設定が完了しました。${result.total_users}名のユーザーに総額$${Number.parseFloat(result.total_user_profit).toFixed(2)}の利益を配布しました。`,
+            text: `🧪 テスト実行完了: ${result.total_users}名処理予定、総額$${Number.parseFloat(result.total_user_profit).toFixed(2)}配布予定、${result.cycle_updates}回サイクル更新予定、${result.auto_nft_purchases}回自動NFT購入予定（実際のデータは変更されません）`,
+          })
+        }
+      } else {
+        // 本番モード: 新しいサイクル処理付き日利設定
+        const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
+          p_date: date,
+          p_yield_rate: Number.parseFloat(yieldRate) / 100,
+          p_margin_rate: Number.parseFloat(marginRate) / 100,
+          p_is_test_mode: false,
+        })
+
+        if (error) throw error
+
+        if (data && data.length > 0) {
+          const result = data[0]
+          setMessage({
+            type: "success",
+            text: result.message || `サイクル処理完了！${result.total_users}名のユーザーに総額$${Number.parseFloat(result.total_user_profit).toFixed(2)}の利益を配布し、${result.cycle_updates}回のサイクル更新、${result.auto_nft_purchases}回の自動NFT購入を実行しました。`,
           })
         } else {
           setMessage({
