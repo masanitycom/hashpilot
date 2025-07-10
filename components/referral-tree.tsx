@@ -24,6 +24,8 @@ interface ReferralTreeProps {
 }
 
 export function ReferralTree({ userId }: { userId: string }) {
+  console.log('ReferralTree component mounted with userId:', userId)
+  
   const [treeData, setTreeData] = useState<ReferralNode[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -378,8 +380,12 @@ export function ReferralTree({ userId }: { userId: string }) {
   }
 
   useEffect(() => {
+    console.log('ReferralTree useEffect triggered with userId:', userId)
     if (userId) {
+      console.log('Calling fetchReferralTree...')
       fetchReferralTree()
+    } else {
+      console.log('No userId provided, skipping fetch')
     }
   }, [userId])
 
