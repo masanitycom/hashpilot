@@ -1,527 +1,476 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import {
-  ArrowLeft,
-  Shield,
-  Wallet,
+import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
+import { 
+  Loader2, 
+  ArrowLeft, 
+  DollarSign, 
+  Clock, 
   CheckCircle,
-  XCircle,
-  Clock,
-  DollarSign,
-  RefreshCw,
-  ExternalLink
+  AlertCircle,
+  Search,
+  Download
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import Link from "next/link"
 
-interface WithdrawalRequest {
-  request_id: string
+interface WithdrawalRecord {
+  id: string
   user_id: string
-  amount: number
-  wallet_address: string
-  wallet_type: string
+  email: string
+  withdrawal_month: string
+  total_amount: number
+  withdrawal_address: string | null
+  withdrawal_method: string | null
   status: string
-  admin_notes: string | null
-  transaction_hash: string | null
-  available_usdt_before: number
-  available_usdt_after: number
   created_at: string
-  admin_approved_at: string | null
-  admin_approved_by: string | null
+  completed_at: string | null
+  notes: string | null
+}
+
+interface MonthlyStats {
+  total_amount: number
+  pending_count: number
+  completed_count: number
+  on_hold_count: number
 }
 
 export default function AdminWithdrawalsPage() {
-  const [requests, setRequests] = useState<WithdrawalRequest[]>([])
-  const [filteredRequests, setFilteredRequests] = useState<WithdrawalRequest[]>([])
+  const [user, setUser] = useState<any>(null)
+  const [withdrawals, setWithdrawals] = useState<WithdrawalRecord[]>([])
+  const [stats, setStats] = useState<MonthlyStats | null>(null)
+  const [selectedMonth, setSelectedMonth] = useState<string>(
+    new Date().toISOString().slice(0, 7) // YYYY-MM format
+  )
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(true)
-  const [processing, setProcessing] = useState("")
+  const [processing, setProcessing] = useState(false)
   const [error, setError] = useState("")
-  const [currentUser, setCurrentUser] = useState<any>(null)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [selectedRequest, setSelectedRequest] = useState<WithdrawalRequest | null>(null)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [action, setAction] = useState<"approve" | "reject" | null>(null)
-  const [adminNotes, setAdminNotes] = useState("")
-  const [transactionHash, setTransactionHash] = useState("")
   const router = useRouter()
 
   useEffect(() => {
-    checkAdminAccess()
+    checkAuth()
   }, [])
 
   useEffect(() => {
-    if (requests.length > 0) {
-      filterRequests()
+    if (user) {
+      fetchWithdrawals()
     }
-  }, [requests, statusFilter])
+  }, [user, selectedMonth])
 
-  const checkAdminAccess = async () => {
+  const checkAuth = async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (!user) {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      
+      if (sessionError || !session?.user) {
         router.push("/login")
         return
       }
 
-      setCurrentUser(user)
-      setIsAdmin(true) // 緊急対応で管理者チェックを無効化
-      await fetchWithdrawalRequests()
+      setUser(session.user)
     } catch (error) {
-      console.error("Admin access check error:", error)
-      setError("管理者権限の確認でエラーが発生しました")
+      console.error("Auth check error:", error)
+      router.push("/login")
     }
   }
 
-  const fetchWithdrawalRequests = async () => {
+  const fetchWithdrawals = async () => {
     try {
       setLoading(true)
-      const { data, error } = await supabase.rpc("get_withdrawal_requests_admin", {
-        p_status: null,
-        p_limit: 100
-      })
+      setError("")
 
-      if (error) throw error
-      setRequests(data || [])
-    } catch (error: any) {
-      console.error("出金申請取得エラー:", error)
-      setError("出金申請の取得に失敗しました")
+      const targetDate = `${selectedMonth}-01`
+      
+      // 月間出金記録を取得
+      const { data: withdrawalData, error: withdrawalError } = await supabase
+        .from("monthly_withdrawals")
+        .select("*")
+        .eq("withdrawal_month", targetDate)
+        .order("created_at", { ascending: false })
+
+      if (withdrawalError) {
+        throw withdrawalError
+      }
+
+      setWithdrawals(withdrawalData || [])
+
+      // 統計情報を計算
+      const stats: MonthlyStats = {
+        total_amount: withdrawalData?.reduce((sum, w) => sum + Number(w.total_amount), 0) || 0,
+        pending_count: withdrawalData?.filter(w => w.status === 'pending').length || 0,
+        completed_count: withdrawalData?.filter(w => w.status === 'completed').length || 0,
+        on_hold_count: withdrawalData?.filter(w => w.status === 'on_hold').length || 0,
+      }
+      setStats(stats)
+
+    } catch (err: any) {
+      console.error("Error fetching withdrawals:", err)
+      setError("出金データの取得に失敗しました")
     } finally {
       setLoading(false)
     }
   }
 
-  const filterRequests = () => {
-    if (statusFilter === "all") {
-      setFilteredRequests(requests)
-    } else {
-      setFilteredRequests(requests.filter(req => req.status === statusFilter))
-    }
-  }
-
-  const handleAction = (request: WithdrawalRequest, actionType: "approve" | "reject") => {
-    setSelectedRequest(request)
-    setAction(actionType)
-    setAdminNotes("")
-    setTransactionHash("")
-    setDialogOpen(true)
-  }
-
-  const processRequest = async () => {
-    if (!selectedRequest || !action) return
-
+  const processMonthlyWithdrawals = async () => {
     try {
-      setProcessing(selectedRequest.request_id)
+      setProcessing(true)
       
-      const { data, error } = await supabase.rpc("process_withdrawal_request", {
-        p_request_id: selectedRequest.request_id,
-        p_action: action,
-        p_admin_user_id: currentUser?.email || "admin",
-        p_admin_notes: adminNotes || null,
-        p_transaction_hash: action === "approve" ? transactionHash || null : null
+      const targetDate = `${selectedMonth}-01`
+      
+      const { data, error } = await supabase.rpc("process_monthly_withdrawals", {
+        p_target_month: targetDate
       })
 
-      if (error) throw error
-
-      if (data && data.length > 0) {
-        const result = data[0]
-        if (result.status === "SUCCESS") {
-          await fetchWithdrawalRequests() // 再取得
-          setDialogOpen(false)
-          setSelectedRequest(null)
-          setAction(null)
-        } else {
-          setError(result.message)
-        }
+      if (error) {
+        throw error
       }
-    } catch (error: any) {
-      setError(error.message || "処理に失敗しました")
+
+      alert(`月末出金処理が完了しました。処理件数: ${data[0].processed_count}件`)
+      fetchWithdrawals()
+    } catch (err: any) {
+      console.error("Error processing monthly withdrawals:", err)
+      alert("月末出金処理に失敗しました: " + err.message)
     } finally {
-      setProcessing("")
+      setProcessing(false)
     }
   }
 
-  const getStatusIcon = (status: string) => {
+  const markAsCompleted = async (ids: string[]) => {
+    try {
+      setProcessing(true)
+
+      const { error } = await supabase
+        .from("monthly_withdrawals")
+        .update({ 
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .in("id", ids)
+
+      if (error) {
+        throw error
+      }
+
+      alert(`${ids.length}件の出金を完了済みにしました`)
+      setSelectedIds(new Set())
+      fetchWithdrawals()
+    } catch (err: any) {
+      console.error("Error marking as completed:", err)
+      alert("ステータス更新に失敗しました: " + err.message)
+    } finally {
+      setProcessing(false)
+    }
+  }
+
+  const exportCSV = () => {
+    const headers = [
+      "ユーザーID", "メールアドレス", "報酬額", "送金方法", "送金先", 
+      "ステータス", "作成日", "完了日", "備考"
+    ]
+    
+    const csvData = filteredWithdrawals.map(w => [
+      w.user_id,
+      w.email,
+      w.total_amount,
+      w.withdrawal_method || "未設定",
+      w.withdrawal_address || "未設定",
+      w.status,
+      new Date(w.created_at).toLocaleDateString('ja-JP'),
+      w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
+      w.notes || ""
+    ])
+
+    const csvContent = [headers, ...csvData]
+      .map(row => row.map(field => `"${field}"`).join(","))
+      .join("\\n")
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+    const link = document.createElement("a")
+    link.href = URL.createObjectURL(blob)
+    link.download = `withdrawals_${selectedMonth}.csv`
+    link.click()
+  }
+
+  const filteredWithdrawals = withdrawals.filter(w => 
+    w.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    w.email.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case "pending":
-        return <Clock className="h-4 w-4 text-yellow-400" />
-      case "approved":
-        return <CheckCircle className="h-4 w-4 text-green-400" />
-      case "rejected":
-        return <XCircle className="h-4 w-4 text-red-400" />
-      case "completed":
-        return <CheckCircle className="h-4 w-4 text-blue-400" />
+      case 'pending':
+        return <Badge className="bg-yellow-600 text-white">送金待ち</Badge>
+      case 'completed':
+        return <Badge className="bg-green-600 text-white">送金完了</Badge>
+      case 'on_hold':
+        return <Badge className="bg-red-600 text-white">保留中</Badge>
       default:
-        return <Clock className="h-4 w-4 text-gray-400" />
+        return <Badge className="bg-gray-600 text-white">{status}</Badge>
     }
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-600"
-      case "approved":
-        return "bg-green-600"
-      case "rejected":
-        return "bg-red-600"
-      case "completed":
-        return "bg-blue-600"
-      default:
-        return "bg-gray-600"
-    }
-  }
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "審査中"
-      case "approved":
-        return "承認済み"
-      case "rejected":
-        return "拒否"
-      case "completed":
-        return "完了"
-      default:
-        return status
-    }
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    })
-  }
-
-  if (!isAdmin) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <Card className="w-full max-w-md bg-gray-800 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-red-400 flex items-center">
-              <Shield className="w-5 h-5 mr-2" />
-              アクセス拒否
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-white">
-            <p>管理者権限が必要です。</p>
-            <Button
-              onClick={() => router.push("/admin")}
-              className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              管理者ダッシュボードに戻る
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+        <div className="flex items-center space-x-2 text-white">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>読み込み中...</span>
+        </div>
       </div>
     )
   }
 
-  const pendingCount = requests.filter(r => r.status === "pending").length
-  const totalPendingAmount = requests
-    .filter(r => r.status === "pending")
-    .reduce((sum, r) => sum + r.amount, 0)
-
   return (
-    <div className="min-h-screen bg-gray-900">
-      <div className="max-w-7xl mx-auto p-4 space-y-6">
-        {/* ヘッダー */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button
-              onClick={() => router.push("/admin")}
-              variant="outline"
-              size="sm"
-              className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              管理者ダッシュボード
-            </Button>
-            <h1 className="text-3xl font-bold text-white flex items-center">
-              <Wallet className="w-8 h-8 mr-3 text-green-400" />
-              出金管理
-            </h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={fetchWithdrawalRequests}
-              variant="outline"
-              size="sm"
-              className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              更新
-            </Button>
-            <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
-          </div>
-        </div>
-
-        {/* 統計カード */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gradient-to-br from-yellow-900 to-yellow-800 border-yellow-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2 text-yellow-100">
-                <Clock className="h-4 w-4" />
-                審査待ち
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">{pendingCount}件</div>
-              <p className="text-xs text-yellow-200">総額: ${totalPendingAmount.toLocaleString()}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-green-900 to-green-800 border-green-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2 text-green-100">
-                <CheckCircle className="h-4 w-4" />
-                承認済み
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">
-                {requests.filter(r => r.status === "approved").length}件
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
+      {/* ヘッダー */}
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link href="/admin">
+                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  管理画面
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold text-white">月末出金管理</h1>
+                <p className="text-sm text-gray-400">月末自動出金の処理と管理</p>
               </div>
-              <p className="text-xs text-green-200">手動送金待ち</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-blue-900 to-blue-800 border-blue-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2 text-blue-100">
-                <DollarSign className="h-4 w-4" />
-                総申請数
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">{requests.length}件</div>
-              <p className="text-xs text-blue-200">全期間</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* フィルター */}
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-white">出金申請一覧</CardTitle>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">全て</SelectItem>
-                  <SelectItem value="pending">審査中</SelectItem>
-                  <SelectItem value="approved">承認済み</SelectItem>
-                  <SelectItem value="rejected">拒否</SelectItem>
-                  <SelectItem value="completed">完了</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* 統計セクション */}
+        {stats && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <Card className="bg-blue-900/20 border-blue-700/50">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-3">
+                  <DollarSign className="h-8 w-8 text-blue-400" />
+                  <div>
+                    <p className="text-sm text-blue-300">総出金額</p>
+                    <p className="text-2xl font-bold text-blue-400">
+                      ${stats.total_amount.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-yellow-900/20 border-yellow-700/50">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-3">
+                  <Clock className="h-8 w-8 text-yellow-400" />
+                  <div>
+                    <p className="text-sm text-yellow-300">送金待ち</p>
+                    <p className="text-2xl font-bold text-yellow-400">{stats.pending_count}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-green-900/20 border-green-700/50">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-8 w-8 text-green-400" />
+                  <div>
+                    <p className="text-sm text-green-300">送金完了</p>
+                    <p className="text-2xl font-bold text-green-400">{stats.completed_count}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-red-900/20 border-red-700/50">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-3">
+                  <AlertCircle className="h-8 w-8 text-red-400" />
+                  <div>
+                    <p className="text-sm text-red-300">保留中</p>
+                    <p className="text-2xl font-bold text-red-400">{stats.on_hold_count}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* 操作パネル */}
+        <Card className="bg-gray-800 border-gray-700 mb-6">
+          <CardHeader>
+            <CardTitle className="text-white">操作パネル</CardTitle>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <div className="text-center py-8">
-                <div className="text-white">読み込み中...</div>
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center space-x-2">
+                <label className="text-sm text-gray-300">対象月:</label>
+                <Input
+                  type="month"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="bg-gray-700 border-gray-600 text-white"
+                />
               </div>
-            ) : filteredRequests.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-400">
-                  {statusFilter === "all" ? "出金申請がありません" : `${getStatusText(statusFilter)}の申請がありません`}
-                </p>
+              
+              <Button
+                onClick={processMonthlyWithdrawals}
+                disabled={processing}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {processing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                月末出金処理実行
+              </Button>
+
+              <Button
+                onClick={() => markAsCompleted(Array.from(selectedIds))}
+                disabled={selectedIds.size === 0 || processing}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                選択した項目を完了済みに
+              </Button>
+
+              <Button
+                onClick={exportCSV}
+                variant="outline"
+                className="border-gray-600 text-gray-300"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                CSV出力
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 検索・フィルター */}
+        <Card className="bg-gray-800 border-gray-700 mb-6">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+                  <Input
+                    placeholder="ユーザーID・メールアドレスで検索..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-gray-700 border-gray-600 text-white"
+                  />
+                </div>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredRequests.map((request) => (
-                  <div
-                    key={request.request_id}
-                    className="bg-gray-700/50 border border-gray-600 rounded-lg p-4 space-y-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        {getStatusIcon(request.status)}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 出金一覧 */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white">出金一覧 ({filteredWithdrawals.length}件)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-700">
+                    <th className="text-left py-3 px-2">
+                      <Checkbox
+                        checked={selectedIds.size === filteredWithdrawals.length && filteredWithdrawals.length > 0}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedIds(new Set(filteredWithdrawals.map(w => w.id)))
+                          } else {
+                            setSelectedIds(new Set())
+                          }
+                        }}
+                      />
+                    </th>
+                    <th className="text-left py-3 px-2 text-gray-300">ユーザー</th>
+                    <th className="text-left py-3 px-2 text-gray-300">報酬額</th>
+                    <th className="text-left py-3 px-2 text-gray-300">送金先</th>
+                    <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
+                    <th className="text-left py-3 px-2 text-gray-300">作成日</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredWithdrawals.map((withdrawal) => (
+                    <tr key={withdrawal.id} className="border-b border-gray-700/50 hover:bg-gray-700/20">
+                      <td className="py-3 px-2">
+                        <Checkbox
+                          checked={selectedIds.has(withdrawal.id)}
+                          onCheckedChange={(checked) => {
+                            const newSet = new Set(selectedIds)
+                            if (checked) {
+                              newSet.add(withdrawal.id)
+                            } else {
+                              newSet.delete(withdrawal.id)
+                            }
+                            setSelectedIds(newSet)
+                          }}
+                        />
+                      </td>
+                      <td className="py-3 px-2">
                         <div>
-                          <span className="text-white font-medium">
-                            ${request.amount.toLocaleString()}
-                          </span>
-                          <div className="text-sm text-gray-400">
-                            {request.user_id}
-                          </div>
+                          <div className="font-medium text-white">{withdrawal.user_id}</div>
+                          <div className="text-xs text-gray-400">{withdrawal.email}</div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge className={getStatusColor(request.status)}>
-                          {getStatusText(request.status)}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-                      <div>
-                        <span className="text-gray-400">ウォレット: </span>
-                        <span className="text-white">{request.wallet_type}</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">申請日: </span>
-                        <span className="text-white">{formatDate(request.created_at)}</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-400">残高変化: </span>
-                        <span className="text-white">
-                          ${request.available_usdt_before.toFixed(2)} → ${request.available_usdt_after.toFixed(2)}
+                      </td>
+                      <td className="py-3 px-2">
+                        <span className="font-bold text-green-400">
+                          ${withdrawal.total_amount.toFixed(2)}
                         </span>
-                      </div>
-                    </div>
-
-                    <div className="text-xs">
-                      <span className="text-gray-400">アドレス: </span>
-                      <span className="text-gray-300 font-mono break-all">
-                        {request.wallet_address}
-                      </span>
-                    </div>
-
-                    {request.transaction_hash && (
-                      <div className="text-xs">
-                        <span className="text-gray-400">トランザクション: </span>
-                        <span className="text-blue-400 font-mono break-all">
-                          {request.transaction_hash}
-                        </span>
-                      </div>
-                    )}
-
-                    {request.admin_notes && (
-                      <div className="text-xs">
-                        <span className="text-gray-400">管理者備考: </span>
-                        <span className="text-gray-300">{request.admin_notes}</span>
-                      </div>
-                    )}
-
-                    {request.status === "pending" && (
-                      <div className="flex gap-2 pt-2">
-                        <Button
-                          onClick={() => handleAction(request, "approve")}
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700"
-                          disabled={processing === request.request_id}
-                        >
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          承認
-                        </Button>
-                        <Button
-                          onClick={() => handleAction(request, "reject")}
-                          size="sm"
-                          variant="destructive"
-                          disabled={processing === request.request_id}
-                        >
-                          <XCircle className="h-3 w-3 mr-1" />
-                          拒否
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                      </td>
+                      <td className="py-3 px-2">
+                        <div className="text-white">
+                          {withdrawal.withdrawal_method === 'coinw' ? (
+                            <div>
+                              <span className="text-xs text-blue-400">CoinW:</span>
+                              <div>{withdrawal.withdrawal_address}</div>
+                            </div>
+                          ) : withdrawal.withdrawal_method === 'bep20' ? (
+                            <div>
+                              <span className="text-xs text-green-400">BEP20:</span>
+                              <div className="truncate max-w-32">{withdrawal.withdrawal_address}</div>
+                            </div>
+                          ) : (
+                            <span className="text-red-400">未設定</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-3 px-2">
+                        {getStatusBadge(withdrawal.status)}
+                      </td>
+                      <td className="py-3 px-2 text-gray-300">
+                        {new Date(withdrawal.created_at).toLocaleDateString('ja-JP')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              
+              {filteredWithdrawals.length === 0 && (
+                <div className="text-center py-8 text-gray-400">
+                  出金記録がありません
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
 
         {error && (
-          <Alert className="border-red-500 bg-red-900/20">
-            <AlertDescription className="text-red-300">{error}</AlertDescription>
-          </Alert>
+          <div className="mt-4 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
+            <p className="text-red-200">{error}</p>
+          </div>
         )}
       </div>
-
-      {/* 処理確認ダイアログ */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="bg-gray-800 border-gray-700 text-white">
-          <DialogHeader>
-            <DialogTitle>
-              {action === "approve" ? "出金申請を承認" : "出金申請を拒否"}
-            </DialogTitle>
-            <DialogDescription className="text-gray-300">
-              {selectedRequest && (
-                <>
-                  ユーザー: {selectedRequest.user_id}<br />
-                  金額: ${selectedRequest.amount.toLocaleString()}<br />
-                  アドレス: {selectedRequest.wallet_address}
-                </>
-              )}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {action === "approve" && (
-              <div className="space-y-2">
-                <Label htmlFor="transactionHash" className="text-white">
-                  トランザクションハッシュ（オプション）
-                </Label>
-                <Input
-                  id="transactionHash"
-                  value={transactionHash}
-                  onChange={(e) => setTransactionHash(e.target.value)}
-                  placeholder="送金完了後に入力"
-                  className="bg-gray-700 border-gray-600 text-white"
-                />
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="adminNotes" className="text-white">
-                管理者備考
-              </Label>
-              <Textarea
-                id="adminNotes"
-                value={adminNotes}
-                onChange={(e) => setAdminNotes(e.target.value)}
-                placeholder={action === "approve" ? "承認理由（オプション）" : "拒否理由を入力"}
-                className="bg-gray-700 border-gray-600 text-white"
-                rows={3}
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDialogOpen(false)}
-              className="border-gray-600 text-gray-300"
-            >
-              キャンセル
-            </Button>
-            <Button
-              onClick={processRequest}
-              className={action === "approve" ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}
-              disabled={processing !== ""}
-            >
-              {processing !== "" ? "処理中..." : action === "approve" ? "承認" : "拒否"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

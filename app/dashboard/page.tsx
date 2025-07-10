@@ -14,6 +14,7 @@ import { LatestProfitCard } from "@/components/latest-profit-card"
 import { MonthlyProfitCard } from "@/components/monthly-profit-card"
 import { CycleStatusCard } from "@/components/cycle-status-card"
 import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
+import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
 import Link from "next/link"
 
 interface UserData {
@@ -383,7 +384,7 @@ export default function DashboardPage() {
         {/* 統計カードと日利グラフ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* 統計カード */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {/* 個人投資額 */}
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader className="pb-3">
@@ -405,6 +406,9 @@ export default function DashboardPage() {
             
             {/* 今月の累積利益 */}
             <MonthlyProfitCard userId={userData?.user_id || ""} />
+
+            {/* 保留中出金額 */}
+            <PendingWithdrawalCard userId={userData?.user_id || ""} />
 
             {/* 直接紹介者数 */}
             <Card className="bg-gray-800 border-gray-700">
