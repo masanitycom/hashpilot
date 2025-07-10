@@ -200,4 +200,3 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   )
 }
 
-export { PendingWithdrawalCard }

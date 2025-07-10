@@ -191,4 +191,3 @@ export function MonthlyWithdrawalAlert({ userId, hasWithdrawalAddress }: Monthly
   )
 }
 
-export { MonthlyWithdrawalAlert }
