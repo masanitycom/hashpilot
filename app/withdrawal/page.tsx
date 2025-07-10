@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, ArrowLeft, Wallet, DollarSign, TrendingUp } from "lucide-react"
+import { Loader2, ArrowLeft, Calendar, Clock, CheckCircle, AlertTriangle, Info } from "lucide-react"
 import { supabase } from "@/lib/supabase"
-import { WithdrawalRequest } from "@/components/withdrawal-request"
+import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
+import { MonthlyWithdrawalAlert } from "@/components/monthly-withdrawal-alert"
 import Link from "next/link"
 
 interface UserData {
@@ -15,19 +16,13 @@ interface UserData {
   user_id: string
   email: string
   full_name: string | null
-}
-
-interface CycleData {
-  phase: string
-  cum_usdt: number
-  available_usdt: number
-  total_nft_count: number
+  reward_address_bep20: string | null
+  coinw_uid: string | null
 }
 
 export default function WithdrawalPage() {
   const [user, setUser] = useState<any>(null)
   const [userData, setUserData] = useState<UserData | null>(null)
-  const [cycleData, setCycleData] = useState<CycleData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [authChecked, setAuthChecked] = useState(false)
@@ -101,28 +96,6 @@ export default function WithdrawalPage() {
 
       const userRecord = userRecords[0]
       setUserData(userRecord)
-
-      // サイクルデータ取得
-      const { data: cycleRecord, error: cycleError } = await supabase
-        .from("affiliate_cycle")
-        .select("*")
-        .eq("user_id", userRecord.user_id)
-        .single()
-
-      if (cycleError) {
-        if (cycleError.code !== "PGRST116") {
-          console.error("Cycle data error:", cycleError)
-        }
-        // サイクルデータがない場合はデフォルト値
-        setCycleData({
-          phase: "USDT",
-          cum_usdt: 0,
-          available_usdt: 0,
-          total_nft_count: 0
-        })
-      } else {
-        setCycleData(cycleRecord)
-      }
     } catch (error) {
       console.error("Fetch user data error:", error)
       setError("データの取得中にエラーが発生しました")
@@ -185,8 +158,8 @@ export default function WithdrawalPage() {
                 </Button>
               </Link>
               <div>
-                <h1 className="text-xl font-bold text-white">出金申請</h1>
-                <p className="text-sm text-gray-400">利益の出金申請を行えます</p>
+                <h1 className="text-xl font-bold text-white">月末自動出金</h1>
+                <p className="text-sm text-gray-400">月末自動出金システムの概要と状況</p>
               </div>
             </div>
 
@@ -200,78 +173,106 @@ export default function WithdrawalPage() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* 概要セクション */}
-        <div className="mb-8 bg-gradient-to-r from-green-900/20 to-blue-900/20 border border-green-700/50 rounded-lg p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* 利用可能残高 */}
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Wallet className="h-6 w-6 text-green-400 mr-2" />
-                <span className="text-green-400 font-medium">利用可能残高</span>
+        {/* 月末出金システム概要 */}
+        <Card className="mb-8 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/50">
+          <CardHeader>
+            <CardTitle className="text-white text-2xl flex items-center space-x-3">
+              <Calendar className="h-6 w-6 text-blue-400" />
+              <span>月末自動出金システム</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-4 bg-blue-900/20 rounded-lg">
+                <Clock className="h-8 w-8 text-blue-400 mx-auto mb-2" />
+                <p className="text-blue-300 font-medium">自動処理</p>
+                <p className="text-sm text-gray-300">毎月月末に自動実行</p>
               </div>
-              <div className="text-3xl font-bold text-green-400">
-                ${cycleData?.available_usdt.toFixed(2) || "0.00"}
+              <div className="text-center p-4 bg-green-900/20 rounded-lg">
+                <CheckCircle className="h-8 w-8 text-green-400 mx-auto mb-2" />
+                <p className="text-green-300 font-medium">手数料なし</p>
+                <p className="text-sm text-gray-300">管理者が手数料負担</p>
               </div>
-              <p className="text-xs text-gray-400 mt-1">即時出金可能</p>
+              <div className="text-center p-4 bg-purple-900/20 rounded-lg">
+                <AlertTriangle className="h-8 w-8 text-purple-400 mx-auto mb-2" />
+                <p className="text-purple-300 font-medium">最小額$10</p>
+                <p className="text-sm text-gray-300">$10以上で自動出金</p>
+              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* 累積残高 */}
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <TrendingUp className="h-6 w-6 text-blue-400 mr-2" />
-                <span className="text-blue-400 font-medium">累積残高</span>
-              </div>
-              <div className="text-3xl font-bold text-blue-400">
-                ${cycleData?.cum_usdt.toFixed(2) || "0.00"}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">サイクル進行中</p>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* 出金状況 */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white">あなたの出金状況</h2>
+            <PendingWithdrawalCard userId={userData?.user_id || ""} />
+          </div>
 
-            {/* 保有NFT */}
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <DollarSign className="h-6 w-6 text-purple-400 mr-2" />
-                <span className="text-purple-400 font-medium">保有NFT</span>
-              </div>
-              <div className="text-3xl font-bold text-purple-400">
-                {cycleData?.total_nft_count || 0}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">収益生成中</p>
-            </div>
+          {/* 設定とアラート */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-white">設定とお知らせ</h2>
+            <MonthlyWithdrawalAlert 
+              userId={userData?.user_id || ""} 
+              hasWithdrawalAddress={!!(userData?.reward_address_bep20 || userData?.coinw_uid)}
+            />
+            <Card className="bg-gray-800 border-gray-700">
+              <CardContent className="p-4">
+                <Link href="/profile">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    プロフィールで送金先を設定
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
-        {/* 出金申請コンポーネント */}
-        <WithdrawalRequest
-          userId={userData?.user_id || ""}
-          availableUsdt={cycleData?.available_usdt || 0}
-        />
-
-        {/* 注意事項 */}
+        {/* システム詳細 */}
         <Card className="mt-8 bg-gray-800 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white text-lg">出金に関する注意事項</CardTitle>
+            <CardTitle className="text-white text-lg flex items-center space-x-2">
+              <Info className="h-5 w-5 text-blue-400" />
+              <span>月末自動出金システムについて</span>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-gray-300">
-            <div className="flex items-start space-x-2">
-              <span className="text-yellow-400 font-bold">•</span>
-              <span>最小出金額は$100です。</span>
-            </div>
-            <div className="flex items-start space-x-2">
-              <span className="text-yellow-400 font-bold">•</span>
-              <span>出金申請は管理者による審査が必要です（通常1-3営業日）。</span>
-            </div>
-            <div className="flex items-start space-x-2">
-              <span className="text-yellow-400 font-bold">•</span>
-              <span>ウォレットアドレスは正確に入力してください。間違ったアドレスへの送金は復元できません。</span>
-            </div>
-            <div className="flex items-start space-x-2">
-              <span className="text-yellow-400 font-bold">•</span>
-              <span>HOLDフェーズ中の累積残高は2200 USDT到達まで出金できません。</span>
-            </div>
-            <div className="flex items-start space-x-2">
-              <span className="text-yellow-400 font-bold">•</span>
-              <span>ネットワーク手数料は受取額から差し引かれる場合があります。</span>
+          <CardContent className="space-y-4 text-sm text-gray-300">
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <span className="text-blue-400 font-bold">1.</span>
+                <div>
+                  <p className="font-medium text-white">処理タイミング</p>
+                  <p>毎月月末の日利設定完了後、翌1日にリセットと同時に出金処理を実行します。</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="text-blue-400 font-bold">2.</span>
+                <div>
+                  <p className="font-medium text-white">送金方法</p>
+                  <p>プロフィールで設定された報酬受取アドレス（USDT BEP20）またはCoinW UIDに送金されます。</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="text-blue-400 font-bold">3.</span>
+                <div>
+                  <p className="font-medium text-white">最小出金額</p>
+                  <p>$10以上の報酬がある場合に自動出金されます。$10未満の場合は翌月に繰り越されます。</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="text-blue-400 font-bold">4.</span>
+                <div>
+                  <p className="font-medium text-white">送金先未設定の場合</p>
+                  <p>送金先が設定されていない場合、出金は保留状態となり、設定完了後に送金されます。</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="text-blue-400 font-bold">5.</span>
+                <div>
+                  <p className="font-medium text-white">確認メール</p>
+                  <p>出金処理が完了すると、登録メールアドレスに確認メールが送信されます。</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
