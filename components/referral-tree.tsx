@@ -55,7 +55,7 @@ export function ReferralTree({ userId }: { userId: string }) {
 
       if (level1 && level1.length > 0) {
         for (const user1 of level1) {
-          console.log('Level1 user:', user1.user_id, 'total_purchases:', user1.total_purchases, 'converted:', Number(user1.total_purchases))
+          console.log('Level1 user:', user1.user_id, 'total_purchases:', user1.total_purchases, 'type:', typeof user1.total_purchases, 'converted:', Number(user1.total_purchases))
           
           const node1: ReferralNode = {
             user_id: user1.user_id,
@@ -78,6 +78,8 @@ export function ReferralTree({ userId }: { userId: string }) {
 
           if (!level2Error && level2 && level2.length > 0) {
             for (const user2 of level2) {
+              console.log('Level2 user:', user2.user_id, 'total_purchases:', user2.total_purchases, 'type:', typeof user2.total_purchases, 'converted:', Number(user2.total_purchases))
+              
               const node2: ReferralNode = {
                 user_id: user2.user_id,
                 email: user2.email,
@@ -99,6 +101,8 @@ export function ReferralTree({ userId }: { userId: string }) {
 
               if (!level3Error && level3 && level3.length > 0) {
                 for (const user3 of level3) {
+                  console.log('Level3 user:', user3.user_id, 'total_purchases:', user3.total_purchases, 'type:', typeof user3.total_purchases, 'converted:', Number(user3.total_purchases))
+                  
                   const node3: ReferralNode = {
                     user_id: user3.user_id,
                     email: user3.email,
