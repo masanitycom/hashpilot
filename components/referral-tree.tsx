@@ -44,7 +44,7 @@ export function ReferralTree({ userId }: { userId: string }) {
       // Fallback: Get direct referrals manually (キャッシュ無効化)
       const { data: level1, error: level1Error } = await supabase
         .from("users")
-        .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
+        .select("user_id, email, full_name, coinw_uid, total_purchases::numeric as total_purchases, referrer_user_id")
         .eq("referrer_user_id", userId)
 
       if (level1Error) {
@@ -73,7 +73,7 @@ export function ReferralTree({ userId }: { userId: string }) {
           // Get level 2
           const { data: level2, error: level2Error } = await supabase
             .from("users")
-            .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
+            .select("user_id, email, full_name, coinw_uid, total_purchases::numeric as total_purchases, referrer_user_id")
             .eq("referrer_user_id", user1.user_id)
 
           if (!level2Error && level2 && level2.length > 0) {
@@ -96,7 +96,7 @@ export function ReferralTree({ userId }: { userId: string }) {
               // Get level 3
               const { data: level3, error: level3Error } = await supabase
                 .from("users")
-                .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
+                .select("user_id, email, full_name, coinw_uid, total_purchases::numeric as total_purchases, referrer_user_id")
                 .eq("referrer_user_id", user2.user_id)
 
               if (!level3Error && level3 && level3.length > 0) {
@@ -178,15 +178,15 @@ export function ReferralTree({ userId }: { userId: string }) {
       // Only include Level 1-3 nodes
       if (levelNum > 3) return
 
-      const investment = Number(dbNode.personal_investment) || 0
+      const investment = Number(dbNode.personal_investment) || Number(dbNode.total_purchases) || 0
       const node: ReferralNode = {
         user_id: dbNode.user_id || '',
         email: dbNode.email || '',
         full_name: dbNode.full_name || '',
         coinw_uid: dbNode.coinw_uid || '',
         level_num: levelNum,
-        total_investment: Math.floor(investment / 1000) * 1000,
-        nft_count: Math.floor(investment / 1000),
+        total_investment: investment,
+        nft_count: Math.floor(investment / 1100),
         path: dbNode.path || dbNode.user_id || '',
         parent_user_id: dbNode.referrer_id || null,
         children: []
