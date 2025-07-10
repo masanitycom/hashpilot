@@ -63,10 +63,14 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
 
       // 今月の累積利益を計算
       const totalProfit = profitData?.reduce((sum, record) => {
-        return sum + (parseFloat(record.daily_profit) || 0)
+        const dailyValue = parseFloat(record.daily_profit) || 0
+        console.log(`Daily profit for ${record.date || 'unknown'}: ${record.daily_profit} -> parsed: ${dailyValue}`)
+        return sum + dailyValue
       }, 0) || 0
 
-      console.log('Total monthly profit:', totalProfit)
+      console.log('Profit data array:', profitData)
+      console.log('Total monthly profit calculated:', totalProfit)
+      console.log('Profit data length:', profitData?.length)
       setProfit(totalProfit)
     } catch (err: any) {
       console.error("今月の利益取得エラー:", err)
