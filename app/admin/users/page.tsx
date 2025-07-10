@@ -63,7 +63,8 @@ export default function AdminUsersPage() {
 
       // 管理者権限チェック（他の管理ページと統一）
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
-        p_email: user.email,
+        user_email: user.email,
+        user_uuid: null,
       })
 
       if (adminError || !adminCheck) {
