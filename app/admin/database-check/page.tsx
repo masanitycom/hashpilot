@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Database, RefreshCw, AlertTriangle, CheckCircle, Info } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { ArrowLeft, Database, RefreshCw, AlertTriangle, CheckCircle, Info, Search, User, DollarSign } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
 interface DatabaseStats {
@@ -47,11 +48,24 @@ interface DatabaseStats {
   }>
 }
 
+interface UserInvestigation {
+  basic_info?: any
+  purchases?: any[]
+  daily_profits?: any[]
+  affiliate_cycle?: any
+  monthly_withdrawals?: any[]
+  referrals?: any[]
+}
+
 export default function DatabaseCheckPage() {
   const [stats, setStats] = useState<DatabaseStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
+  const [searchUserId, setSearchUserId] = useState("2BF53B")
+  const [investigation, setInvestigation] = useState<UserInvestigation>({})
+  const [investigationLoading, setInvestigationLoading] = useState(false)
+  const [investigationError, setInvestigationError] = useState("")
   const router = useRouter()
 
   useEffect(() => {
@@ -232,6 +246,98 @@ export default function DatabaseCheckPage() {
     }
   }
 
+  const investigateUser = async () => {
+    if (!searchUserId.trim()) return
+
+    try {
+      setInvestigationLoading(true)
+      setInvestigationError("")
+      setInvestigation({})
+
+      const userId = searchUserId.trim()
+
+      // 1. 基本情報
+      const { data: basicInfo, error: basicError } = await supabase
+        .from("users")
+        .select("*")
+        .or(`user_id.eq.${userId},email.ilike.%${userId}%`)
+        .single()
+
+      if (basicError && basicError.code !== "PGRST116") {
+        throw basicError
+      }
+
+      const actualUserId = basicInfo?.user_id || userId
+
+      // 2. 購入履歴
+      const { data: purchases, error: purchasesError } = await supabase
+        .from("purchases")
+        .select("*")
+        .eq("user_id", actualUserId)
+        .order("created_at", { ascending: false })
+
+      // 3. 日利履歴（全件）
+      const { data: dailyProfits, error: dailyError } = await supabase
+        .from("user_daily_profit")
+        .select("*")
+        .eq("user_id", actualUserId)
+        .order("date", { ascending: false })
+
+      // 4. アフィリエイトサイクル
+      const { data: affiliateCycle, error: cycleError } = await supabase
+        .from("affiliate_cycle")
+        .select("*")
+        .eq("user_id", actualUserId)
+        .single()
+
+      // 5. 月末出金記録
+      const { data: monthlyWithdrawals, error: withdrawalError } = await supabase
+        .from("monthly_withdrawals")
+        .select("*")
+        .eq("user_id", actualUserId)
+        .order("withdrawal_month", { ascending: false })
+
+      // 6. 紹介関係
+      const { data: referrals, error: referralError } = await supabase
+        .from("users")
+        .select("user_id, email, total_purchases, created_at")
+        .eq("referrer_user_id", actualUserId)
+        .order("created_at", { ascending: false })
+
+      setInvestigation({
+        basic_info: basicInfo,
+        purchases: purchases || [],
+        daily_profits: dailyProfits || [],
+        affiliate_cycle: affiliateCycle,
+        monthly_withdrawals: monthlyWithdrawals || [],
+        referrals: referrals || []
+      })
+
+    } catch (err: any) {
+      console.error("Investigation error:", err)
+      setInvestigationError(`調査中にエラーが発生しました: ${err.message}`)
+    } finally {
+      setInvestigationLoading(false)
+    }
+  }
+
+  const calculateUserTotals = () => {
+    if (!investigation.basic_info) return { grandTotal: 0 }
+
+    const totalPurchases = investigation.basic_info?.total_purchases || 0
+    const totalDailyProfit = investigation.daily_profits?.reduce((sum, p) => sum + parseFloat(p.daily_profit || 0), 0) || 0
+    const availableUsdt = investigation.affiliate_cycle?.available_usdt || 0
+    const cumUsdt = investigation.affiliate_cycle?.cum_usdt || 0
+
+    return {
+      totalPurchases,
+      totalDailyProfit,
+      availableUsdt,
+      cumUsdt,
+      grandTotal: totalPurchases + totalDailyProfit + availableUsdt
+    }
+  }
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -293,6 +399,119 @@ export default function DatabaseCheckPage() {
           </Card>
         ) : stats ? (
           <div className="space-y-6">
+            {/* ユーザー調査セクション */}
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <User className="w-5 h-5 mr-2 text-blue-400" />
+                  ユーザー詳細調査
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder="ユーザーID またはメールアドレス"
+                      value={searchUserId}
+                      onChange={(e) => setSearchUserId(e.target.value)}
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <Button
+                    onClick={investigateUser}
+                    disabled={investigationLoading}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {investigationLoading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
+                    調査開始
+                  </Button>
+                </div>
+
+                {investigationError && (
+                  <Card className="bg-red-900/20 border-red-500/50 mb-4">
+                    <CardContent className="p-3">
+                      <p className="text-red-200 text-sm">{investigationError}</p>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {investigation.basic_info && (
+                  <div className="space-y-4">
+                    {/* 基本情報 */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div>
+                        <p className="text-gray-400 text-sm">ユーザーID</p>
+                        <p className="text-white font-mono">{investigation.basic_info.user_id}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">メール</p>
+                        <p className="text-white text-sm">{investigation.basic_info.email}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">NFT購入額</p>
+                        <p className="text-white font-bold">${investigation.basic_info.total_purchases?.toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">登録日</p>
+                        <p className="text-white text-sm">{new Date(investigation.basic_info.created_at).toLocaleDateString('ja-JP')}</p>
+                      </div>
+                    </div>
+
+                    {/* 金額サマリー */}
+                    <div className="mt-4 p-4 bg-blue-900/20 border border-blue-700/50 rounded-lg">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="text-center">
+                          <p className="text-gray-400 text-sm">NFT購入額</p>
+                          <p className="text-xl font-bold text-white">${calculateUserTotals().totalPurchases.toFixed(2)}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-gray-400 text-sm">日利合計</p>
+                          <p className="text-xl font-bold text-green-400">${calculateUserTotals().totalDailyProfit.toFixed(2)}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-gray-400 text-sm">累積USDT</p>
+                          <p className="text-xl font-bold text-blue-400">${calculateUserTotals().cumUsdt.toFixed(2)}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-gray-400 text-sm">利用可能額</p>
+                          <p className="text-xl font-bold text-purple-400">${calculateUserTotals().availableUsdt.toFixed(2)}</p>
+                        </div>
+                      </div>
+                      <div className="mt-4 pt-4 border-t border-blue-600/30">
+                        <div className="flex justify-between items-center">
+                          <span className="text-yellow-200 font-medium">推定総資産額:</span>
+                          <span className="text-2xl font-bold text-yellow-400">${calculateUserTotals().grandTotal.toFixed(2)}</span>
+                        </div>
+                        <p className="text-yellow-300 text-sm mt-2">
+                          詳細: 購入${calculateUserTotals().totalPurchases.toFixed(2)} + 日利${calculateUserTotals().totalDailyProfit.toFixed(2)} + 利用可能${calculateUserTotals().availableUsdt.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* データ詳細 */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div>
+                        <p className="text-gray-400">購入履歴</p>
+                        <p className="text-white">{investigation.purchases?.length || 0}件</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400">日利記録</p>
+                        <p className="text-white">{investigation.daily_profits?.length || 0}日</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400">出金記録</p>
+                        <p className="text-white">{investigation.monthly_withdrawals?.length || 0}件</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400">紹介者</p>
+                        <p className="text-white">{investigation.referrals?.length || 0}人</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* 昨日のデータ状況 */}
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
