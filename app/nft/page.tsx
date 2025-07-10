@@ -99,7 +99,7 @@ export default function NFTPage() {
       const { data: purchase, error: purchaseError } = await supabase
         .from("purchases")
         .insert({
-          user_id: userData.id,
+          user_id: userData.user_id,
           amount_usd: NFT_PRICE, // $1000 investment amount
           admin_approved: false,
         })
@@ -113,7 +113,7 @@ export default function NFTPage() {
       setSuccess("NFT購入リクエストが送信されました。管理者の承認をお待ちください。")
 
       // ユーザーデータを再取得
-      await fetchUserData(userData.id)
+      await fetchUserData(user.id)
     } catch (error: any) {
       console.error("Purchase error:", error)
       setError(`購入に失敗しました: ${error.message}`)
