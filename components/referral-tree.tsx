@@ -77,7 +77,9 @@ export function ReferralTree({ userId }: { userId: string }) {
       if (level1 && level1.length > 0) {
         for (const user1 of level1) {
           const totalPurchases = parseFloat(user1.total_purchases) || 0
-          console.log('Level1 user:', user1.user_id, 'raw total_purchases:', user1.total_purchases, 'type:', typeof user1.total_purchases, 'parsed:', totalPurchases)
+          const nftCount1 = Math.floor(totalPurchases / 1100)
+          const operationalAmount1 = nftCount1 * 1000
+          console.log('Level1 user:', user1.user_id, 'purchase:', totalPurchases, 'nftCount:', nftCount1, 'operational:', operationalAmount1)
           
           const node1: ReferralNode = {
             user_id: user1.user_id,
@@ -85,8 +87,8 @@ export function ReferralTree({ userId }: { userId: string }) {
             full_name: user1.full_name,
             coinw_uid: user1.coinw_uid,
             level_num: 1,
-            total_investment: totalPurchases,
-            nft_count: Math.floor(totalPurchases / 1100),
+            total_investment: operationalAmount1,
+            nft_count: nftCount1,
             path: user1.user_id,
             parent_user_id: user1.referrer_user_id,
             children: [],
@@ -101,7 +103,9 @@ export function ReferralTree({ userId }: { userId: string }) {
           if (!level2Error && level2 && level2.length > 0) {
             for (const user2 of level2) {
               const totalPurchases2 = parseFloat(user2.total_purchases) || 0
-              console.log('Level2 user:', user2.user_id, 'raw total_purchases:', user2.total_purchases, 'type:', typeof user2.total_purchases, 'parsed:', totalPurchases2)
+              const nftCount2 = Math.floor(totalPurchases2 / 1100)
+              const operationalAmount2 = nftCount2 * 1000
+              console.log('Level2 user:', user2.user_id, 'purchase:', totalPurchases2, 'nftCount:', nftCount2, 'operational:', operationalAmount2)
               
               const node2: ReferralNode = {
                 user_id: user2.user_id,
@@ -109,8 +113,8 @@ export function ReferralTree({ userId }: { userId: string }) {
                 full_name: user2.full_name,
                 coinw_uid: user2.coinw_uid,
                 level_num: 2,
-                total_investment: totalPurchases2,
-                nft_count: Math.floor(totalPurchases2 / 1100),
+                total_investment: operationalAmount2,
+                nft_count: nftCount2,
                 path: `${user1.user_id}->${user2.user_id}`,
                 parent_user_id: user2.referrer_user_id,
                 children: [],
@@ -125,7 +129,9 @@ export function ReferralTree({ userId }: { userId: string }) {
               if (!level3Error && level3 && level3.length > 0) {
                 for (const user3 of level3) {
                   const totalPurchases3 = parseFloat(user3.total_purchases) || 0
-                  console.log('Level3 user:', user3.user_id, 'raw total_purchases:', user3.total_purchases, 'type:', typeof user3.total_purchases, 'parsed:', totalPurchases3)
+                  const nftCount3 = Math.floor(totalPurchases3 / 1100)
+                  const operationalAmount3 = nftCount3 * 1000
+                  console.log('Level3 user:', user3.user_id, 'purchase:', totalPurchases3, 'nftCount:', nftCount3, 'operational:', operationalAmount3)
                   
                   const node3: ReferralNode = {
                     user_id: user3.user_id,
@@ -133,8 +139,8 @@ export function ReferralTree({ userId }: { userId: string }) {
                     full_name: user3.full_name,
                     coinw_uid: user3.coinw_uid,
                     level_num: 3,
-                    total_investment: totalPurchases3,
-                    nft_count: Math.floor(totalPurchases3 / 1100),
+                    total_investment: operationalAmount3,
+                    nft_count: nftCount3,
                     path: `${user1.user_id}->${user2.user_id}->${user3.user_id}`,
                     parent_user_id: user3.referrer_user_id,
                   }
@@ -209,8 +215,10 @@ export function ReferralTree({ userId }: { userId: string }) {
       // Only include Level 1-3 nodes
       if (levelNum > 3) return
 
-      const investment = Number(dbNode.personal_purchases) || Number(dbNode.personal_investment) || Number(dbNode.total_purchases) || 0
-      console.log('Building node for:', dbNode.user_id, 'personal_purchases:', dbNode.personal_purchases, 'converted:', investment)
+      const purchaseAmount = Number(dbNode.personal_purchases) || Number(dbNode.personal_investment) || Number(dbNode.total_purchases) || 0
+      const nftCount = Math.floor(purchaseAmount / 1100)
+      const operationalAmount = nftCount * 1000  // 運用額は1000ドル×NFT数
+      console.log('Building node for:', dbNode.user_id, 'purchase:', purchaseAmount, 'nftCount:', nftCount, 'operational:', operationalAmount)
       
       const node: ReferralNode = {
         user_id: dbNode.user_id || '',
@@ -218,8 +226,8 @@ export function ReferralTree({ userId }: { userId: string }) {
         full_name: dbNode.full_name || '',
         coinw_uid: dbNode.coinw_uid || '',
         level_num: levelNum,
-        total_investment: investment,
-        nft_count: Math.floor(investment / 1100),
+        total_investment: operationalAmount,  // 運用額を表示
+        nft_count: nftCount,
         path: dbNode.path || dbNode.user_id || '',
         parent_user_id: dbNode.referrer_id || null,
         children: []
