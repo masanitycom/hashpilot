@@ -276,22 +276,9 @@ export default function NFTPage() {
                   </div>
                 </div>
 
-                {!userData?.nft_address && (
-                  <Alert className="bg-yellow-900 border-yellow-700">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-yellow-200">
-                      NFT受け取りアドレスが設定されていません。
-                      <Link href="/profile" className="underline ml-1">
-                        プロフィールページ
-                      </Link>
-                      で設定してください。
-                    </AlertDescription>
-                  </Alert>
-                )}
-
                 <Button
                   onClick={handlePurchase}
-                  disabled={purchasing || !userData?.nft_address}
+                  disabled={purchasing}
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg"
                 >
                   {purchasing ? (
