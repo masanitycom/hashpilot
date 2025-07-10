@@ -31,12 +31,12 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         return
       }
 
-      // 今月の開始日と終了日を取得
+      // 今月の開始日と終了日を取得（UTC）
       const now = new Date()
       const year = now.getFullYear()
       const month = now.getMonth()
-      const monthStart = new Date(year, month, 1).toISOString().split('T')[0]
-      const monthEnd = new Date(year, month + 1, 0).toISOString().split('T')[0]
+      const monthStart = new Date(Date.UTC(year, month, 1)).toISOString().split('T')[0]
+      const monthEnd = new Date(Date.UTC(year, month + 1, 0)).toISOString().split('T')[0]
       
       // 月名を設定
       setCurrentMonth(`${year}年${month + 1}月`)

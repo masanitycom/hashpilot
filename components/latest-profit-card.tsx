@@ -5,22 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, TrendingDown, TrendingUp, Loader2 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
-interface DailyProfitCardProps {
+interface LatestProfitCardProps {
   userId: string
 }
 
-export function DailyProfitCard({ userId }: DailyProfitCardProps) {
+export function LatestProfitCard({ userId }: LatestProfitCardProps) {
   const [profit, setProfit] = useState<number>(0)
+  const [profitDate, setProfitDate] = useState<string>("")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>("")
 
   useEffect(() => {
     if (userId) {
-      fetchYesterdayProfit()
+      fetchLatestProfit()
     }
   }, [userId])
 
-  const fetchYesterdayProfit = async () => {
+  const fetchLatestProfit = async () => {
     try {
       setLoading(true)
       setError("")
@@ -30,50 +31,52 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         return
       }
 
-      // 昨日の日付を取得（UTCで処理）
-      const now = new Date()
-      const yesterday = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate() - 1))
-      const yesterdayStr = yesterday.toISOString().split('T')[0]
+      // 最新の確定利益を取得（最大30日前まで）
+      const thirtyDaysAgo = new Date()
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
       
-      // デバッグ用: 固定日付でテスト
-      // const yesterdayStr = '2025-07-09'
-
-      console.log('DailyProfitCard Debug:', {
-        userId,
-        yesterdayStr,
-        searchingFor: `user_id: ${userId}, date: ${yesterdayStr}`,
-        today: new Date().toISOString(),
-        yesterday: yesterday.toISOString()
-      })
-
-      // user_daily_profitテーブルから昨日の確定利益を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit')
+        .select('date, daily_profit')
         .eq('user_id', userId)
-        .eq('date', yesterdayStr)
+        .gte('date', thirtyDaysAgo.toISOString().split('T')[0])
+        .order('date', { ascending: false })
+        .limit(1)
         .single()
 
-      console.log('Daily profit query result:', {
+      console.log('Latest profit query result:', {
         data: profitData,
         error: profitError
       })
 
       if (profitError) {
-        // データが見つからない場合は0として扱う
         if (profitError.code === 'PGRST116') {
-          console.log('No data found for yesterday')
+          console.log('No profit data found')
           setProfit(0)
+          setProfitDate("データなし")
         } else {
           throw profitError
         }
       } else {
-        console.log('Found daily profit:', profitData?.daily_profit)
         const profitValue = parseFloat(profitData?.daily_profit) || 0
         setProfit(profitValue)
+        
+        // 日付をフォーマット
+        const date = new Date(profitData.date)
+        const today = new Date()
+        const yesterday = new Date(today)
+        yesterday.setDate(yesterday.getDate() - 1)
+        
+        if (date.toDateString() === yesterday.toDateString()) {
+          setProfitDate("昨日")
+        } else if (date.toDateString() === today.toDateString()) {
+          setProfitDate("本日")
+        } else {
+          setProfitDate(date.toLocaleDateString('ja-JP'))
+        }
       }
     } catch (err: any) {
-      console.error("昨日の利益取得エラー:", err)
+      console.error("最新利益取得エラー:", err)
       setError("データの取得に失敗しました")
       setProfit(0)
     } finally {
@@ -85,7 +88,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
     return (
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader className="pb-3">
-          <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定利益</CardTitle>
+          <CardTitle className="text-gray-300 text-sm font-medium">最新の確定利益</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-2">
@@ -100,7 +103,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
   return (
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader className="pb-3">
-        <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定利益</CardTitle>
+        <CardTitle className="text-gray-300 text-sm font-medium">最新の確定利益</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-2">
@@ -115,10 +118,11 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
           </span>
         </div>
         <p className="text-xs text-gray-500 mt-1">
-          {error ? error : "前日の確定済み利益"}
+          {error ? error : `${profitDate}の確定利益`}
         </p>
       </CardContent>
     </Card>
   )
 }
 
+export { LatestProfitCard }
