@@ -109,4 +109,3 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
   )
 }
 
-export { DailyProfitCard }

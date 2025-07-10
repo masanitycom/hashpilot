@@ -109,4 +109,3 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
   )
 }
 
-export { MonthlyProfitCard }

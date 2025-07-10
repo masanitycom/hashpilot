@@ -173,4 +173,3 @@ export function AutoPurchaseHistory({ userId }: AutoPurchaseHistoryProps) {
   )
 }
 
-export { AutoPurchaseHistory }

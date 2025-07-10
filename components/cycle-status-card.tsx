@@ -205,4 +205,3 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
   )
 }
 
-export { CycleStatusCard }
