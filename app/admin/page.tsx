@@ -415,12 +415,12 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* 今日の活動 */}
+        {/* 本日の活動状況 */}
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="text-white flex items-center space-x-2">
               <Activity className="w-5 h-5 text-green-400" />
-              <span>今日の活動</span>
+              <span>本日の活動状況</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
