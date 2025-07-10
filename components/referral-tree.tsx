@@ -41,10 +41,19 @@ export function ReferralTree({ userId }: { userId: string }) {
 
       console.log('ReferralTree: Fetching data for userId:', userId)
 
+      // テスト: まず全ユーザーのtotal_purchasesを確認
+      const { data: testData, error: testError } = await supabase
+        .from("users")
+        .select("user_id, total_purchases")
+        .gt("total_purchases", 0)
+        .limit(5)
+      
+      console.log('Test query - all users with purchases:', testData, 'error:', testError)
+
       // Fallback: Get direct referrals manually (キャッシュ無効化)
       const { data: level1, error: level1Error } = await supabase
         .from("users")
-        .select("user_id, email, full_name, coinw_uid, total_purchases::numeric as total_purchases, referrer_user_id")
+        .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
         .eq("referrer_user_id", userId)
 
       if (level1Error) {
@@ -53,9 +62,12 @@ export function ReferralTree({ userId }: { userId: string }) {
 
       const treeNodes: ReferralNode[] = []
 
+      console.log('Level1 raw data:', level1)
+
       if (level1 && level1.length > 0) {
         for (const user1 of level1) {
-          console.log('Level1 user:', user1.user_id, 'total_purchases:', user1.total_purchases, 'type:', typeof user1.total_purchases, 'converted:', Number(user1.total_purchases))
+          const totalPurchases = parseFloat(user1.total_purchases) || 0
+          console.log('Level1 user:', user1.user_id, 'raw total_purchases:', user1.total_purchases, 'type:', typeof user1.total_purchases, 'parsed:', totalPurchases)
           
           const node1: ReferralNode = {
             user_id: user1.user_id,
@@ -63,8 +75,8 @@ export function ReferralTree({ userId }: { userId: string }) {
             full_name: user1.full_name,
             coinw_uid: user1.coinw_uid,
             level_num: 1,
-            total_investment: Number(user1.total_purchases) || 0,
-            nft_count: Math.floor((Number(user1.total_purchases) || 0) / 1100),
+            total_investment: totalPurchases,
+            nft_count: Math.floor(totalPurchases / 1100),
             path: user1.user_id,
             parent_user_id: user1.referrer_user_id,
             children: [],
@@ -73,12 +85,13 @@ export function ReferralTree({ userId }: { userId: string }) {
           // Get level 2
           const { data: level2, error: level2Error } = await supabase
             .from("users")
-            .select("user_id, email, full_name, coinw_uid, total_purchases::numeric as total_purchases, referrer_user_id")
+            .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
             .eq("referrer_user_id", user1.user_id)
 
           if (!level2Error && level2 && level2.length > 0) {
             for (const user2 of level2) {
-              console.log('Level2 user:', user2.user_id, 'total_purchases:', user2.total_purchases, 'type:', typeof user2.total_purchases, 'converted:', Number(user2.total_purchases))
+              const totalPurchases2 = parseFloat(user2.total_purchases) || 0
+              console.log('Level2 user:', user2.user_id, 'raw total_purchases:', user2.total_purchases, 'type:', typeof user2.total_purchases, 'parsed:', totalPurchases2)
               
               const node2: ReferralNode = {
                 user_id: user2.user_id,
@@ -86,8 +99,8 @@ export function ReferralTree({ userId }: { userId: string }) {
                 full_name: user2.full_name,
                 coinw_uid: user2.coinw_uid,
                 level_num: 2,
-                total_investment: Number(user2.total_purchases) || 0,
-                nft_count: Math.floor((Number(user2.total_purchases) || 0) / 1100),
+                total_investment: totalPurchases2,
+                nft_count: Math.floor(totalPurchases2 / 1100),
                 path: `${user1.user_id}->${user2.user_id}`,
                 parent_user_id: user2.referrer_user_id,
                 children: [],
@@ -96,12 +109,13 @@ export function ReferralTree({ userId }: { userId: string }) {
               // Get level 3
               const { data: level3, error: level3Error } = await supabase
                 .from("users")
-                .select("user_id, email, full_name, coinw_uid, total_purchases::numeric as total_purchases, referrer_user_id")
+                .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
                 .eq("referrer_user_id", user2.user_id)
 
               if (!level3Error && level3 && level3.length > 0) {
                 for (const user3 of level3) {
-                  console.log('Level3 user:', user3.user_id, 'total_purchases:', user3.total_purchases, 'type:', typeof user3.total_purchases, 'converted:', Number(user3.total_purchases))
+                  const totalPurchases3 = parseFloat(user3.total_purchases) || 0
+                  console.log('Level3 user:', user3.user_id, 'raw total_purchases:', user3.total_purchases, 'type:', typeof user3.total_purchases, 'parsed:', totalPurchases3)
                   
                   const node3: ReferralNode = {
                     user_id: user3.user_id,
@@ -109,8 +123,8 @@ export function ReferralTree({ userId }: { userId: string }) {
                     full_name: user3.full_name,
                     coinw_uid: user3.coinw_uid,
                     level_num: 3,
-                    total_investment: Number(user3.total_purchases) || 0,
-                    nft_count: Math.floor((Number(user3.total_purchases) || 0) / 1100),
+                    total_investment: totalPurchases3,
+                    nft_count: Math.floor(totalPurchases3 / 1100),
                     path: `${user1.user_id}->${user2.user_id}->${user3.user_id}`,
                     parent_user_id: user3.referrer_user_id,
                   }
