@@ -30,7 +30,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         return
       }
 
-      // 昨日の日付を取得
+      // 昨日の日付を取得（JST考慮）
       const yesterday = new Date()
       yesterday.setDate(yesterday.getDate() - 1)
       const yesterdayStr = yesterday.toISOString().split('T')[0]
@@ -38,7 +38,9 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
       console.log('DailyProfitCard Debug:', {
         userId,
         yesterdayStr,
-        searchingFor: `user_id: ${userId}, date: ${yesterdayStr}`
+        searchingFor: `user_id: ${userId}, date: ${yesterdayStr}`,
+        today: new Date().toISOString(),
+        yesterday: yesterday.toISOString()
       })
 
       // user_daily_profitテーブルから昨日の確定利益を取得
@@ -49,14 +51,21 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         .eq('date', yesterdayStr)
         .single()
 
+      console.log('Daily profit query result:', {
+        data: profitData,
+        error: profitError
+      })
+
       if (profitError) {
         // データが見つからない場合は0として扱う
         if (profitError.code === 'PGRST116') {
+          console.log('No data found for yesterday')
           setProfit(0)
         } else {
           throw profitError
         }
       } else {
+        console.log('Found daily profit:', profitData?.daily_profit)
         setProfit(profitData?.daily_profit || 0)
       }
     } catch (err: any) {
