@@ -294,6 +294,12 @@ export function ReferralTree({ userId }: { userId: string }) {
                   <div className="text-sm text-gray-400">
                     {node.nft_count || 0} NFT保有
                   </div>
+                  {/* デバッグ用 */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <div className="text-xs text-red-400">
+                      Debug: {node.total_investment}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
