@@ -529,12 +529,12 @@ export default function DashboardPage() {
               <div className="border-t border-gray-600/30 pt-6">
                 <h3 className="text-lg font-semibold text-orange-400 mb-4">Level4以降の総計</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gradient-to-r from-orange-900/20 to-red-900/20 border border-orange-600/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-6">
                     <div className="flex items-center space-x-3 mb-3">
                       <Users className="h-8 w-8 text-orange-400" />
                       <div>
                         <h3 className="text-lg font-semibold text-orange-400">Level4以降の人数</h3>
-                        <p className="text-sm text-orange-300">Level4以降の合計人数</p>
+                        <p className="text-sm text-gray-300">Level4以降の合計人数</p>
                       </div>
                     </div>
                     <div className="text-3xl font-bold text-orange-400">
@@ -542,12 +542,12 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-orange-900/20 to-red-900/20 border border-orange-600/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-6">
                     <div className="flex items-center space-x-3 mb-3">
                       <DollarSign className="h-8 w-8 text-orange-400" />
                       <div>
                         <h3 className="text-lg font-semibold text-orange-400">Level4以降の投資額</h3>
-                        <p className="text-sm text-orange-300">Level4以降の投資合計</p>
+                        <p className="text-sm text-gray-300">Level4以降の投資合計</p>
                       </div>
                     </div>
                     <div className="text-3xl font-bold text-orange-400">
