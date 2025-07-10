@@ -111,10 +111,9 @@ export default function NFTPage() {
         throw purchaseError
       }
 
-      setSuccess("NFT購入リクエストが送信されました。管理者の承認をお待ちください。")
-
-      // ユーザーデータを再取得
-      await fetchUserData(user.id)
+      // 購入成功後、支払い画面にリダイレクト
+      router.push(`/nft-payment?id=${purchase.id}`)
+      return
     } catch (error: any) {
       console.error("Purchase error:", error)
       setError(`購入に失敗しました: ${error.message}`)
