@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts"
 import { RefreshCw, Info } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
@@ -47,12 +47,16 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
       }
 
       // 実際のデータベースから日利データを取得
+      console.log('Fetching daily profit data for user:', userId)
       const { data: dailyProfitData, error } = await supabase
         .from('user_daily_profit')
         .select('date, daily_profit, yield_rate, user_rate, phase')
         .eq('user_id', userId)
         .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
         .order('date', { ascending: true })
+      
+      console.log('Daily profit data:', dailyProfitData)
+      console.log('Daily profit error:', error)
 
       if (error) {
         console.error('Database error:', error)
@@ -68,7 +72,7 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
           const date = new Date(item.date)
           return {
             date: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
-            pnl: item.daily_profit,
+            pnl: parseFloat(item.daily_profit) || 0,
             formattedDate: date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
           }
         })
@@ -80,10 +84,21 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
           setCurrentPNL(formattedData[formattedData.length - 1].pnl)
         }
       } else {
-        // データが存在しない場合はサンプルデータを使用
-        console.log('No daily profit data found, using sample data')
-        const sampleData = generatePNLData()
-        setData(sampleData)
+        // データが存在しない場合は0のデータを表示
+        console.log('No daily profit data found, creating empty dataset')
+        const emptyData: DailyPNLData[] = []
+        const today = new Date()
+        for (let i = 29; i >= 0; i--) {
+          const date = new Date(today)
+          date.setDate(date.getDate() - i)
+          emptyData.push({
+            date: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
+            pnl: 0,
+            formattedDate: date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
+          })
+        }
+        setData(emptyData)
+        setCurrentPNL(0)
       }
     } catch (err: any) {
       console.error("Daily PNL fetch error:", err)
@@ -164,6 +179,14 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
               axisLine={false}
               tickLine={false}
               tickFormatter={(value) => value.toFixed(0)}
+              domain={['dataMin - 2', 'dataMax + 2']}
+            />
+            <ReferenceLine 
+              y={0} 
+              stroke="#6B7280" 
+              strokeDasharray="3 3" 
+              strokeWidth={1}
+              label={{ value: "0", position: "insideLeft", fill: "#9CA3AF", fontSize: 10 }}
             />
             <Tooltip
               contentStyle={{
@@ -179,16 +202,35 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
             <Line
               type="monotone"
               dataKey="pnl"
-              stroke="#10B981"
+              stroke="url(#colorPnl)"
               strokeWidth={2.5}
-              dot={false}
+              dot={(props) => {
+                const { cx, cy, payload } = props
+                return (
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={3}
+                    fill={payload.pnl >= 0 ? "#10B981" : "#EF4444"}
+                    stroke="#1F2937"
+                    strokeWidth={1}
+                  />
+                )
+              }}
               activeDot={{
-                r: 4,
-                fill: "#10B981",
+                r: 5,
+                fill: "#FCD34D",
                 stroke: "#1F2937",
                 strokeWidth: 2,
               }}
             />
+            <defs>
+              <linearGradient id="colorPnl" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#10B981" stopOpacity={1} />
+                <stop offset="50%" stopColor="#FCD34D" stopOpacity={1} />
+                <stop offset="100%" stopColor="#EF4444" stopOpacity={1} />
+              </linearGradient>
+            </defs>
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

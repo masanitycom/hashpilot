@@ -31,15 +31,21 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         return
       }
 
-      // 今月の開始日と終了日を取得
+      // 今月の開始日と終了日を取得（UTC）
       const now = new Date()
       const year = now.getFullYear()
       const month = now.getMonth()
-      const monthStart = new Date(year, month, 1).toISOString().split('T')[0]
-      const monthEnd = new Date(year, month + 1, 0).toISOString().split('T')[0]
+      const monthStart = new Date(Date.UTC(year, month, 1)).toISOString().split('T')[0]
+      const monthEnd = new Date(Date.UTC(year, month + 1, 0)).toISOString().split('T')[0]
       
       // 月名を設定
       setCurrentMonth(`${year}年${month + 1}月`)
+
+      console.log('Monthly profit query:', {
+        userId,
+        monthStart,
+        monthEnd
+      })
 
       // user_daily_profitテーブルから今月の累積利益を取得
       const { data: profitData, error: profitError } = await supabase
@@ -53,11 +59,14 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         throw profitError
       }
 
+      console.log('Monthly profit data:', profitData)
+
       // 今月の累積利益を計算
       const totalProfit = profitData?.reduce((sum, record) => {
-        return sum + (record.daily_profit || 0)
+        return sum + (parseFloat(record.daily_profit) || 0)
       }, 0) || 0
 
+      console.log('Total monthly profit:', totalProfit)
       setProfit(totalProfit)
     } catch (err: any) {
       console.error("今月の利益取得エラー:", err)
@@ -109,4 +118,3 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
   )
 }
 
-export default MonthlyProfitCard

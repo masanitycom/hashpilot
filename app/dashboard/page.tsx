@@ -10,6 +10,7 @@ import { supabase } from "@/lib/supabase"
 import { ReferralTree } from "@/components/referral-tree"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
 import { DailyProfitCard } from "@/components/daily-profit-card"
+import { LatestProfitCard } from "@/components/latest-profit-card"
 import { MonthlyProfitCard } from "@/components/monthly-profit-card"
 import { CycleStatusCard } from "@/components/cycle-status-card"
 import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
@@ -255,10 +256,10 @@ export default function DashboardPage() {
       if (supabase) {
         await supabase.auth.signOut()
       }
-      router.push("/login")
+      router.push("/")
     } catch (error) {
       console.error("Logout error:", error)
-      router.push("/login")
+      router.push("/")
     }
   }
 
@@ -318,6 +319,15 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center space-x-4">
+              <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-green-500 text-green-400 hover:bg-green-600 bg-transparent"
+                >
+                  📱 公式LINE
+                </Button>
+              </Link>
               <Link href="/nft">
                 <Button
                   variant="outline"
@@ -373,7 +383,7 @@ export default function DashboardPage() {
         {/* 統計カードと日利グラフ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* 統計カード */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* 個人投資額 */}
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader className="pb-3">
@@ -392,12 +402,9 @@ export default function DashboardPage() {
 
             {/* 昨日の確定利益 */}
             <DailyProfitCard userId={userData?.user_id || ""} />
-
+            
             {/* 今月の累積利益 */}
             <MonthlyProfitCard userId={userData?.user_id || ""} />
-
-            {/* NFTサイクル状況 */}
-            <CycleStatusCard userId={userData?.user_id || ""} />
 
             {/* 直接紹介者数 */}
             <Card className="bg-gray-800 border-gray-700">
@@ -442,15 +449,21 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 mt-1">紹介者の投資合計</p>
               </CardContent>
             </Card>
-
-            {/* 自動NFT購入履歴 */}
-            <AutoPurchaseHistory userId={userData?.user_id || ""} />
           </div>
 
           {/* 日利グラフ */}
           <div className="lg:col-span-1">
             <DailyProfitChart userId={userData?.user_id || ""} />
           </div>
+        </div>
+
+        {/* NFTサイクルと購入履歴 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* NFTサイクル状況 */}
+          <CycleStatusCard userId={userData?.user_id || ""} />
+          
+          {/* 自動NFT購入履歴 */}
+          <AutoPurchaseHistory userId={userData?.user_id || ""} />
         </div>
 
         {/* 紹介ツリーセクション */}
@@ -516,12 +529,12 @@ export default function DashboardPage() {
               <div className="border-t border-gray-600/30 pt-6">
                 <h3 className="text-lg font-semibold text-orange-400 mb-4">Level4以降の総計</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gradient-to-r from-orange-900/20 to-red-900/20 border border-orange-600/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-6">
                     <div className="flex items-center space-x-3 mb-3">
                       <Users className="h-8 w-8 text-orange-400" />
                       <div>
                         <h3 className="text-lg font-semibold text-orange-400">Level4以降の人数</h3>
-                        <p className="text-sm text-orange-300">Level4以降の合計人数</p>
+                        <p className="text-sm text-gray-300">Level4以降の合計人数</p>
                       </div>
                     </div>
                     <div className="text-3xl font-bold text-orange-400">
@@ -529,12 +542,12 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-orange-900/20 to-red-900/20 border border-orange-600/30 rounded-lg p-6">
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 border border-orange-600/30 rounded-lg p-6">
                     <div className="flex items-center space-x-3 mb-3">
                       <DollarSign className="h-8 w-8 text-orange-400" />
                       <div>
                         <h3 className="text-lg font-semibold text-orange-400">Level4以降の投資額</h3>
-                        <p className="text-sm text-orange-300">Level4以降の投資合計</p>
+                        <p className="text-sm text-gray-300">Level4以降の投資合計</p>
                       </div>
                     </div>
                     <div className="text-3xl font-bold text-orange-400">

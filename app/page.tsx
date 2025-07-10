@@ -24,6 +24,14 @@ export default function HomePage() {
             </div>
             {/* デスクトップ用ナビゲーション */}
             <div className="hidden md:flex space-x-4">
+              <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  className="bg-green-600 text-white border-green-500 hover:bg-green-700 hover:border-green-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  📱 公式LINE
+                </Button>
+              </Link>
               <Link href="/login">
                 <Button
                   variant="outline"
@@ -57,6 +65,14 @@ export default function HomePage() {
                   </div>
                 </summary>
                 <div className="absolute right-0 top-8 bg-black/80 backdrop-blur-md border border-yellow-500/30 rounded-lg shadow-2xl p-4 space-y-3 min-w-[150px] z-50">
+                  <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer" className="block">
+                    <Button
+                      variant="outline"
+                      className="w-full bg-green-600 text-white border-green-500 hover:bg-green-700 hover:border-green-600 font-semibold"
+                    >
+                      📱 公式LINE
+                    </Button>
+                  </Link>
                   <Link href="/login" className="block">
                     <Button
                       variant="outline"

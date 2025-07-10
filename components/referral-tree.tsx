@@ -59,8 +59,8 @@ export function ReferralTree({ userId }: { userId: string }) {
             full_name: user1.full_name,
             coinw_uid: user1.coinw_uid,
             level_num: 1,
-            total_investment: Math.floor((user1.total_purchases || 0) / 1000) * 1000,
-            nft_count: Math.floor((user1.total_purchases || 0) / 1000),
+            total_investment: Math.floor((Number(user1.total_purchases) || 0) / 1000) * 1000,
+            nft_count: Math.floor((Number(user1.total_purchases) || 0) / 1000),
             path: user1.user_id,
             parent_user_id: user1.referrer_user_id,
             children: [],
@@ -80,8 +80,8 @@ export function ReferralTree({ userId }: { userId: string }) {
                 full_name: user2.full_name,
                 coinw_uid: user2.coinw_uid,
                 level_num: 2,
-                total_investment: Math.floor((user2.total_purchases || 0) / 1000) * 1000,
-                nft_count: Math.floor((user2.total_purchases || 0) / 1000),
+                total_investment: Math.floor((Number(user2.total_purchases) || 0) / 1000) * 1000,
+                nft_count: Math.floor((Number(user2.total_purchases) || 0) / 1000),
                 path: `${user1.user_id}->${user2.user_id}`,
                 parent_user_id: user2.referrer_user_id,
                 children: [],
@@ -101,8 +101,8 @@ export function ReferralTree({ userId }: { userId: string }) {
                     full_name: user3.full_name,
                     coinw_uid: user3.coinw_uid,
                     level_num: 3,
-                    total_investment: Math.floor((user3.total_purchases || 0) / 1000) * 1000,
-                    nft_count: Math.floor((user3.total_purchases || 0) / 1000),
+                    total_investment: Math.floor((Number(user3.total_purchases) || 0) / 1000) * 1000,
+                    nft_count: Math.floor((Number(user3.total_purchases) || 0) / 1000),
                     path: `${user1.user_id}->${user2.user_id}->${user3.user_id}`,
                     parent_user_id: user3.referrer_user_id,
                   }
@@ -164,15 +164,19 @@ export function ReferralTree({ userId }: { userId: string }) {
     const nodeMap = new Map<string, ReferralNode>()
     const rootNodes: ReferralNode[] = []
 
-    // Create a map of all nodes
+    // Create a map of all nodes, but only include Level 1-3
     flatData.forEach((dbNode) => {
+      const levelNum = Number(dbNode.level_num) || 1
+      // Only include Level 1-3 nodes
+      if (levelNum > 3) return
+
       const investment = Number(dbNode.personal_investment) || 0
       const node: ReferralNode = {
         user_id: dbNode.user_id || '',
         email: dbNode.email || '',
         full_name: dbNode.full_name || '',
         coinw_uid: dbNode.coinw_uid || '',
-        level_num: Number(dbNode.level_num) || 1,
+        level_num: levelNum,
         total_investment: Math.floor(investment / 1000) * 1000,
         nft_count: Math.floor(investment / 1000),
         path: dbNode.path || dbNode.user_id || '',
@@ -184,6 +188,10 @@ export function ReferralTree({ userId }: { userId: string }) {
 
     // Build the tree structure
     flatData.forEach((dbNode) => {
+      const levelNum = Number(dbNode.level_num) || 1
+      // Only include Level 1-3 nodes
+      if (levelNum > 3) return
+
       const currentNode = nodeMap.get(dbNode.user_id)
       if (!currentNode) return
 
@@ -312,18 +320,11 @@ export function ReferralTree({ userId }: { userId: string }) {
   }
 
   const getStats = () => {
-    const allNodes = getAllNodes(treeData)
-    const level4Plus = allNodes.filter((node) => node.level_num >= 4)
-
-    const totalInvestment = level4Plus.reduce((sum, node) => {
-      const investment = typeof node.total_investment === 'number' ? node.total_investment : 0
-      return sum + investment
-    }, 0)
-
+    // Since we're limiting to Level 3, there should be no Level 4+ users
     return {
-      totalPeople: level4Plus.length,
-      totalInvestment: totalInvestment,
-      averageInvestment: level4Plus.length > 0 ? totalInvestment / level4Plus.length : 0,
+      totalPeople: 0,
+      totalInvestment: 0,
+      averageInvestment: 0,
     }
   }
 
@@ -423,37 +424,6 @@ export function ReferralTree({ userId }: { userId: string }) {
         </CardContent>
       </Card>
 
-      {stats.totalPeople > 0 && (
-        <Card className="bg-gradient-to-r from-pink-900/20 to-purple-900/20 border-pink-700/50">
-          <CardHeader>
-            <CardTitle className="text-pink-300 flex items-center space-x-2">
-              <TrendingUp className="h-5 w-5" />
-              <span>Lv.4以降の統計</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-pink-300">{stats.totalPeople}</div>
-                <div className="text-sm text-gray-400">合計人数</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-pink-300">${(stats.totalInvestment || 0).toLocaleString()}</div>
-                <div className="text-sm text-gray-400">合計投資額</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-pink-300">
-                  ${Math.round(stats.averageInvestment || 0).toLocaleString()}
-                </div>
-                <div className="text-sm text-gray-400">平均投資額</div>
-              </div>
-            </div>
-            <div className="text-center text-xs text-gray-500 mt-4">
-              Level 4以降の詳細な紹介関係は統計のみ表示されます
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   )
 }
