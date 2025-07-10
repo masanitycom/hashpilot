@@ -9,6 +9,10 @@ import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User } from "luci
 import { supabase } from "@/lib/supabase"
 import { ReferralTree } from "@/components/referral-tree"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
+import { DailyProfitCard } from "@/components/daily-profit-card"
+import { MonthlyProfitCard } from "@/components/monthly-profit-card"
+import { CycleStatusCard } from "@/components/cycle-status-card"
+import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
 import Link from "next/link"
 
 interface UserData {
@@ -314,6 +318,15 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center space-x-4">
+              <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-green-500 text-green-400 hover:bg-green-600 bg-transparent"
+                >
+                  📱 公式LINE
+                </Button>
+              </Link>
               <Link href="/nft">
                 <Button
                   variant="outline"
@@ -321,6 +334,15 @@ export default function DashboardPage() {
                   className="border-gray-600 text-white hover:bg-gray-700 bg-transparent"
                 >
                   NFT購入
+                </Button>
+              </Link>
+              <Link href="/withdrawal">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-green-600 text-green-400 hover:bg-green-700 bg-transparent"
+                >
+                  出金申請
                 </Button>
               </Link>
               <Button onClick={handleLogout} variant="ghost" size="sm" className="text-gray-300 hover:text-white">
@@ -360,7 +382,7 @@ export default function DashboardPage() {
         {/* 統計カードと日利グラフ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* 統計カード */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {/* 個人投資額 */}
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader className="pb-3">
@@ -376,6 +398,15 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 mt-1">{nftCount} NFT保有</p>
               </CardContent>
             </Card>
+
+            {/* 昨日の確定利益 */}
+            <DailyProfitCard userId={userData?.user_id || ""} />
+
+            {/* 今月の累積利益 */}
+            <MonthlyProfitCard userId={userData?.user_id || ""} />
+
+            {/* NFTサイクル状況 */}
+            <CycleStatusCard userId={userData?.user_id || ""} />
 
             {/* 直接紹介者数 */}
             <Card className="bg-gray-800 border-gray-700">
@@ -420,6 +451,9 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 mt-1">紹介者の投資合計</p>
               </CardContent>
             </Card>
+
+            {/* 自動NFT購入履歴 */}
+            <AutoPurchaseHistory userId={userData?.user_id || ""} />
           </div>
 
           {/* 日利グラフ */}
@@ -450,7 +484,7 @@ export default function DashboardPage() {
                     <DollarSign className="h-8 w-8 text-green-400" />
                     <div>
                       <h3 className="text-lg font-semibold text-green-400">Level1投資額</h3>
-                      <p className="text-sm text-gray-400">報酬率: 25%</p>
+                      <p className="text-sm text-gray-400">報酬率: 20%</p>
                     </div>
                   </div>
                   <div className="text-3xl font-bold text-green-400">
