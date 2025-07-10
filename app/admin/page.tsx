@@ -384,12 +384,12 @@ export default function AdminDashboard() {
             <CardContent className="pt-4">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-medium">出金申請</span>
-                  <Badge className="bg-emerald-600 text-white px-3 py-1 text-sm font-semibold">管理</Badge>
+                  <span className="text-gray-300 font-medium">月末出金管理</span>
+                  <Badge className="bg-emerald-600 text-white px-3 py-1 text-sm font-semibold">自動処理</Badge>
                 </div>
                 <Link href="/admin/withdrawals">
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 font-medium mt-6">
-                    出金管理画面へ
+                    月末出金管理画面へ
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>

@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode, User as UserIcon, LogOut, Home, Settings, TrendingUp, Menu } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { MonthlyWithdrawalAlert } from "@/components/monthly-withdrawal-alert"
 import Link from "next/link"
 
 interface UserProfile {
@@ -396,6 +397,14 @@ export default function ProfilePage() {
                   {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('ja-JP') : "不明"}
                 </div>
               </div>
+            </div>
+
+            {/* 月末出金アラート */}
+            <div className="border-t border-gray-600/30 pt-6">
+              <MonthlyWithdrawalAlert 
+                userId={profile?.user_id || ""} 
+                hasWithdrawalAddress={!!(profile?.reward_address_bep20 || profile?.coinw_uid)}
+              />
             </div>
 
             <div className="border-t border-gray-600/30 pt-6">
