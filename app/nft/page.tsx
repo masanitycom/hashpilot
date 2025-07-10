@@ -101,6 +101,7 @@ export default function NFTPage() {
         .insert({
           user_id: userData.user_id,
           amount_usd: NFT_PRICE, // $1000 investment amount
+          nft_quantity: 1, // 1 NFT購入
           admin_approved: false,
         })
         .select()
