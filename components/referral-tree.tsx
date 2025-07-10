@@ -158,20 +158,26 @@ export function ReferralTree({ userId }: { userId: string }) {
   }
 
   const fetchReferralTree = async () => {
+    console.log('fetchReferralTree called with userId:', userId)
     try {
       setLoading(true)
       setError(null)
 
       if (!supabase) {
+        console.log('Supabase client not configured')
         throw new Error("Supabase client is not configured")
       }
 
+      console.log('Calling RPC get_referral_tree...')
       const { data, error } = await supabase.rpc("get_referral_tree", {
         target_user_id: userId,
       })
+      
+      console.log('RPC result:', { data, error })
 
       if (error) {
         console.error("RPC function error:", error)
+        console.log('Switching to fallback method...')
         // Try fallback method
         await fetchReferralTreeFallback()
         return
@@ -185,6 +191,7 @@ export function ReferralTree({ userId }: { userId: string }) {
       }
     } catch (err) {
       console.error("Error fetching referral tree:", err)
+      console.log('Switching to fallback method due to error...')
       // Try fallback method
       await fetchReferralTreeFallback()
     } finally {
