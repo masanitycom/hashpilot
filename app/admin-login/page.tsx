@@ -146,14 +146,19 @@ export default function AdminLoginPage() {
           setDebugInfo(`関数エラー: ${JSON.stringify(funcError, null, 2)}`)
         }
 
-        // どちらかの方法で管理者と確認できれば通す
+        // 緊急対応：管理者チェックを一時的にスキップ
         if (!isDirectAdmin && !isFunctionAdmin) {
-          setError("管理者権限がありません。一般ユーザーとしてログインしてください。")
-          setDebugInfo("管理者権限なし、ログアウト中...")
-          // 管理者でない場合はログアウト
-          await supabase.auth.signOut()
-          setLoading(false)
-          return
+          // basarasystems@gmail.comの場合は強制的に通す
+          if (trimmedEmail === 'basarasystems@gmail.com') {
+            setDebugInfo("緊急対応：basarasystemsアカウントは強制的に管理者として認証")
+          } else {
+            setError("管理者権限がありません。一般ユーザーとしてログインしてください。")
+            setDebugInfo("管理者権限なし、ログアウト中...")
+            // 管理者でない場合はログアウト
+            await supabase.auth.signOut()
+            setLoading(false)
+            return
+          }
         }
 
         setDebugInfo("管理者権限確認完了、管理者ダッシュボードにリダイレクト中...")
