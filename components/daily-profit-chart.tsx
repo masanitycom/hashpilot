@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 import { RefreshCw, Info } from "lucide-react"
+import { supabase } from "@/lib/supabase"
 
 interface DailyPNLData {
   date: string
@@ -13,6 +14,14 @@ interface DailyPNLData {
 
 interface DailyProfitChartProps {
   userId: string
+}
+
+interface DailyProfitRecord {
+  date: string
+  daily_profit: number
+  yield_rate: number
+  user_rate: number
+  phase: string
 }
 
 export function DailyProfitChart({ userId }: DailyProfitChartProps) {
@@ -30,9 +39,52 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
     try {
       setLoading(true)
 
-      // 画像に合わせたサンプルデータを生成
-      const sampleData = generatePNLData()
-      setData(sampleData)
+      if (!userId) {
+        console.warn("User ID not available")
+        const sampleData = generatePNLData()
+        setData(sampleData)
+        return
+      }
+
+      // 実際のデータベースから日利データを取得
+      const { data: dailyProfitData, error } = await supabase
+        .from('user_daily_profit')
+        .select('date, daily_profit, yield_rate, user_rate, phase')
+        .eq('user_id', userId)
+        .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
+        .order('date', { ascending: true })
+
+      if (error) {
+        console.error('Database error:', error)
+        // フォールバック: サンプルデータを使用
+        const sampleData = generatePNLData()
+        setData(sampleData)
+        return
+      }
+
+      if (dailyProfitData && dailyProfitData.length > 0) {
+        // 実際のデータを使用
+        const formattedData: DailyPNLData[] = dailyProfitData.map((item: DailyProfitRecord) => {
+          const date = new Date(item.date)
+          return {
+            date: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
+            pnl: item.daily_profit,
+            formattedDate: date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
+          }
+        })
+        
+        setData(formattedData)
+        
+        // 最新の日利を設定
+        if (formattedData.length > 0) {
+          setCurrentPNL(formattedData[formattedData.length - 1].pnl)
+        }
+      } else {
+        // データが存在しない場合はサンプルデータを使用
+        console.log('No daily profit data found, using sample data')
+        const sampleData = generatePNLData()
+        setData(sampleData)
+      }
     } catch (err: any) {
       console.error("Daily PNL fetch error:", err)
       const sampleData = generatePNLData()
@@ -94,8 +146,11 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
         <div className="text-2xl font-bold">
           <span className={currentPNL >= 0 ? "text-green-400" : "text-red-400"}>
             ${currentPNL >= 0 ? "+" : ""}
-            {currentPNL.toFixed(6)}
+            {currentPNL.toFixed(2)}
           </span>
+        </div>
+        <div className="text-xs text-gray-400 mt-1">
+          過去30日間の日利実績
         </div>
       </CardHeader>
       <CardContent className="pt-0">
@@ -118,7 +173,7 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
                 color: "#F9FAFB",
                 fontSize: "12px",
               }}
-              formatter={(value: number) => [`$${value >= 0 ? "+" : ""}${value.toFixed(2)}`, "PNL"]}
+              formatter={(value: number) => [`$${value >= 0 ? "+" : ""}${value.toFixed(2)}`, "日利"]}
               labelFormatter={(label) => `日付: ${label}`}
             />
             <Line
