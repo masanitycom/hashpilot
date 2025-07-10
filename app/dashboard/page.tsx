@@ -10,6 +10,7 @@ import { supabase } from "@/lib/supabase"
 import { ReferralTree } from "@/components/referral-tree"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
 import { DailyProfitCard } from "@/components/daily-profit-card"
+import { LatestProfitCard } from "@/components/latest-profit-card"
 import { MonthlyProfitCard } from "@/components/monthly-profit-card"
 import { CycleStatusCard } from "@/components/cycle-status-card"
 import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
@@ -401,6 +402,9 @@ export default function DashboardPage() {
 
             {/* 昨日の確定利益 */}
             <DailyProfitCard userId={userData?.user_id || ""} />
+            
+            {/* 最新の確定利益（テスト用） */}
+            {/* <LatestProfitCard userId={userData?.user_id || ""} /> */}
 
             {/* 今月の累積利益 */}
             <MonthlyProfitCard userId={userData?.user_id || ""} />
