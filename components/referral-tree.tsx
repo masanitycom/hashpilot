@@ -50,6 +50,14 @@ export function ReferralTree({ userId }: { userId: string }) {
       
       console.log('Test query - all users with purchases:', testData, 'error:', testError)
 
+      // テスト: このユーザーに紹介者がいるかチェック
+      const { data: referralsCheck, error: referralsError } = await supabase
+        .from("users")
+        .select("user_id, email, total_purchases, referrer_user_id")
+        .eq("referrer_user_id", userId)
+      
+      console.log(`Referrals check for ${userId}:`, referralsCheck, 'error:', referralsError)
+
       // Fallback: Get direct referrals manually (キャッシュ無効化)
       const { data: level1, error: level1Error } = await supabase
         .from("users")
