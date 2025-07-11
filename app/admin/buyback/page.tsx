@@ -128,8 +128,26 @@ export default function AdminBuybackPage() {
             manual_buyback_amount: 1500,
             auto_buyback_amount: 500,
             total_buyback_amount: 2000,
-            wallet_address: "0x1234567890abcdef1234567890abcdef12345678",
+            wallet_address: "TKx8dBWs3F4d3Fj8Qf5VzKz8Gf4sD3F2Bx9W5K3s",
             wallet_type: "USDT-BEP20",
+            status: "pending",
+            processed_by: null,
+            processed_at: null,
+            transaction_hash: null
+          },
+          {
+            id: "sample-2", 
+            user_id: "B43A3D",
+            email: "test@example.com",
+            request_date: new Date(Date.now() - 86400000).toISOString(),
+            manual_nft_count: 1,
+            auto_nft_count: 2,
+            total_nft_count: 3,
+            manual_buyback_amount: 800,
+            auto_buyback_amount: 1000,
+            total_buyback_amount: 1800,
+            wallet_address: "123456789",
+            wallet_type: "CoinW",
             status: "pending",
             processed_by: null,
             processed_at: null,
@@ -389,6 +407,7 @@ export default function AdminBuybackPage() {
                       <th className="text-left p-3 text-gray-400">ユーザー</th>
                       <th className="text-center p-3 text-gray-400">手動NFT</th>
                       <th className="text-center p-3 text-gray-400">自動NFT</th>
+                      <th className="text-left p-3 text-gray-400">送金先</th>
                       <th className="text-right p-3 text-gray-400">買い取り額</th>
                       <th className="text-center p-3 text-gray-400">ステータス</th>
                       <th className="text-center p-3 text-gray-400">アクション</th>
@@ -419,6 +438,21 @@ export default function AdminBuybackPage() {
                               ${request.auto_buyback_amount}
                             </div>
                           )}
+                        </td>
+                        <td className="p-3 text-left">
+                          <div className="text-white font-mono text-sm">
+                            {request.wallet_type === "CoinW" ? (
+                              <div>
+                                <div className="text-orange-400">CoinW UID</div>
+                                <div>{request.wallet_address}</div>
+                              </div>
+                            ) : (
+                              <div>
+                                <div className="text-green-400">USDT-BEP20</div>
+                                <div className="text-xs break-all">{request.wallet_address}</div>
+                              </div>
+                            )}
+                          </div>
                         </td>
                         <td className="p-3 text-right">
                           <div className="text-yellow-400 font-bold">
