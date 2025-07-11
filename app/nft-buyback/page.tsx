@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { NftBuybackRequest } from "@/components/nft-buyback-request"
+import { checkUserNFTPurchase } from "@/lib/check-nft-purchase"
 
 export default function NftBuybackPage() {
   const [user, setUser] = useState<any>(null)
@@ -44,6 +45,14 @@ export default function NftBuybackPage() {
       if (error) {
         console.error("Error fetching user data:", error)
         router.push("/dashboard")
+        return
+      }
+
+      // NFT購入チェック
+      const { hasApprovedPurchase } = await checkUserNFTPurchase(userInfo.user_id)
+      if (!hasApprovedPurchase) {
+        console.log("User has no approved NFT purchase, redirecting to /nft")
+        router.push("/nft")
         return
       }
 

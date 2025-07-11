@@ -19,6 +19,7 @@ import { PersonalProfitCard } from "@/components/personal-profit-card"
 import { ReferralProfitCard } from "@/components/referral-profit-card"
 import { TotalProfitCard } from "@/components/total-profit-card"
 import Link from "next/link"
+import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
 
 interface UserData {
   id: string
@@ -123,6 +124,15 @@ export default function DashboardPage() {
       }
 
       const userRecord = userRecords[0]
+      
+      // NFT購入チェック
+      const { hasApprovedPurchase } = await checkUserNFTPurchase(userRecord.user_id)
+      if (!hasApprovedPurchase) {
+        console.log("User has no approved NFT purchase, redirecting to /nft")
+        router.push("/nft")
+        return
+      }
+      
       setUserData(userRecord)
       await calculateStats(userRecord)
     } catch (error) {

@@ -10,6 +10,7 @@ import { supabase } from "@/lib/supabase"
 import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
 import { MonthlyWithdrawalAlert } from "@/components/monthly-withdrawal-alert"
 import Link from "next/link"
+import { checkUserNFTPurchase } from "@/lib/check-nft-purchase"
 
 interface UserData {
   id: string
@@ -101,6 +102,15 @@ export default function WithdrawalPage() {
       }
 
       const userRecord = userRecords[0]
+      
+      // NFT購入チェック
+      const { hasApprovedPurchase } = await checkUserNFTPurchase(userRecord.user_id)
+      if (!hasApprovedPurchase) {
+        console.log("User has no approved NFT purchase, redirecting to /nft")
+        router.push("/nft")
+        return
+      }
+      
       setUserData(userRecord)
     } catch (error) {
       console.error("Fetch user data error:", error)

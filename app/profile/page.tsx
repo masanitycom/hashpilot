@@ -12,6 +12,7 @@ import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode, User as UserIcon, 
 import { supabase } from "@/lib/supabase"
 import { MonthlyWithdrawalAlert } from "@/components/monthly-withdrawal-alert"
 import Link from "next/link"
+import { checkUserNFTPurchase } from "@/lib/check-nft-purchase"
 
 interface UserProfile {
   id: string
@@ -90,6 +91,14 @@ export default function ProfilePage() {
         .single()
 
       if (userError) throw userError
+
+      // NFT購入チェック
+      const { hasApprovedPurchase } = await checkUserNFTPurchase(userData.user_id)
+      if (!hasApprovedPurchase) {
+        console.log("User has no approved NFT purchase, redirecting to /nft")
+        router.push("/nft")
+        return
+      }
 
       // 紹介者数を取得
       const { count: referralCount } = await supabase

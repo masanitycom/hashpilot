@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { supabase, hasSupabaseCredentials } from "@/lib/supabase"
 import { Loader2 } from "lucide-react"
+import { checkUserNFTPurchase } from "@/lib/check-nft-purchase"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -41,11 +42,31 @@ export default function LoginPage() {
       } = await supabase.auth.getSession()
       if (session?.user) {
         // basarasystems@gmail.com は管理画面にリダイレクト
-        if (session.user.email === "basarasystems@gmail.com") {
+        if (session.user.email === "basarasystems@gmail.com" || session.user.email === "support@dshsupport.biz") {
           router.push("/admin")
         } else {
-          // その他のユーザーはダッシュボードにリダイレクト
-          router.push("/dashboard")
+          // ユーザーのuser_idを取得
+          const { data: userData } = await supabase
+            .from("users")
+            .select("user_id")
+            .eq("id", session.user.id)
+            .single()
+
+          if (userData) {
+            // NFT購入チェック
+            const { hasApprovedPurchase } = await checkUserNFTPurchase(userData.user_id)
+            
+            if (!hasApprovedPurchase) {
+              // NFT未購入者は購入画面へリダイレクト
+              router.push("/nft")
+            } else {
+              // NFT購入済みユーザーはダッシュボードへ
+              router.push("/dashboard")
+            }
+          } else {
+            // ユーザーデータが見つからない場合はダッシュボードへ
+            router.push("/dashboard")
+          }
         }
       }
     } catch (error) {
@@ -110,17 +131,38 @@ export default function LoginPage() {
       }
 
       if (data.user && data.session) {
-        setDebugInfo("ログイン成功、ダッシュボードにリダイレクト中...")
+        setDebugInfo("ログイン成功、リダイレクト処理中...")
 
         // セッションが確実に設定されるまで少し待つ
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
         // basarasystems@gmail.com は管理画面にリダイレクト
-        if (data.user.email === "basarasystems@gmail.com") {
+        if (data.user.email === "basarasystems@gmail.com" || data.user.email === "support@dshsupport.biz") {
           window.location.href = "/admin"
         } else {
-          // その他のユーザーはダッシュボードにリダイレクト
-          window.location.href = "/dashboard"
+          // ユーザーのuser_idを取得
+          const { data: userData } = await supabase
+            .from("users")
+            .select("user_id")
+            .eq("id", data.user.id)
+            .single()
+
+          if (userData) {
+            // NFT購入チェック
+            const { hasApprovedPurchase } = await checkUserNFTPurchase(userData.user_id)
+            
+            if (!hasApprovedPurchase) {
+              // NFT未購入者は購入画面へリダイレクト
+              setDebugInfo("NFT未購入のため、購入画面へリダイレクト...")
+              window.location.href = "/nft"
+            } else {
+              // NFT購入済みユーザーはダッシュボードへ
+              window.location.href = "/dashboard"
+            }
+          } else {
+            // ユーザーデータが見つからない場合はダッシュボードへ
+            window.location.href = "/dashboard"
+          }
         }
       } else {
         setError("ログインに失敗しました。再度お試しください。")
