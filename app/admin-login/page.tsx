@@ -106,15 +106,6 @@ export default function AdminLoginPage() {
 
       setDebugInfo(`認証成功: ${data.user.email} (ID: ${data.user.id.substring(0, 8)}...)`)
 
-      // 緊急対応：管理者権限チェックを一時的に無効化
-      setDebugInfo("緊急対応：管理者権限チェックをスキップ中...")
-      
-      // 認証成功時は直接管理者ダッシュボードへ
-      router.push("/admin")
-      return
-
-      // ↓ 以下は一時的に無効化
-      /*
       // 管理者権限をチェック
       setDebugInfo("管理者権限を確認中...")
 
@@ -155,30 +146,22 @@ export default function AdminLoginPage() {
           setDebugInfo(`関数エラー: ${JSON.stringify(funcError, null, 2)}`)
         }
 
-        // 緊急対応：管理者チェックを一時的にスキップ
         if (!isDirectAdmin && !isFunctionAdmin) {
-          // basarasystems@gmail.comの場合は強制的に通す
-          if (trimmedEmail === 'basarasystems@gmail.com') {
-            setDebugInfo("緊急対応：basarasystemsアカウントは強制的に管理者として認証")
-          } else {
-            setError("管理者権限がありません。一般ユーザーとしてログインしてください。")
-            setDebugInfo("管理者権限なし、ログアウト中...")
-            // 管理者でない場合はログアウト
-            await supabase.auth.signOut()
-            setLoading(false)
-            return
-          }
+          setError("管理者権限がありません。一般ユーザーとしてログインしてください。")
+          setDebugInfo("管理者権限なし、ログアウト中...")
+          // 管理者でない場合はログアウト
+          await supabase.auth.signOut()
+          setLoading(false)
+          return
         }
 
-        setDebugInfo("緊急対応：管理者チェックをスキップして管理者ダッシュボードにリダイレクト中...")
-        // 緊急対応：認証成功時は直接管理者として扱う
+        setDebugInfo("管理者権限確認成功、管理者ダッシュボードにリダイレクト中...")
         router.push("/admin")
       } catch (adminCheckError: any) {
         console.error("Admin check exception:", adminCheckError)
         setError(`管理者権限確認中にエラーが発生しました: ${adminCheckError.message}`)
         setLoading(false)
       }
-      */
     } catch (error: any) {
       console.error("Admin login exception:", error)
       setDebugInfo(`例外エラー: ${JSON.stringify(error, null, 2)}`)

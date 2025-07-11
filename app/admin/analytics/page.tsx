@@ -70,8 +70,6 @@ export default function AdminAnalyticsPage() {
         return
       }
 
-      // 緊急対応：管理者権限チェックを一時的に無効化
-      /*
       const { data: userData, error } = await supabase
         .from("users")
         .select("is_admin")
@@ -82,7 +80,6 @@ export default function AdminAnalyticsPage() {
         router.push("/dashboard")
         return
       }
-      */
 
       setIsAdmin(true)
       await fetchAnalytics()

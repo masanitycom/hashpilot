@@ -101,8 +101,6 @@ export default function AdminYieldPage() {
 
       setCurrentUser(user)
 
-      // 緊急対応：管理者権限チェックを一時的に無効化
-      /*
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
         user_email: user.email,
       })
@@ -118,7 +116,6 @@ export default function AdminYieldPage() {
         router.push("/dashboard")
         return
       }
-      */
 
       setIsAdmin(true)
       fetchHistory()

@@ -74,8 +74,6 @@ export default function AdminDashboard() {
 
       setCurrentUser(user)
 
-      // 緊急対応：管理者権限チェックを一時的に無効化
-      /*
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
         user_email: user.email,
       })
@@ -85,7 +83,6 @@ export default function AdminDashboard() {
         router.push("/dashboard")
         return
       }
-      */
 
       setIsAdmin(true)
       await fetchStats()
