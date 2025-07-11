@@ -72,8 +72,10 @@ export default function AdminBuybackPage() {
         return
       }
 
-      // 緊急対応: basarasystems@gmail.com と support@dshsupport.biz のアクセス許可
-      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
+      // 緊急対応: 管理者メールのアクセス許可
+      if (user.email === "basarasystems@gmail.com" || 
+          user.email === "support@dshsupport.biz" || 
+          user.email === "masataka.tak@gmail.com") {
         setAdminUser(user)
         return
       }
