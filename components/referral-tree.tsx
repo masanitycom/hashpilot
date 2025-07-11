@@ -175,8 +175,8 @@ export function ReferralTree({ userId }: { userId: string }) {
         throw new Error("Supabase client is not configured")
       }
 
-      console.log('Calling RPC get_referral_tree_user...')
-      const { data, error } = await supabase.rpc("get_referral_tree_user", {
+      console.log('Calling RPC get_referral_tree...')
+      const { data, error } = await supabase.rpc("get_referral_tree", {
         root_user_id: userId,
       })
       
@@ -230,7 +230,7 @@ export function ReferralTree({ userId }: { userId: string }) {
         total_investment: operationalAmount,  // 運用額を表示
         nft_count: nftCount,
         path: dbNode.path || dbNode.user_id || '',
-        parent_user_id: dbNode.referrer_id || null,
+        parent_user_id: dbNode.parent_user_id || null,
         children: []
       }
       nodeMap.set(node.user_id, node)
@@ -245,8 +245,8 @@ export function ReferralTree({ userId }: { userId: string }) {
       const currentNode = nodeMap.get(dbNode.user_id)
       if (!currentNode) return
 
-      if (dbNode.referrer_id && nodeMap.has(dbNode.referrer_id)) {
-        const parentNode = nodeMap.get(dbNode.referrer_id)!
+      if (dbNode.parent_user_id && nodeMap.has(dbNode.parent_user_id)) {
+        const parentNode = nodeMap.get(dbNode.parent_user_id)!
         if (!parentNode.children) {
           parentNode.children = []
         }
