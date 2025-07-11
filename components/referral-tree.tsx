@@ -175,8 +175,8 @@ export function ReferralTree({ userId }: { userId: string }) {
         throw new Error("Supabase client is not configured")
       }
 
-      console.log('Calling RPC get_referral_tree...')
-      const { data, error } = await supabase.rpc("get_referral_tree", {
+      console.log('Calling RPC get_referral_tree_user...')
+      const { data, error } = await supabase.rpc("get_referral_tree_user", {
         target_user_id: userId,
       })
       
