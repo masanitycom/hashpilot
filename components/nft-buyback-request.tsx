@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { supabase } from "@/lib/supabase"
-import { Loader2, DollarSign, AlertCircle, CheckCircle } from "lucide-react"
+import { Loader2, DollarSign, AlertCircle, CheckCircle, XCircle } from "lucide-react"
 
 interface NftBuybackRequestProps {
   userId: string
@@ -40,6 +40,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
   const [buybackAmount, setBuybackAmount] = useState({ manual: 0, auto: 0, total: 0 })
   const [history, setHistory] = useState<BuybackHistory[]>([])
   const [userProfit, setUserProfit] = useState(0)
+  const [cancellingId, setCancellingId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchNftData()
@@ -177,6 +178,41 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
       setMessage({ type: "error", text: error.message || "申請中にエラーが発生しました" })
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleCancel = async (requestId: string) => {
+    if (!confirm("本当に買い取り申請をキャンセルしますか？NFT保有数が元に戻ります。")) {
+      return
+    }
+
+    setCancellingId(requestId)
+    setMessage(null)
+
+    try {
+      const { data, error } = await supabase.rpc("cancel_buyback_request", {
+        p_request_id: requestId,
+        p_user_id: userId
+      })
+
+      if (error) throw error
+
+      if (data && data[0]?.success) {
+        setMessage({ 
+          type: "success", 
+          text: data[0].message 
+        })
+        
+        // データを再取得
+        fetchNftData()
+        fetchBuybackHistory()
+      } else {
+        throw new Error(data?.[0]?.message || "キャンセルに失敗しました")
+      }
+    } catch (error: any) {
+      setMessage({ type: "error", text: error.message || "キャンセル中にエラーが発生しました" })
+    } finally {
+      setCancellingId(null)
     }
   }
 
@@ -349,6 +385,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                     <th className="text-left p-2 text-gray-400">自動NFT</th>
                     <th className="text-left p-2 text-gray-400">買い取り額</th>
                     <th className="text-left p-2 text-gray-400">ステータス</th>
+                    <th className="text-center p-2 text-gray-400">アクション</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -361,6 +398,26 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                       <td className="p-2 text-white">{request.auto_nft_count}枚</td>
                       <td className="p-2 text-yellow-400">${request.total_buyback_amount}</td>
                       <td className="p-2">{getStatusBadge(request.status)}</td>
+                      <td className="p-2 text-center">
+                        {request.status === "pending" && (
+                          <Button
+                            onClick={() => handleCancel(request.id)}
+                            disabled={cancellingId === request.id}
+                            variant="outline"
+                            size="sm"
+                            className="text-red-400 border-red-600 hover:bg-red-900/20"
+                          >
+                            {cancellingId === request.id ? (
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : (
+                              <>
+                                <XCircle className="h-3 w-3 mr-1" />
+                                キャンセル
+                              </>
+                            )}
+                          </Button>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
