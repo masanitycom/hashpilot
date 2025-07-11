@@ -79,15 +79,10 @@ export default function AdminYieldPage() {
     const margin_rate = Number.parseFloat(marginRate) || 0
     // 正しい計算式: 日利率 × (1 - マージン率/100) × 0.6
     const after_margin = yield_rate * (1 - margin_rate / 100)
-    let calculated_user_rate = after_margin * 0.6
-    
-    // 月末処理時は5%ボーナス追加
-    if (isMonthEnd) {
-      calculated_user_rate = calculated_user_rate * 1.05
-    }
+    const calculated_user_rate = after_margin * 0.6
     
     setUserRate(calculated_user_rate)
-  }, [yieldRate, marginRate, isMonthEnd])
+  }, [yieldRate, marginRate])
 
   useEffect(() => {
     checkAdminAccess()
@@ -625,15 +620,20 @@ export default function AdminYieldPage() {
                 )}
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="monthEnd"
-                  checked={isMonthEnd}
-                  onCheckedChange={(checked) => setIsMonthEnd(checked as boolean)}
-                />
-                <Label htmlFor="monthEnd" className="text-white">
-                  月末処理
-                </Label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="monthEnd"
+                    checked={isMonthEnd}
+                    onCheckedChange={(checked) => setIsMonthEnd(checked as boolean)}
+                  />
+                  <Label htmlFor="monthEnd" className="text-white">
+                    月末処理フラグ
+                  </Label>
+                </div>
+                <p className="text-xs text-gray-400 ml-6">
+                  月末自動出金システムとは別の特別処理フラグです
+                </p>
               </div>
 
               <Button
