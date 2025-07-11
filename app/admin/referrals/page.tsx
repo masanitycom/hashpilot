@@ -159,7 +159,7 @@ export default function AdminReferralsPage() {
 
       // 紹介ツリーデータを取得
       const { data: treeResult, error: treeError } = await supabase.rpc("get_referral_tree", {
-        target_user_id: userId,
+        root_user_id: userId,
       })
 
       if (treeError) {

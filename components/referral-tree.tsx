@@ -177,7 +177,7 @@ export function ReferralTree({ userId }: { userId: string }) {
 
       console.log('Calling RPC get_referral_tree_user...')
       const { data, error } = await supabase.rpc("get_referral_tree_user", {
-        target_user_id: userId,
+        root_user_id: userId,
       })
       
       console.log('RPC result:', { data, error })
