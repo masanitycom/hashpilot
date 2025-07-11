@@ -76,18 +76,13 @@ export default function AdminRewardsPage() {
 
       setCurrentUser(user)
 
-      const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
-        user_email: user.email,
-      })
+      const { data: userData, error } = await supabase
+        .from("users")
+        .select("is_admin")
+        .eq("id", user.id)
+        .single()
 
-      if (adminError) {
-        console.error("Admin check error:", adminError)
-        setError("管理者権限の確認でエラーが発生しました")
-        return
-      }
-
-      if (!adminCheck) {
-        alert("管理者権限がありません")
+      if (error || !userData?.is_admin) {
         router.push("/dashboard")
         return
       }

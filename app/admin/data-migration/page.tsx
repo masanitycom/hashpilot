@@ -37,11 +37,13 @@ export default function DataMigrationPage() {
         return
       }
 
-      const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
-        user_email: user.email,
-      })
+      const { data: userData, error } = await supabase
+        .from("users")
+        .select("is_admin")
+        .eq("id", user.id)
+        .single()
 
-      if (adminError || !adminCheck) {
+      if (error || !userData?.is_admin) {
         router.push("/dashboard")
         return
       }
