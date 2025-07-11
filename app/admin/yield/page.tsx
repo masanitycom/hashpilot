@@ -79,9 +79,15 @@ export default function AdminYieldPage() {
     const margin_rate = Number.parseFloat(marginRate) || 0
     // 正しい計算式: 日利率 × (1 - マージン率/100) × 0.6
     const after_margin = yield_rate * (1 - margin_rate / 100)
-    const calculated_user_rate = after_margin * 0.6
+    let calculated_user_rate = after_margin * 0.6
+    
+    // 月末処理時は5%ボーナス追加
+    if (isMonthEnd) {
+      calculated_user_rate = calculated_user_rate * 1.05
+    }
+    
     setUserRate(calculated_user_rate)
-  }, [yieldRate, marginRate])
+  }, [yieldRate, marginRate, isMonthEnd])
 
   useEffect(() => {
     checkAdminAccess()
@@ -203,6 +209,7 @@ export default function AdminYieldPage() {
           p_yield_rate: Number.parseFloat(yieldRate) / 100,
           p_margin_rate: Number.parseFloat(marginRate) / 100,
           p_is_test_mode: true,
+          p_is_month_end: isMonthEnd,
         })
 
         if (error) throw error
@@ -221,6 +228,7 @@ export default function AdminYieldPage() {
           p_yield_rate: Number.parseFloat(yieldRate) / 100,
           p_margin_rate: Number.parseFloat(marginRate) / 100,
           p_is_test_mode: false,
+          p_is_month_end: isMonthEnd,
         })
 
         if (error) throw error
