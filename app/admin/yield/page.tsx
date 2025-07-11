@@ -59,7 +59,6 @@ export default function AdminYieldPage() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [yieldRate, setYieldRate] = useState("")
   const [marginRate, setMarginRate] = useState("30")
-  const [isMonthEnd, setIsMonthEnd] = useState(false)
   const [isTestMode, setIsTestMode] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
@@ -237,7 +236,6 @@ export default function AdminYieldPage() {
           p_yield_rate: Number.parseFloat(yieldRate) / 100,
           p_margin_rate: Number.parseFloat(marginRate) / 100,
           p_is_test_mode: true,
-          p_is_month_end: isMonthEnd,
         })
 
         if (error) throw error
@@ -256,7 +254,6 @@ export default function AdminYieldPage() {
           p_yield_rate: Number.parseFloat(yieldRate) / 100,
           p_margin_rate: Number.parseFloat(marginRate) / 100,
           p_is_test_mode: false,
-          p_is_month_end: isMonthEnd,
         })
 
         if (error) throw error
@@ -908,21 +905,6 @@ export default function AdminYieldPage() {
                 )}
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="monthEnd"
-                    checked={isMonthEnd}
-                    onCheckedChange={(checked) => setIsMonthEnd(checked as boolean)}
-                  />
-                  <Label htmlFor="monthEnd" className="text-white">
-                    月末処理フラグ
-                  </Label>
-                </div>
-                <p className="text-xs text-gray-400 ml-6">
-                  月末自動出金システムとは別の特別処理フラグです
-                </p>
-              </div>
 
               <Button
                 type="submit"
