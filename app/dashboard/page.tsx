@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X } from "lucide-react"
+import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X, Coins } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { ReferralTree } from "@/components/referral-tree"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
@@ -15,7 +15,6 @@ import { MonthlyProfitCard } from "@/components/monthly-profit-card"
 import { CycleStatusCard } from "@/components/cycle-status-card"
 import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
 import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
-import { NftBuybackRequest } from "@/components/nft-buyback-request"
 import Link from "next/link"
 
 interface UserData {
@@ -541,9 +540,30 @@ export default function DashboardPage() {
           <AutoPurchaseHistory userId={userData?.user_id || ""} />
         </div>
 
-        {/* NFT買い取り申請セクション */}
+        {/* NFT買い取り申請リンク */}
         <div className="mb-6 md:mb-8">
-          <NftBuybackRequest userId={userData?.user_id || ""} />
+          <Card className="bg-gray-900/50 border-gray-700">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-purple-600 rounded-lg">
+                    <Coins className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-2">NFT買い取り申請</h3>
+                    <p className="text-gray-400 mb-4">
+                      保有中のNFTを買い取り申請できます。手動購入NFTは1000ドル-利益額、自動購入NFTは500ドルで買い取り可能です。
+                    </p>
+                  </div>
+                </div>
+                <Link href="/nft-buyback">
+                  <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
+                    買い取り申請ページへ
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* 紹介ツリーセクション */}
