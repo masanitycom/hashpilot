@@ -39,8 +39,8 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       // 利益データを取得
       const { data: profitData, error: profitError } = await supabase
-        .from('daily_profits')
-        .select('profit_amount')
+        .from('daily_profit_records')
+        .select('daily_profit')
         .eq('user_id', userId)
 
       if (profitError) throw profitError
@@ -66,7 +66,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       if (withdrawalError && withdrawalError.code !== 'PGRST116') throw withdrawalError
 
       // 計算
-      const totalProfit = profitData?.reduce((sum, p) => sum + (p.profit_amount || 0), 0) || 0
+      const totalProfit = profitData?.reduce((sum, p) => sum + (p.daily_profit || 0), 0) || 0
       const manualNfts = nftData?.filter(n => n.purchase_type === 'manual').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
       const autoNfts = nftData?.filter(n => n.purchase_type === 'auto').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
       const availableUsdt = withdrawalData?.[0]?.available_amount || 0
