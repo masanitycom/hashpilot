@@ -15,6 +15,9 @@ import { MonthlyProfitCard } from "@/components/monthly-profit-card"
 import { CycleStatusCard } from "@/components/cycle-status-card"
 import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
 import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
+import { PersonalProfitCard } from "@/components/personal-profit-card"
+import { ReferralProfitCard } from "@/components/referral-profit-card"
+import { TotalProfitCard } from "@/components/total-profit-card"
 import Link from "next/link"
 
 interface UserData {
@@ -528,6 +531,46 @@ export default function DashboardPage() {
           {/* 日利グラフ */}
           <div className="lg:col-span-1">
             <DailyProfitChart userId={userData?.user_id || ""} />
+          </div>
+        </div>
+
+        {/* 利益分析セクション */}
+        <div className="mb-6 md:mb-8">
+          <Card className="bg-gray-800 border-gray-700 mb-4">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-white text-lg font-semibold flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-blue-400" />
+                利益分析
+              </CardTitle>
+              <p className="text-gray-400 text-sm">
+                投資額別の利益内訳（個人投資額・Level3紹介報酬・合計）
+              </p>
+            </CardHeader>
+          </Card>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            {/* 個人投資利益 */}
+            <PersonalProfitCard 
+              userId={userData?.user_id || ""} 
+              totalInvestment={userStats?.total_investment || 0}
+            />
+            
+            {/* Level3紹介報酬 */}
+            <ReferralProfitCard 
+              userId={userData?.user_id || ""} 
+              level1Investment={userStats?.level1_investment || 0}
+              level2Investment={userStats?.level2_investment || 0}
+              level3Investment={userStats?.level3_investment || 0}
+            />
+            
+            {/* 合計利益 */}
+            <TotalProfitCard 
+              userId={userData?.user_id || ""} 
+              totalInvestment={userStats?.total_investment || 0}
+              level1Investment={userStats?.level1_investment || 0}
+              level2Investment={userStats?.level2_investment || 0}
+              level3Investment={userStats?.level3_investment || 0}
+            />
           </div>
         </div>
 
