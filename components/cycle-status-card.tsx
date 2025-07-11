@@ -12,13 +12,13 @@ interface CycleStatusCardProps {
 }
 
 interface CycleData {
-  phase: string
-  cum_usdt: number
+  next_action: string
   available_usdt: number
   total_nft_count: number
   auto_nft_count: number
   manual_nft_count: number
-  cycle_number: number
+  cum_profit: number
+  remaining_profit: number
 }
 
 export function CycleStatusCard({ userId }: CycleStatusCardProps) {
@@ -37,20 +37,18 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       setLoading(true)
       setError("")
 
-      const { data, error: cycleError } = await supabase
-        .from('affiliate_cycle')
-        .select('*')
-        .eq('user_id', userId)
-        .single()
+      const { data, error: cycleError } = await supabase.rpc('get_user_cycle_status', {
+        p_user_id: userId
+      })
 
       if (cycleError) {
-        if (cycleError.code === 'PGRST116') {
-          setError("サイクルデータがありません")
-        } else {
-          throw cycleError
-        }
+        throw cycleError
+      }
+
+      if (data && data.length > 0) {
+        setCycleData(data[0])
       } else {
-        setCycleData(data)
+        setError("サイクルデータがありません")
       }
     } catch (err: any) {
       console.error("Cycle data fetch error:", err)
@@ -60,47 +58,42 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
     }
   }
 
-  const getPhaseInfo = (phase: string, cumUsdt: number) => {
-    if (phase === 'HOLD' || cumUsdt >= 1100) {
+  const getPhaseInfo = (nextAction: string) => {
+    if (nextAction === 'nft') {
       return {
-        label: "🔒 HOLD フェーズ",
-        description: "2200 USDT到達で自動NFT購入",
-        color: "bg-orange-600",
-        icon: <Clock className="h-4 w-4" />
+        label: "🎯 NFT購入フェーズ",
+        description: "次の1100ドルでNFT自動購入",
+        color: "bg-purple-600",
+        icon: <Target className="h-4 w-4" />
       }
     } else {
       return {
-        label: "💰 USDT フェーズ", 
-        description: "利益は即時受け取り可能",
+        label: "💰 USDT受取フェーズ", 
+        description: "次の1100ドルはUSDT受取",
         color: "bg-green-600",
         icon: <DollarSign className="h-4 w-4" />
       }
     }
   }
 
-  const getProgressPercentage = (cumUsdt: number) => {
-    if (cumUsdt >= 2200) return 100
-    return (cumUsdt / 2200) * 100
+  const getProgressPercentage = (remaining: number) => {
+    if (remaining <= 0) return 100
+    if (remaining >= 1100) return 0
+    return ((1100 - remaining) / 1100) * 100
   }
 
-  const getNextMilestone = (cumUsdt: number) => {
-    if (cumUsdt < 1100) {
+  const getNextMilestone = (remaining: number, nextAction: string) => {
+    if (remaining <= 0) {
       return {
         target: 1100,
-        label: "HOLDフェーズまで",
-        remaining: 1100 - cumUsdt
-      }
-    } else if (cumUsdt < 2200) {
-      return {
-        target: 2200,
-        label: "自動NFT購入まで",
-        remaining: 2200 - cumUsdt
+        label: nextAction === 'nft' ? "NFT購入準備完了" : "USDT受取準備完了",
+        remaining: 0
       }
     } else {
       return {
-        target: 2200,
-        label: "自動NFT購入準備完了",
-        remaining: 0
+        target: 1100,
+        label: nextAction === 'nft' ? "NFT購入まで" : "USDT受取まで",
+        remaining: remaining
       }
     }
   }
@@ -127,9 +120,9 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
     )
   }
 
-  const phaseInfo = getPhaseInfo(cycleData.phase, cycleData.cum_usdt)
-  const progress = getProgressPercentage(cycleData.cum_usdt)
-  const milestone = getNextMilestone(cycleData.cum_usdt)
+  const phaseInfo = getPhaseInfo(cycleData.next_action)
+  const progress = getProgressPercentage(cycleData.remaining_profit)
+  const milestone = getNextMilestone(cycleData.remaining_profit, cycleData.next_action)
 
   return (
     <Card className="bg-gray-800 border-gray-700">
@@ -147,7 +140,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
             <span className="text-white text-sm font-medium">{phaseInfo.label}</span>
           </div>
           <Badge className={phaseInfo.color}>
-            サイクル {cycleData.cycle_number}
+            次: {cycleData.next_action.toUpperCase()}
           </Badge>
         </div>
 
@@ -156,8 +149,8 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
         {/* 進捗バー */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-400">累積額進捗</span>
-            <span className="text-white">${cycleData.cum_usdt.toFixed(2)} / $2,200</span>
+            <span className="text-gray-400">次の1100ドルまでの進捗</span>
+            <span className="text-white">${(1100 - cycleData.remaining_profit).toFixed(2)} / $1,100</span>
           </div>
           <Progress value={progress} className="h-2 bg-gray-700">
             <div 
