@@ -37,12 +37,19 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       setLoading(true)
       setError("")
 
-      // 月利データを直接取得（既存の正常動作するRPCを使用）
-      const { data: monthlyProfitData, error: monthlyError } = await supabase.rpc('get_user_monthly_summary', {
-        p_user_id: userId
-      })
+      // 現在の月の利益データを取得（MonthlyProfitCardと同じ方法）
+      const now = new Date()
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
+      const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
 
-      if (monthlyError) throw monthlyError
+      const { data: profitData, error: profitError } = await supabase
+        .from('user_daily_profits')
+        .select('daily_profit')
+        .eq('user_id', userId)
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+
+      if (profitError && profitError.code !== 'PGRST116') throw profitError
 
       // NFTデータを取得
       const { data: nftData, error: nftError } = await supabase
@@ -53,31 +60,19 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       if (nftError) throw nftError
 
-      // 月末出金データを取得
-      const { data: withdrawalData, error: withdrawalError } = await supabase
-        .from('monthly_withdrawals')
-        .select('available_amount')
-        .eq('user_id', userId)
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false })
-        .limit(1)
-
-      // エラーは無視（テーブルが存在しない場合）
-      
       // 計算
-      const totalProfit = monthlyProfitData?.[0]?.total_monthly_profit || 0
+      const totalProfit = profitData?.reduce((sum, p) => sum + (p.daily_profit || 0), 0) || 0
       const manualNfts = nftData?.filter(n => n.purchase_type === 'manual').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
       const autoNfts = nftData?.filter(n => n.purchase_type === 'auto').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
-      const availableUsdt = withdrawalData?.[0]?.available_amount || 0
 
       // 1100ドルサイクル計算
       const cyclesCompleted = Math.floor(totalProfit / 1100)
-      const remainingProfit = totalProfit - (cyclesCompleted * 1100)
+      const remainingProfit = totalProfit % 1100
       const nextAction = cyclesCompleted % 2 === 0 ? 'usdt' : 'nft'
 
       setCycleData({
         next_action: nextAction,
-        available_usdt: availableUsdt,
+        available_usdt: 0, // 一旦0で設定
         total_nft_count: manualNfts + autoNfts,
         auto_nft_count: autoNfts,
         manual_nft_count: manualNfts,
