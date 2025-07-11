@@ -32,9 +32,10 @@ interface SystemLog {
 }
 
 interface HealthCheck {
-  check_name: string
+  component: string
   status: string
-  value: string
+  message: string
+  last_check: string
   details: any
 }
 
@@ -72,7 +73,26 @@ export default function AdminLogsPage() {
       }
 
       setCurrentUser(user)
-      setIsAdmin(true) // 緊急対応で管理者チェックを無効化
+      
+      // 緊急対応: basarasystems@gmail.com と support@dshsupport.biz のアクセス許可
+      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
+        setIsAdmin(true)
+        await Promise.all([fetchLogs(), fetchHealthChecks()])
+        return
+      }
+
+      // 通常の管理者チェック
+      const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
+        user_email: user.email,
+      })
+
+      if (adminError || !adminCheck) {
+        setError("管理者権限がありません")
+        router.push("/admin")
+        return
+      }
+
+      setIsAdmin(true)
       await Promise.all([fetchLogs(), fetchHealthChecks()])
     } catch (error) {
       console.error("Admin access check error:", error)
@@ -293,17 +313,17 @@ export default function AdminLogsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {healthChecks.map((check) => (
                 <div
-                  key={check.check_name}
+                  key={check.component}
                   className="bg-gray-700/50 border border-gray-600 rounded-lg p-3"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-white text-sm font-medium">
-                      {check.check_name.replace(/_/g, " ")}
+                      {check.component.replace(/_/g, " ")}
                     </span>
                     {getHealthStatusIcon(check.status)}
                   </div>
                   <div className="text-lg font-bold text-white mb-1">
-                    {check.value}
+                    {check.message}
                   </div>
                   <Badge className={`${getHealthStatusColor(check.status)} text-xs`}>
                     {check.status}

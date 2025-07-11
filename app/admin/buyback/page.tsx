@@ -72,21 +72,26 @@ export default function AdminBuybackPage() {
         return
       }
 
-      const { data: userData, error } = await supabase
-        .from("users")
-        .select("is_admin")
-        .eq("id", user.id)
-        .single()
+      // 緊急対応: basarasystems@gmail.com と support@dshsupport.biz のアクセス許可
+      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
+        setAdminUser(user)
+        return
+      }
 
-      if (error || !userData?.is_admin) {
-        router.push("/dashboard")
+      // 通常の管理者チェック
+      const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
+        user_email: user.email,
+      })
+
+      if (adminError || !adminCheck) {
+        router.push("/admin")
         return
       }
 
       setAdminUser(user)
     } catch (error) {
       console.error("Error checking admin access:", error)
-      router.push("/dashboard")
+      router.push("/admin")
     }
   }
 
