@@ -588,8 +588,7 @@ export default function AdminYieldPage() {
         .from("daily_yield_log")
         .update({
           margin_rate: fixedMarginRate,
-          user_rate: fixedUserRate,
-          updated_at: new Date().toISOString()
+          user_rate: fixedUserRate
         })
         .eq("id", recordId)
         .select()
