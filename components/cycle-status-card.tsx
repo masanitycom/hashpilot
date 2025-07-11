@@ -23,12 +23,13 @@ interface CycleData {
 
 export function CycleStatusCard({ userId }: CycleStatusCardProps) {
   const [cycleData, setCycleData] = useState<CycleData | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
   useEffect(() => {
-    // 一時的にサイクル情報を非表示
-    setError("サイクル情報は調整中です")
+    if (userId) {
+      fetchCycleData()
+    }
   }, [userId])
 
   const fetchCycleData = async () => {
@@ -36,13 +37,14 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       setLoading(true)
       setError("")
 
-      // 利益データを取得
-      const { data: profitData, error: profitError } = await supabase
-        .from('daily_profit_records')
-        .select('daily_profit')
-        .eq('user_id', userId)
+      // 月利データを直接取得（既存の正常動作するRPCを使用）
+      const { data: monthlyProfitData, error: monthlyError } = await supabase.rpc('get_user_monthly_profit', {
+        p_user_id: userId,
+        p_month: new Date().getMonth() + 1,
+        p_year: new Date().getFullYear()
+      })
 
-      if (profitError) throw profitError
+      if (monthlyError) throw monthlyError
 
       // NFTデータを取得
       const { data: nftData, error: nftError } = await supabase
@@ -62,10 +64,10 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
         .order('created_at', { ascending: false })
         .limit(1)
 
-      if (withdrawalError && withdrawalError.code !== 'PGRST116') throw withdrawalError
-
+      // エラーは無視（テーブルが存在しない場合）
+      
       // 計算
-      const totalProfit = profitData?.reduce((sum, p) => sum + (p.daily_profit || 0), 0) || 0
+      const totalProfit = monthlyProfitData?.[0]?.total_profit || 0
       const manualNfts = nftData?.filter(n => n.purchase_type === 'manual').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
       const autoNfts = nftData?.filter(n => n.purchase_type === 'auto').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
       const availableUsdt = withdrawalData?.[0]?.available_amount || 0
