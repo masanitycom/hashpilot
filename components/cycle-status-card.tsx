@@ -54,7 +54,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       // NFTデータを取得
       const { data: nftData, error: nftError } = await supabase
         .from('purchases')
-        .select('nft_quantity, purchase_type')
+        .select('nft_quantity')
         .eq('user_id', userId)
         .eq('admin_approved', true)
 
@@ -62,8 +62,10 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       // 計算
       const totalProfit = profitData?.reduce((sum, p) => sum + (p.daily_profit || 0), 0) || 0
-      const manualNfts = nftData?.filter(n => n.purchase_type === 'manual').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
-      const autoNfts = nftData?.filter(n => n.purchase_type === 'auto').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
+      const totalNfts = nftData?.reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
+      // 自動/手動の区別は一旦なしで総数のみ表示
+      const manualNfts = totalNfts
+      const autoNfts = 0
 
       // 1100ドルサイクル計算
       const cyclesCompleted = Math.floor(totalProfit / 1100)
