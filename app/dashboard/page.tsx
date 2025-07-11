@@ -15,6 +15,7 @@ import { MonthlyProfitCard } from "@/components/monthly-profit-card"
 import { CycleStatusCard } from "@/components/cycle-status-card"
 import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
 import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
+import { NftBuybackRequest } from "@/components/nft-buyback-request"
 import Link from "next/link"
 
 interface UserData {
@@ -538,6 +539,11 @@ export default function DashboardPage() {
           
           {/* 自動NFT購入履歴 */}
           <AutoPurchaseHistory userId={userData?.user_id || ""} />
+        </div>
+
+        {/* NFT買い取り申請セクション */}
+        <div className="mb-6 md:mb-8">
+          <NftBuybackRequest userId={userData?.user_id || ""} />
         </div>
 
         {/* 紹介ツリーセクション */}
