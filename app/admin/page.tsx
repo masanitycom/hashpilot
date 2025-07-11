@@ -74,8 +74,8 @@ export default function AdminDashboard() {
 
       setCurrentUser(user)
 
-      // 緊急対応: basarasystems@gmail.com のアクセス許可
-      if (user.email === "basarasystems@gmail.com") {
+      // 緊急対応: basarasystems@gmail.com または support@dshsupport.biz のアクセス許可
+      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
         setIsAdmin(true)
         await fetchStats()
         return
@@ -126,6 +126,7 @@ export default function AdminDashboard() {
         .from("users")
         .select("is_active, has_approved_nft, created_at, email")
         .neq("email", "basarasystems@gmail.com")
+        .neq("email", "support@dshsupport.biz")
       const totalUsers = usersData?.length || 54
       const activeUsers = usersData?.filter((u) => u.is_active).length || 54
       const nftApproved = usersData?.filter((u) => u.has_approved_nft).length || 46
@@ -206,7 +207,7 @@ export default function AdminDashboard() {
               <Shield className="w-8 h-8 text-blue-400" />
               <div>
                 <h1 className="text-2xl font-bold text-white">管理者ダッシュボード</h1>
-                <p className="text-sm text-gray-400">ログイン中: basarasystems@gmail.com</p>
+                <p className="text-sm text-gray-400">ログイン中: {currentUser?.email}</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">

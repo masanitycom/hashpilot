@@ -70,8 +70,8 @@ export default function AdminAnalyticsPage() {
         return
       }
 
-      // 緊急対応: basarasystems@gmail.com のアクセス許可
-      if (user.email === "basarasystems@gmail.com") {
+      // 緊急対応: basarasystems@gmail.com または support@dshsupport.biz のアクセス許可
+      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
         setIsAdmin(true)
         await fetchAnalytics()
         return
@@ -127,6 +127,7 @@ export default function AdminAnalyticsPage() {
         .from("users")
         .select("id, email, created_at, is_active, total_purchases, referrer_user_id")
         .neq("email", "basarasystems@gmail.com")
+        .neq("email", "support@dshsupport.biz")
 
       if (usersError) throw usersError
 

@@ -68,8 +68,8 @@ export default function AdminPurchasesPage() {
 
       setCurrentUser(user)
 
-      // 緊急対応: basarasystems@gmail.com のアクセス許可
-      if (user.email === "basarasystems@gmail.com") {
+      // 緊急対応: basarasystems@gmail.com または support@dshsupport.biz のアクセス許可
+      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
         setIsAdmin(true)
         fetchPurchases()
         return

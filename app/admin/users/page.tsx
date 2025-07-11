@@ -61,8 +61,8 @@ export default function AdminUsersPage() {
         return
       }
 
-      // 緊急対応: basarasystems@gmail.com のアクセス許可
-      if (user.email === "basarasystems@gmail.com") {
+      // 緊急対応: basarasystems@gmail.com または support@dshsupport.biz のアクセス許可
+      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
         await fetchUsers()
         return
       }
@@ -123,6 +123,7 @@ export default function AdminUsersPage() {
         .from("users")
         .select("*")
         .neq("email", "basarasystems@gmail.com")  // 管理者アカウントを除外
+        .neq("email", "support@dshsupport.biz")  // 管理者アカウントを除外
         .order("created_at", { ascending: false })
 
       if (usersError) {

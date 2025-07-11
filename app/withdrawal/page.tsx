@@ -60,7 +60,7 @@ export default function WithdrawalPage() {
       }
 
       // basarasystems@gmail.com は管理画面にリダイレクト
-      if (session.user.email === "basarasystems@gmail.com") {
+      if (session.user.email === "basarasystems@gmail.com" || session.user.email === "support@dshsupport.biz") {
         router.push("/admin")
         return
       }

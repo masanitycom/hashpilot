@@ -69,7 +69,7 @@ export default function ProfilePage() {
       }
 
       // basarasystems@gmail.com は管理画面にリダイレクト
-      if (user.email === "basarasystems@gmail.com") {
+      if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
         router.push("/admin")
         return
       }

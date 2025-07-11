@@ -85,7 +85,7 @@ export default function DashboardPage() {
       }
 
       // basarasystems@gmail.com は管理画面にリダイレクト
-      if (session.user.email === "basarasystems@gmail.com") {
+      if (session.user.email === "basarasystems@gmail.com" || session.user.email === "support@dshsupport.biz") {
         console.log("Admin user detected, redirecting to admin dashboard")
         router.push("/admin")
         return
