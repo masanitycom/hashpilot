@@ -190,25 +190,62 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     setMessage(null)
 
     try {
-      const { data, error } = await supabase.rpc("cancel_buyback_request", {
-        p_request_id: requestId,
-        p_user_id: userId
-      })
+      // 申請データを取得
+      const { data: requestData, error: requestError } = await supabase
+        .from("buyback_requests")
+        .select("status, manual_nft_count, auto_nft_count, total_nft_count")
+        .eq("id", requestId)
+        .eq("user_id", userId)
+        .single()
 
-      if (error) throw error
+      if (requestError) throw requestError
 
-      if (data && data[0]?.success) {
-        setMessage({ 
-          type: "success", 
-          text: data[0].message 
-        })
-        
-        // データを再取得
-        fetchNftData()
-        fetchBuybackHistory()
-      } else {
-        throw new Error(data?.[0]?.message || "キャンセルに失敗しました")
+      if (requestData.status !== "pending") {
+        throw new Error("申請中でない申請はキャンセルできません")
       }
+
+      // 申請をキャンセル状態に更新
+      const { error: updateError } = await supabase
+        .from("buyback_requests")
+        .update({
+          status: "cancelled",
+          processed_at: new Date().toISOString(),
+          processed_by: userId
+        })
+        .eq("id", requestId)
+
+      if (updateError) throw updateError
+
+      // 現在のNFT保有数を取得
+      const { data: currentCycle, error: getCycleError } = await supabase
+        .from("affiliate_cycle")
+        .select("manual_nft_count, auto_nft_count, total_nft_count")
+        .eq("user_id", userId)
+        .single()
+
+      if (getCycleError) throw getCycleError
+
+      // NFT保有数を復元
+      const { error: cycleError } = await supabase
+        .from("affiliate_cycle")
+        .update({
+          manual_nft_count: currentCycle.manual_nft_count + requestData.manual_nft_count,
+          auto_nft_count: currentCycle.auto_nft_count + requestData.auto_nft_count,
+          total_nft_count: currentCycle.total_nft_count + requestData.total_nft_count,
+          updated_at: new Date().toISOString()
+        })
+        .eq("user_id", userId)
+
+      if (cycleError) throw cycleError
+
+      setMessage({ 
+        type: "success", 
+        text: "買い取り申請をキャンセルしました。NFT保有数が復元されました。" 
+      })
+      
+      // データを再取得
+      fetchNftData()
+      fetchBuybackHistory()
     } catch (error: any) {
       setMessage({ type: "error", text: error.message || "キャンセル中にエラーが発生しました" })
     } finally {
