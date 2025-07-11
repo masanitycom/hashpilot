@@ -38,10 +38,8 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       setError("")
 
       // 月利データを直接取得（既存の正常動作するRPCを使用）
-      const { data: monthlyProfitData, error: monthlyError } = await supabase.rpc('get_user_monthly_profit', {
-        p_user_id: userId,
-        p_month: new Date().getMonth() + 1,
-        p_year: new Date().getFullYear()
+      const { data: monthlyProfitData, error: monthlyError } = await supabase.rpc('get_user_monthly_summary', {
+        p_user_id: userId
       })
 
       if (monthlyError) throw monthlyError
@@ -67,7 +65,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       // エラーは無視（テーブルが存在しない場合）
       
       // 計算
-      const totalProfit = monthlyProfitData?.[0]?.total_profit || 0
+      const totalProfit = monthlyProfitData?.[0]?.total_monthly_profit || 0
       const manualNfts = nftData?.filter(n => n.purchase_type === 'manual').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
       const autoNfts = nftData?.filter(n => n.purchase_type === 'auto').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
       const availableUsdt = withdrawalData?.[0]?.available_amount || 0
