@@ -122,10 +122,11 @@ export default function AdminAnalyticsPage() {
       setLoading(true)
       setError("")
 
-      // Fetch users data
+      // Fetch users data (basarasystems@gmail.comを除外)
       const { data: usersData, error: usersError } = await supabase
         .from("users")
         .select("id, email, created_at, is_active, total_purchases, referrer_user_id")
+        .neq("email", "basarasystems@gmail.com")
 
       if (usersError) throw usersError
 

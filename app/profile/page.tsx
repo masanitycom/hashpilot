@@ -68,6 +68,12 @@ export default function ProfilePage() {
         return
       }
 
+      // basarasystems@gmail.com は管理画面にリダイレクト
+      if (user.email === "basarasystems@gmail.com") {
+        router.push("/admin")
+        return
+      }
+
       const { data: userData, error: userError } = await supabase
         .from("users")
         .select(`

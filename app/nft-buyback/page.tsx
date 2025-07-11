@@ -26,6 +26,12 @@ export default function NftBuybackPage() {
         return
       }
 
+      // basarasystems@gmail.com は管理画面にリダイレクト
+      if (user.email === "basarasystems@gmail.com") {
+        router.push("/admin")
+        return
+      }
+
       setUser(user)
 
       // ユーザーデータを取得

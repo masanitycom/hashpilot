@@ -121,8 +121,11 @@ export default function AdminDashboard() {
       const { data: revenueData } = await supabase.from("purchases").select("amount_usd").eq("admin_approved", true)
       const totalRevenue = revenueData?.reduce((sum, purchase) => sum + purchase.amount_usd, 0) || 53900.0
 
-      // ユーザー統計の取得
-      const { data: usersData } = await supabase.from("users").select("is_active, has_approved_nft, created_at")
+      // ユーザー統計の取得（basarasystems@gmail.comを除外）
+      const { data: usersData } = await supabase
+        .from("users")
+        .select("is_active, has_approved_nft, created_at, email")
+        .neq("email", "basarasystems@gmail.com")
       const totalUsers = usersData?.length || 54
       const activeUsers = usersData?.filter((u) => u.is_active).length || 54
       const nftApproved = usersData?.filter((u) => u.has_approved_nft).length || 46

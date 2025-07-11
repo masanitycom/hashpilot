@@ -52,6 +52,12 @@ export default function NFTPage() {
         return
       }
 
+      // basarasystems@gmail.com は管理画面にリダイレクト
+      if (session.user.email === "basarasystems@gmail.com") {
+        router.push("/admin")
+        return
+      }
+
       setUser(session.user)
       await fetchUserData(session.user.id)
     } catch (error) {

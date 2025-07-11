@@ -84,6 +84,13 @@ export default function DashboardPage() {
         return
       }
 
+      // basarasystems@gmail.com は管理画面にリダイレクト
+      if (session.user.email === "basarasystems@gmail.com") {
+        console.log("Admin user detected, redirecting to admin dashboard")
+        router.push("/admin")
+        return
+      }
+
       console.log("User authenticated:", session.user.id)
       setUser(session.user)
       await fetchUserData(session.user.id)

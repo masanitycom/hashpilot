@@ -59,6 +59,12 @@ export default function WithdrawalPage() {
         return
       }
 
+      // basarasystems@gmail.com は管理画面にリダイレクト
+      if (session.user.email === "basarasystems@gmail.com") {
+        router.push("/admin")
+        return
+      }
+
       console.log("User authenticated:", session.user.id)
       setUser(session.user)
       await fetchUserData(session.user.id)

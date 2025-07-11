@@ -122,6 +122,7 @@ export default function AdminUsersPage() {
       const { data: usersData, error: usersError } = await supabase
         .from("users")
         .select("*")
+        .neq("email", "basarasystems@gmail.com")  // 管理者アカウントを除外
         .order("created_at", { ascending: false })
 
       if (usersError) {

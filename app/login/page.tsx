@@ -40,8 +40,13 @@ export default function LoginPage() {
         data: { session },
       } = await supabase.auth.getSession()
       if (session?.user) {
-        // 既にログインしている場合はダッシュボードにリダイレクト
-        router.push("/dashboard")
+        // basarasystems@gmail.com は管理画面にリダイレクト
+        if (session.user.email === "basarasystems@gmail.com") {
+          router.push("/admin")
+        } else {
+          // その他のユーザーはダッシュボードにリダイレクト
+          router.push("/dashboard")
+        }
       }
     } catch (error) {
       console.error("Session check error:", error)
@@ -110,8 +115,13 @@ export default function LoginPage() {
         // セッションが確実に設定されるまで少し待つ
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        // ダッシュボードにリダイレクト
-        window.location.href = "/dashboard"
+        // basarasystems@gmail.com は管理画面にリダイレクト
+        if (data.user.email === "basarasystems@gmail.com") {
+          window.location.href = "/admin"
+        } else {
+          // その他のユーザーはダッシュボードにリダイレクト
+          window.location.href = "/dashboard"
+        }
       } else {
         setError("ログインに失敗しました。再度お試しください。")
         setLoading(false)
