@@ -242,8 +242,8 @@ export default function AdminBuybackPage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
-    setMessage({ type: "success", text: "コピーしました" })
-    setTimeout(() => setMessage(null), 2000)
+    setMessage({ type: "success", text: `コピーしました: ${text.length > 20 ? text.substring(0, 20) + '...' : text}` })
+    setTimeout(() => setMessage(null), 3000)
   }
 
   const getStatusBadge = (status: string) => {
@@ -443,13 +443,31 @@ export default function AdminBuybackPage() {
                           <div className="text-white font-mono text-sm">
                             {request.wallet_type === "CoinW" ? (
                               <div>
-                                <div className="text-orange-400">CoinW UID</div>
-                                <div>{request.wallet_address}</div>
+                                <div className="text-orange-400 text-xs">CoinW UID</div>
+                                <button
+                                  onClick={() => copyToClipboard(request.wallet_address)}
+                                  className="text-white hover:text-orange-400 transition-colors cursor-pointer text-left p-1 -ml-1 rounded hover:bg-gray-800"
+                                  title="クリックでコピー"
+                                >
+                                  <div className="flex items-center space-x-1">
+                                    <span>{request.wallet_address}</span>
+                                    <Copy className="h-3 w-3" />
+                                  </div>
+                                </button>
                               </div>
                             ) : (
                               <div>
-                                <div className="text-green-400">USDT-BEP20</div>
-                                <div className="text-xs break-all">{request.wallet_address}</div>
+                                <div className="text-green-400 text-xs">USDT-BEP20</div>
+                                <button
+                                  onClick={() => copyToClipboard(request.wallet_address)}
+                                  className="text-white hover:text-green-400 transition-colors cursor-pointer text-left p-1 -ml-1 rounded hover:bg-gray-800"
+                                  title="クリックでコピー"
+                                >
+                                  <div className="flex items-center space-x-1">
+                                    <span className="text-xs break-all">{request.wallet_address}</span>
+                                    <Copy className="h-3 w-3 flex-shrink-0" />
+                                  </div>
+                                </button>
                               </div>
                             )}
                           </div>
