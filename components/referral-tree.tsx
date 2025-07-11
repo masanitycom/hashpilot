@@ -469,19 +469,27 @@ export function ReferralTree({ userId }: { userId: string }) {
           </Button>
         </CardHeader>
         <CardContent className="p-3 sm:p-6 overflow-x-hidden">
-          <div className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6">
-            <div className="flex flex-wrap gap-2 sm:gap-4">
-              <div className="flex items-center space-x-1 sm:space-x-2">
-                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-blue-500 rounded-full"></div>
-                <span>Lv1: 直接</span>
+          <div className="mb-4 sm:mb-6">
+            <div className="text-xs sm:text-sm text-gray-400 mb-2">
+              <div className="flex flex-wrap gap-2 sm:gap-4">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-blue-500 rounded-full"></div>
+                  <span>Lv1: 直接紹介</span>
+                </div>
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
+                  <span>Lv2: 間接紹介</span>
+                </div>
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></div>
+                  <span>Lv3: 第3階層</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-1 sm:space-x-2">
-                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
-                <span>Lv2: 間接</span>
-              </div>
-              <div className="flex items-center space-x-1 sm:space-x-2">
-                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></div>
-                <span>Lv3: 第3階層</span>
+            </div>
+            <div className="bg-gray-800/50 border border-gray-700 rounded-lg px-3 py-2 text-xs sm:text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
+                <span>各メンバーをクリックするとLevel3まで展開できます</span>
               </div>
             </div>
           </div>
