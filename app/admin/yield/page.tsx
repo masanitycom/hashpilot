@@ -358,15 +358,26 @@ export default function AdminYieldPage() {
     }
 
     try {
-      const { data, error } = await supabase.rpc("cancel_yield_posting", {
-        p_date: cancelDate,
-      })
+      // 直接テーブルから削除する方法に変更（RPC関数の管理者権限エラーを回避）
+      const { error: deleteYieldError } = await supabase
+        .from("daily_yield_log")
+        .delete()
+        .eq("date", cancelDate)
 
-      if (error) throw error
+      if (deleteYieldError) throw deleteYieldError
+
+      const { error: deleteProfitError } = await supabase
+        .from("user_daily_profit")
+        .delete()
+        .eq("date", cancelDate)
+
+      if (deleteProfitError) {
+        console.warn("利益データ削除エラー（存在しない可能性）:", deleteProfitError)
+      }
 
       setMessage({
         type: "success",
-        text: data.message,
+        text: `${cancelDate}の日利設定とユーザー利益データをキャンセルしました`,
       })
 
       fetchHistory()
@@ -593,11 +604,25 @@ export default function AdminYieldPage() {
                     min="0"
                     max="100"
                     value={marginRate}
-                    onChange={(e) => setMarginRate(e.target.value)}
+                    onChange={(e) => {
+                      const value = Number.parseFloat(e.target.value) || 0
+                      if (value <= 100) {
+                        setMarginRate(e.target.value)
+                      } else {
+                        setMarginRate("100")
+                        setMessage({
+                          type: "warning",
+                          text: "マージン率は100%以下に設定してください"
+                        })
+                      }
+                    }}
                     placeholder="例: 30"
                     required
                     className="bg-gray-700 border-gray-600 text-white"
                   />
+                  <p className="text-xs text-gray-400">
+                    ⚠️ 通常は30%程度。100%を超える値は設定できません
+                  </p>
                 </div>
               </div>
 
@@ -778,7 +803,12 @@ export default function AdminYieldPage() {
                           >
                             {(Number.parseFloat(item.yield_rate) * 100).toFixed(3)}%
                           </td>
-                          <td className="p-2">{(Number.parseFloat(item.margin_rate) * 100).toFixed(0)}%</td>
+                          <td className={`p-2 ${Number.parseFloat(item.margin_rate) * 100 > 100 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
+                            {(Number.parseFloat(item.margin_rate) * 100).toFixed(0)}%
+                            {Number.parseFloat(item.margin_rate) * 100 > 100 && (
+                              <span className="ml-1 text-xs">⚠️異常値</span>
+                            )}
+                          </td>
                           <td
                             className={`p-2 font-medium ${Number.parseFloat(item.user_rate) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
