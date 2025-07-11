@@ -35,9 +35,9 @@ export default function AdminUsersPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [editForm, setEditForm] = useState({
     coinw_uid: "",
-    full_name: "",
     reward_address_bep20: "",
     nft_receive_address: "",
+    referrer_user_id: "",
   })
   const [saving, setSaving] = useState(false)
   const router = useRouter()
@@ -125,9 +125,9 @@ export default function AdminUsersPage() {
     setEditingUser(user)
     setEditForm({
       coinw_uid: user.coinw_uid || "",
-      full_name: user.full_name || "",
       reward_address_bep20: user.reward_address_bep20 || "",
       nft_receive_address: user.nft_receive_address || "",
+      referrer_user_id: user.referrer_user_id || "",
     })
   }
 
@@ -142,9 +142,9 @@ export default function AdminUsersPage() {
         .from("users")
         .update({
           coinw_uid: editForm.coinw_uid || null,
-          full_name: editForm.full_name || null,
           reward_address_bep20: editForm.reward_address_bep20 || null,
           nft_receive_address: editForm.nft_receive_address || null,
+          referrer_user_id: editForm.referrer_user_id || null,
           updated_at: new Date().toISOString(),
         })
         .eq("id", editingUser.id)
@@ -184,14 +184,11 @@ export default function AdminUsersPage() {
 
   const exportUsers = () => {
     const csvContent = [
-      ["ユーザーID", "メール", "氏名", "CoinW UID", "投資額", "紹介者", "作成日", "報酬アドレス", "NFTアドレス"].join(
-        ",",
-      ),
+      ["ユーザーID", "メール", "CoinW UID", "投資額", "紹介者", "作成日", "報酬アドレス", "NFTアドレス"].join(","),
       ...filteredUsers.map((user) =>
         [
           user.user_id,
           user.email,
-          user.full_name || "",
           user.coinw_uid || "",
           user.total_purchases,
           user.referrer_user_id || "",
@@ -320,12 +317,6 @@ export default function AdminUsersPage() {
                           <span className="text-gray-400">メール: </span>
                           <span className="text-white">{user.email}</span>
                         </div>
-                        {user.full_name && (
-                          <div>
-                            <span className="text-gray-400">氏名: </span>
-                            <span className="text-white">{user.full_name}</span>
-                          </div>
-                        )}
                         <div>
                           <span className="text-gray-400">投資額: </span>
                           <span className="text-green-400">${user.total_purchases.toLocaleString()}</span>
@@ -409,12 +400,12 @@ export default function AdminUsersPage() {
                 </div>
 
                 <div>
-                  <Label className="text-gray-300">氏名</Label>
+                  <Label className="text-gray-300">紹介者ユーザーID</Label>
                   <Input
-                    value={editForm.full_name}
-                    onChange={(e) => setEditForm({ ...editForm, full_name: e.target.value })}
+                    value={editForm.referrer_user_id}
+                    onChange={(e) => setEditForm({ ...editForm, referrer_user_id: e.target.value })}
                     className="bg-gray-700 border-gray-600 text-white"
-                    placeholder="氏名"
+                    placeholder="紹介者のユーザーID"
                   />
                 </div>
 
