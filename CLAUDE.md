@@ -91,11 +91,11 @@ monthly_statistics (year, month, total_users, total_profit, total_auto_purchases
 3. **next_action管理**: 各ユーザーの次のアクション（'usdt' or 'nft'）を記録
 
 #### 具体例（毎月5000ドル利益の場合）
-- **1ヶ月目**: 2800USDT受取 + 2NFT購入（600ドル保留、次=NFT）
-- **2ヶ月目**: 2700USDT受取 + 2NFT購入（100ドル保留、次=NFT）
-- **3ヶ月目**: 2200USDT受取 + 2NFT購入（700ドル保留、次=USDT）
-- **4ヶ月目**: 3300USDT受取 + 2NFT購入（200ドル保留、次=NFT）
-- **5ヶ月目**: 2200USDT受取 + 2NFT購入（800ドル保留、次=USDT）
+- **1ヶ月目**: 2800USDT受取 + 2NFT購入（保留0、次=USDT） 
+- **2ヶ月目**: 2700USDT受取 + 2NFT購入（保留100、次=NFT）
+- **3ヶ月目**: 2200USDT受取 + 2NFT購入（保留700、次=USDT）
+- **4ヶ月目**: 2400USDT受取 + 3NFT購入（保留0、次=NFT）
+- **5ヶ月目**: 2800USDT受取 + 2NFT購入（保留0、次=USDT）
 
 #### フェーズ判定（レガシー互換性のため維持）
 - **USDTフェーズ**: cum_usdt < 1100 かつ next_action = 'usdt'
