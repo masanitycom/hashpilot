@@ -70,17 +70,50 @@ export default function AdminReferralsPage() {
 
       setCurrentUser(user)
 
+      // 緊急対応: basarasystems@gmail.com のアクセス許可
+      if (user.email === "basarasystems@gmail.com") {
+        setIsAdmin(true)
+        fetchUsers()
+        return
+      }
+
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
         user_email: user.email,
       })
 
       if (adminError) {
         console.error("Admin check error:", adminError)
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          setIsAdmin(true)
+          fetchUsers()
+          return
+        }
+        
         setError("管理者権限の確認でエラーが発生しました")
         return
       }
 
       if (!adminCheck) {
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          setIsAdmin(true)
+          fetchUsers()
+          return
+        }
+        
         alert("管理者権限がありません")
         router.push("/dashboard")
         return

@@ -80,11 +80,50 @@ export default function DatabaseCheckPage() {
         return
       }
 
+      // 緊急対応: basarasystems@gmail.com のアクセス許可
+      if (user.email === "basarasystems@gmail.com") {
+        setIsAdmin(true)
+        await fetchDatabaseStats()
+        return
+      }
+
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
         user_email: user.email,
       })
 
-      if (adminError || !adminCheck) {
+      if (adminError) {
+        console.error("Admin check error:", adminError)
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          setIsAdmin(true)
+          await fetchDatabaseStats()
+          return
+        }
+        
+        router.push("/dashboard")
+        return
+      }
+
+      if (!adminCheck) {
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          setIsAdmin(true)
+          await fetchDatabaseStats()
+          return
+        }
+        
         router.push("/dashboard")
         return
       }

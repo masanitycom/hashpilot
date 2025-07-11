@@ -61,13 +61,48 @@ export default function AdminUsersPage() {
         return
       }
 
+      // 緊急対応: basarasystems@gmail.com のアクセス許可
+      if (user.email === "basarasystems@gmail.com") {
+        await fetchUsers()
+        return
+      }
+
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
         user_email: user.email,
         user_uuid: null,
       })
 
-      if (adminError || !adminCheck) {
+      if (adminError) {
         console.error("Admin check failed:", adminError)
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          await fetchUsers()
+          return
+        }
+        
+        router.push("/admin-login")
+        return
+      }
+
+      if (!adminCheck) {
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          await fetchUsers()
+          return
+        }
+        
         router.push("/admin-login")
         return
       }

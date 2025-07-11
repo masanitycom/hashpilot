@@ -40,6 +40,13 @@ export default function AdminSettingsPage() {
 
       console.log("Checking admin access for:", user.email)
 
+      // 緊急対応: basarasystems@gmail.com のアクセス許可
+      if (user.email === "basarasystems@gmail.com") {
+        setIsAdmin(true)
+        await fetchSettings()
+        return
+      }
+
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
         user_email: user.email,
       })
@@ -48,11 +55,37 @@ export default function AdminSettingsPage() {
 
       if (adminError) {
         console.error("Admin check error:", adminError)
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          setIsAdmin(true)
+          await fetchSettings()
+          return
+        }
+        
         setError("管理者権限の確認中にエラーが発生しました")
         return
       }
 
       if (!adminCheck) {
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userCheck, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("email", user.email)
+          .single()
+        
+        if (!userError && userCheck?.is_admin) {
+          setIsAdmin(true)
+          await fetchSettings()
+          return
+        }
+        
         setError("管理者権限がありません")
         setTimeout(() => {
           router.push("/dashboard")

@@ -74,11 +74,32 @@ export default function AdminDashboard() {
 
       setCurrentUser(user)
 
+      // 緊急対応: basarasystems@gmail.com のアクセス許可
+      if (user.email === "basarasystems@gmail.com") {
+        setIsAdmin(true)
+        await fetchStats()
+        return
+      }
+
       const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
         user_email: user.email,
       })
 
       if (adminError || !adminCheck) {
+        console.error("Admin check error:", adminError)
+        // usersテーブルのis_adminフィールドでも確認
+        const { data: userData, error: userError } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single()
+
+        if (!userError && userData?.is_admin) {
+          setIsAdmin(true)
+          await fetchStats()
+          return
+        }
+
         alert("管理者権限がありません")
         router.push("/dashboard")
         return

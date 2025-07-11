@@ -70,15 +70,43 @@ export default function AdminAnalyticsPage() {
         return
       }
 
-      const { data: userData, error } = await supabase
-        .from("users")
-        .select("is_admin")
-        .eq("id", user.id)
-        .single()
-
-      if (error || !userData?.is_admin) {
-        router.push("/dashboard")
+      // 緊急対応: basarasystems@gmail.com のアクセス許可
+      if (user.email === "basarasystems@gmail.com") {
+        setIsAdmin(true)
+        await fetchAnalytics()
         return
+      }
+
+      // RPC関数で管理者権限をチェック
+      const { data: adminCheck, error: adminError } = await supabase.rpc("is_admin", {
+        user_email: user.email,
+      })
+
+      if (adminError) {
+        console.error("Admin RPC error:", adminError)
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userData, error } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single()
+
+        if (error || !userData?.is_admin) {
+          router.push("/dashboard")
+          return
+        }
+      } else if (!adminCheck) {
+        // フォールバック: usersテーブルのis_adminフィールドをチェック
+        const { data: userData, error } = await supabase
+          .from("users")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single()
+
+        if (error || !userData?.is_admin) {
+          router.push("/dashboard")
+          return
+        }
       }
 
       setIsAdmin(true)
