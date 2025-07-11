@@ -1,6 +1,6 @@
--- 買い取り申請時に即座にNFT保有数を減らす処理を修正
+/* 買い取り申請時に即座にNFT保有数を減らす処理を修正 */
 
--- 既存の create_buyback_request 関数を修正して、申請時に即座にNFT数を減らす
+/* 既存の create_buyback_request 関数を修正して、申請時に即座にNFT数を減らす */
 CREATE OR REPLACE FUNCTION create_buyback_request(
     p_user_id TEXT,
     p_manual_nft_count INTEGER,
@@ -25,13 +25,13 @@ DECLARE
     v_total_buyback NUMERIC;
     v_new_request_id UUID;
 BEGIN
-    -- 現在のNFT保有数を確認
+    /* 現在のNFT保有数を確認 */
     SELECT manual_nft_count, auto_nft_count 
     INTO v_current_manual, v_current_auto
     FROM affiliate_cycle 
     WHERE user_id = p_user_id;
 
-    -- NFT保有数の検証
+    /* NFT保有数の検証 */
     IF v_current_manual < p_manual_nft_count THEN
         RETURN QUERY SELECT false, '手動NFTの保有数が不足しています', 0::NUMERIC, NULL::UUID;
         RETURN;
@@ -42,29 +42,29 @@ BEGIN
         RETURN;
     END IF;
 
-    -- ユーザーの累積利益を取得
+    /* ユーザーの累積利益を取得 */
     SELECT COALESCE(SUM(daily_profit), 0) 
     INTO v_user_profit_total
     FROM user_daily_profit 
     WHERE user_id = p_user_id;
 
-    -- 買い取り額計算
-    -- 手動NFT: 1000ドル - (累積利益 / 手動NFT数 × 申請数)
+    /* 買い取り額計算 */
+    /* 手動NFT: 1000ドル - (累積利益 / 手動NFT数 × 申請数) */
     IF p_manual_nft_count > 0 AND v_current_manual > 0 THEN
         v_manual_buyback := GREATEST(0, (1000 * p_manual_nft_count) - (v_user_profit_total / v_current_manual * p_manual_nft_count));
     ELSE
         v_manual_buyback := 0;
     END IF;
 
-    -- 自動NFT: 一律500ドル/枚
+    /* 自動NFT: 一律500ドル/枚 */
     v_auto_buyback := 500 * p_auto_nft_count;
     
     v_total_buyback := v_manual_buyback + v_auto_buyback;
 
-    -- 新しいリクエストIDを生成
+    /* 新しいリクエストIDを生成 */
     v_new_request_id := gen_random_uuid();
 
-    -- 買い取り申請を記録
+    /* 買い取り申請を記録 */
     INSERT INTO buyback_requests (
         id,
         user_id,
@@ -93,7 +93,7 @@ BEGIN
         'pending'
     );
 
-    -- 【重要】申請と同時にNFT保有数を即座に減らす
+    /* 【重要】申請と同時にNFT保有数を即座に減らす */
     UPDATE affiliate_cycle 
     SET 
         manual_nft_count = manual_nft_count - p_manual_nft_count,
@@ -102,7 +102,7 @@ BEGIN
         updated_at = NOW()
     WHERE user_id = p_user_id;
 
-    -- システムログを記録
+    /* システムログを記録 */
     INSERT INTO system_logs (log_type, operation, user_id, message, details)
     VALUES (
         'INFO',
