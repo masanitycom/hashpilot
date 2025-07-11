@@ -182,7 +182,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
   }
 
   const handleCancel = async (requestId: string) => {
-    if (!confirm("本当に買い取り申請をキャンセルしますか？NFT保有数が元に戻ります。")) {
+    if (!confirm("管理者にキャンセル依頼を送信しますか？")) {
       return
     }
 
@@ -190,64 +190,31 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     setMessage(null)
 
     try {
-      // 申請データを取得
-      const { data: requestData, error: requestError } = await supabase
-        .from("buyback_requests")
-        .select("status, manual_nft_count, auto_nft_count, total_nft_count")
-        .eq("id", requestId)
-        .eq("user_id", userId)
-        .single()
+      // システムログにキャンセル依頼を記録
+      const { error: logError } = await supabase
+        .from("system_logs")
+        .insert({
+          log_type: "INFO",
+          operation: "buyback_cancel_request",
+          user_id: userId,
+          message: `ユーザー${userId}が買い取り申請のキャンセルを依頼しました`,
+          details: {
+            request_id: requestId,
+            requested_at: new Date().toISOString()
+          }
+        })
 
-      if (requestError) throw requestError
-
-      if (requestData.status !== "pending") {
-        throw new Error("申請中でない申請はキャンセルできません")
+      if (logError) {
+        console.warn("Log insert failed:", logError)
       }
-
-      // 申請をキャンセル状態に更新
-      const { error: updateError } = await supabase
-        .from("buyback_requests")
-        .update({
-          status: "cancelled",
-          processed_at: new Date().toISOString(),
-          processed_by: userId
-        })
-        .eq("id", requestId)
-
-      if (updateError) throw updateError
-
-      // 現在のNFT保有数を取得
-      const { data: currentCycle, error: getCycleError } = await supabase
-        .from("affiliate_cycle")
-        .select("manual_nft_count, auto_nft_count, total_nft_count")
-        .eq("user_id", userId)
-        .single()
-
-      if (getCycleError) throw getCycleError
-
-      // NFT保有数を復元
-      const { error: cycleError } = await supabase
-        .from("affiliate_cycle")
-        .update({
-          manual_nft_count: currentCycle.manual_nft_count + requestData.manual_nft_count,
-          auto_nft_count: currentCycle.auto_nft_count + requestData.auto_nft_count,
-          total_nft_count: currentCycle.total_nft_count + requestData.total_nft_count,
-          updated_at: new Date().toISOString()
-        })
-        .eq("user_id", userId)
-
-      if (cycleError) throw cycleError
 
       setMessage({ 
         type: "success", 
-        text: "買い取り申請をキャンセルしました。NFT保有数が復元されました。" 
+        text: "キャンセル依頼を送信しました。管理者が確認してキャンセル処理を行います。" 
       })
       
-      // データを再取得
-      fetchNftData()
-      fetchBuybackHistory()
     } catch (error: any) {
-      setMessage({ type: "error", text: error.message || "キャンセル中にエラーが発生しました" })
+      setMessage({ type: "error", text: "キャンセル依頼の送信に失敗しました" })
     } finally {
       setCancellingId(null)
     }
@@ -449,7 +416,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                             ) : (
                               <>
                                 <XCircle className="h-3 w-3 mr-1" />
-                                キャンセル
+                                キャンセル依頼
                               </>
                             )}
                           </Button>
