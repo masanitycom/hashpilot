@@ -307,7 +307,7 @@ export default function AdminBuybackPage() {
             onClick={fetchRequests}
             variant="outline"
             size="sm"
-            className="text-gray-300 border-gray-600 hover:bg-gray-700"
+            className="text-white bg-gray-700 border-gray-600 hover:bg-gray-600"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             更新
