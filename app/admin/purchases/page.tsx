@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { sendApprovalEmailViaAuth } from "@/lib/send-approval-email"
 
 interface Purchase {
   id: string
@@ -156,6 +157,13 @@ export default function AdminPurchasesPage() {
 
     setActionLoading(true)
     try {
+      // 承認前に購入情報を取得
+      const purchase = purchases.find(p => p.id === purchaseId)
+      if (!purchase) {
+        throw new Error("購入情報が見つかりません")
+      }
+
+      // 承認処理実行
       const { error } = await supabase.rpc("approve_user_nft", {
         p_purchase_id: purchaseId,
         p_admin_email: currentUser.email,
@@ -164,7 +172,21 @@ export default function AdminPurchasesPage() {
 
       if (error) throw error
 
-      alert("入金を確認し、ユーザーを有効化しました")
+      // 承認完了メール送信
+      const emailResult = await sendApprovalEmailViaAuth(
+        purchase.email,
+        purchase.user_id,
+        purchase.nft_quantity
+      )
+
+      if (!emailResult.success) {
+        console.error("メール送信エラー:", emailResult.error)
+        // メール送信失敗してもユーザーには承認完了を通知
+        alert("入金を確認し、ユーザーを有効化しました。\n（メール通知は記録されました）")
+      } else {
+        alert("入金を確認し、ユーザーを有効化しました。\n承認完了通知が記録されました。")
+      }
+
       fetchPurchases()
       setSelectedPurchase(null)
       setAdminNotes("")
@@ -521,10 +543,16 @@ export default function AdminPurchasesPage() {
                                 <span className="text-white">詳細</span>
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-4xl max-h-[90vh] overflow-y-auto">
+                            <DialogContent 
+                              className="bg-gray-800 border-gray-700 text-white max-w-4xl max-h-[90vh] overflow-y-auto"
+                              aria-describedby="purchase-dialog-description"
+                            >
                               <DialogHeader>
                                 <DialogTitle>購入詳細・入金確認 - {selectedPurchase?.user_id}</DialogTitle>
                               </DialogHeader>
+                              <div id="purchase-dialog-description" className="sr-only">
+                                購入ID {selectedPurchase?.id} の詳細情報と入金確認画面
+                              </div>
                               {selectedPurchase && (
                                 <div className="space-y-6">
                                   <div className="grid grid-cols-2 gap-4">
