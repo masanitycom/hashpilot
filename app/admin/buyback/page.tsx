@@ -99,41 +99,37 @@ export default function AdminBuybackPage() {
     try {
       setLoading(true)
       
+      // 買い取り申請データを取得
       let query = supabase
         .from("buyback_requests")
-        .select(`
-          id,
-          user_id,
-          request_date,
-          manual_nft_count,
-          auto_nft_count,
-          total_nft_count,
-          manual_buyback_amount,
-          auto_buyback_amount,
-          total_buyback_amount,
-          wallet_address,
-          wallet_type,
-          status,
-          processed_by,
-          processed_at,
-          transaction_hash,
-          users!inner(email)
-        `)
+        .select("*")
         .order("request_date", { ascending: false })
 
       if (filter !== "all") {
         query = query.eq("status", filter)
       }
 
-      const { data, error } = await query
+      const { data: buybackData, error: buybackError } = await query
 
-      if (error) throw error
+      if (buybackError) throw buybackError
 
-      // データを変換
-      const formattedData = (data || []).map(item => ({
-        ...item,
-        email: item.users?.email || 'Unknown'
-      }))
+      // ユーザーデータを取得
+      const userIds = buybackData?.map(item => item.user_id) || []
+      const { data: usersData, error: usersError } = await supabase
+        .from("users")
+        .select("id, email")
+        .in("id", userIds)
+
+      if (usersError) throw usersError
+
+      // データを結合
+      const formattedData = (buybackData || []).map(item => {
+        const user = usersData?.find(u => u.id === item.user_id)
+        return {
+          ...item,
+          email: user?.email || 'Unknown'
+        }
+      })
 
       setRequests(formattedData)
     } catch (error) {
