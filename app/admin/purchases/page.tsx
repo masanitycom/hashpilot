@@ -163,14 +163,21 @@ export default function AdminPurchasesPage() {
         throw new Error("購入情報が見つかりません")
       }
 
-      // 承認処理実行
-      const { error } = await supabase.rpc("approve_user_nft", {
+      // 承認処理実行（purchaseIdが確実にUUID文字列として渡されるように）
+      const { data: rpcResult, error } = await supabase.rpc("approve_user_nft", {
         p_purchase_id: purchaseId,
         p_admin_email: currentUser.email,
         p_admin_notes: adminNotes || "入金確認済み",
       })
 
       if (error) throw error
+
+      // RPC関数の結果を確認
+      console.log("RPC Result:", rpcResult)
+      
+      if (rpcResult && rpcResult[0]?.status === 'ERROR') {
+        throw new Error(rpcResult[0].message)
+      }
 
       // 承認完了メール送信
       const emailResult = await sendApprovalEmailViaAuth(
