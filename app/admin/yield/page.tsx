@@ -358,31 +358,87 @@ export default function AdminYieldPage() {
     }
 
     try {
-      // 直接テーブルから削除する方法に変更（RPC関数の管理者権限エラーを回避）
-      const { error: deleteYieldError } = await supabase
+      // まず管理者用RPC関数を試す
+      try {
+        const { data: rpcResult, error: rpcError } = await supabase.rpc("admin_cancel_yield_posting", {
+          p_date: cancelDate
+        })
+
+        if (!rpcError && rpcResult?.success) {
+          setMessage({
+            type: "success",
+            text: rpcResult.message,
+          })
+
+          setTimeout(() => {
+            fetchHistory()
+            fetchStats()
+          }, 500)
+          return
+        }
+        
+        console.warn("RPC関数エラー、直接削除に切り替え:", rpcError)
+      } catch (rpcFallbackError) {
+        console.warn("RPC関数使用不可、直接削除に切り替え:", rpcFallbackError)
+      }
+
+      // RPC関数が失敗した場合の直接削除
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        throw new Error("ユーザー認証が必要です")
+      }
+
+      // daily_yield_logから削除（デバッグ情報付き）
+      const { data: yieldData, error: deleteYieldError } = await supabase
         .from("daily_yield_log")
         .delete()
         .eq("date", cancelDate)
+        .select()
 
-      if (deleteYieldError) throw deleteYieldError
+      if (deleteYieldError) {
+        console.error("daily_yield_log削除エラー:", deleteYieldError)
+        throw new Error(`日利設定の削除に失敗: ${deleteYieldError.message}`)
+      }
 
-      const { error: deleteProfitError } = await supabase
+      console.log("削除されたyield_log:", yieldData)
+
+      // user_daily_profitから削除（デバッグ情報付き）
+      const { data: profitData, error: deleteProfitError } = await supabase
         .from("user_daily_profit")
         .delete()
         .eq("date", cancelDate)
+        .select()
 
       if (deleteProfitError) {
-        console.warn("利益データ削除エラー（存在しない可能性）:", deleteProfitError)
+        console.warn("user_daily_profit削除エラー:", deleteProfitError)
+      } else {
+        console.log("削除されたprofit数:", profitData?.length || 0)
+      }
+
+      // 削除結果の確認
+      const { data: remainingData, error: checkError } = await supabase
+        .from("daily_yield_log")
+        .select("*")
+        .eq("date", cancelDate)
+
+      if (!checkError && remainingData && remainingData.length > 0) {
+        throw new Error("データの削除に失敗しました。権限を確認してください。")
       }
 
       setMessage({
         type: "success",
-        text: `${cancelDate}の日利設定とユーザー利益データをキャンセルしました`,
+        text: `${cancelDate}の日利設定をキャンセルしました（${yieldData?.length || 0}件削除）`,
       })
 
-      fetchHistory()
-      fetchStats()
+      // 少し待ってから再取得
+      setTimeout(() => {
+        fetchHistory()
+        fetchStats()
+      }, 500)
+      
     } catch (error: any) {
+      console.error("キャンセルエラー:", error)
       setMessage({
         type: "error",
         text: error.message || "キャンセルに失敗しました",
