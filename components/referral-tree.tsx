@@ -30,6 +30,7 @@ export function ReferralTree({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
+  const [isMobile, setIsMobile] = useState(false)
   // const [fallbackMode, setFallbackMode] = useState(false)
 
   const fetchReferralTreeFallback = async () => {
@@ -271,7 +272,8 @@ export function ReferralTree({ userId }: { userId: string }) {
   const renderNode = (node: ReferralNode, depth = 0) => {
     const hasChildren = node.children && node.children.length > 0
     const isExpanded = expandedNodes.has(node.user_id)
-    const paddingLeft = depth > 0 ? depth * 40 : 0
+    // スマホでは横幅を減らす
+    const paddingLeft = depth > 0 ? depth * (isMobile ? 20 : 40) : 0
 
     const getLevelColor = (level: number) => {
       switch (level) {
@@ -304,7 +306,7 @@ export function ReferralTree({ userId }: { userId: string }) {
         {depth > 0 && (
           <div 
             className="absolute left-0 top-0 w-px h-full bg-gray-600/30" 
-            style={{ left: `${(depth - 1) * 40 + 20}px` }}
+            style={{ left: `${(depth - 1) * (isMobile ? 20 : 40) + 20}px` }}
           />
         )}
         
@@ -313,35 +315,35 @@ export function ReferralTree({ userId }: { userId: string }) {
             className={`border-l-4 rounded-lg ${getLevelColor(node.level_num)} backdrop-blur-sm transition-all duration-200 hover:shadow-lg ${hasChildren ? 'cursor-pointer' : ''}`}
             onClick={() => hasChildren && toggleNode(node.user_id)}
           >
-            <div className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
+            <div className="p-2 sm:p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="flex items-start sm:items-center gap-2 flex-1 min-w-0">
                   {hasChildren && (
-                    <div className="p-1.5 h-7 w-7 flex items-center justify-center">
+                    <div className="p-1.5 h-7 w-7 flex items-center justify-center flex-shrink-0">
                       {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </div>
                   )}
                   
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getLevelBadgeColor(node.level_num)}`}>
-                    Level {node.level_num}
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold border whitespace-nowrap flex-shrink-0 ${getLevelBadgeColor(node.level_num)}`}>
+                    Lv{node.level_num}
                   </span>
                   
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium text-white">{node.email}</span>
+                      <span className="font-medium text-white text-sm sm:text-base truncate block">{node.email}</span>
                     </div>
-                    <div className="text-xs text-gray-500 mt-0.5">
+                    <div className="text-xs text-gray-500 mt-0.5 truncate">
                       ID: {node.user_id}
                     </div>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <div className="text-xl font-bold text-yellow-400">
+                <div className="text-right flex-shrink-0 ml-8 sm:ml-0">
+                  <div className="text-base sm:text-xl font-bold text-yellow-400 whitespace-nowrap">
                     ${(node.total_investment || 0).toLocaleString()}
                   </div>
-                  <div className="text-sm text-gray-400">
-                    {node.nft_count || 0} NFT保有
+                  <div className="text-xs sm:text-sm text-gray-400 whitespace-nowrap">
+                    {node.nft_count || 0} NFT
                   </div>
                   {/* デバッグ用 */}
                   {process.env.NODE_ENV === 'development' && (
@@ -397,6 +399,13 @@ export function ReferralTree({ userId }: { userId: string }) {
   }
 
   useEffect(() => {
+    // モバイル判定
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
     console.log('ReferralTree useEffect triggered with userId:', userId)
     if (userId) {
       console.log('Calling fetchReferralTree...')
@@ -404,6 +413,8 @@ export function ReferralTree({ userId }: { userId: string }) {
     } else {
       console.log('No userId provided, skipping fetch')
     }
+    
+    return () => window.removeEventListener('resize', checkMobile)
   }, [userId])
 
   if (loading) {
@@ -457,20 +468,20 @@ export function ReferralTree({ userId }: { userId: string }) {
             更新
           </Button>
         </CardHeader>
-        <CardContent className="p-6">
-          <div className="text-sm text-gray-400 mb-6">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span>Level 1: 直接紹介</span>
+        <CardContent className="p-3 sm:p-6 overflow-x-hidden">
+          <div className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6">
+            <div className="flex flex-wrap gap-2 sm:gap-4">
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-blue-500 rounded-full"></div>
+                <span>Lv1: 直接</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span>Level 2: 間接紹介</span>
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
+                <span>Lv2: 間接</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span>Level 3: 第3階層</span>
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></div>
+                <span>Lv3: 第3階層</span>
               </div>
             </div>
           </div>
@@ -478,7 +489,7 @@ export function ReferralTree({ userId }: { userId: string }) {
           {treeData.length === 0 ? (
             <div className="text-center text-gray-400 py-8">紹介者がいません</div>
           ) : (
-            <div className="space-y-2">{treeData.map((node) => renderNode(node))}</div>
+            <div className="space-y-2 overflow-x-auto max-w-full">{treeData.map((node) => renderNode(node))}</div>
           )}
         </CardContent>
       </Card>
