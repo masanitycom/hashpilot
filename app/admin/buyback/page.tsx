@@ -98,12 +98,44 @@ export default function AdminBuybackPage() {
   const fetchRequests = async () => {
     try {
       setLoading(true)
-      const { data, error } = await supabase.rpc("get_buyback_requests", {
-        p_status: filter === "all" ? null : filter
-      })
+      
+      let query = supabase
+        .from("buyback_requests")
+        .select(`
+          id,
+          user_id,
+          request_date,
+          manual_nft_count,
+          auto_nft_count,
+          total_nft_count,
+          manual_buyback_amount,
+          auto_buyback_amount,
+          total_buyback_amount,
+          wallet_address,
+          wallet_type,
+          status,
+          processed_by,
+          processed_at,
+          transaction_hash,
+          users!inner(email)
+        `)
+        .order("request_date", { ascending: false })
+
+      if (filter !== "all") {
+        query = query.eq("status", filter)
+      }
+
+      const { data, error } = await query
 
       if (error) throw error
-      setRequests(data || [])
+
+      // データを変換
+      const formattedData = (data || []).map(item => ({
+        ...item,
+        email: item.users?.email || 'Unknown'
+      }))
+
+      setRequests(formattedData)
     } catch (error) {
       console.error("Error fetching buyback requests:", error)
     } finally {
