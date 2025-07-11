@@ -37,19 +37,54 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       setLoading(true)
       setError("")
 
-      const { data, error: cycleError } = await supabase.rpc('get_user_cycle_status', {
-        p_user_id: userId
+      // 利益データを取得
+      const { data: profitData, error: profitError } = await supabase
+        .from('daily_profits')
+        .select('profit_amount')
+        .eq('user_id', userId)
+
+      if (profitError) throw profitError
+
+      // NFTデータを取得
+      const { data: nftData, error: nftError } = await supabase
+        .from('purchases')
+        .select('nft_quantity, purchase_type')
+        .eq('user_id', userId)
+        .eq('admin_approved', true)
+
+      if (nftError) throw nftError
+
+      // 月末出金データを取得
+      const { data: withdrawalData, error: withdrawalError } = await supabase
+        .from('monthly_withdrawals')
+        .select('available_amount')
+        .eq('user_id', userId)
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      if (withdrawalError && withdrawalError.code !== 'PGRST116') throw withdrawalError
+
+      // 計算
+      const totalProfit = profitData?.reduce((sum, p) => sum + (p.profit_amount || 0), 0) || 0
+      const manualNfts = nftData?.filter(n => n.purchase_type === 'manual').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
+      const autoNfts = nftData?.filter(n => n.purchase_type === 'auto').reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
+      const availableUsdt = withdrawalData?.[0]?.available_amount || 0
+
+      // 1100ドルサイクル計算
+      const cyclesCompleted = Math.floor(totalProfit / 1100)
+      const remainingProfit = totalProfit - (cyclesCompleted * 1100)
+      const nextAction = cyclesCompleted % 2 === 0 ? 'usdt' : 'nft'
+
+      setCycleData({
+        next_action: nextAction,
+        available_usdt: availableUsdt,
+        total_nft_count: manualNfts + autoNfts,
+        auto_nft_count: autoNfts,
+        manual_nft_count: manualNfts,
+        cum_profit: totalProfit,
+        remaining_profit: remainingProfit
       })
-
-      if (cycleError) {
-        throw cycleError
-      }
-
-      if (data && data.length > 0) {
-        setCycleData(data[0])
-      } else {
-        setError("サイクルデータがありません")
-      }
     } catch (err: any) {
       console.error("Cycle data fetch error:", err)
       setError("データの取得に失敗しました")
