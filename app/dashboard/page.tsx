@@ -227,8 +227,8 @@ export default function DashboardPage() {
             0,
           )
 
-          // 更に深いレベルを計算（最大10レベルまで）
-          if (currentLevel < 10) {
+          // 更に深いレベルを計算（最大50レベルまで）
+          if (currentLevel < 50) {
             for (const ref of refs) {
               await calculateDeepLevels(ref.user_id, currentLevel + 1)
             }
