@@ -389,21 +389,60 @@ export default function AdminYieldPage() {
         throw new Error("ユーザー認証が必要です")
       }
 
-      // daily_yield_logから削除（デバッグ情報付き）
-      const { data: yieldData, error: deleteYieldError } = await supabase
+      // まず削除対象データの存在確認
+      const { data: existingData, error: checkExistError } = await supabase
         .from("daily_yield_log")
-        .delete()
+        .select("*")
         .eq("date", cancelDate)
-        .select()
 
-      if (deleteYieldError) {
-        console.error("daily_yield_log削除エラー:", deleteYieldError)
-        throw new Error(`日利設定の削除に失敗: ${deleteYieldError.message}`)
+      console.log("削除対象データ:", existingData)
+      
+      if (checkExistError) {
+        throw new Error(`データ確認エラー: ${checkExistError.message}`)
       }
 
-      console.log("削除されたyield_log:", yieldData)
+      if (!existingData || existingData.length === 0) {
+        throw new Error("削除対象のデータが見つかりません")
+      }
 
-      // user_daily_profitから削除（デバッグ情報付き）
+      // IDを使用して削除を試みる
+      const targetId = existingData[0].id
+      console.log("削除対象ID:", targetId)
+
+      // IDで削除を試みる
+      const { data: deleteByIdData, error: deleteByIdError } = await supabase
+        .from("daily_yield_log")
+        .delete()
+        .eq("id", targetId)
+        .select()
+
+      if (deleteByIdError) {
+        console.error("ID削除エラー:", deleteByIdError)
+        
+        // 日付で削除を試みる
+        const { data: yieldData, error: deleteYieldError } = await supabase
+          .from("daily_yield_log")
+          .delete()
+          .eq("date", cancelDate)
+          .select()
+
+        if (deleteYieldError) {
+          console.error("daily_yield_log削除エラー:", deleteYieldError)
+          throw new Error(`日利設定の削除に失敗: ${deleteYieldError.message}`)
+        }
+        console.log("日付削除結果:", yieldData)
+      } else {
+        console.log("ID削除成功:", deleteByIdData)
+      }
+
+      // user_daily_profitから削除
+      const { data: profitExisting, error: profitCheckError } = await supabase
+        .from("user_daily_profit")
+        .select("count")
+        .eq("date", cancelDate)
+
+      console.log("削除対象profit数:", profitExisting)
+
       const { data: profitData, error: deleteProfitError } = await supabase
         .from("user_daily_profit")
         .delete()
@@ -413,22 +452,30 @@ export default function AdminYieldPage() {
       if (deleteProfitError) {
         console.warn("user_daily_profit削除エラー:", deleteProfitError)
       } else {
-        console.log("削除されたprofit数:", profitData?.length || 0)
+        console.log("削除されたprofit:", profitData?.length || 0)
       }
 
-      // 削除結果の確認
-      const { data: remainingData, error: checkError } = await supabase
+      // 削除後の再確認
+      const { data: remainingData, error: finalCheckError } = await supabase
         .from("daily_yield_log")
         .select("*")
         .eq("date", cancelDate)
 
-      if (!checkError && remainingData && remainingData.length > 0) {
+      console.log("削除後の残存データ:", remainingData)
+
+      if (!finalCheckError && remainingData && remainingData.length > 0) {
+        // 3000%の異常値の場合は特別な処理
+        if (remainingData[0].margin_rate && parseFloat(remainingData[0].margin_rate) > 1) {
+          console.error("異常値データの削除に失敗。管理者に連絡してください。")
+          throw new Error("3000%の異常値データは手動削除が必要です。Supabaseダッシュボードから削除してください。")
+        }
         throw new Error("データの削除に失敗しました。権限を確認してください。")
       }
 
+      const deletedCount = (deleteByIdData?.length || 0) + (profitData?.length || 0)
       setMessage({
         type: "success",
-        text: `${cancelDate}の日利設定をキャンセルしました（${yieldData?.length || 0}件削除）`,
+        text: `${cancelDate}の日利設定をキャンセルしました（${deletedCount}件削除）`,
       })
 
       // 少し待ってから再取得
@@ -777,6 +824,38 @@ export default function AdminYieldPage() {
                     本番履歴に戻る
                   </Button>
                 )}
+                <Button 
+                  onClick={async () => {
+                    try {
+                      const { data, error } = await supabase
+                        .from("daily_yield_log")
+                        .select("*")
+                        .order("date", { ascending: false })
+                      
+                      console.log("全履歴データ:", data)
+                      if (error) console.error("履歴取得エラー:", error)
+                      
+                      const { count, error: countError } = await supabase
+                        .from("daily_yield_log")
+                        .select("*", { count: "exact", head: true })
+                      
+                      console.log("総レコード数:", count)
+                      if (countError) console.error("カウントエラー:", countError)
+                      
+                      setMessage({
+                        type: "success",
+                        text: `デバッグ情報をコンソールに出力しました（${count}件）`
+                      })
+                    } catch (err) {
+                      console.error("デバッグエラー:", err)
+                    }
+                  }}
+                  size="sm" 
+                  variant="outline"
+                  className="border-yellow-600 text-yellow-300"
+                >
+                  🔍 DB確認
+                </Button>
                 <Button 
                   onClick={showTestResults ? () => {} : fetchHistory} 
                   size="sm" 
