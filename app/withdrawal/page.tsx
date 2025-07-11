@@ -174,7 +174,7 @@ export default function WithdrawalPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* 月末出金システム概要 */}
-        <Card className="mb-8 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-700/50">
+        <Card className="mb-8 bg-gray-900/50 border border-gray-700">
           <CardHeader>
             <CardTitle className="text-white text-2xl flex items-center space-x-3">
               <Calendar className="h-6 w-6 text-blue-400" />
@@ -183,17 +183,17 @@ export default function WithdrawalPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-4 bg-blue-900/20 rounded-lg">
+              <div className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                 <Clock className="h-8 w-8 text-blue-400 mx-auto mb-2" />
                 <p className="text-blue-300 font-medium">自動処理</p>
                 <p className="text-sm text-gray-300">毎月月末に自動実行</p>
               </div>
-              <div className="text-center p-4 bg-green-900/20 rounded-lg">
+              <div className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                 <CheckCircle className="h-8 w-8 text-green-400 mx-auto mb-2" />
                 <p className="text-green-300 font-medium">手数料なし</p>
                 <p className="text-sm text-gray-300">管理者が手数料負担</p>
               </div>
-              <div className="text-center p-4 bg-purple-900/20 rounded-lg">
+              <div className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                 <AlertTriangle className="h-8 w-8 text-purple-400 mx-auto mb-2" />
                 <p className="text-purple-300 font-medium">最小額$10</p>
                 <p className="text-sm text-gray-300">$10以上で自動出金</p>
