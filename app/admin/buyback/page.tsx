@@ -364,8 +364,8 @@ export default function AdminBuybackPage() {
               size="sm"
               onClick={() => setFilter(status)}
               className={filter === status 
-                ? "bg-yellow-600 hover:bg-yellow-700" 
-                : "text-gray-300 border-gray-600 hover:bg-gray-700"
+                ? "bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600" 
+                : "text-white border-gray-600 hover:bg-gray-700 bg-gray-800"
               }
             >
               {status === "all" && "すべて"}
@@ -488,7 +488,7 @@ export default function AdminBuybackPage() {
                               size="sm"
                               variant="outline"
                               onClick={() => setSelectedRequest(request)}
-                              className="text-yellow-400 border-yellow-600 hover:bg-yellow-900/20"
+                              className="text-white bg-yellow-600 border-yellow-600 hover:bg-yellow-700"
                             >
                               処理
                             </Button>
@@ -497,7 +497,7 @@ export default function AdminBuybackPage() {
                               size="sm"
                               variant="ghost"
                               onClick={() => copyToClipboard(request.transaction_hash!)}
-                              className="text-gray-400 hover:text-white"
+                              className="text-white bg-gray-600 hover:bg-gray-700 border border-gray-500"
                             >
                               <Copy className="h-3 w-3" />
                             </Button>
@@ -599,7 +599,7 @@ export default function AdminBuybackPage() {
                     onClick={() => processRequest("cancel")}
                     disabled={processingId === selectedRequest.id}
                     variant="outline"
-                    className="flex-1 text-red-400 border-red-600 hover:bg-red-900/20"
+                    className="flex-1 text-white bg-red-600 border-red-600 hover:bg-red-700"
                   >
                     {processingId === selectedRequest.id ? (
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -617,7 +617,7 @@ export default function AdminBuybackPage() {
                     setAdminNotes("")
                   }}
                   variant="ghost"
-                  className="w-full text-gray-400 hover:text-white"
+                  className="w-full text-white bg-gray-600 hover:bg-gray-700 border border-gray-500"
                   disabled={processingId === selectedRequest.id}
                 >
                   閉じる
