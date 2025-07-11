@@ -43,7 +43,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
 
       const { data: profitData, error: profitError } = await supabase
-        .from('user_daily_profits')
+        .from('user_daily_profit')
         .select('daily_profit')
         .eq('user_id', userId)
         .gte('date', monthStart)
