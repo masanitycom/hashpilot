@@ -23,13 +23,12 @@ interface CycleData {
 
 export function CycleStatusCard({ userId }: CycleStatusCardProps) {
   const [cycleData, setCycleData] = useState<CycleData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
   useEffect(() => {
-    if (userId) {
-      fetchCycleData()
-    }
+    // 一時的にサイクル情報を非表示
+    setError("サイクル情報は調整中です")
   }, [userId])
 
   const fetchCycleData = async () => {
