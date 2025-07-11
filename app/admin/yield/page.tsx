@@ -493,6 +493,79 @@ export default function AdminYieldPage() {
     }
   }
 
+  const handleForceDelete = async (recordId: string, targetDate: string) => {
+    if (!confirm(`ID:${recordId} (${targetDate}) を強制削除しますか？この操作は取り消せません。`)) {
+      return
+    }
+
+    try {
+      setMessage({ type: "warning", text: "強制削除中..." })
+
+      // 複数の方法で削除を試行
+      console.log("強制削除開始 - ID:", recordId, "Date:", targetDate)
+
+      // 方法1: IDでの削除
+      const { error: deleteById } = await supabase
+        .from("daily_yield_log")
+        .delete()
+        .eq("id", recordId)
+
+      console.log("ID削除結果:", deleteById)
+
+      // 方法2: 日付とマージン率の条件で削除
+      const { error: deleteByCondition } = await supabase
+        .from("daily_yield_log")
+        .delete()
+        .eq("date", targetDate)
+        .gt("margin_rate", 1)
+
+      console.log("条件削除結果:", deleteByCondition)
+
+      // 方法3: user_daily_profitからも削除
+      const { error: deleteProfits } = await supabase
+        .from("user_daily_profit")
+        .delete()
+        .eq("date", targetDate)
+
+      console.log("利益データ削除結果:", deleteProfits)
+
+      // キャッシュをクリアして再取得
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      const { data: checkData } = await supabase
+        .from("daily_yield_log")
+        .select("*")
+        .eq("date", targetDate)
+
+      console.log("削除後確認:", checkData)
+
+      if (checkData && checkData.length === 0) {
+        setMessage({
+          type: "success",
+          text: `${targetDate}の異常値データを強制削除しました`,
+        })
+      } else {
+        setMessage({
+          type: "error",
+          text: "強制削除に失敗しました。Supabaseダッシュボードから手動削除してください。",
+        })
+      }
+
+      // 履歴を再取得
+      setTimeout(() => {
+        fetchHistory()
+        fetchStats()
+      }, 1500)
+
+    } catch (error: any) {
+      console.error("強制削除エラー:", error)
+      setMessage({
+        type: "error",
+        text: `強制削除に失敗: ${error.message}`,
+      })
+    }
+  }
+
   const clearTestResults = () => {
     setTestResults([])
     setShowTestResults(false)
@@ -950,7 +1023,7 @@ export default function AdminYieldPage() {
                             {(Number.parseFloat(item.user_rate) * 100).toFixed(3)}%
                           </td>
                           <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
-                          <td className="p-2">
+                          <td className="p-2 space-x-1">
                             <Button
                               variant="destructive"
                               size="sm"
@@ -960,6 +1033,17 @@ export default function AdminYieldPage() {
                               <Trash2 className="h-3 w-3 mr-1" />
                               キャンセル
                             </Button>
+                            {Number.parseFloat(item.margin_rate) * 100 > 100 && (
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleForceDelete(item.id, item.date)}
+                                className="h-8 px-2 bg-orange-600 hover:bg-orange-700"
+                              >
+                                <Trash2 className="h-3 w-3 mr-1" />
+                                強制削除
+                              </Button>
+                            )}
                           </td>
                         </tr>
                       ))}
