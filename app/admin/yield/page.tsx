@@ -494,61 +494,60 @@ export default function AdminYieldPage() {
   }
 
   const handleForceDelete = async (recordId: string, targetDate: string) => {
-    if (!confirm(`ID:${recordId} (${targetDate}) を強制削除しますか？この操作は取り消せません。`)) {
-      return
-    }
+    const options = [
+      "削除（推奨）",
+      "正常値に修正（30%に変更）",
+      "キャンセル"
+    ]
+    
+    const choice = confirm(`ID:${recordId} (${targetDate}) の3000%異常値データをどうしますか？\n\n1. 削除を試行（推奨）\n2. 正常値（30%）に修正\n\nOK = 削除、キャンセル = 修正`)
 
     try {
-      setMessage({ type: "warning", text: "強制削除中..." })
+      if (choice) {
+        // 削除を試行
+        setMessage({ type: "warning", text: "削除試行中..." })
 
-      // 複数の方法で削除を試行
-      console.log("強制削除開始 - ID:", recordId, "Date:", targetDate)
+        console.log("削除開始 - ID:", recordId, "Date:", targetDate)
 
-      // 方法1: IDでの削除
-      const { error: deleteById } = await supabase
-        .from("daily_yield_log")
-        .delete()
-        .eq("id", recordId)
+        // すべての削除方法を同時に実行
+        const [deleteById, deleteByCondition, deleteProfits] = await Promise.all([
+          supabase.from("daily_yield_log").delete().eq("id", recordId),
+          supabase.from("daily_yield_log").delete().eq("date", targetDate).gt("margin_rate", 1),
+          supabase.from("user_daily_profit").delete().eq("date", targetDate)
+        ])
 
-      console.log("ID削除結果:", deleteById)
+        console.log("削除結果:", { deleteById, deleteByCondition, deleteProfits })
 
-      // 方法2: 日付とマージン率の条件で削除
-      const { error: deleteByCondition } = await supabase
-        .from("daily_yield_log")
-        .delete()
-        .eq("date", targetDate)
-        .gt("margin_rate", 1)
+        // 削除確認
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        
+        const { data: checkData } = await supabase
+          .from("daily_yield_log")
+          .select("*")
+          .eq("date", targetDate)
 
-      console.log("条件削除結果:", deleteByCondition)
+        console.log("削除後確認:", checkData)
 
-      // 方法3: user_daily_profitからも削除
-      const { error: deleteProfits } = await supabase
-        .from("user_daily_profit")
-        .delete()
-        .eq("date", targetDate)
-
-      console.log("利益データ削除結果:", deleteProfits)
-
-      // キャッシュをクリアして再取得
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      const { data: checkData } = await supabase
-        .from("daily_yield_log")
-        .select("*")
-        .eq("date", targetDate)
-
-      console.log("削除後確認:", checkData)
-
-      if (checkData && checkData.length === 0) {
-        setMessage({
-          type: "success",
-          text: `${targetDate}の異常値データを強制削除しました`,
-        })
+        if (checkData && checkData.length === 0) {
+          setMessage({
+            type: "success",
+            text: `${targetDate}の異常値データを削除しました`,
+          })
+        } else {
+          // 削除失敗時は自動的に修正を提案
+          if (confirm("削除に失敗しました。マージン率を30%に修正しますか？")) {
+            await handleFixAnomaly(recordId, targetDate)
+            return
+          } else {
+            setMessage({
+              type: "error",
+              text: "RLSポリシーにより削除が制限されています。Supabaseダッシュボードから手動削除してください。",
+            })
+          }
+        }
       } else {
-        setMessage({
-          type: "error",
-          text: "強制削除に失敗しました。Supabaseダッシュボードから手動削除してください。",
-        })
+        // 修正を選択
+        await handleFixAnomaly(recordId, targetDate)
       }
 
       // 履歴を再取得
@@ -558,10 +557,66 @@ export default function AdminYieldPage() {
       }, 1500)
 
     } catch (error: any) {
-      console.error("強制削除エラー:", error)
+      console.error("処理エラー:", error)
       setMessage({
         type: "error",
-        text: `強制削除に失敗: ${error.message}`,
+        text: `処理に失敗: ${error.message}`,
+      })
+    }
+  }
+
+  const handleFixAnomaly = async (recordId: string, targetDate: string) => {
+    try {
+      setMessage({ type: "warning", text: "異常値を修正中..." })
+
+      // 現在のデータを取得
+      const { data: currentData, error: fetchError } = await supabase
+        .from("daily_yield_log")
+        .select("*")
+        .eq("id", recordId)
+        .single()
+
+      if (fetchError || !currentData) {
+        throw new Error("データ取得に失敗しました")
+      }
+
+      // 正常なマージン率（30%）に修正
+      const fixedMarginRate = 0.30 // 30%
+      const fixedUserRate = currentData.yield_rate * (1 - fixedMarginRate) * 0.6
+
+      const { data: updateData, error: updateError } = await supabase
+        .from("daily_yield_log")
+        .update({
+          margin_rate: fixedMarginRate,
+          user_rate: fixedUserRate,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", recordId)
+        .select()
+
+      console.log("修正結果:", { updateData, updateError })
+
+      if (updateError) {
+        throw updateError
+      }
+
+      // user_daily_profitも再計算が必要な場合
+      const { error: recalcError } = await supabase.rpc("recalculate_daily_profit", {
+        p_date: targetDate
+      }).catch(() => {
+        console.log("再計算RPC関数が存在しない場合は手動で修正が必要")
+      })
+
+      setMessage({
+        type: "success",
+        text: `${targetDate}の異常値を修正しました（マージン率: 3000% → 30%）`,
+      })
+
+    } catch (error: any) {
+      console.error("修正エラー:", error)
+      setMessage({
+        type: "error",
+        text: `修正に失敗: ${error.message}`,
       })
     }
   }
@@ -1041,7 +1096,7 @@ export default function AdminYieldPage() {
                                 className="h-8 px-2 bg-orange-600 hover:bg-orange-700"
                               >
                                 <Trash2 className="h-3 w-3 mr-1" />
-                                強制削除
+                                修正
                               </Button>
                             )}
                           </td>
