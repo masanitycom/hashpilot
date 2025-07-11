@@ -107,13 +107,14 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
     }
   }
 
-  const getProgressPercentage = (remaining: number) => {
-    if (remaining <= 0) return 100
-    if (remaining >= 1100) return 0
-    return ((1100 - remaining) / 1100) * 100
+  const getProgressPercentage = (currentProfit: number) => {
+    if (currentProfit <= 0) return 0
+    if (currentProfit >= 1100) return 100
+    return (currentProfit / 1100) * 100
   }
 
-  const getNextMilestone = (remaining: number, nextAction: string) => {
+  const getNextMilestone = (currentProfit: number, nextAction: string) => {
+    const remaining = 1100 - currentProfit
     if (remaining <= 0) {
       return {
         target: 1100,
@@ -181,14 +182,21 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-400">次の1100ドルまでの進捗</span>
-            <span className="text-white">${(1100 - cycleData.remaining_profit).toFixed(2)} / $1,100</span>
+            <span className="text-white">${cycleData.remaining_profit.toFixed(2)} / $1,100</span>
           </div>
-          <Progress value={progress} className="h-2 bg-gray-700">
-            <div 
-              className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </Progress>
+          <div className="relative">
+            <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xs font-semibold text-white drop-shadow-lg">
+                {progress.toFixed(1)}%
+              </span>
+            </div>
+          </div>
           
           {milestone.remaining > 0 && (
             <p className="text-xs text-gray-400">
