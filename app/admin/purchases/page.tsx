@@ -346,20 +346,51 @@ export default function AdminPurchasesPage() {
 
     setActionLoading(true)
     try {
-      const { data, error } = await supabase.rpc("modify_purchase_approval_date", {
-        p_purchase_id: purchaseId,
-        p_new_approval_date: new Date(newApprovalDate).toISOString(),
-        p_admin_email: currentUser.email,
-        p_reason: approvalChangeReason.trim()
+      // まず手動でデータベースの更新を試行（関数が存在しない場合のフォールバック）
+      const newDate = new Date(newApprovalDate).toISOString()
+      
+      // 直接テーブルを更新する方法を使用
+      const { data: purchaseData, error: fetchError } = await supabase
+        .from("purchases")
+        .select("admin_approved_at, admin_notes, user_id")
+        .eq("id", purchaseId)
+        .single()
+
+      if (fetchError) throw fetchError
+
+      const oldDate = purchaseData.admin_approved_at
+      const currentNotes = purchaseData.admin_notes || ""
+      
+      const updateNote = `\n[${new Date().toISOString().split('T')[0]}] 承認日変更: ${oldDate ? new Date(oldDate).toISOString().split('T')[0] : 'NULL'} → ${new Date(newDate).toISOString().split('T')[0]} (変更者: ${currentUser.email}, 理由: ${approvalChangeReason.trim()})`
+
+      const { error: updateError } = await supabase
+        .from("purchases")
+        .update({
+          admin_approved_at: newDate,
+          admin_notes: currentNotes + updateNote,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", purchaseId)
+
+      if (updateError) throw updateError
+
+      // システムログに記録
+      await supabase.from("system_logs").insert({
+        log_type: 'SUCCESS',
+        operation: 'modify_approval_date',
+        user_id: purchaseData.user_id,
+        message: '購入承認日を変更しました',
+        details: {
+          purchase_id: purchaseId,
+          old_approval_date: oldDate,
+          new_approval_date: newDate,
+          admin_email: currentUser.email,
+          reason: approvalChangeReason.trim()
+        },
+        created_at: new Date().toISOString()
       })
 
-      if (error) throw error
-
-      if (data && data[0].status === 'ERROR') {
-        throw new Error(data[0].message)
-      }
-
-      alert(`承認日を更新しました\n旧: ${data[0].old_date ? new Date(data[0].old_date).toLocaleDateString('ja-JP') : 'なし'}\n新: ${new Date(data[0].new_date).toLocaleDateString('ja-JP')}`)
+      alert(`承認日を更新しました\n旧: ${oldDate ? new Date(oldDate).toLocaleDateString('ja-JP') : 'なし'}\n新: ${new Date(newDate).toLocaleDateString('ja-JP')}`)
       fetchPurchases()
       setEditingApprovalDate(null)
       setNewApprovalDate("")
@@ -369,12 +400,12 @@ export default function AdminPurchasesPage() {
       if (selectedPurchase && selectedPurchase.id === purchaseId) {
         setSelectedPurchase({
           ...selectedPurchase,
-          admin_approved_at: data[0].new_date,
+          admin_approved_at: newDate,
         })
       }
     } catch (error: any) {
       console.error("Approval date update error:", error)
-      alert(`承認日更新エラー: ${error.message}`)
+      alert(`承認日更新エラー: ${error.message || 'システムエラーが発生しました'}`)
     } finally {
       setActionLoading(false)
     }
@@ -780,8 +811,8 @@ export default function AdminPurchasesPage() {
                               <DialogHeader>
                                 <DialogTitle>購入詳細・入金確認 - {selectedPurchase?.user_id}</DialogTitle>
                               </DialogHeader>
-                              <div id="purchase-dialog-description" className="sr-only">
-                                購入ID {selectedPurchase?.id} の詳細情報と入金確認画面
+                              <div id="purchase-dialog-description" className="text-gray-400 text-sm mb-4">
+                                購入ID {selectedPurchase?.id} の詳細情報と管理機能
                               </div>
                               {selectedPurchase && (
                                 <div className="space-y-6">
