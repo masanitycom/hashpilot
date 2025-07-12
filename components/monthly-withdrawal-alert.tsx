@@ -89,8 +89,8 @@ export function MonthlyWithdrawalAlert({ userId, hasCoinwUid }: MonthlyWithdrawa
             <p className="font-medium">月末自動出金について</p>
             <ul className="text-sm space-y-1 ml-4">
               <li>• 毎月月末に自動的に報酬が出金処理されます</li>
-              <li>• CoinW UIDで無料送金されます（全ユーザー設定済み）</li>
-              <li>• 1ドルから出金可能です</li>
+              <li>• 毎月1日～5日の間に報酬が送金されます</li>
+              <li>• 報酬はCoinWに送られます</li>
             </ul>
           </div>
         </AlertDescription>
