@@ -107,13 +107,13 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   if (!hasWithdrawals) {
     return (
       <Card className="bg-gray-800 border-gray-700">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-gray-300 text-sm font-medium">出金状況</CardTitle>
+        <CardHeader className="p-3 pb-2">
+          <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center space-x-2">
-            <DollarSign className="h-5 w-5 text-green-400" />
-            <span className="text-2xl font-bold text-green-400">$0.00</span>
+        <CardContent className="p-3 pt-0">
+          <div className="flex items-center space-x-1">
+            <DollarSign className="h-4 w-4 text-green-400 flex-shrink-0" />
+            <span className="text-base md:text-xl lg:text-2xl font-bold text-green-400">$0.00</span>
           </div>
           <p className="text-xs text-gray-500 mt-1">保留中の出金なし</p>
         </CardContent>
@@ -123,78 +123,27 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
 
   return (
     <Card className="bg-gray-800 border-gray-700">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-gray-300 text-sm font-medium">出金状況</CardTitle>
-          <Link href="/profile">
-            <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-700">
-              <ExternalLink className="h-3 w-3" />
-            </Button>
-          </Link>
-        </div>
+      <CardHeader className="p-3 pb-2">
+        <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {/* 送金待ち */}
-        {summary && summary.pending_amount > 0 && (
-          <div className="flex items-center justify-between p-3 bg-green-900/20 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <Clock className="h-4 w-4 text-green-400" />
-              <div>
-                <p className="text-sm font-medium text-green-300">送金待ち</p>
-                <p className="text-xs text-gray-400">{summary.pending_count}件</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-lg font-bold text-green-400">
-                ${summary.pending_amount.toFixed(2)}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* 保留中 */}
-        {summary && summary.on_hold_amount > 0 && (
-          <div className="flex items-center justify-between p-3 bg-yellow-900/20 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <AlertTriangle className="h-4 w-4 text-yellow-400" />
-              <div>
-                <p className="text-sm font-medium text-yellow-300">保留中</p>
-                <p className="text-xs text-gray-400">送金先設定が必要</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-lg font-bold text-yellow-400">
-                ${summary.on_hold_amount.toFixed(2)}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* 合計 */}
-        <div className="border-t border-gray-600/30 pt-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-white">合計出金予定額</p>
-              {summary?.latest_month && (
-                <p className="text-xs text-gray-400">
-                  最新: {formatMonth(summary.latest_month)}
-                </p>
-              )}
-            </div>
-            <div className="text-right">
-              <p className="text-xl font-bold text-blue-400">
-                ${totalAmount.toFixed(2)}
-              </p>
-            </div>
-          </div>
+      <CardContent className="p-3 pt-0">
+        <div className="flex items-center space-x-1">
+          <DollarSign className="h-4 w-4 text-blue-400 flex-shrink-0" />
+          <span className="text-base md:text-xl lg:text-2xl font-bold text-blue-400 truncate">
+            ${totalAmount.toFixed(2)}
+          </span>
         </div>
-
-        {/* 保留中の場合の案内 */}
-        {summary && summary.on_hold_amount > 0 && (
-          <div className="text-xs text-gray-400 bg-gray-700/50 p-2 rounded">
-            プロフィール画面で報酬受取アドレスを設定すると送金されます
-          </div>
-        )}
+        <div className="text-xs text-gray-500 mt-1 space-y-1">
+          {summary && summary.pending_amount > 0 && (
+            <div>送金待ち: ${summary.pending_amount.toFixed(2)}</div>
+          )}
+          {summary && summary.on_hold_amount > 0 && (
+            <div>保留中: ${summary.on_hold_amount.toFixed(2)}</div>
+          )}
+          {!summary?.pending_amount && !summary?.on_hold_amount && (
+            <div>保留中の出金なし</div>
+          )}
+        </div>
       </CardContent>
     </Card>
   )
