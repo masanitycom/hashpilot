@@ -53,6 +53,10 @@ export default function AdminPurchasesPage() {
   const [editingTransactionId, setEditingTransactionId] = useState<string | null>(null)
   const [newTransactionId, setNewTransactionId] = useState("")
 
+  const [editingApprovalDate, setEditingApprovalDate] = useState<string | null>(null)
+  const [newApprovalDate, setNewApprovalDate] = useState("")
+  const [approvalChangeReason, setApprovalChangeReason] = useState("")
+
   useEffect(() => {
     checkAdminAccess()
   }, [])
@@ -323,6 +327,53 @@ export default function AdminPurchasesPage() {
     } catch (error: any) {
       console.error("Transaction ID update error:", error)
       alert(`トランザクションID更新エラー: ${error.message}`)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const updateApprovalDate = async (purchaseId: string) => {
+    if (!newApprovalDate.trim()) {
+      alert("承認日を入力してください")
+      return
+    }
+
+    if (!approvalChangeReason.trim()) {
+      alert("変更理由を入力してください")
+      return
+    }
+
+    setActionLoading(true)
+    try {
+      const { data, error } = await supabase.rpc("modify_purchase_approval_date", {
+        p_purchase_id: purchaseId,
+        p_new_approval_date: new Date(newApprovalDate).toISOString(),
+        p_admin_email: currentUser.email,
+        p_reason: approvalChangeReason.trim()
+      })
+
+      if (error) throw error
+
+      if (data && data[0].status === 'ERROR') {
+        throw new Error(data[0].message)
+      }
+
+      alert(`承認日を更新しました\n旧: ${data[0].old_date ? new Date(data[0].old_date).toLocaleDateString('ja-JP') : 'なし'}\n新: ${new Date(data[0].new_date).toLocaleDateString('ja-JP')}`)
+      fetchPurchases()
+      setEditingApprovalDate(null)
+      setNewApprovalDate("")
+      setApprovalChangeReason("")
+
+      // 選択された購入情報も更新
+      if (selectedPurchase && selectedPurchase.id === purchaseId) {
+        setSelectedPurchase({
+          ...selectedPurchase,
+          admin_approved_at: data[0].new_date,
+        })
+      }
+    } catch (error: any) {
+      console.error("Approval date update error:", error)
+      alert(`承認日更新エラー: ${error.message}`)
     } finally {
       setActionLoading(false)
     }
@@ -903,14 +954,81 @@ export default function AdminPurchasesPage() {
 
                                   {selectedPurchase.admin_approved && (
                                     <div className="bg-green-900 border border-green-700 rounded-lg p-3">
-                                      <p className="text-green-200">
-                                        ✅ 入金確認済み・ユーザー有効化完了 (
-                                        {formatDate(selectedPurchase.admin_approved_at!)})
-                                      </p>
-                                      {selectedPurchase.admin_approved_by && (
-                                        <p className="text-sm text-green-300">
-                                          確認者: {selectedPurchase.admin_approved_by}
+                                      <div className="flex items-center justify-between mb-2">
+                                        <p className="text-green-200">
+                                          ✅ 入金確認済み・ユーザー有効化完了
                                         </p>
+                                        {editingApprovalDate !== selectedPurchase.id && (
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                              setEditingApprovalDate(selectedPurchase.id)
+                                              setNewApprovalDate(selectedPurchase.admin_approved_at ? new Date(selectedPurchase.admin_approved_at).toISOString().slice(0, 16) : "")
+                                              setApprovalChangeReason("")
+                                            }}
+                                            className="bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600 text-xs"
+                                          >
+                                            <Edit className="w-3 h-3 mr-1" />
+                                            承認日編集
+                                          </Button>
+                                        )}
+                                      </div>
+                                      
+                                      {editingApprovalDate === selectedPurchase.id ? (
+                                        <div className="space-y-3">
+                                          <div>
+                                            <Label className="text-green-300 text-sm">承認日時</Label>
+                                            <Input
+                                              type="datetime-local"
+                                              value={newApprovalDate}
+                                              onChange={(e) => setNewApprovalDate(e.target.value)}
+                                              className="bg-gray-700 border-gray-600 text-white mt-1"
+                                            />
+                                          </div>
+                                          <div>
+                                            <Label className="text-green-300 text-sm">変更理由（必須）</Label>
+                                            <Input
+                                              value={approvalChangeReason}
+                                              onChange={(e) => setApprovalChangeReason(e.target.value)}
+                                              placeholder="例: 承認漏れのため遡って設定"
+                                              className="bg-gray-700 border-gray-600 text-white mt-1"
+                                            />
+                                          </div>
+                                          <div className="flex space-x-2">
+                                            <Button
+                                              size="sm"
+                                              onClick={() => updateApprovalDate(selectedPurchase.id)}
+                                              disabled={actionLoading}
+                                              className="bg-green-600 hover:bg-green-700 text-xs"
+                                            >
+                                              保存
+                                            </Button>
+                                            <Button
+                                              size="sm"
+                                              variant="outline"
+                                              onClick={() => {
+                                                setEditingApprovalDate(null)
+                                                setNewApprovalDate("")
+                                                setApprovalChangeReason("")
+                                              }}
+                                              className="bg-gray-600 hover:bg-gray-700 text-white border-gray-600 text-xs"
+                                            >
+                                              キャンセル
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <div>
+                                          <p className="text-green-300 text-sm">
+                                            承認日時: {formatDate(selectedPurchase.admin_approved_at!)}
+                                          </p>
+                                          {selectedPurchase.admin_approved_by && (
+                                            <p className="text-sm text-green-300">
+                                              確認者: {selectedPurchase.admin_approved_by}
+                                            </p>
+                                          )}
+                                        </div>
                                       )}
                                     </div>
                                   )}
