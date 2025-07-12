@@ -18,6 +18,7 @@ import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
 import { PersonalProfitCard } from "@/components/personal-profit-card"
 import { ReferralProfitCard } from "@/components/referral-profit-card"
 import { TotalProfitCard } from "@/components/total-profit-card"
+import { OperationStatus } from "@/components/operation-status"
 import Link from "next/link"
 import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
 
@@ -52,6 +53,7 @@ export default function DashboardPage() {
   const [error, setError] = useState("")
   const [authChecked, setAuthChecked] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [latestApprovalDate, setLatestApprovalDate] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -163,11 +165,36 @@ export default function DashboardPage() {
       
       setUserData(userRecord)
       await calculateStats(userRecord)
+      await fetchLatestApprovalDate(userRecord.user_id)
     } catch (error) {
       console.error("Fetch user data error:", error)
       setError("データの取得中にエラーが発生しました")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchLatestApprovalDate = async (userId: string) => {
+    try {
+      const { data: latestPurchase, error } = await supabase
+        .from('purchases')
+        .select('admin_approved_at')
+        .eq('user_id', userId)
+        .eq('admin_approved', true)
+        .order('admin_approved_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (error) {
+        console.error('Error fetching latest approval date:', error)
+        return
+      }
+
+      if (latestPurchase?.admin_approved_at) {
+        setLatestApprovalDate(latestPurchase.admin_approved_at)
+      }
+    } catch (error) {
+      console.error('Fetch latest approval date error:', error)
     }
   }
 
@@ -487,6 +514,11 @@ export default function DashboardPage() {
                 </div>
               </div>
               <p className="text-gray-400 text-sm md:text-base break-all">{userData?.email}</p>
+              
+              {/* 運用ステータス */}
+              <div className="mt-4">
+                <OperationStatus approvalDate={latestApprovalDate} />
+              </div>
             </div>
             <div className="hidden md:block">
               <Link href="/profile">

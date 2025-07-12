@@ -80,10 +80,10 @@ serve(async (req) => {
             <div class="next-steps">
                 <h3>🚀 次のステップ</h3>
                 <ol>
-                    <li><strong>日利受取開始:</strong> 明日（0:00以降）から日利の受取が開始されます</li>
+                    <li><strong>日利受取開始:</strong> 承認日から15日後に日利の受取が開始されます</li>
                     <li><strong>ダッシュボード確認:</strong> 投資状況や利益をリアルタイムで確認できます</li>
                     <li><strong>アフィリエイト報酬:</strong> 紹介者がいる場合、報酬が自動計算されます</li>
-                    <li><strong>自動再投資:</strong> 利益が一定額に達すると自動でNFTが追加購入されます</li>
+                    <li><strong>自動再投資:</strong> 利益が一定額に達すると自動でNFTが追加購入されます（15日後から開始）</li>
                 </ol>
             </div>
             
@@ -93,9 +93,10 @@ serve(async (req) => {
             
             <p><strong>重要な注意事項:</strong></p>
             <ul>
-                <li>日利は翌日0:00以降から開始されます（購入当日は対象外）</li>
+                <li>日利は承認日から15日後に開始されます（承認から14日間は準備期間）</li>
                 <li>利益は自動的にアカウントに反映されます</li>
                 <li>出金申請は最小$100から可能です</li>
+                <li>自動NFT購入も同様に15日後から対象となります</li>
                 <li>質問がある場合は、サポートまでお気軽にお問い合わせください</li>
             </ul>
         </div>
@@ -103,7 +104,7 @@ serve(async (req) => {
         <div class="footer">
             <p>このメールは HASHPILOT システムから自動送信されています。</p>
             <p>© 2025 HASHPILOT. All rights reserved.</p>
-            <p>お問い合わせ: support@hashpilot.net</p>
+            <p>お問い合わせ: <a href="https://lin.ee/GHcn4pN">サポートLINE</a></p>
         </div>
     </div>
 </body>
@@ -118,7 +119,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'HASHPILOT <noreply@hashpilot.net>',
+        from: 'HASHPILOT <send@hashpilot.net>',
         to: [to_email],
         subject: emailSubject,
         html: emailBody,

@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { sendApprovalEmailViaAuth } from "@/lib/send-approval-email"
+import { OperationStatus } from "@/components/operation-status"
 
 interface Purchase {
   id: string
@@ -557,6 +558,7 @@ export default function AdminPurchasesPage() {
                     <th className="text-left p-3">トランザクションID</th>
                     <th className="text-left p-3">金額・数量</th>
                     <th className="text-left p-3">状態</th>
+                    <th className="text-left p-3">運用ステータス</th>
                     <th className="text-left p-3">購入日時</th>
                     <th className="text-left p-3">操作</th>
                   </tr>
@@ -610,6 +612,12 @@ export default function AdminPurchasesPage() {
                         <div className="text-sm text-gray-400">{purchase.nft_quantity} NFT</div>
                       </td>
                       <td className="p-3">{getStatusBadge(purchase.payment_status, purchase.admin_approved)}</td>
+                      <td className="p-3">
+                        <OperationStatus 
+                          approvalDate={purchase.admin_approved ? purchase.admin_approved_at : null} 
+                          variant="compact"
+                        />
+                      </td>
                       <td className="p-3">
                         <div className="text-sm">{formatDate(purchase.created_at)}</div>
                         {purchase.admin_approved_at && (
