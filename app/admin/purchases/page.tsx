@@ -510,10 +510,10 @@ export default function AdminPurchasesPage() {
     window.open(url, "_blank")
   }
 
-  const truncateHash = (hash: string, length = 6) => {
+  const truncateHash = (hash: string) => {
     if (!hash) return "未入力"
-    if (hash.length <= length) return hash
-    return `${hash.substring(0, length)}...${hash.substring(hash.length - 3)}`
+    if (hash.length <= 8) return hash
+    return `${hash.substring(0, 4)}...${hash.substring(hash.length - 4)}`
   }
 
   if (loading) {
@@ -709,12 +709,11 @@ export default function AdminPurchasesPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-white min-w-[900px]">
+              <table className="w-full text-white min-w-[800px]">
                 <thead>
                   <tr className="border-b border-gray-600">
-                    <th className="text-left p-1 min-w-[100px] text-xs">ユーザー</th>
-                    <th className="text-left p-1 min-w-[80px] text-xs">紹介者</th>
-                    <th className="text-left p-1 min-w-[90px] text-xs">TX ID</th>
+                    <th className="text-left p-1 min-w-[120px] text-xs">ユーザー</th>
+                    <th className="text-left p-1 min-w-[100px] text-xs">TX ID</th>
                     <th className="text-left p-1 min-w-[70px] text-xs">金額</th>
                     <th className="text-left p-1 min-w-[80px] text-xs">状態</th>
                     <th className="text-left p-1 min-w-[90px] text-xs">運用</th>
@@ -740,23 +739,14 @@ export default function AdminPurchasesPage() {
                       <td className="p-1">
                         <div>
                           <div className="font-semibold text-xs">{purchase.user_id}</div>
-                          <div className="text-xs text-gray-400 truncate" style={{maxWidth: '90px'}}>{purchase.email}</div>
+                          <div className="text-xs text-gray-400 truncate" style={{maxWidth: '110px'}}>{purchase.email}</div>
                         </div>
-                      </td>
-                      <td className="p-1">
-                        {purchase.referrer_user_id ? (
-                          <div className="text-xs text-blue-400 truncate" style={{maxWidth: '70px'}}>
-                            {purchase.referrer_user_id}
-                          </div>
-                        ) : (
-                          <div className="text-xs text-gray-500">直接</div>
-                        )}
                       </td>
                       <td className="p-1">
                         {purchase.payment_proof_url ? (
                           <div className="flex items-center space-x-1">
                             <span className="font-mono text-xs text-yellow-400">
-                              {truncateHash(purchase.payment_proof_url, 6)}
+                              {truncateHash(purchase.payment_proof_url)}
                             </span>
                             <Button
                               size="sm"
