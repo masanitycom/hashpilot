@@ -709,10 +709,10 @@ export default function AdminPurchasesPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-white min-w-[800px]">
+              <table className="w-full text-white min-w-[830px]">
                 <thead>
                   <tr className="border-b border-gray-600">
-                    <th className="text-left p-1 min-w-[120px] text-xs">ユーザー</th>
+                    <th className="text-left p-1 min-w-[150px] text-xs">ユーザー</th>
                     <th className="text-left p-1 min-w-[100px] text-xs">TX ID</th>
                     <th className="text-left p-1 min-w-[70px] text-xs">金額</th>
                     <th className="text-left p-1 min-w-[80px] text-xs">状態</th>
@@ -739,7 +739,7 @@ export default function AdminPurchasesPage() {
                       <td className="p-1">
                         <div>
                           <div className="font-semibold text-xs">{purchase.user_id}</div>
-                          <div className="text-xs text-gray-400 truncate" style={{maxWidth: '110px'}}>{purchase.email}</div>
+                          <div className="text-xs text-gray-400 break-all">{purchase.email}</div>
                         </div>
                       </td>
                       <td className="p-1">
