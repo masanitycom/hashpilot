@@ -12,7 +12,7 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
   if (!approvalDate) {
     return (
       <div className="flex items-center gap-2">
-        <Badge variant="secondary" className="flex items-center gap-1">
+        <Badge variant="secondary" className="flex items-center gap-1 text-xs">
           <Clock className="h-3 w-3" />
           未承認
         </Badge>
@@ -42,17 +42,27 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
 
   if (variant === "compact") {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-1">
         {isOperating ? (
-          <Badge variant="default" className="bg-green-600 flex items-center gap-1">
+          <Badge variant="default" className="bg-green-600 text-white flex items-center gap-1 text-xs">
             <TrendingUp className="h-3 w-3" />
             運用中
           </Badge>
         ) : (
-          <Badge variant="outline" className="border-orange-300 text-orange-700 flex items-center gap-1">
-            <CalendarDays className="h-3 w-3" />
-            {formatDate(operationStart)}開始
-          </Badge>
+          <>
+            <Badge variant="outline" className="border-orange-300 text-orange-600 bg-orange-50 flex items-center gap-1 text-xs">
+              <Clock className="h-3 w-3" />
+              運用待機中
+            </Badge>
+            <div className="text-xs text-gray-600">
+              {formatDate(operationStart)}開始
+              {daysUntilStart > 0 && (
+                <div className="text-orange-600 font-medium">
+                  あと{daysUntilStart}日
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
     )
@@ -61,8 +71,8 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        <CalendarDays className="h-4 w-4 text-gray-500" />
-        <span className="text-sm font-medium">運用ステータス</span>
+        <CalendarDays className="h-4 w-4 text-gray-300" />
+        <span className="text-sm font-medium text-white">運用ステータス</span>
       </div>
       
       <div className="flex items-center gap-3">
@@ -72,20 +82,20 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
               <TrendingUp className="h-3 w-3" />
               運用中
             </Badge>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-300">
               {formatDate(operationStart)}より運用開始済み
             </span>
           </>
         ) : (
           <>
-            <Badge variant="outline" className="border-orange-300 text-orange-700 flex items-center gap-1">
+            <Badge variant="outline" className="border-orange-300 text-orange-300 bg-orange-900/20 flex items-center gap-1">
               <Clock className="h-3 w-3" />
               運用待機中
             </Badge>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-300">
               {formatDate(operationStart)}より運用開始
               {daysUntilStart > 0 && (
-                <span className="text-orange-600 font-medium ml-1">
+                <span className="text-orange-300 font-medium ml-1">
                   (あと{daysUntilStart}日)
                 </span>
               )}
@@ -94,7 +104,7 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
         )}
       </div>
       
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-gray-400">
         承認日: {formatDate(approval)}
       </div>
     </div>
