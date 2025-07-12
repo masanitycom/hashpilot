@@ -550,7 +550,7 @@ export default function AdminPurchasesPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-white min-w-[1280px]">
+              <table className="w-full text-white min-w-[1400px]">
                 <thead>
                   <tr className="border-b border-gray-600">
                     <th className="text-left p-3 min-w-[150px]">ユーザー</th>
@@ -560,7 +560,7 @@ export default function AdminPurchasesPage() {
                     <th className="text-left p-3 min-w-[120px]">状態</th>
                     <th className="text-left p-3 min-w-[110px]">運用ステータス</th>
                     <th className="text-left p-3 min-w-[140px]">購入日時</th>
-                    <th className="text-left p-3 min-w-[180px]">操作</th>
+                    <th className="text-left p-3 min-w-[180px] w-[180px]">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -624,7 +624,7 @@ export default function AdminPurchasesPage() {
                           <div className="text-xs text-green-400">確認: {formatDate(purchase.admin_approved_at)}</div>
                         )}
                       </td>
-                      <td className="p-3 whitespace-nowrap">
+                      <td className="p-3 whitespace-nowrap min-w-[180px] w-[180px]">
                         <div className="flex space-x-1">
                           <Dialog>
                             <DialogTrigger asChild>
