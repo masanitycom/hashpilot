@@ -418,20 +418,20 @@ export default function AdminPurchasesPage() {
 
   const getStatusBadge = (status: string, approved: boolean) => {
     if (approved) {
-      return <Badge className="bg-green-600 text-xs whitespace-nowrap">確認済み</Badge>
+      return <Badge className="bg-green-600 text-sm whitespace-nowrap">確認済み</Badge>
     }
 
     switch (status) {
       case "pending":
-        return <Badge variant="secondary" className="text-xs whitespace-nowrap">注文作成</Badge>
+        return <Badge variant="secondary" className="text-sm whitespace-nowrap">注文作成</Badge>
       case "payment_sent":
-        return <Badge className="bg-yellow-600 text-xs whitespace-nowrap">確認待ち</Badge>
+        return <Badge className="bg-yellow-600 text-sm whitespace-nowrap">確認待ち</Badge>
       case "payment_confirmed":
-        return <Badge className="bg-blue-600 text-xs whitespace-nowrap">確認済み</Badge>
+        return <Badge className="bg-blue-600 text-sm whitespace-nowrap">確認済み</Badge>
       case "rejected":
-        return <Badge variant="destructive" className="text-xs whitespace-nowrap">拒否</Badge>
+        return <Badge variant="destructive" className="text-sm whitespace-nowrap">拒否</Badge>
       default:
-        return <Badge variant="outline" className="text-xs whitespace-nowrap">{status}</Badge>
+        return <Badge variant="outline" className="text-sm whitespace-nowrap">{status}</Badge>
     }
   }
 
@@ -712,13 +712,13 @@ export default function AdminPurchasesPage() {
               <table className="w-full text-white min-w-[830px]">
                 <thead>
                   <tr className="border-b border-gray-600">
-                    <th className="text-left p-1 min-w-[150px] text-xs">ユーザー</th>
-                    <th className="text-left p-1 min-w-[100px] text-xs">TX ID</th>
-                    <th className="text-left p-1 min-w-[70px] text-xs">金額</th>
-                    <th className="text-left p-1 min-w-[80px] text-xs">状態</th>
-                    <th className="text-left p-1 min-w-[90px] text-xs">運用</th>
-                    <th className="text-left p-1 min-w-[100px] text-xs">日時</th>
-                    <th className="text-left p-1 min-w-[140px] w-[140px] text-xs">操作</th>
+                    <th className="text-left p-2 min-w-[160px] text-sm font-medium">ユーザー</th>
+                    <th className="text-left p-2 min-w-[110px] text-sm font-medium">TX ID</th>
+                    <th className="text-left p-2 min-w-[80px] text-sm font-medium">金額</th>
+                    <th className="text-left p-2 min-w-[90px] text-sm font-medium">状態</th>
+                    <th className="text-left p-2 min-w-[100px] text-sm font-medium">運用</th>
+                    <th className="text-left p-2 min-w-[110px] text-sm font-medium">日時</th>
+                    <th className="text-left p-2 min-w-[150px] w-[150px] text-sm font-medium">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -736,61 +736,61 @@ export default function AdminPurchasesPage() {
                     })
                     .map((purchase) => (
                     <tr key={purchase.id} className="border-b border-gray-700 hover:bg-gray-750">
-                      <td className="p-1">
+                      <td className="p-2">
                         <div>
-                          <div className="font-semibold text-xs">{purchase.user_id}</div>
-                          <div className="text-xs text-gray-400 break-all">{purchase.email}</div>
+                          <div className="font-semibold text-sm">{purchase.user_id}</div>
+                          <div className="text-sm text-gray-400 break-all">{purchase.email}</div>
                         </div>
                       </td>
-                      <td className="p-1">
+                      <td className="p-2">
                         {purchase.payment_proof_url ? (
-                          <div className="flex items-center space-x-1">
-                            <span className="font-mono text-xs text-yellow-400">
+                          <div className="flex items-center space-x-2">
+                            <span className="font-mono text-sm text-yellow-400">
                               {truncateHash(purchase.payment_proof_url)}
                             </span>
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => copyToClipboard(purchase.payment_proof_url!)}
-                              className="h-4 w-4 p-0 text-gray-400 hover:text-white"
+                              className="h-5 w-5 p-0 text-gray-400 hover:text-white"
                             >
-                              <Copy className="w-2 h-2" />
+                              <Copy className="w-3 h-3" />
                             </Button>
                           </div>
                         ) : (
-                          <div className="text-xs text-gray-500">未入力</div>
+                          <div className="text-sm text-gray-500">未入力</div>
                         )}
                       </td>
-                      <td className="p-1">
-                        <div className="font-bold text-green-600 text-xs">${purchase.amount_usd}</div>
-                        <div className="text-xs text-gray-400">{purchase.nft_quantity}NFT</div>
+                      <td className="p-2">
+                        <div className="font-bold text-green-600 text-sm">${purchase.amount_usd}</div>
+                        <div className="text-sm text-gray-400">{purchase.nft_quantity}NFT</div>
                       </td>
-                      <td className="p-1 whitespace-nowrap">{getStatusBadge(purchase.payment_status, purchase.admin_approved)}</td>
-                      <td className="p-1 whitespace-nowrap">
+                      <td className="p-2 whitespace-nowrap">{getStatusBadge(purchase.payment_status, purchase.admin_approved)}</td>
+                      <td className="p-2 whitespace-nowrap">
                         <OperationStatus 
                           approvalDate={purchase.admin_approved ? purchase.admin_approved_at : null} 
                           variant="compact"
                         />
                       </td>
-                      <td className="p-1">
-                        <div className="text-xs">{new Date(purchase.created_at).toLocaleDateString('ja-JP')}</div>
+                      <td className="p-2">
+                        <div className="text-sm">{new Date(purchase.created_at).toLocaleDateString('ja-JP')}</div>
                         {purchase.admin_approved_at && (
-                          <div className="text-xs text-green-400">承認済み</div>
+                          <div className="text-sm text-green-400">承認済み</div>
                         )}
                       </td>
-                      <td className="p-1 whitespace-nowrap min-w-[140px] w-[140px]">
+                      <td className="p-2 whitespace-nowrap min-w-[150px] w-[150px]">
                         <div className="flex space-x-1">
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button
                                 size="sm"
-                                className="bg-blue-600 hover:bg-blue-700 text-white border-0 text-xs px-2 py-1"
+                                className="bg-blue-600 hover:bg-blue-700 text-white border-0 text-sm px-3 py-2"
                                 onClick={() => {
                                   setSelectedPurchase(purchase)
                                   setAdminNotes(purchase.admin_notes || "")
                                 }}
                               >
-                                <Eye className="w-3 h-3 mr-1 text-white" />
+                                <Eye className="w-4 h-4 mr-1 text-white" />
                                 <span className="text-white">詳細</span>
                               </Button>
                             </DialogTrigger>
@@ -1163,9 +1163,9 @@ export default function AdminPurchasesPage() {
                             variant="destructive"
                             onClick={() => deletePurchase(purchase.id)}
                             disabled={actionLoading}
-                            className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1"
+                            className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2"
                           >
-                            <XCircle className="w-3 h-3 mr-1" />
+                            <XCircle className="w-4 h-4 mr-1" />
                             削除
                           </Button>
                         </div>
