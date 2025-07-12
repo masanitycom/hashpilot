@@ -27,6 +27,10 @@ interface User {
 }
 
 export default function AdminUsersPage() {
+  // 強制更新用バージョン - 古いキャッシュを無効化
+  console.log("🚀🚀🚀 AdminUsersPage v2.5 - CACHE CLEARED 🚀🚀🚀")
+  console.log("新しいコードが実行されています - " + new Date().toISOString())
+  
   const [users, setUsers] = useState<User[]>([])
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
@@ -198,21 +202,93 @@ export default function AdminUsersPage() {
   }
 
   const handleDelete = async (userId: string) => {
-    if (!confirm("本当にこのユーザーを削除しますか？")) return
+    console.log("🚨🚨🚨 NEW DELETE FUNCTION v2.1 EXECUTING 🚨🚨🚨")
+    console.log("This is the new safe deletion code - if you see direct DELETE API calls, there's still old code running!")
+    
+    const user = users.find(u => u.id === userId)
+    if (!user) {
+      console.log("❌ User not found:", userId)
+      return
+    }
+
+    console.log("削除対象ユーザー:", {
+      uuid_id: user.id,
+      user_id: user.user_id,
+      email: user.email,
+      timestamp: new Date().toISOString()
+    })
+
+    if (!confirm(`本当にユーザー "${user.email}" (ID: ${user.user_id}) を削除しますか？\n\nこの操作により以下のデータも削除されます：\n- 購入履歴\n- アフィリエイトサイクル\n- 出金履歴\n- 買い取り申請\n\nこの操作は取り消せません。`)) return
+
+    // 古いDELETE方式を完全に無効化
+    console.log("⚠️ 新しい安全な削除関数のみを使用します")
 
     try {
       setError("")
+      setSaving(true)
 
-      const { error: deleteError } = await supabase.from("users").delete().eq("id", userId)
+      console.log("🔍 削除プロセス開始")
+
+      // 現在のユーザーのメールアドレス取得
+      console.log("🔍 管理者認証確認中...")
+      const { data: { user: currentUser } } = await supabase.auth.getUser()
+      if (!currentUser) {
+        throw new Error("管理者認証が必要です")
+      }
+      console.log("✅ 管理者認証成功:", currentUser.email)
+
+      // 安全な削除関数を使用（user_idを使用）
+      console.log("🔍 安全な削除関数を呼び出し中:", {
+        function: "delete_user_safely",
+        p_user_id: user.user_id,
+        p_admin_email: currentUser.email
+      })
+
+      const { data: result, error: deleteError } = await supabase.rpc("delete_user_safely", {
+        p_user_id: user.user_id,
+        p_admin_email: currentUser.email
+      })
+
+      console.log("📊 削除関数の結果:", { result, deleteError })
 
       if (deleteError) {
-        throw deleteError
+        console.error("❌ 削除関数でエラー:", deleteError)
+        throw new Error(`削除関数エラー: ${deleteError.message}`)
       }
 
+      console.log("✅ RPC関数実行完了 - 結果:", result)
+
+      // 結果確認
+      if (!result || result.length === 0) {
+        throw new Error("削除関数から結果が返されませんでした")
+      }
+
+      if (result[0]?.status === 'ERROR') {
+        throw new Error(`削除エラー: ${result[0].message}`)
+      }
+
+      if (result[0]?.status !== 'SUCCESS') {
+        throw new Error(`予期しない結果: ${JSON.stringify(result[0])}`)
+      }
+
+      // 削除詳細を表示
+      if (result && result[0]?.details) {
+        const details = result[0].details
+        const tableInfo = details.deleted_from_tables?.map((t: any) => 
+          `  - ${t.table}: ${t.rows}件`
+        ).join('\n')
+        
+        alert(`ユーザーの削除が完了しました\n\n${result[0].message}\n\n削除されたデータ:\n${tableInfo || 'なし'}`)
+      } else {
+        alert(`ユーザーの削除が完了しました\n${result?.[0]?.message || '正常に削除されました'}`)
+      }
+      
       await fetchUsers()
     } catch (error: any) {
       console.error("Delete error:", error)
       setError(`削除に失敗しました: ${error.message}`)
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -391,12 +467,17 @@ export default function AdminUsersPage() {
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
-                        onClick={() => handleDelete(user.id)}
+                        onClick={() => {
+                          console.log("🔴 削除ボタンクリック - 新しいコード実行中")
+                          handleDelete(user.id)
+                        }}
                         variant="outline"
                         size="sm"
-                        className="border-red-600 text-red-400 hover:bg-red-900 bg-transparent"
+                        disabled={saving}
+                        className="border-red-600 text-red-400 hover:bg-red-900 bg-transparent disabled:opacity-50"
                       >
                         <Trash2 className="h-4 w-4" />
+                        <span className="ml-1 text-xs">v2.5</span>
                       </Button>
                     </div>
                   </div>

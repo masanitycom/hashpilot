@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit } from "lucide-react"
+import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { sendApprovalEmailViaAuth } from "@/lib/send-approval-email"
 
@@ -345,6 +345,69 @@ export default function AdminPurchasesPage() {
     return new Date(dateString).toLocaleString("ja-JP")
   }
 
+  const exportToCSV = () => {
+    const csvHeaders = [
+      "購入ID",
+      "ユーザーID", 
+      "メールアドレス",
+      "フルネーム",
+      "CoinW UID",
+      "紹介者ID",
+      "紹介者メール",
+      "NFT数量",
+      "金額(USD)",
+      "ステータス",
+      "管理者承認",
+      "トランザクションID",
+      "ユーザーメモ",
+      "管理者メモ",
+      "購入日時",
+      "承認日時",
+      "承認者"
+    ]
+
+    const csvData = purchases.map(purchase => [
+      purchase.id,
+      purchase.user_id,
+      purchase.email,
+      purchase.full_name || "",
+      purchase.coinw_uid || "",
+      purchase.referrer_user_id || "",
+      purchase.referrer_email || "",
+      purchase.nft_quantity,
+      purchase.amount_usd,
+      purchase.payment_status,
+      purchase.admin_approved ? "承認済み" : "未承認",
+      purchase.payment_proof_url || "",
+      purchase.user_notes || "",
+      purchase.admin_notes || "",
+      formatDate(purchase.created_at),
+      purchase.admin_approved_at ? formatDate(purchase.admin_approved_at) : "",
+      purchase.admin_approved_by || ""
+    ])
+
+    const csvContent = [
+      csvHeaders.join(","),
+      ...csvData.map(row => 
+        row.map(field => 
+          typeof field === 'string' && field.includes(',') 
+            ? `"${field.replace(/"/g, '""')}"` 
+            : field
+        ).join(",")
+      )
+    ].join("\n")
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" })
+    const link = document.createElement("a")
+    const url = URL.createObjectURL(blob)
+    link.setAttribute("href", url)
+    link.setAttribute("download", `purchases_${new Date().toISOString().split("T")[0]}.csv`)
+    link.style.visibility = "hidden"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   const openBlockchainExplorer = (txHash: string) => {
     if (!txHash) return
 
@@ -432,6 +495,15 @@ export default function AdminPurchasesPage() {
                   className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
                 >
                   管理者ダッシュボード
+                </Button>
+                <Button 
+                  onClick={exportToCSV} 
+                  size="sm"
+                  variant="outline"
+                  className="bg-green-600 hover:bg-green-700 text-white border-green-600"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  CSV出力
                 </Button>
                 <Button onClick={fetchPurchases} size="sm">
                   <RefreshCw className="w-4 h-4 mr-2" />
