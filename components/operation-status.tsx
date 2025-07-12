@@ -10,6 +10,13 @@ interface OperationStatusProps {
 
 export function OperationStatus({ approvalDate, variant = "default" }: OperationStatusProps) {
   if (!approvalDate) {
+    if (variant === "compact") {
+      return (
+        <div className="text-xs">
+          <span className="text-gray-500">未承認</span>
+        </div>
+      )
+    }
     return (
       <div className="flex items-center gap-2">
         <Badge variant="secondary" className="flex items-center gap-1 text-xs">
@@ -42,27 +49,11 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
 
   if (variant === "compact") {
     return (
-      <div className="flex flex-col gap-1">
+      <div className="text-xs">
         {isOperating ? (
-          <Badge variant="default" className="bg-green-600 text-white flex items-center gap-1 text-xs">
-            <TrendingUp className="h-3 w-3" />
-            運用中
-          </Badge>
+          <span className="text-green-600 font-medium">運用中</span>
         ) : (
-          <>
-            <Badge variant="outline" className="border-orange-300 text-orange-600 bg-orange-50 flex items-center gap-1 text-xs">
-              <Clock className="h-3 w-3" />
-              運用待機中
-            </Badge>
-            <div className="text-xs text-gray-600">
-              {formatDate(operationStart)}開始
-              {daysUntilStart > 0 && (
-                <div className="text-orange-600 font-medium">
-                  あと{daysUntilStart}日
-                </div>
-              )}
-            </div>
-          </>
+          <span className="text-orange-600">{formatDate(operationStart)}開始</span>
         )}
       </div>
     )
