@@ -427,10 +427,10 @@ export default function AdminPurchasesPage() {
     window.open(url, "_blank")
   }
 
-  const truncateHash = (hash: string, length = 10) => {
+  const truncateHash = (hash: string, length = 6) => {
     if (!hash) return "未入力"
     if (hash.length <= length) return hash
-    return `${hash.substring(0, length)}...${hash.substring(hash.length - 4)}`
+    return `${hash.substring(0, length)}...${hash.substring(hash.length - 3)}`
   }
 
   if (loading) {
@@ -550,93 +550,86 @@ export default function AdminPurchasesPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-white min-w-[1400px]">
+              <table className="w-full text-white min-w-[900px]">
                 <thead>
                   <tr className="border-b border-gray-600">
-                    <th className="text-left p-3 min-w-[150px]">ユーザー</th>
-                    <th className="text-left p-3 min-w-[120px]">紹介者</th>
-                    <th className="text-left p-3 min-w-[120px]">トランザクションID</th>
-                    <th className="text-left p-3 min-w-[100px]">金額・数量</th>
-                    <th className="text-left p-3 min-w-[120px]">状態</th>
-                    <th className="text-left p-3 min-w-[110px]">運用ステータス</th>
-                    <th className="text-left p-3 min-w-[140px]">購入日時</th>
-                    <th className="text-left p-3 min-w-[180px] w-[180px]">操作</th>
+                    <th className="text-left p-1 min-w-[100px] text-xs">ユーザー</th>
+                    <th className="text-left p-1 min-w-[80px] text-xs">紹介者</th>
+                    <th className="text-left p-1 min-w-[90px] text-xs">TX ID</th>
+                    <th className="text-left p-1 min-w-[70px] text-xs">金額</th>
+                    <th className="text-left p-1 min-w-[80px] text-xs">状態</th>
+                    <th className="text-left p-1 min-w-[90px] text-xs">運用</th>
+                    <th className="text-left p-1 min-w-[100px] text-xs">日時</th>
+                    <th className="text-left p-1 min-w-[140px] w-[140px] text-xs">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   {purchases.map((purchase) => (
                     <tr key={purchase.id} className="border-b border-gray-700 hover:bg-gray-750">
-                      <td className="p-3">
+                      <td className="p-1">
                         <div>
-                          <div className="font-semibold">{purchase.user_id}</div>
-                          <div className="text-sm text-gray-400">{purchase.email}</div>
-                          {purchase.full_name && <div className="text-sm text-gray-400">{purchase.full_name}</div>}
+                          <div className="font-semibold text-xs">{purchase.user_id}</div>
+                          <div className="text-xs text-gray-400 truncate" style={{maxWidth: '90px'}}>{purchase.email}</div>
                         </div>
                       </td>
-                      <td className="p-3">
+                      <td className="p-1">
                         {purchase.referrer_user_id ? (
-                          <div className="flex items-center">
-                            <Users className="w-4 h-4 mr-1 text-blue-400" />
-                            <div>
-                              <div className="text-sm font-medium text-blue-400">{purchase.referrer_user_id}</div>
-                              {purchase.referrer_email && (
-                                <div className="text-xs text-gray-400">{purchase.referrer_email}</div>
-                              )}
-                            </div>
+                          <div className="text-xs text-blue-400 truncate" style={{maxWidth: '70px'}}>
+                            {purchase.referrer_user_id}
                           </div>
                         ) : (
-                          <div className="text-sm text-gray-500">直接登録</div>
+                          <div className="text-xs text-gray-500">直接</div>
                         )}
                       </td>
-                      <td className="p-3">
+                      <td className="p-1">
                         {purchase.payment_proof_url ? (
                           <div className="flex items-center space-x-1">
                             <span className="font-mono text-xs text-yellow-400">
-                              {truncateHash(purchase.payment_proof_url)}
+                              {truncateHash(purchase.payment_proof_url, 6)}
                             </span>
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => copyToClipboard(purchase.payment_proof_url!)}
-                              className="h-6 w-6 p-0 text-gray-400 hover:text-white"
+                              className="h-4 w-4 p-0 text-gray-400 hover:text-white"
                             >
-                              <Copy className="w-3 h-3" />
+                              <Copy className="w-2 h-2" />
                             </Button>
                           </div>
                         ) : (
-                          <div className="text-sm text-gray-500">未入力</div>
+                          <div className="text-xs text-gray-500">未入力</div>
                         )}
                       </td>
-                      <td className="p-3">
-                        <div className="font-bold text-green-600">${purchase.amount_usd}</div>
-                        <div className="text-sm text-gray-400">{purchase.nft_quantity} NFT</div>
+                      <td className="p-1">
+                        <div className="font-bold text-green-600 text-xs">${purchase.amount_usd}</div>
+                        <div className="text-xs text-gray-400">{purchase.nft_quantity}NFT</div>
                       </td>
-                      <td className="p-3 whitespace-nowrap">{getStatusBadge(purchase.payment_status, purchase.admin_approved)}</td>
-                      <td className="p-3 whitespace-nowrap">
+                      <td className="p-1 whitespace-nowrap">{getStatusBadge(purchase.payment_status, purchase.admin_approved)}</td>
+                      <td className="p-1 whitespace-nowrap">
                         <OperationStatus 
                           approvalDate={purchase.admin_approved ? purchase.admin_approved_at : null} 
                           variant="compact"
                         />
                       </td>
-                      <td className="p-3">
-                        <div className="text-sm">{formatDate(purchase.created_at)}</div>
+                      <td className="p-1">
+                        <div className="text-xs">{new Date(purchase.created_at).toLocaleDateString('ja-JP')}</div>
                         {purchase.admin_approved_at && (
-                          <div className="text-xs text-green-400">確認: {formatDate(purchase.admin_approved_at)}</div>
+                          <div className="text-xs text-green-400">承認済み</div>
                         )}
                       </td>
-                      <td className="p-3 whitespace-nowrap min-w-[180px] w-[180px]">
+                      <td className="p-1 whitespace-nowrap min-w-[140px] w-[140px]">
                         <div className="flex space-x-1">
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button
                                 size="sm"
-                                className="bg-blue-600 hover:bg-blue-700 text-white border-0"
+                                className="bg-blue-600 hover:bg-blue-700 text-white border-0 text-xs px-2 py-1"
                                 onClick={() => {
                                   setSelectedPurchase(purchase)
                                   setAdminNotes(purchase.admin_notes || "")
                                 }}
                               >
-                                <Eye className="w-4 h-4 mr-1 text-white" />
+                                <Eye className="w-3 h-3 mr-1 text-white" />
                                 <span className="text-white">詳細</span>
                               </Button>
                             </DialogTrigger>
@@ -942,9 +935,9 @@ export default function AdminPurchasesPage() {
                             variant="destructive"
                             onClick={() => deletePurchase(purchase.id)}
                             disabled={actionLoading}
-                            className="bg-red-600 hover:bg-red-700 text-white"
+                            className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1"
                           >
-                            <XCircle className="w-4 h-4 mr-1" />
+                            <XCircle className="w-3 h-3 mr-1" />
                             削除
                           </Button>
                         </div>
