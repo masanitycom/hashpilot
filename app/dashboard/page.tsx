@@ -66,6 +66,9 @@ export default function DashboardPage() {
         return
       }
 
+      // セッション情報を強制的にリフレッシュ
+      await supabase.auth.refreshSession()
+
       const {
         data: { session },
         error: sessionError,
@@ -75,6 +78,8 @@ export default function DashboardPage() {
 
       if (sessionError) {
         console.error("Session error:", sessionError)
+        // セッションエラー時は完全にログアウト
+        await supabase.auth.signOut()
         router.push("/login")
         return
       }
@@ -92,9 +97,9 @@ export default function DashboardPage() {
         return
       }
 
-      console.log("User authenticated:", session.user.id)
+      console.log("User authenticated:", session.user.id, "Email:", session.user.email)
       setUser(session.user)
-      await fetchUserData(session.user.id)
+      await fetchUserData(session.user)
     } catch (error) {
       console.error("Auth check error:", error)
       setAuthChecked(true)
@@ -102,13 +107,17 @@ export default function DashboardPage() {
     }
   }
 
-  const fetchUserData = async (userId: string) => {
+  const fetchUserData = async (user: any) => {
     try {
       if (!supabase) {
         throw new Error("Supabase client not available")
       }
 
-      const { data: userRecords, error: userError } = await supabase.from("users").select("*").eq("id", userId)
+      // まずメールアドレスでユーザーを検索（より確実）
+      const { data: userRecords, error: userError } = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", user.email)
 
       if (userError) {
         console.error("User data error:", userError)
@@ -118,8 +127,27 @@ export default function DashboardPage() {
       }
 
       if (!userRecords || userRecords.length === 0) {
-        setError("ユーザーレコードが見つかりません")
-        setLoading(false)
+        console.log("User not found by email, checking by UUID:", user.id)
+        // フォールバック: UUIDでも検索
+        const { data: fallbackRecords, error: fallbackError } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", user.id)
+        
+        if (fallbackError || !fallbackRecords || fallbackRecords.length === 0) {
+          console.error("User not found by UUID either:", fallbackError)
+          setError("ユーザーレコードが見つかりません。ブラウザのキャッシュをクリアしてから再度ログインしてください。")
+          // 完全ログアウトを実行
+          await supabase.auth.signOut()
+          setLoading(false)
+          router.push("/login")
+          return
+        }
+        
+        // UUIDで見つかった場合はそれを使用
+        const userRecord = fallbackRecords[0]
+        setUserData(userRecord)
+        await calculateStats(userRecord)
         return
       }
 

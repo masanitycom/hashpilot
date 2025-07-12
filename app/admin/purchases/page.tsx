@@ -179,19 +179,29 @@ export default function AdminPurchasesPage() {
         throw new Error(rpcResult[0].message)
       }
 
-      // 承認完了メール送信
-      const emailResult = await sendApprovalEmailViaAuth(
-        purchase.email,
-        purchase.user_id,
-        purchase.nft_quantity
-      )
+      // Edge Functionを使って承認完了メール送信
+      try {
+        const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-approval-email', {
+          body: {
+            to_email: purchase.email,
+            user_name: purchase.full_name,
+            nft_quantity: purchase.nft_quantity,
+            amount_usd: purchase.amount_usd,
+            user_id: purchase.user_id,
+            purchase_id: purchaseId
+          }
+        })
 
-      if (!emailResult.success) {
-        console.error("メール送信エラー:", emailResult.error)
-        // メール送信失敗してもユーザーには承認完了を通知
-        alert("入金を確認し、ユーザーを有効化しました。\n（メール通知は記録されました）")
-      } else {
-        alert("入金を確認し、ユーザーを有効化しました。\n承認完了通知が記録されました。")
+        if (emailError) {
+          console.error("Edge Function メール送信エラー:", emailError)
+          alert("入金を確認し、ユーザーを有効化しました。\n（メール送信でエラーが発生しましたが承認は完了しています）")
+        } else {
+          console.log("メール送信成功:", emailResult)
+          alert("入金を確認し、ユーザーを有効化しました。\n承認完了メールを送信しました。")
+        }
+      } catch (emailError) {
+        console.error("メール送信処理エラー:", emailError)
+        alert("入金を確認し、ユーザーを有効化しました。\n（メール送信処理でエラーが発生しましたが承認は完了しています）")
       }
 
       fetchPurchases()
