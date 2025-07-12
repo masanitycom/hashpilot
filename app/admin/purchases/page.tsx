@@ -335,20 +335,20 @@ export default function AdminPurchasesPage() {
 
   const getStatusBadge = (status: string, approved: boolean) => {
     if (approved) {
-      return <Badge className="bg-green-600">入金確認済み</Badge>
+      return <Badge className="bg-green-600 text-xs whitespace-nowrap">確認済み</Badge>
     }
 
     switch (status) {
       case "pending":
-        return <Badge variant="secondary">注文作成済み</Badge>
+        return <Badge variant="secondary" className="text-xs whitespace-nowrap">注文作成</Badge>
       case "payment_sent":
-        return <Badge className="bg-yellow-600">送金完了・確認待ち</Badge>
+        return <Badge className="bg-yellow-600 text-xs whitespace-nowrap">確認待ち</Badge>
       case "payment_confirmed":
-        return <Badge className="bg-blue-600">入金確認済み</Badge>
+        return <Badge className="bg-blue-600 text-xs whitespace-nowrap">確認済み</Badge>
       case "rejected":
-        return <Badge variant="destructive">拒否</Badge>
+        return <Badge variant="destructive" className="text-xs whitespace-nowrap">拒否</Badge>
       default:
-        return <Badge variant="outline">{status}</Badge>
+        return <Badge variant="outline" className="text-xs whitespace-nowrap">{status}</Badge>
     }
   }
 
@@ -550,17 +550,17 @@ export default function AdminPurchasesPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-white">
+              <table className="w-full text-white min-w-[1200px]">
                 <thead>
                   <tr className="border-b border-gray-600">
-                    <th className="text-left p-3">ユーザー</th>
-                    <th className="text-left p-3">紹介者</th>
-                    <th className="text-left p-3">トランザクションID</th>
-                    <th className="text-left p-3">金額・数量</th>
-                    <th className="text-left p-3">状態</th>
-                    <th className="text-left p-3">運用ステータス</th>
-                    <th className="text-left p-3">購入日時</th>
-                    <th className="text-left p-3">操作</th>
+                    <th className="text-left p-3 min-w-[150px]">ユーザー</th>
+                    <th className="text-left p-3 min-w-[120px]">紹介者</th>
+                    <th className="text-left p-3 min-w-[120px]">トランザクションID</th>
+                    <th className="text-left p-3 min-w-[100px]">金額・数量</th>
+                    <th className="text-left p-3 min-w-[120px]">状態</th>
+                    <th className="text-left p-3 min-w-[110px]">運用ステータス</th>
+                    <th className="text-left p-3 min-w-[140px]">購入日時</th>
+                    <th className="text-left p-3 min-w-[100px]">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -611,8 +611,8 @@ export default function AdminPurchasesPage() {
                         <div className="font-bold text-green-600">${purchase.amount_usd}</div>
                         <div className="text-sm text-gray-400">{purchase.nft_quantity} NFT</div>
                       </td>
-                      <td className="p-3">{getStatusBadge(purchase.payment_status, purchase.admin_approved)}</td>
-                      <td className="p-3">
+                      <td className="p-3 whitespace-nowrap">{getStatusBadge(purchase.payment_status, purchase.admin_approved)}</td>
+                      <td className="p-3 whitespace-nowrap">
                         <OperationStatus 
                           approvalDate={purchase.admin_approved ? purchase.admin_approved_at : null} 
                           variant="compact"
