@@ -9,7 +9,7 @@ import { supabase } from "@/lib/supabase"
 
 interface MonthlyWithdrawalAlertProps {
   userId: string
-  hasWithdrawalAddress: boolean
+  hasCoinwUid: boolean
 }
 
 interface PendingWithdrawal {
@@ -20,7 +20,7 @@ interface PendingWithdrawal {
   withdrawal_method: string | null
 }
 
-export function MonthlyWithdrawalAlert({ userId, hasWithdrawalAddress }: MonthlyWithdrawalAlertProps) {
+export function MonthlyWithdrawalAlert({ userId, hasCoinwUid }: MonthlyWithdrawalAlertProps) {
   const [pendingWithdrawals, setPendingWithdrawals] = useState<PendingWithdrawal[]>([])
   const [onHoldAmount, setOnHoldAmount] = useState<number>(0)
   const [loading, setLoading] = useState(true)
@@ -89,23 +89,22 @@ export function MonthlyWithdrawalAlert({ userId, hasWithdrawalAddress }: Monthly
             <p className="font-medium">月末自動出金について</p>
             <ul className="text-sm space-y-1 ml-4">
               <li>• 毎月月末に自動的に報酬が出金処理されます</li>
-              <li>• 報酬受取アドレス（USDT BEP20）またはCoinW UIDが必要です</li>
-              <li>• 最小出金額は$10です</li>
-              <li>• 設定がない場合は出金が保留されます</li>
+              <li>• CoinW UIDで無料送金されます（全ユーザー設定済み）</li>
+              <li>• 1ドルから出金可能です</li>
             </ul>
           </div>
         </AlertDescription>
       </Alert>
 
-      {/* 送金先未設定アラート */}
-      {!hasWithdrawalAddress && isMonthEnd() && (
+      {/* CoinW UID未設定アラート */}
+      {!hasCoinwUid && isMonthEnd() && (
         <Alert className="border-red-500/50 bg-red-900/20">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription className="text-red-200">
             <div className="space-y-2">
-              <p className="font-medium">⚠️ 送金先アドレスが未設定です</p>
+              <p className="font-medium">⚠️ CoinW UIDが未設定です</p>
               <p className="text-sm">
-                月末出金処理のため、報酬受取アドレス（USDT BEP20）の設定が必要です。
+                月末出金処理のため、CoinW UIDの設定が必要です。
                 設定がない場合、出金が保留され、手動で設定するまで送金されません。
               </p>
             </div>
@@ -122,7 +121,7 @@ export function MonthlyWithdrawalAlert({ userId, hasWithdrawalAddress }: Monthly
                 <Clock className="h-5 w-5 text-yellow-400" />
                 <div>
                   <p className="font-medium text-yellow-200">保留中の出金額</p>
-                  <p className="text-sm text-yellow-300">送金先アドレス設定待ち</p>
+                  <p className="text-sm text-yellow-300">CoinW UID設定待ち</p>
                 </div>
               </div>
               <div className="text-right">
@@ -171,8 +170,8 @@ export function MonthlyWithdrawalAlert({ userId, hasWithdrawalAddress }: Monthly
         </Card>
       )}
 
-      {/* 送金先設定完了の表示 */}
-      {hasWithdrawalAddress && onHoldAmount === 0 && (
+      {/* CoinW UID設定完了の表示 */}
+      {hasCoinwUid && onHoldAmount === 0 && (
         <Card className="bg-green-900/20 border-green-700/50">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
@@ -180,7 +179,7 @@ export function MonthlyWithdrawalAlert({ userId, hasWithdrawalAddress }: Monthly
               <div>
                 <p className="font-medium text-green-200">月末出金設定完了</p>
                 <p className="text-sm text-green-300">
-                  報酬受取アドレスが設定済みです。月末に自動的に出金処理されます。
+                  CoinW UIDが設定済みです。月末に自動的に出金処理されます。
                 </p>
               </div>
             </div>

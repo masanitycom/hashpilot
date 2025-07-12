@@ -22,8 +22,6 @@ interface UserProfile {
   created_at: string
   total_purchases: number
   referral_count: number
-  reward_address_bep20: string | null
-  nft_receive_address: string | null
 }
 
 export default function ProfilePage() {
@@ -36,8 +34,6 @@ export default function ProfilePage() {
   const [success, setSuccess] = useState("")
   const [editForm, setEditForm] = useState({
     coinw_uid: "",
-    reward_address_bep20: "",
-    nft_receive_address: "",
   })
   const [showQR, setShowQR] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -83,9 +79,7 @@ export default function ProfilePage() {
           email,
           coinw_uid,
           created_at,
-          total_purchases,
-          reward_address_bep20,
-          nft_receive_address
+          total_purchases
         `)
         .eq("id", user.id)
         .single()
@@ -114,8 +108,6 @@ export default function ProfilePage() {
       setProfile(profileData)
       setEditForm({
         coinw_uid: userData.coinw_uid || "",
-        reward_address_bep20: userData.reward_address_bep20 || "",
-        nft_receive_address: userData.nft_receive_address || "",
       })
     } catch (error: any) {
       console.error("Profile fetch error:", error)
@@ -141,8 +133,6 @@ export default function ProfilePage() {
         .from("users")
         .update({
           coinw_uid: editForm.coinw_uid,
-          reward_address_bep20: editForm.reward_address_bep20,
-          nft_receive_address: editForm.nft_receive_address,
         })
         .eq("id", user.id)
 
@@ -418,49 +408,8 @@ export default function ProfilePage() {
             <div className="border-t border-gray-600/30 pt-6">
               <MonthlyWithdrawalAlert 
                 userId={profile?.user_id || ""} 
-                hasWithdrawalAddress={!!(profile?.reward_address_bep20 || profile?.coinw_uid)}
+                hasCoinwUid={!!profile?.coinw_uid}
               />
-            </div>
-
-            <div className="border-t border-gray-600/30 pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5 text-yellow-400" />
-                <span>ウォレットアドレス</span>
-              </h3>
-              
-              <div className="grid grid-cols-1 gap-6">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">報酬受取アドレス (USDT BEP20)</Label>
-                  {editing ? (
-                    <Input
-                      value={editForm.reward_address_bep20}
-                      onChange={(e) => setEditForm({ ...editForm, reward_address_bep20: e.target.value })}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500/20"
-                      placeholder="0x... (BEP20アドレス)"
-                    />
-                  ) : (
-                    <div className="bg-gray-800/50 border border-gray-600/50 rounded-lg p-3 text-white break-all font-mono text-sm">
-                      {profile?.reward_address_bep20 || "未設定"}
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-300">NFT受取アドレス</Label>
-                  {editing ? (
-                    <Input
-                      value={editForm.nft_receive_address}
-                      onChange={(e) => setEditForm({ ...editForm, nft_receive_address: e.target.value })}
-                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500/20"
-                      placeholder="0x... (NFT受取用アドレス)"
-                    />
-                  ) : (
-                    <div className="bg-gray-800/50 border border-gray-600/50 rounded-lg p-3 text-white break-all font-mono text-sm">
-                      {profile?.nft_receive_address || "未設定"}
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
 
             {editing && (

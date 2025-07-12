@@ -172,7 +172,7 @@ export default function AdminWithdrawalsPage() {
 
   const exportCSV = () => {
     const headers = [
-      "ユーザーID", "メールアドレス", "報酬額", "送金方法", "送金先", 
+      "ユーザーID", "メールアドレス", "報酬額", "送金方法", "CoinW UID/送金先", 
       "ステータス", "作成日", "完了日", "備考"
     ]
     
@@ -180,7 +180,7 @@ export default function AdminWithdrawalsPage() {
       w.user_id,
       w.email,
       w.total_amount,
-      w.withdrawal_method || "未設定",
+      w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
       w.withdrawal_address || "未設定",
       w.status,
       new Date(w.created_at).toLocaleDateString('ja-JP'),
@@ -395,7 +395,7 @@ export default function AdminWithdrawalsPage() {
                     </th>
                     <th className="text-left py-3 px-2 text-gray-300">ユーザー</th>
                     <th className="text-left py-3 px-2 text-gray-300">報酬額</th>
-                    <th className="text-left py-3 px-2 text-gray-300">送金先</th>
+                    <th className="text-left py-3 px-2 text-gray-300">CoinW UID/送金先</th>
                     <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
                     <th className="text-left py-3 px-2 text-gray-300">作成日</th>
                   </tr>
