@@ -22,8 +22,6 @@ interface User {
   referrer_user_id: string | null
   created_at: string
   is_active: boolean
-  reward_address_bep20: string | null
-  nft_receive_address: string | null
 }
 
 export default function AdminUsersPage() {
@@ -39,8 +37,6 @@ export default function AdminUsersPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [editForm, setEditForm] = useState({
     coinw_uid: "",
-    reward_address_bep20: "",
-    nft_receive_address: "",
     referrer_user_id: "",
   })
   const [saving, setSaving] = useState(false)
@@ -163,8 +159,6 @@ export default function AdminUsersPage() {
     setEditingUser(user)
     setEditForm({
       coinw_uid: user.coinw_uid || "",
-      reward_address_bep20: user.reward_address_bep20 || "",
-      nft_receive_address: user.nft_receive_address || "",
       referrer_user_id: user.referrer_user_id || "",
     })
   }
@@ -180,8 +174,6 @@ export default function AdminUsersPage() {
         .from("users")
         .update({
           coinw_uid: editForm.coinw_uid || null,
-          reward_address_bep20: editForm.reward_address_bep20 || null,
-          nft_receive_address: editForm.nft_receive_address || null,
           referrer_user_id: editForm.referrer_user_id || null,
           updated_at: new Date().toISOString(),
         })
@@ -294,7 +286,7 @@ export default function AdminUsersPage() {
 
   const exportUsers = () => {
     const csvContent = [
-      ["ユーザーID", "メール", "CoinW UID", "投資額", "紹介者", "作成日", "報酬アドレス", "NFTアドレス"].join(","),
+      ["ユーザーID", "メール", "CoinW UID", "投資額", "紹介者", "作成日"].join(","),
       ...filteredUsers.map((user) =>
         [
           user.user_id,
@@ -303,8 +295,6 @@ export default function AdminUsersPage() {
           user.total_purchases,
           user.referrer_user_id || "",
           new Date(user.created_at).toLocaleDateString("ja-JP"),
-          user.reward_address_bep20 || "",
-          user.nft_receive_address || "",
         ].join(","),
       ),
     ].join("\n")
@@ -439,22 +429,6 @@ export default function AdminUsersPage() {
                         )}
                       </div>
 
-                      {(user.reward_address_bep20 || user.nft_receive_address) && (
-                        <div className="mt-2 text-xs space-y-1">
-                          {user.reward_address_bep20 && (
-                            <div>
-                              <span className="text-gray-400">報酬アドレス: </span>
-                              <span className="text-blue-400 font-mono">{user.reward_address_bep20}</span>
-                            </div>
-                          )}
-                          {user.nft_receive_address && (
-                            <div>
-                              <span className="text-gray-400">NFTアドレス: </span>
-                              <span className="text-purple-400 font-mono">{user.nft_receive_address}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
                     </div>
 
                     <div className="flex items-center space-x-2">
@@ -524,25 +498,6 @@ export default function AdminUsersPage() {
                   />
                 </div>
 
-                <div>
-                  <Label className="text-gray-300">報酬受け取りアドレス</Label>
-                  <Input
-                    value={editForm.reward_address_bep20}
-                    onChange={(e) => setEditForm({ ...editForm, reward_address_bep20: e.target.value })}
-                    className="bg-gray-700 border-gray-600 text-white"
-                    placeholder="0x..."
-                  />
-                </div>
-
-                <div>
-                  <Label className="text-gray-300">NFT受取アドレス</Label>
-                  <Input
-                    value={editForm.nft_receive_address}
-                    onChange={(e) => setEditForm({ ...editForm, nft_receive_address: e.target.value })}
-                    className="bg-gray-700 border-gray-600 text-white"
-                    placeholder="0x..."
-                  />
-                </div>
 
                 <div className="flex justify-end space-x-2 pt-4">
                   <Button
