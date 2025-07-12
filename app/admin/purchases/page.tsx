@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download } from "lucide-react"
+import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download, Search } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { sendApprovalEmailViaAuth } from "@/lib/send-approval-email"
 import { OperationStatus } from "@/components/operation-status"
@@ -56,6 +56,7 @@ export default function AdminPurchasesPage() {
   const [editingApprovalDate, setEditingApprovalDate] = useState<string | null>(null)
   const [newApprovalDate, setNewApprovalDate] = useState("")
   const [approvalChangeReason, setApprovalChangeReason] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
     checkAdminAccess()
@@ -577,26 +578,102 @@ export default function AdminPurchasesPage() {
           <CardContent>
             <div className="mb-4 grid grid-cols-4 gap-4 text-center">
               <div className="bg-gray-700 p-3 rounded">
-                <div className="text-2xl font-bold text-white">{purchases.length}</div>
-                <div className="text-sm text-gray-400">総購入数</div>
+                <div className="text-2xl font-bold text-white">
+                  {(() => {
+                    const filteredPurchases = purchases.filter(purchase => {
+                      if (!searchTerm) return true
+                      const term = searchTerm.toLowerCase()
+                      return (
+                        purchase.user_id.toLowerCase().includes(term) ||
+                        purchase.email.toLowerCase().includes(term) ||
+                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
+                        purchase.id.toLowerCase().includes(term) ||
+                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
+                      )
+                    })
+                    return filteredPurchases.length
+                  })()}
+                </div>
+                <div className="text-sm text-gray-400">{searchTerm ? '検索結果' : '総購入数'}</div>
               </div>
               <div className="bg-yellow-900 p-3 rounded">
                 <div className="text-2xl font-bold text-yellow-400">
-                  {purchases.filter((p) => p.payment_status === "payment_sent" && !p.admin_approved).length}
+                  {(() => {
+                    const filteredPurchases = purchases.filter(purchase => {
+                      if (!searchTerm) return true
+                      const term = searchTerm.toLowerCase()
+                      return (
+                        purchase.user_id.toLowerCase().includes(term) ||
+                        purchase.email.toLowerCase().includes(term) ||
+                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
+                        purchase.id.toLowerCase().includes(term) ||
+                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
+                      )
+                    })
+                    return filteredPurchases.filter((p) => p.payment_status === "payment_sent" && !p.admin_approved).length
+                  })()}
                 </div>
                 <div className="text-sm text-yellow-200">入金確認待ち</div>
               </div>
               <div className="bg-green-900 p-3 rounded">
                 <div className="text-2xl font-bold text-green-400">
-                  {purchases.filter((p) => p.admin_approved).length}
+                  {(() => {
+                    const filteredPurchases = purchases.filter(purchase => {
+                      if (!searchTerm) return true
+                      const term = searchTerm.toLowerCase()
+                      return (
+                        purchase.user_id.toLowerCase().includes(term) ||
+                        purchase.email.toLowerCase().includes(term) ||
+                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
+                        purchase.id.toLowerCase().includes(term) ||
+                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
+                      )
+                    })
+                    return filteredPurchases.filter((p) => p.admin_approved).length
+                  })()}
                 </div>
                 <div className="text-sm text-green-200">入金確認済み</div>
               </div>
               <div className="bg-red-900 p-3 rounded">
                 <div className="text-2xl font-bold text-red-400">
-                  {purchases.filter((p) => p.payment_status === "rejected").length}
+                  {(() => {
+                    const filteredPurchases = purchases.filter(purchase => {
+                      if (!searchTerm) return true
+                      const term = searchTerm.toLowerCase()
+                      return (
+                        purchase.user_id.toLowerCase().includes(term) ||
+                        purchase.email.toLowerCase().includes(term) ||
+                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
+                        purchase.id.toLowerCase().includes(term) ||
+                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
+                      )
+                    })
+                    return filteredPurchases.filter((p) => p.payment_status === "rejected").length
+                  })()}
                 </div>
                 <div className="text-sm text-red-200">拒否</div>
+              </div>
+            </div>
+
+            {/* 検索バー */}
+            <div className="mb-4">
+              <div className="relative">
+                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="ユーザーID、メールアドレス、CoinW UID、購入IDで検索..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  >
+                    ×
+                  </button>
+                )}
               </div>
             </div>
 
@@ -615,7 +692,19 @@ export default function AdminPurchasesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {purchases.map((purchase) => (
+                  {purchases
+                    .filter(purchase => {
+                      if (!searchTerm) return true
+                      const term = searchTerm.toLowerCase()
+                      return (
+                        purchase.user_id.toLowerCase().includes(term) ||
+                        purchase.email.toLowerCase().includes(term) ||
+                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
+                        purchase.id.toLowerCase().includes(term) ||
+                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
+                      )
+                    })
+                    .map((purchase) => (
                     <tr key={purchase.id} className="border-b border-gray-700 hover:bg-gray-750">
                       <td className="p-1">
                         <div>
@@ -1065,7 +1154,21 @@ export default function AdminPurchasesPage() {
                 </tbody>
               </table>
 
-              {purchases.length === 0 && <div className="text-center py-8 text-gray-400">購入データがありません</div>}
+              {purchases.filter(purchase => {
+                if (!searchTerm) return true
+                const term = searchTerm.toLowerCase()
+                return (
+                  purchase.user_id.toLowerCase().includes(term) ||
+                  purchase.email.toLowerCase().includes(term) ||
+                  (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
+                  purchase.id.toLowerCase().includes(term) ||
+                  (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
+                )
+              }).length === 0 && (
+                <div className="text-center py-8 text-gray-400">
+                  {searchTerm ? `"${searchTerm}"に一致する購入データがありません` : "購入データがありません"}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
