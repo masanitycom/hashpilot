@@ -47,7 +47,7 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         monthEnd
       })
 
-      // user_daily_profitテーブルから今月の累積利益を取得
+      // 個人の今月の累積利益を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
         .select('daily_profit')
@@ -61,12 +61,28 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
 
       console.log('Monthly profit data:', profitData)
 
-      // 今月の累積利益を計算
-      const totalProfit = profitData?.reduce((sum, record) => {
+      // 個人利益を計算
+      const personalProfit = profitData?.reduce((sum, record) => {
         const dailyValue = parseFloat(record.daily_profit) || 0
         console.log(`Daily profit for ${record.date || 'unknown'}: ${record.daily_profit} -> parsed: ${dailyValue}`)
         return sum + dailyValue
       }, 0) || 0
+
+      // 紹介報酬を取得
+      const { data: referralData, error: referralError } = await supabase
+        .rpc('get_referral_profits', {
+          p_user_id: userId,
+          p_month_start: monthStart,
+          p_month_end: monthEnd
+        })
+
+      let referralProfit = 0
+      if (referralData) {
+        referralProfit = referralData.reduce((sum, row) => sum + parseFloat(row.monthly_profit), 0)
+      }
+
+      // 合計利益を計算
+      const totalProfit = personalProfit + referralProfit
 
       console.log('Profit data array:', profitData)
       console.log('Total monthly profit calculated:', totalProfit)

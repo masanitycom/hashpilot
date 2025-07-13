@@ -68,6 +68,7 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       const monthStart = new Date(Date.UTC(year, month, 1)).toISOString().split('T')[0]
       const monthEnd = new Date(Date.UTC(year, month + 1, 0)).toISOString().split('T')[0]
 
+      // 個人利益を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
         .select('daily_profit')
@@ -79,11 +80,27 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
         throw profitError
       }
 
-      // 今月の累積利益を計算
-      const monthlyProfit = profitData?.reduce((sum, record) => {
+      // 個人利益を計算
+      const personalProfit = profitData?.reduce((sum, record) => {
         const dailyValue = parseFloat(record.daily_profit) || 0
         return sum + dailyValue
       }, 0) || 0
+
+      // 紹介報酬を取得
+      const { data: referralData, error: referralError } = await supabase
+        .rpc('get_referral_profits', {
+          p_user_id: userId,
+          p_month_start: monthStart,
+          p_month_end: monthEnd
+        })
+
+      let referralProfit = 0
+      if (referralData) {
+        referralProfit = referralData.reduce((sum, row) => sum + parseFloat(row.monthly_profit), 0)
+      }
+
+      // 合計利益を計算
+      const monthlyProfit = personalProfit + referralProfit
 
       setWithdrawalData({
         amount: monthlyProfit,
