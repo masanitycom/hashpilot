@@ -61,67 +61,80 @@ export function ReferralProfitCard({
       const level2Rate = 0.10 // 10%
       const level3Rate = 0.05 // 5%
 
-      // 基本日利率（3%）
-      const dailyRate = 0.03
-
-      // 各レベルの期待日利を計算
-      const level1DailyProfit = level1Investment * dailyRate * level1Rate
-      const level2DailyProfit = level2Investment * dailyRate * level2Rate
-      const level3DailyProfit = level3Investment * dailyRate * level3Rate
-
-      // 昨日の総利益を取得
-      const { data: yesterdayData, error: yesterdayError } = await supabase
+      // 正しい紹介報酬計算: 実際の紹介者の利益を取得
+      
+      // Level1紹介者の昨日の利益を取得
+      const { data: level1YesterdayData, error: level1YesterdayError } = await supabase
         .from('user_daily_profit')
         .select('daily_profit')
-        .eq('user_id', userId)
         .eq('date', yesterdayStr)
-        .single()
+        .in('user_id', await getDirectReferrals(userId))
 
-      if (yesterdayError && yesterdayError.code !== 'PGRST116') {
-        throw yesterdayError
-      }
-
-      // 今月の総利益累計を取得
-      const { data: monthlyData, error: monthlyError } = await supabase
+      // Level1紹介者の今月の利益を取得
+      const { data: level1MonthlyData, error: level1MonthlyError } = await supabase
         .from('user_daily_profit')
         .select('daily_profit')
-        .eq('user_id', userId)
         .gte('date', monthStart)
         .lte('date', monthEnd)
+        .in('user_id', await getDirectReferrals(userId))
 
-      if (monthlyError && monthlyError.code !== 'PGRST116') {
-        throw monthlyError
-      }
+      // Level2紹介者の利益を取得
+      const level2UserIds = await getLevel2Referrals(userId)
+      const { data: level2YesterdayData, error: level2YesterdayError } = await supabase
+        .from('user_daily_profit')
+        .select('daily_profit')
+        .eq('date', yesterdayStr)
+        .in('user_id', level2UserIds)
 
-      // 紹介報酬分を計算（全利益の30%を紹介報酬分と仮定）
-      const referralRatio = 0.30
-      const totalYesterdayReferralProfit = yesterdayData ? (yesterdayData.daily_profit * referralRatio) : 0
-      const totalMonthlyReferralProfit = monthlyData ? 
-        monthlyData.reduce((sum, record) => sum + (record.daily_profit * referralRatio), 0) : 0
+      const { data: level2MonthlyData, error: level2MonthlyError } = await supabase
+        .from('user_daily_profit')
+        .select('daily_profit')
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+        .in('user_id', level2UserIds)
 
-      // 各レベルの投資額比率に基づいて分配
-      const totalReferralInvestment = level1Investment + level2Investment + level3Investment
-      
-      let level1Yesterday = 0, level2Yesterday = 0, level3Yesterday = 0
-      let level1Monthly = 0, level2Monthly = 0, level3Monthly = 0
+      // Level3紹介者の利益を取得
+      const level3UserIds = await getLevel3Referrals(userId)
+      const { data: level3YesterdayData, error: level3YesterdayError } = await supabase
+        .from('user_daily_profit')
+        .select('daily_profit')
+        .eq('date', yesterdayStr)
+        .in('user_id', level3UserIds)
 
-      if (totalReferralInvestment > 0) {
-        // 各レベルの重み付けを考慮した分配（レベル1は20%、レベル2は10%、レベル3は5%の報酬率）
-        const level1Weight = level1Investment * level1Rate
-        const level2Weight = level2Investment * level2Rate
-        const level3Weight = level3Investment * level3Rate
-        const totalWeight = level1Weight + level2Weight + level3Weight
+      const { data: level3MonthlyData, error: level3MonthlyError } = await supabase
+        .from('user_daily_profit')
+        .select('daily_profit')
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+        .in('user_id', level3UserIds)
 
-        if (totalWeight > 0) {
-          level1Yesterday = totalYesterdayReferralProfit * (level1Weight / totalWeight)
-          level2Yesterday = totalYesterdayReferralProfit * (level2Weight / totalWeight)
-          level3Yesterday = totalYesterdayReferralProfit * (level3Weight / totalWeight)
+      // 実際の紹介報酬を計算
+      const level1YesterdayProfit = (level1YesterdayData || [])
+        .reduce((sum, record) => sum + parseFloat(record.daily_profit), 0)
+      const level1MonthlyProfit = (level1MonthlyData || [])
+        .reduce((sum, record) => sum + parseFloat(record.daily_profit), 0)
 
-          level1Monthly = totalMonthlyReferralProfit * (level1Weight / totalWeight)
-          level2Monthly = totalMonthlyReferralProfit * (level2Weight / totalWeight)
-          level3Monthly = totalMonthlyReferralProfit * (level3Weight / totalWeight)
-        }
-      }
+      const level2YesterdayProfit = (level2YesterdayData || [])
+        .reduce((sum, record) => sum + parseFloat(record.daily_profit), 0)
+      const level2MonthlyProfit = (level2MonthlyData || [])
+        .reduce((sum, record) => sum + parseFloat(record.daily_profit), 0)
+
+      const level3YesterdayProfit = (level3YesterdayData || [])
+        .reduce((sum, record) => sum + parseFloat(record.daily_profit), 0)
+      const level3MonthlyProfit = (level3MonthlyData || [])
+        .reduce((sum, record) => sum + parseFloat(record.daily_profit), 0)
+
+      // 紹介報酬の計算（実際の紹介者利益 × 報酬率）
+      const level1Yesterday = level1YesterdayProfit * level1Rate
+      const level2Yesterday = level2YesterdayProfit * level2Rate
+      const level3Yesterday = level3YesterdayProfit * level3Rate
+
+      const level1Monthly = level1MonthlyProfit * level1Rate
+      const level2Monthly = level2MonthlyProfit * level2Rate
+      const level3Monthly = level3MonthlyProfit * level3Rate
+
+      const totalYesterdayReferralProfit = level1Yesterday + level2Yesterday + level3Yesterday
+      const totalMonthlyReferralProfit = level1Monthly + level2Monthly + level3Monthly
 
       setProfitData({
         yesterdayProfit: totalYesterdayReferralProfit,
@@ -142,6 +155,57 @@ export function ReferralProfitCard({
     } finally {
       setLoading(false)
     }
+  }
+
+  // 直接紹介者のIDを取得
+  const getDirectReferrals = async (userId: string): Promise<string[]> => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id')
+      .eq('referrer_user_id', userId)
+
+    if (error) {
+      console.error('Error fetching direct referrals:', error)
+      return []
+    }
+
+    return data.map(user => user.user_id)
+  }
+
+  // Level2紹介者のIDを取得
+  const getLevel2Referrals = async (userId: string): Promise<string[]> => {
+    const level1Ids = await getDirectReferrals(userId)
+    if (level1Ids.length === 0) return []
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id')
+      .in('referrer_user_id', level1Ids)
+
+    if (error) {
+      console.error('Error fetching level2 referrals:', error)
+      return []
+    }
+
+    return data.map(user => user.user_id)
+  }
+
+  // Level3紹介者のIDを取得
+  const getLevel3Referrals = async (userId: string): Promise<string[]> => {
+    const level2Ids = await getLevel2Referrals(userId)
+    if (level2Ids.length === 0) return []
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id')
+      .in('referrer_user_id', level2Ids)
+
+    if (error) {
+      console.error('Error fetching level3 referrals:', error)
+      return []
+    }
+
+    return data.map(user => user.user_id)
   }
 
   if (loading) {
