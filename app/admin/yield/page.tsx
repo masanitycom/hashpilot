@@ -394,17 +394,20 @@ export default function AdminYieldPage() {
           p_date: cancelDate
         })
 
-        if (!rpcError && rpcResult?.success) {
-          setMessage({
-            type: "success",
-            text: rpcResult.message,
-          })
+        if (!rpcError && rpcResult && rpcResult.length > 0) {
+          const result = rpcResult[0]
+          if (result.success) {
+            setMessage({
+              type: "success",
+              text: result.message,
+            })
 
-          setTimeout(() => {
-            fetchHistory()
-            fetchStats()
-          }, 500)
-          return
+            setTimeout(() => {
+              fetchHistory()
+              fetchStats()
+            }, 500)
+            return
+          }
         }
         
         console.warn("RPC関数エラー、直接削除に切り替え:", rpcError)
