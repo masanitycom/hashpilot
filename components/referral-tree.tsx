@@ -17,8 +17,6 @@ interface ReferralNode {
   path: string
   parent_user_id: string | null
   children?: ReferralNode[]
-  operation_status?: 'operating' | 'waiting' | 'not_approved'
-  operation_start_date?: string | null
 }
 
 interface ReferralTreeProps {
@@ -84,9 +82,6 @@ export function ReferralTree({ userId }: { userId: string }) {
           const operationalAmount1 = nftCount1 * 1000
           console.log('Level1 user:', user1.user_id, 'purchase:', totalPurchases, 'nftCount:', nftCount1, 'operational:', operationalAmount1)
           
-          // 運用ステータスを計算
-          const operationStatus = await getOperationStatus(user1.user_id)
-          
           const node1: ReferralNode = {
             user_id: user1.user_id,
             email: user1.email,
@@ -98,8 +93,6 @@ export function ReferralTree({ userId }: { userId: string }) {
             path: user1.user_id,
             parent_user_id: user1.referrer_user_id,
             children: [],
-            operation_status: operationStatus.status,
-            operation_start_date: operationStatus.start_date
           }
 
           // Get level 2
@@ -115,9 +108,6 @@ export function ReferralTree({ userId }: { userId: string }) {
               const operationalAmount2 = nftCount2 * 1000
               console.log('Level2 user:', user2.user_id, 'purchase:', totalPurchases2, 'nftCount:', nftCount2, 'operational:', operationalAmount2)
               
-              // 運用ステータスを計算
-              const operationStatus2 = await getOperationStatus(user2.user_id)
-              
               const node2: ReferralNode = {
                 user_id: user2.user_id,
                 email: user2.email,
@@ -129,8 +119,6 @@ export function ReferralTree({ userId }: { userId: string }) {
                 path: `${user1.user_id}->${user2.user_id}`,
                 parent_user_id: user2.referrer_user_id,
                 children: [],
-                operation_status: operationStatus2.status,
-                operation_start_date: operationStatus2.start_date
               }
 
               // Get level 3
@@ -146,9 +134,6 @@ export function ReferralTree({ userId }: { userId: string }) {
                   const operationalAmount3 = nftCount3 * 1000
                   console.log('Level3 user:', user3.user_id, 'purchase:', totalPurchases3, 'nftCount:', nftCount3, 'operational:', operationalAmount3)
                   
-                  // 運用ステータスを計算
-                  const operationStatus3 = await getOperationStatus(user3.user_id)
-                  
                   const node3: ReferralNode = {
                     user_id: user3.user_id,
                     email: user3.email,
@@ -159,8 +144,6 @@ export function ReferralTree({ userId }: { userId: string }) {
                     nft_count: nftCount3,
                     path: `${user1.user_id}->${user2.user_id}->${user3.user_id}`,
                     parent_user_id: user3.referrer_user_id,
-                    operation_status: operationStatus3.status,
-                    operation_start_date: operationStatus3.start_date
                   }
                   node2.children!.push(node3)
                 }
@@ -178,44 +161,6 @@ export function ReferralTree({ userId }: { userId: string }) {
       setError(err instanceof Error ? err.message : "Unknown error occurred")
     } finally {
       setLoading(false)
-    }
-  }
-
-  // 運用ステータスを計算する関数（ユーザーIDベース）
-  const getOperationStatus = async (userId: string) => {
-    try {
-      // 直接purchasesテーブルから承認済み購入を検索
-      const { data: purchases, error } = await supabase
-        .from('purchases')
-        .select('admin_approved, admin_approved_at')
-        .eq('user_id', userId)
-        .eq('admin_approved', true)
-        .order('admin_approved_at', { ascending: false })
-        .limit(1)
-
-      if (error || !purchases || purchases.length === 0) {
-        return { status: 'not_approved' as const, start_date: null }
-      }
-
-      const approvedPurchase = purchases[0]
-      if (!approvedPurchase.admin_approved_at) {
-        return { status: 'not_approved' as const, start_date: null }
-      }
-
-      const approvalDate = new Date(approvedPurchase.admin_approved_at)
-      const operationStartDate = new Date(approvalDate)
-      operationStartDate.setDate(operationStartDate.getDate() + 15)
-      
-      const now = new Date()
-      const status = now >= operationStartDate ? 'operating' : 'waiting'
-      
-      return {
-        status,
-        start_date: operationStartDate.toISOString()
-      }
-    } catch (err) {
-      console.error('Error getting operation status for:', userId, err)
-      return { status: 'not_approved' as const, start_date: null }
     }
   }
 
@@ -276,10 +221,6 @@ export function ReferralTree({ userId }: { userId: string }) {
       const operationalAmount = nftCount * 1000  // 運用額は1000ドル×NFT数
       console.log('Building node for:', dbNode.user_id, 'purchase:', purchaseAmount, 'nftCount:', nftCount, 'operational:', operationalAmount)
       
-      // RPCから運用ステータス情報を取得（またはデフォルト値）
-      const operationStatus = dbNode.operation_status || 'not_approved'
-      const operationStartDate = dbNode.operation_start_date || null
-      
       const node: ReferralNode = {
         user_id: dbNode.user_id || '',
         email: dbNode.email || '',
@@ -290,9 +231,7 @@ export function ReferralTree({ userId }: { userId: string }) {
         nft_count: nftCount,
         path: dbNode.path || dbNode.user_id || '',
         parent_user_id: dbNode.parent_user_id || null,
-        children: [],
-        operation_status: operationStatus,
-        operation_start_date: operationStartDate
+        children: []
       }
       nodeMap.set(node.user_id, node)
     })
@@ -362,32 +301,6 @@ export function ReferralTree({ userId }: { userId: string }) {
       }
     }
 
-    // 運用ステータスバッジを取得する関数
-    const getOperationStatusBadge = (status?: string) => {
-      switch (status) {
-        case 'operating':
-          return (
-            <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-green-900/50 text-green-400 border border-green-500/50 whitespace-nowrap">
-              運用中
-            </span>
-          )
-        case 'waiting':
-          return (
-            <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-yellow-900/50 text-yellow-400 border border-yellow-500/50 whitespace-nowrap">
-              運用開始前
-            </span>
-          )
-        case 'not_approved':
-          return (
-            <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-red-900/50 text-red-400 border border-red-500/50 whitespace-nowrap">
-              未承認
-            </span>
-          )
-        default:
-          return null
-      }
-    }
-
     return (
       <div key={node.user_id} className="relative">
         {depth > 0 && (
@@ -418,7 +331,6 @@ export function ReferralTree({ userId }: { userId: string }) {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center space-x-2">
                       <span className="font-medium text-white text-sm sm:text-base truncate block">{node.email}</span>
-                      {getOperationStatusBadge(node.operation_status)}
                     </div>
                     <div className="text-xs text-gray-500 mt-0.5 truncate">
                       ID: {node.user_id}
