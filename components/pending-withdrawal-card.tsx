@@ -12,64 +12,86 @@ interface PendingWithdrawalCardProps {
   userId: string
 }
 
-interface WithdrawalSummary {
-  pending_amount: number
-  on_hold_amount: number
-  pending_count: number
-  on_hold_count: number
-  latest_month: string | null
+interface WithdrawalData {
+  amount: number
+  type: 'monthly_profit' | 'pending_withdrawal'
+  status?: string
+  latest_month?: string | null
 }
 
 export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
-  const [summary, setSummary] = useState<WithdrawalSummary | null>(null)
+  const [withdrawalData, setWithdrawalData] = useState<WithdrawalData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
   useEffect(() => {
     if (userId) {
-      fetchWithdrawalSummary()
+      fetchWithdrawalData()
     }
   }, [userId])
 
-  const fetchWithdrawalSummary = async () => {
+  const fetchWithdrawalData = async () => {
     try {
       setLoading(true)
       setError("")
 
-      // 過去6ヶ月の出金記録を取得
-      const sixMonthsAgo = new Date()
-      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
-
-      const { data, error } = await supabase
+      // 1. まず月次出金システムの保留中データを確認
+      const { data: pendingWithdrawals, error: withdrawalError } = await supabase
         .from("monthly_withdrawals")
         .select("*")
         .eq("user_id", userId)
-        .gte("withdrawal_month", sixMonthsAgo.toISOString().split('T')[0])
         .in("status", ["pending", "on_hold"])
+        .order("withdrawal_month", { ascending: false })
 
-      if (error && error.code !== "PGRST116") {
-        throw error
+      if (withdrawalError && withdrawalError.code !== "PGRST116") {
+        throw withdrawalError
       }
 
-      const withdrawals = data || []
-      
-      const summary: WithdrawalSummary = {
-        pending_amount: withdrawals
-          .filter(w => w.status === "pending")
-          .reduce((sum, w) => sum + Number(w.total_amount), 0),
-        on_hold_amount: withdrawals
-          .filter(w => w.status === "on_hold")
-          .reduce((sum, w) => sum + Number(w.total_amount), 0),
-        pending_count: withdrawals.filter(w => w.status === "pending").length,
-        on_hold_count: withdrawals.filter(w => w.status === "on_hold").length,
-        latest_month: withdrawals.length > 0 
-          ? withdrawals.sort((a, b) => new Date(b.withdrawal_month).getTime() - new Date(a.withdrawal_month).getTime())[0].withdrawal_month
-          : null
+      // 保留中の出金がある場合はその金額を表示
+      if (pendingWithdrawals && pendingWithdrawals.length > 0) {
+        const totalPendingAmount = pendingWithdrawals.reduce((sum, w) => sum + Number(w.total_amount), 0)
+        const latestWithdrawal = pendingWithdrawals[0]
+        
+        setWithdrawalData({
+          amount: totalPendingAmount,
+          type: 'pending_withdrawal',
+          status: latestWithdrawal.status,
+          latest_month: latestWithdrawal.withdrawal_month
+        })
+        return
       }
 
-      setSummary(summary)
+      // 2. 保留中の出金がない場合は今月の累積利益を表示
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = now.getMonth()
+      const monthStart = new Date(Date.UTC(year, month, 1)).toISOString().split('T')[0]
+      const monthEnd = new Date(Date.UTC(year, month + 1, 0)).toISOString().split('T')[0]
+
+      const { data: profitData, error: profitError } = await supabase
+        .from('user_daily_profit')
+        .select('daily_profit')
+        .eq('user_id', userId)
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+
+      if (profitError) {
+        throw profitError
+      }
+
+      // 今月の累積利益を計算
+      const monthlyProfit = profitData?.reduce((sum, record) => {
+        const dailyValue = parseFloat(record.daily_profit) || 0
+        return sum + dailyValue
+      }, 0) || 0
+
+      setWithdrawalData({
+        amount: monthlyProfit,
+        type: 'monthly_profit'
+      })
+
     } catch (err: any) {
-      console.error("Error fetching withdrawal summary:", err)
+      console.error("Error fetching withdrawal data:", err)
       setError("出金情報の取得に失敗しました")
     } finally {
       setLoading(false)
@@ -81,14 +103,14 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
     return `${date.getFullYear()}年${date.getMonth() + 1}月`
   }
 
-  const totalAmount = (summary?.pending_amount || 0) + (summary?.on_hold_amount || 0)
-  const hasWithdrawals = totalAmount > 0
-
   if (loading) {
     return (
       <Card className="bg-gray-800 border-gray-700">
-        <CardContent className="p-6">
-          <div className="text-center text-gray-400">読み込み中...</div>
+        <CardHeader className="p-3 pb-2">
+          <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
+        </CardHeader>
+        <CardContent className="p-3 pt-0">
+          <div className="text-center text-gray-400 text-sm">読み込み中...</div>
         </CardContent>
       </Card>
     )
@@ -97,29 +119,19 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   if (error) {
     return (
       <Card className="bg-gray-800 border-gray-700">
-        <CardContent className="p-6">
+        <CardHeader className="p-3 pb-2">
+          <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
+        </CardHeader>
+        <CardContent className="p-3 pt-0">
           <div className="text-center text-red-400 text-sm">{error}</div>
         </CardContent>
       </Card>
     )
   }
 
-  if (!hasWithdrawals) {
-    return (
-      <Card className="bg-gray-800 border-gray-700">
-        <CardHeader className="p-3 pb-2">
-          <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
-        </CardHeader>
-        <CardContent className="p-3 pt-0">
-          <div className="flex items-center space-x-1">
-            <DollarSign className="h-4 w-4 text-green-400 flex-shrink-0" />
-            <span className="text-base md:text-xl lg:text-2xl font-bold text-green-400">$0.00</span>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">保留中の出金なし</p>
-        </CardContent>
-      </Card>
-    )
-  }
+  const displayAmount = withdrawalData?.amount || 0
+  const isPendingWithdrawal = withdrawalData?.type === 'pending_withdrawal'
+  const isMonthlyProfit = withdrawalData?.type === 'monthly_profit'
 
   return (
     <Card className="bg-gray-800 border-gray-700">
@@ -128,20 +140,28 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       </CardHeader>
       <CardContent className="p-3 pt-0">
         <div className="flex items-center space-x-1">
-          <DollarSign className="h-4 w-4 text-blue-400 flex-shrink-0" />
-          <span className="text-base md:text-xl lg:text-2xl font-bold text-blue-400 truncate">
-            ${totalAmount.toFixed(2)}
+          <DollarSign className={`h-4 w-4 flex-shrink-0 ${
+            isPendingWithdrawal ? 'text-orange-400' : 'text-purple-400'
+          }`} />
+          <span className={`text-base md:text-xl lg:text-2xl font-bold truncate ${
+            isPendingWithdrawal ? 'text-orange-400' : 'text-purple-400'
+          }`}>
+            ${displayAmount.toFixed(3)}
           </span>
         </div>
-        <div className="text-xs text-gray-500 mt-1 space-y-1">
-          {summary && summary.pending_amount > 0 && (
-            <div>送金待ち: ${summary.pending_amount.toFixed(2)}</div>
+        <div className="text-xs text-gray-500 mt-1">
+          {isPendingWithdrawal && (
+            <div>
+              {withdrawalData?.status === 'pending' && '送金処理中'}
+              {withdrawalData?.status === 'on_hold' && '保留中'}
+              {withdrawalData?.latest_month && ` (${formatMonth(withdrawalData.latest_month)})`}
+            </div>
           )}
-          {summary && summary.on_hold_amount > 0 && (
-            <div>保留中: ${summary.on_hold_amount.toFixed(2)}</div>
+          {isMonthlyProfit && (
+            <div>今月の累積利益（月末に出金処理）</div>
           )}
-          {!summary?.pending_amount && !summary?.on_hold_amount && (
-            <div>保留中の出金なし</div>
+          {displayAmount === 0 && (
+            <div>出金なし</div>
           )}
         </div>
       </CardContent>
