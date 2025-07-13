@@ -66,10 +66,7 @@ export function ReferralTree({ userId }: { userId: string }) {
       // Fallback: Get direct referrals manually (キャッシュ無効化)
       const { data: level1, error: level1Error } = await supabase
         .from("users")
-        .select(`
-          user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id,
-          purchases!inner(admin_approved, admin_approved_at)
-        `)
+        .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
         .eq("referrer_user_id", userId)
 
       if (level1Error) {
@@ -88,7 +85,7 @@ export function ReferralTree({ userId }: { userId: string }) {
           console.log('Level1 user:', user1.user_id, 'purchase:', totalPurchases, 'nftCount:', nftCount1, 'operational:', operationalAmount1)
           
           // 運用ステータスを計算
-          const operationStatus = getOperationStatus(user1.purchases)
+          const operationStatus = await getOperationStatus(user1.user_id)
           
           const node1: ReferralNode = {
             user_id: user1.user_id,
@@ -108,10 +105,7 @@ export function ReferralTree({ userId }: { userId: string }) {
           // Get level 2
           const { data: level2, error: level2Error } = await supabase
             .from("users")
-            .select(`
-              user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id,
-              purchases!inner(admin_approved, admin_approved_at)
-            `)
+            .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
             .eq("referrer_user_id", user1.user_id)
 
           if (!level2Error && level2 && level2.length > 0) {
@@ -122,7 +116,7 @@ export function ReferralTree({ userId }: { userId: string }) {
               console.log('Level2 user:', user2.user_id, 'purchase:', totalPurchases2, 'nftCount:', nftCount2, 'operational:', operationalAmount2)
               
               // 運用ステータスを計算
-              const operationStatus2 = getOperationStatus(user2.purchases)
+              const operationStatus2 = await getOperationStatus(user2.user_id)
               
               const node2: ReferralNode = {
                 user_id: user2.user_id,
@@ -142,10 +136,7 @@ export function ReferralTree({ userId }: { userId: string }) {
               // Get level 3
               const { data: level3, error: level3Error } = await supabase
                 .from("users")
-                .select(`
-                  user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id,
-                  purchases!inner(admin_approved, admin_approved_at)
-                `)
+                .select("user_id, email, full_name, coinw_uid, total_purchases, referrer_user_id")
                 .eq("referrer_user_id", user2.user_id)
 
               if (!level3Error && level3 && level3.length > 0) {
@@ -156,7 +147,7 @@ export function ReferralTree({ userId }: { userId: string }) {
                   console.log('Level3 user:', user3.user_id, 'purchase:', totalPurchases3, 'nftCount:', nftCount3, 'operational:', operationalAmount3)
                   
                   // 運用ステータスを計算
-                  const operationStatus3 = getOperationStatus(user3.purchases)
+                  const operationStatus3 = await getOperationStatus(user3.user_id)
                   
                   const node3: ReferralNode = {
                     user_id: user3.user_id,
@@ -190,27 +181,41 @@ export function ReferralTree({ userId }: { userId: string }) {
     }
   }
 
-  // 運用ステータスを計算する関数
-  const getOperationStatus = (purchases: any[]) => {
-    if (!purchases || purchases.length === 0) {
-      return { status: 'not_approved' as const, start_date: null }
-    }
+  // 運用ステータスを計算する関数（ユーザーIDベース）
+  const getOperationStatus = async (userId: string) => {
+    try {
+      // 直接purchasesテーブルから承認済み購入を検索
+      const { data: purchases, error } = await supabase
+        .from('purchases')
+        .select('admin_approved, admin_approved_at')
+        .eq('user_id', userId)
+        .eq('admin_approved', true)
+        .order('admin_approved_at', { ascending: false })
+        .limit(1)
 
-    const approvedPurchase = purchases.find(p => p.admin_approved === true)
-    if (!approvedPurchase || !approvedPurchase.admin_approved_at) {
-      return { status: 'not_approved' as const, start_date: null }
-    }
+      if (error || !purchases || purchases.length === 0) {
+        return { status: 'not_approved' as const, start_date: null }
+      }
 
-    const approvalDate = new Date(approvedPurchase.admin_approved_at)
-    const operationStartDate = new Date(approvalDate)
-    operationStartDate.setDate(operationStartDate.getDate() + 15)
-    
-    const now = new Date()
-    const status = now >= operationStartDate ? 'operating' : 'waiting'
-    
-    return {
-      status,
-      start_date: operationStartDate.toISOString()
+      const approvedPurchase = purchases[0]
+      if (!approvedPurchase.admin_approved_at) {
+        return { status: 'not_approved' as const, start_date: null }
+      }
+
+      const approvalDate = new Date(approvedPurchase.admin_approved_at)
+      const operationStartDate = new Date(approvalDate)
+      operationStartDate.setDate(operationStartDate.getDate() + 15)
+      
+      const now = new Date()
+      const status = now >= operationStartDate ? 'operating' : 'waiting'
+      
+      return {
+        status,
+        start_date: operationStartDate.toISOString()
+      }
+    } catch (err) {
+      console.error('Error getting operation status for:', userId, err)
+      return { status: 'not_approved' as const, start_date: null }
     }
   }
 
