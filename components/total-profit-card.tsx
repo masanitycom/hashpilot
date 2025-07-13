@@ -80,18 +80,31 @@ export function TotalProfitCard({
         throw monthlyError
       }
 
-      const yesterdayTotal = yesterdayData ? yesterdayData.daily_profit : 0
-      const monthlyTotal = monthlyData ? 
+      // 個人利益（実際のデータ）
+      const personalYesterday = yesterdayData ? yesterdayData.daily_profit : 0
+      const personalMonthly = monthlyData ? 
         monthlyData.reduce((sum, record) => sum + record.daily_profit, 0) : 0
 
-      // 個人投資分と紹介報酬分の分離（70%:30%の比率で仮定）
-      const personalRatio = 0.70
-      const referralRatio = 0.30
+      // 紹介報酬を取得
+      const { data: referralData, error: referralError } = await supabase
+        .rpc('get_referral_profits', {
+          p_user_id: userId,
+          p_date: yesterdayStr,
+          p_month_start: monthStart,
+          p_month_end: monthEnd
+        })
 
-      const personalYesterday = yesterdayTotal * personalRatio
-      const referralYesterday = yesterdayTotal * referralRatio
-      const personalMonthly = monthlyTotal * personalRatio
-      const referralMonthly = monthlyTotal * referralRatio
+      let referralYesterday = 0
+      let referralMonthly = 0
+
+      if (referralData) {
+        referralYesterday = referralData.reduce((sum, row) => sum + parseFloat(row.yesterday_profit), 0)
+        referralMonthly = referralData.reduce((sum, row) => sum + parseFloat(row.monthly_profit), 0)
+      }
+
+      // 合計を計算
+      const yesterdayTotal = personalYesterday + referralYesterday
+      const monthlyTotal = personalMonthly + referralMonthly
 
       setProfitData({
         yesterdayTotal,
