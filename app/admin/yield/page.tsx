@@ -246,15 +246,14 @@ export default function AdminYieldPage() {
           // デバッグ用にレスポンスをログ出力
           console.log('テスト処理結果:', result)
           
-          // 安全な値の取得と変換
-          const totalUsers = result.total_users || result.processed_users || 0
-          const totalProfit = Number.parseFloat(result.total_user_profit || result.total_profit || 0) || 0
-          const cycleUpdates = result.cycle_updates || result.cycles_updated || 0
-          const autoNftPurchases = result.auto_nft_purchases || result.auto_purchases || 0
+          // 安全な値の取得と変換（データベース関数の実際のフィールド名に合わせる）
+          const totalUsers = result.processed_users || result.total_users || 0
+          const totalProfit = Number.parseFloat(result.total_profit_distributed || result.total_profit || result.total_user_profit || 0) || 0
+          const autoNftPurchases = result.auto_purchases_created || result.auto_purchases || result.auto_nft_purchases || 0
           
           setMessage({
             type: "success",
-            text: `🧪 テスト実行完了: ${totalUsers}名処理予定、総額$${totalProfit.toFixed(2)}配布予定、${cycleUpdates}回サイクル更新予定、${autoNftPurchases}回自動NFT購入予定（実際のデータは変更されません）`,
+            text: `🧪 テスト実行完了: ${totalUsers}名処理予定、総額$${totalProfit.toFixed(2)}配布予定、${autoNftPurchases}回自動NFT購入予定（実際のデータは変更されません）`,
           })
         }
       } else {
@@ -274,15 +273,14 @@ export default function AdminYieldPage() {
           // デバッグ用にレスポンスをログ出力
           console.log('サイクル処理結果:', result)
           
-          // 安全な値の取得と変換
-          const totalUsers = result.total_users || result.processed_users || 0
-          const totalProfit = Number.parseFloat(result.total_user_profit || result.total_profit || 0) || 0
-          const cycleUpdates = result.cycle_updates || result.cycles_updated || 0
-          const autoNftPurchases = result.auto_nft_purchases || result.auto_purchases || 0
+          // 安全な値の取得と変換（データベース関数の実際のフィールド名に合わせる）
+          const totalUsers = result.processed_users || result.total_users || 0
+          const totalProfit = Number.parseFloat(result.total_profit_distributed || result.total_profit || result.total_user_profit || 0) || 0
+          const autoNftPurchases = result.auto_purchases_created || result.auto_purchases || result.auto_nft_purchases || 0
           
           // カスタムメッセージがある場合はそれを使用、なければデフォルトメッセージ
           const messageText = result.message || 
-            `サイクル処理完了！${totalUsers}名のユーザーに総額$${totalProfit.toFixed(2)}の利益を配布し、${cycleUpdates}回のサイクル更新、${autoNftPurchases}回の自動NFT購入を実行しました。`
+            `サイクル処理完了！${totalUsers}名のユーザーに総額$${totalProfit.toFixed(2)}の利益を配布し、${autoNftPurchases}回の自動NFT購入を実行しました。`
           
           setMessage({
             type: "success",
