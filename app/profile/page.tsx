@@ -37,7 +37,6 @@ export default function ProfilePage() {
   })
   const [showQR, setShowQR] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [showCoinwAlert, setShowCoinwAlert] = useState(false)
 
   useEffect(() => {
     fetchProfile()
@@ -111,12 +110,7 @@ export default function ProfilePage() {
         coinw_uid: userData.coinw_uid || "",
       })
 
-      // CoinW UIDが未設定の場合、1秒後にポップアップを表示
-      if (!userData.coinw_uid || userData.coinw_uid.trim() === '') {
-        setTimeout(() => {
-          setShowCoinwAlert(true)
-        }, 1000)
-      }
+      // ポップアップ機能をダッシュボードに移動したため削除
     } catch (error: any) {
       console.error("Profile fetch error:", error)
       setError(`プロフィールの取得に失敗しました: ${error.message}`)
@@ -511,61 +505,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* CoinW UID設定促進ポップアップ */}
-        {showCoinwAlert && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <Card className="bg-gray-900 border-blue-500/50 max-w-md w-full mx-4 shadow-2xl">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl font-bold text-blue-400 flex items-center space-x-2">
-                    <Settings className="h-6 w-6" />
-                    <span>設定のご案内</span>
-                  </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowCoinwAlert(false)}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center">
-                  <div className="bg-blue-500/20 rounded-full p-3 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                    <UserIcon className="h-8 w-8 text-blue-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    CoinW UIDの設定をお願いします
-                  </h3>
-                  <p className="text-gray-300 text-sm mb-4">
-                    より安全で便利にサービスをご利用いただくため、CoinW UIDの設定をお勧めしています。
-                    設定いただくことで、よりスムーズなお取引が可能になります。
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button
-                    onClick={() => {
-                      setShowCoinwAlert(false)
-                      setEditing(true)
-                    }}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    今すぐ設定する
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowCoinwAlert(false)}
-                    className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
-                  >
-                    後で設定する
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
 
       </div>
     </div>

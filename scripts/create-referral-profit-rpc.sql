@@ -1,5 +1,8 @@
 -- 緊急: 紹介報酬取得用RPC関数
 
+-- 既存関数を削除
+DROP FUNCTION IF EXISTS get_referral_profits(TEXT, DATE, DATE, DATE);
+
 CREATE OR REPLACE FUNCTION get_referral_profits(
     p_user_id TEXT,
     p_date DATE DEFAULT NULL,
@@ -10,7 +13,7 @@ RETURNS TABLE (
     level INTEGER,
     yesterday_profit DECIMAL,
     monthly_profit DECIMAL,
-    referral_count INTEGER
+    referral_count BIGINT
 )
 LANGUAGE plpgsql
 SECURITY DEFINER  -- RLS制限を回避

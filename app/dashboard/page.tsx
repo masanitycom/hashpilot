@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X, Coins } from "lucide-react"
+import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X, Coins, Settings, AlertCircle } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { ReferralTree } from "@/components/referral-tree"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
@@ -54,6 +54,7 @@ export default function DashboardPage() {
   const [authChecked, setAuthChecked] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [latestApprovalDate, setLatestApprovalDate] = useState<string | null>(null)
+  const [showCoinwAlert, setShowCoinwAlert] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -150,6 +151,13 @@ export default function DashboardPage() {
         const userRecord = fallbackRecords[0]
         setUserData(userRecord)
         await calculateStats(userRecord)
+        
+        // CoinW UID未設定の場合はポップアップを表示
+        if (!userRecord.coinw_uid || userRecord.coinw_uid.trim() === '') {
+          setTimeout(() => {
+            setShowCoinwAlert(true)
+          }, 2000) // 2秒後に表示
+        }
         return
       }
 
@@ -166,6 +174,13 @@ export default function DashboardPage() {
       setUserData(userRecord)
       await calculateStats(userRecord)
       await fetchLatestApprovalDate(userRecord.user_id)
+      
+      // CoinW UID未設定の場合はポップアップを表示
+      if (!userRecord.coinw_uid || userRecord.coinw_uid.trim() === '') {
+        setTimeout(() => {
+          setShowCoinwAlert(true)
+        }, 2000) // 2秒後に表示
+      }
     } catch (error) {
       console.error("Fetch user data error:", error)
       setError("データの取得中にエラーが発生しました")
@@ -780,6 +795,60 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
+
+      {/* CoinW UID設定促進ポップアップ */}
+      {showCoinwAlert && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="bg-gray-900 border-blue-500/50 max-w-md w-full mx-4 shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl font-bold text-blue-400 flex items-center space-x-2">
+                  <AlertCircle className="h-6 w-6" />
+                  <span>CoinW UID設定のお願い</span>
+                </CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCoinwAlert(false)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center">
+                <div className="bg-yellow-500/20 rounded-full p-3 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Settings className="h-8 w-8 text-yellow-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  CoinW UIDの設定が必要です
+                </h3>
+                <p className="text-gray-300 text-sm mb-4">
+                  CoinW UIDの設定がないと、報酬の送金ができません。プロフィール設定からCoinW UIDを登録してください。
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/profile">
+                  <Button
+                    onClick={() => setShowCoinwAlert(false)}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white w-full"
+                  >
+                    プロフィール設定へ
+                  </Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCoinwAlert(false)}
+                  className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  後で設定する
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }

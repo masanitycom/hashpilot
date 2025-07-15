@@ -1,18 +1,19 @@
--- RLS状態確認と再有効化スクリプト
--- 2025-07-11の緊急無効化対応
+-- Check Row Level Security (RLS) Status
+-- This might explain why queries return empty results
 
--- 1. 現在のRLS状態確認
+\echo '=== RLS STATUS CHECK ==='
+-- Check if RLS is enabled on key tables
 SELECT 
     schemaname,
     tablename,
     rowsecurity as rls_enabled,
-    CASE WHEN rowsecurity THEN '🔒 RLS有効' ELSE '⚠️ RLS無効' END as security_status
+    hasoids
 FROM pg_tables 
-WHERE tablename IN ('buyback_requests', 'affiliate_cycle', 'user_daily_profit', 'system_logs')
-    AND schemaname = 'public'
+WHERE tablename IN ('users', 'purchases', 'user_daily_profit', 'affiliate_cycle', 'withdrawal_requests', 'admins', 'system_logs')
 ORDER BY tablename;
 
--- 2. 各テーブルの詳細なRLSポリシー確認
+\echo '=== RLS POLICIES ==='
+-- Check RLS policies that might be blocking access
 SELECT 
     schemaname,
     tablename,
@@ -23,58 +24,20 @@ SELECT
     qual,
     with_check
 FROM pg_policies 
-WHERE tablename IN ('buyback_requests', 'affiliate_cycle', 'user_daily_profit', 'system_logs')
-    AND schemaname = 'public'
+WHERE tablename IN ('users', 'purchases', 'user_daily_profit', 'affiliate_cycle', 'withdrawal_requests', 'admins', 'system_logs')
 ORDER BY tablename, policyname;
 
--- 3. RLS再有効化（必要に応じて実行）
-/*
--- buyback_requests テーブルのRLS再有効化
-ALTER TABLE buyback_requests ENABLE ROW LEVEL SECURITY;
-
--- affiliate_cycle テーブルのRLS再有効化  
-ALTER TABLE affiliate_cycle ENABLE ROW LEVEL SECURITY;
-
--- user_daily_profit テーブルのRLS再有効化
-ALTER TABLE user_daily_profit ENABLE ROW LEVEL SECURITY;
-
--- system_logs テーブルのRLS再有効化
-ALTER TABLE system_logs ENABLE ROW LEVEL SECURITY;
-*/
-
--- 4. 系統ログに再有効化を記録（実際に再有効化した場合）
-/*
-INSERT INTO system_logs (
-    log_type,
-    operation,
-    user_id,
-    message,
-    details,
-    created_at
-) VALUES (
-    'SUCCESS',
-    'rls_re_enable',
-    NULL,
-    'RLSセキュリティを再有効化しました',
-    jsonb_build_object(
-        'reason', '緊急無効化後の正常化',
-        'affected_tables', ARRAY['buyback_requests', 'affiliate_cycle', 'user_daily_profit', 'system_logs'],
-        'previous_disable_date', '2025-07-11T15:29:59.458817+00:00',
-        'admin_action', true
-    ),
-    NOW()
-);
-*/
-
--- 5. 現在のセキュリティ状況サマリー
+\echo '=== CURRENT SESSION INFO ==='
+-- Check what role/user we're running as
 SELECT 
-    COUNT(*) as total_tables,
-    COUNT(CASE WHEN rowsecurity THEN 1 END) as rls_enabled_count,
-    COUNT(CASE WHEN NOT rowsecurity THEN 1 END) as rls_disabled_count,
-    ROUND(
-        COUNT(CASE WHEN rowsecurity THEN 1 END) * 100.0 / COUNT(*), 
-        1
-    ) as rls_enabled_percentage
-FROM pg_tables 
-WHERE tablename IN ('buyback_requests', 'affiliate_cycle', 'user_daily_profit', 'system_logs')
-    AND schemaname = 'public';
+    current_user,
+    session_user,
+    current_role,
+    current_setting('role') as current_role_setting;
+
+\echo '=== AUTH CONTEXT ==='
+-- Check if there's any auth context set
+SELECT 
+    current_setting('request.jwt.claims', true) as jwt_claims,
+    current_setting('request.jwt.claim.sub', true) as jwt_sub,
+    current_setting('request.jwt.claim.role', true) as jwt_role;
