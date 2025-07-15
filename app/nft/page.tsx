@@ -27,8 +27,9 @@ export default function NFTPage() {
   const [success, setSuccess] = useState("")
   const router = useRouter()
 
-  const NFT_PRICE = 1000 // $1000 per NFT
-  const FEE_AMOUNT = 100 // $100 fee
+  const OPERATION_AMOUNT = 1000 // $1000 運用額
+  const FEE_AMOUNT = 100 // $100 手数料
+  const TOTAL_PAYMENT = OPERATION_AMOUNT + FEE_AMOUNT // $1100 送金金額
 
   useEffect(() => {
     checkAuth()
@@ -101,12 +102,12 @@ export default function NFTPage() {
       setError("")
       setSuccess("")
 
-      // NFT購入レコードを作成 - amount_usdは1000に設定
+      // NFT購入レコードを作成 - amount_usdは1100に設定（送金金額）
       const { data: purchase, error: purchaseError } = await supabase
         .from("purchases")
         .insert({
           user_id: userData.user_id,
-          amount_usd: NFT_PRICE, // $1000 investment amount
+          amount_usd: TOTAL_PAYMENT, // $1100 送金金額
           nft_quantity: 1, // 1 NFT購入
           admin_approved: false,
         })
@@ -156,7 +157,7 @@ export default function NFTPage() {
     )
   }
 
-  const currentNFTCount = Math.floor((userData?.total_purchases || 0) / NFT_PRICE)
+  const currentNFTCount = Math.floor((userData?.total_purchases || 0) / OPERATION_AMOUNT)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
@@ -216,8 +217,8 @@ export default function NFTPage() {
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300">NFT価格</span>
-                  <span className="text-2xl font-bold text-green-400">${NFT_PRICE.toLocaleString()}</span>
+                  <span className="text-gray-300">運用額</span>
+                  <span className="text-2xl font-bold text-green-400">${OPERATION_AMOUNT.toLocaleString()}</span>
                 </div>
 
                 <div className="flex justify-between items-center">
@@ -227,8 +228,8 @@ export default function NFTPage() {
 
                 <div className="border-t border-gray-600 pt-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-300 font-medium">合計金額</span>
-                    <span className="text-2xl font-bold text-white">${(NFT_PRICE + FEE_AMOUNT).toLocaleString()}</span>
+                    <span className="text-gray-300 font-medium">送金金額</span>
+                    <span className="text-2xl font-bold text-white">${TOTAL_PAYMENT.toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -258,7 +259,7 @@ export default function NFTPage() {
                 <div>
                   <span className="text-gray-300">現在の保有NFT数</span>
                   <div className="text-3xl font-bold text-blue-400">{currentNFTCount} NFT</div>
-                  <p className="text-sm text-gray-400">総投資額: ${(currentNFTCount * NFT_PRICE).toLocaleString()}</p>
+                  <p className="text-sm text-gray-400">総投資額: ${(currentNFTCount * OPERATION_AMOUNT).toLocaleString()}</p>
                 </div>
 
                 <div className="bg-gray-700 rounded-lg p-4">
@@ -291,7 +292,7 @@ export default function NFTPage() {
                     </>
                   ) : (
                     <>
-                      <DollarSign className="h-5 w-5 mr-2" />${(NFT_PRICE + FEE_AMOUNT).toLocaleString()} で購入
+                      <DollarSign className="h-5 w-5 mr-2" />${TOTAL_PAYMENT.toLocaleString()} で購入
                     </>
                   )}
                 </Button>
