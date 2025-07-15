@@ -687,7 +687,7 @@ export default function DashboardPage() {
                   <div>
                     <h3 className="text-xl font-bold text-white mb-2">NFT買い取り申請</h3>
                     <p className="text-gray-400 mb-4">
-                      保有中のNFTを買い取り申請できます。手動購入NFTは1000ドル-利益額、自動購入NFTは500ドルで買い取り可能です。
+                      保有中のNFTを買い取り申請できます。
                     </p>
                   </div>
                 </div>

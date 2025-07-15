@@ -123,8 +123,9 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     const profitPerNft = nftData.manual_nft_count > 0 ? userProfit / nftData.manual_nft_count : 0
     const manualBuyback = Math.max(0, (1000 * manualCount) - (profitPerNft * manualCount))
     
-    // 自動NFTは一律500ドル
-    const autoBuyback = 500 * autoCount
+    // 自動NFTの買い取り額計算（500ドル-利益額）
+    const autoProfitPerNft = nftData.auto_nft_count > 0 ? userProfit / nftData.auto_nft_count : 0
+    const autoBuyback = Math.max(0, (500 * autoCount) - (autoProfitPerNft * autoCount))
     
     setBuybackAmount({
       manual: manualBuyback,
@@ -267,7 +268,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
             <div className="bg-gray-800/50 rounded-lg p-4">
               <div className="text-sm text-gray-400">自動購入NFT</div>
               <div className="text-2xl font-bold text-white">{nftData.auto_nft_count}枚</div>
-              <div className="text-xs text-gray-500">買い取り額: 500ドル/枚</div>
+              <div className="text-xs text-gray-500">買い取り額: 500ドル-利益額</div>
             </div>
             <div className="bg-gray-800/50 rounded-lg p-4">
               <div className="text-sm text-gray-400">累計利益</div>
