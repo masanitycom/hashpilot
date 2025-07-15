@@ -41,11 +41,7 @@ export function PersonalProfitCard({ userId, totalInvestment }: PersonalProfitCa
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
       const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
 
-      // 個人投資額に基づく利益率を計算（基本は3%、投資額に応じて変動可能）
-      const dailyRate = 0.03 // 3%
-      const expectedDailyProfit = totalInvestment * dailyRate
-
-      // 昨日の個人利益を取得
+      // 昨日の個人利益を取得（daily_profitは既に個人投資額に対する利益）
       const { data: yesterdayData, error: yesterdayError } = await supabase
         .from('user_daily_profit')
         .select('daily_profit')
@@ -69,13 +65,10 @@ export function PersonalProfitCard({ userId, totalInvestment }: PersonalProfitCa
         throw monthlyError
       }
 
-      // 個人投資額分の利益を計算（全利益から紹介報酬を除いた分）
-      // 簡易計算: 総利益の70%を個人投資分、30%を紹介報酬分と仮定
-      const personalRatio = 0.7
-
-      const yesterdayPersonalProfit = yesterdayData ? (yesterdayData.daily_profit * personalRatio) : 0
+      // daily_profitは既に個人投資額に対する実際の利益なので、そのまま使用
+      const yesterdayPersonalProfit = yesterdayData ? parseFloat(yesterdayData.daily_profit) : 0
       const monthlyPersonalProfit = monthlyData ? 
-        monthlyData.reduce((sum, record) => sum + (record.daily_profit * personalRatio), 0) : 0
+        monthlyData.reduce((sum, record) => sum + parseFloat(record.daily_profit), 0) : 0
 
       setProfitData({
         yesterdayProfit: yesterdayPersonalProfit,
