@@ -145,6 +145,17 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
       return
     }
 
+    // 保有数を超えていないかチェック
+    if (manualCount > (nftData?.manual_nft_count || 0)) {
+      setMessage({ type: "error", text: `手動購入NFTの保有数は${nftData?.manual_nft_count}枚です` })
+      return
+    }
+
+    if (autoCount > (nftData?.auto_nft_count || 0)) {
+      setMessage({ type: "error", text: `自動購入NFTの保有数は${nftData?.auto_nft_count}枚です` })
+      return
+    }
+
     setLoading(true)
     setMessage(null)
 
@@ -288,7 +299,10 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                   min="0"
                   max={nftData.manual_nft_count}
                   value={manualCount}
-                  onChange={(e) => setManualCount(Number(e.target.value))}
+                  onChange={(e) => {
+                    const value = Number(e.target.value)
+                    setManualCount(Math.min(Math.max(0, value), nftData.manual_nft_count))
+                  }}
                   className="bg-gray-800 border-gray-700 text-white"
                 />
                 <div className="text-xs text-gray-400 mt-1">
@@ -303,7 +317,10 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                   min="0"
                   max={nftData.auto_nft_count}
                   value={autoCount}
-                  onChange={(e) => setAutoCount(Number(e.target.value))}
+                  onChange={(e) => {
+                    const value = Number(e.target.value)
+                    setAutoCount(Math.min(Math.max(0, value), nftData.auto_nft_count))
+                  }}
                   className="bg-gray-800 border-gray-700 text-white"
                 />
                 <div className="text-xs text-gray-400 mt-1">
