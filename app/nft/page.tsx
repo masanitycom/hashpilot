@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ShoppingCart, DollarSign, CheckCircle, AlertCircle, Loader2, ArrowLeft, Wallet } from "lucide-react"
+import { Input } from "@/components/ui/input"
 import Link from "next/link"
 
 interface UserData {
@@ -25,6 +26,7 @@ export default function NFTPage() {
   const [purchasing, setPurchasing] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [nftQuantity, setNftQuantity] = useState(1) // NFT購入数量
   const router = useRouter()
 
   const OPERATION_AMOUNT = 1000 // $1000 運用額
@@ -102,13 +104,13 @@ export default function NFTPage() {
       setError("")
       setSuccess("")
 
-      // NFT購入レコードを作成 - amount_usdは1100に設定（送金金額）
+      // NFT購入レコードを作成 - 数量に応じた送金金額
       const { data: purchase, error: purchaseError } = await supabase
         .from("purchases")
         .insert({
           user_id: userData.user_id,
-          amount_usd: TOTAL_PAYMENT, // $1100 送金金額
-          nft_quantity: 1, // 1 NFT購入
+          amount_usd: TOTAL_PAYMENT * nftQuantity, // 数量 × $1100 送金金額
+          nft_quantity: nftQuantity, // 選択されたNFT数量
           admin_approved: false,
         })
         .select()
@@ -216,20 +218,65 @@ export default function NFTPage() {
               </div>
 
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300">運用額</span>
-                  <span className="text-2xl font-bold text-green-400">${OPERATION_AMOUNT.toLocaleString()}</span>
+                {/* NFT数量選択 */}
+                <div className="space-y-3 mb-6">
+                  <label className="text-gray-300 font-medium">購入数量</label>
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setNftQuantity(Math.max(1, nftQuantity - 1))}
+                      disabled={nftQuantity <= 1}
+                      className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                    >
+                      -
+                    </Button>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="100"
+                      value={nftQuantity}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 1
+                        setNftQuantity(Math.max(1, Math.min(100, value)))
+                      }}
+                      className="w-20 text-center bg-gray-700 border-gray-600 text-white text-lg font-bold"
+                    />
+                    <span className="text-gray-300">NFT</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setNftQuantity(Math.min(100, nftQuantity + 1))}
+                      className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                    >
+                      +
+                    </Button>
+                  </div>
+                  <p className="text-xs text-gray-400">最大100NFTまで購入可能</p>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300">手数料</span>
+                  <span className="text-gray-300">運用額（1NFTあたり）</span>
+                  <span className="text-lg text-green-400">${OPERATION_AMOUNT.toLocaleString()}</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">手数料（1NFTあたり）</span>
                   <span className="text-lg text-yellow-400">${FEE_AMOUNT.toLocaleString()}</span>
                 </div>
 
-                <div className="border-t border-gray-600 pt-4">
+                <div className="border-t border-gray-600 pt-4 space-y-2">
                   <div className="flex justify-between items-center">
+                    <span className="text-gray-300">総運用額</span>
+                    <span className="text-xl font-bold text-green-400">${(OPERATION_AMOUNT * nftQuantity).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-300">総手数料</span>
+                    <span className="text-lg text-yellow-400">${(FEE_AMOUNT * nftQuantity).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center border-t border-gray-600 pt-2">
                     <span className="text-gray-300 font-medium">送金金額</span>
-                    <span className="text-2xl font-bold text-white">${TOTAL_PAYMENT.toLocaleString()}</span>
+                    <span className="text-2xl font-bold text-white">${(TOTAL_PAYMENT * nftQuantity).toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -292,7 +339,7 @@ export default function NFTPage() {
                     </>
                   ) : (
                     <>
-                      <DollarSign className="h-5 w-5 mr-2" />${TOTAL_PAYMENT.toLocaleString()} で購入
+                      <DollarSign className="h-5 w-5 mr-2" />${(TOTAL_PAYMENT * nftQuantity).toLocaleString()} で {nftQuantity}NFT購入
                     </>
                   )}
                 </Button>
