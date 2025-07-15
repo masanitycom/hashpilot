@@ -50,6 +50,17 @@ export default function RegisterPage() {
         const finalReferrer = refFromUrl || refFromSession || refFromLocal
         const finalCoinw = coinwFromUrl || coinwFromSession || coinwFromLocal
 
+        // CoinW UIDがない場合はpre-registerページへリダイレクト
+        if (!finalCoinw) {
+          // 紹介コードを保持してリダイレクト
+          if (finalReferrer) {
+            sessionStorage.setItem("referrer_id", finalReferrer)
+            localStorage.setItem("referrer_id", finalReferrer)
+          }
+          router.push(`/pre-register${finalReferrer ? `?ref=${finalReferrer}` : ''}`)
+          return
+        }
+
         setReferrerCode(finalReferrer)
         setCoinwUid(finalCoinw)
 

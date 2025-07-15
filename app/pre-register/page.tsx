@@ -22,6 +22,15 @@ export default function PreRegisterPage() {
     const ref = searchParams.get("ref")
     if (ref) {
       setReferrerId(ref)
+      // 紹介コードをストレージにも保存
+      sessionStorage.setItem("referrer_id", ref)
+      localStorage.setItem("referrer_id", ref)
+    } else {
+      // URLにrefがない場合は、ストレージから取得
+      const storedRef = sessionStorage.getItem("referrer_id") || localStorage.getItem("referrer_id")
+      if (storedRef) {
+        setReferrerId(storedRef)
+      }
     }
   }, [searchParams])
 
@@ -40,9 +49,18 @@ export default function PreRegisterPage() {
       // CoinW UIDをセッションストレージに保存
       sessionStorage.setItem("coinw_uid", coinwUid.trim())
       sessionStorage.setItem("referrer_id", referrerId)
+      
+      // ローカルストレージにも保存（バックアップ）
+      localStorage.setItem("coinw_uid", coinwUid.trim())
+      localStorage.setItem("referrer_id", referrerId)
 
-      // 登録ページにリダイレクト
-      router.push("/register")
+      // 登録ページにリダイレクト（パラメータ付き）
+      const params = new URLSearchParams()
+      params.set("coinw", coinwUid.trim())
+      if (referrerId) {
+        params.set("ref", referrerId)
+      }
+      router.push(`/register?${params.toString()}`)
     } catch (error: any) {
       console.error("Pre-registration error:", error)
       setError("エラーが発生しました。もう一度お試しください。")
