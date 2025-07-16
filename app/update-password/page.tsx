@@ -146,15 +146,12 @@ export default function UpdatePasswordPage() {
 
       setSuccess("パスワードが正常に更新されました")
       
-      // URLパラメータをクリアして再利用を防ぐ
-      const urlParams = new URLSearchParams(window.location.search)
-      if (urlParams.get('from') === 'reset' || urlParams.get('token')) {
-        window.history.replaceState({}, '', '/update-password')
-      }
+      // セッションを終了してからログインページに移動
+      await supabase.auth.signOut()
       
-      // 3秒後にダッシュボードにリダイレクト
+      // 3秒後にログインページにリダイレクト
       setTimeout(() => {
-        router.push("/dashboard")
+        window.location.href = "/login"
       }, 3000)
       
     } catch (error: any) {
@@ -245,7 +242,7 @@ export default function UpdatePasswordPage() {
               <AlertDescription className="text-green-400">
                 {success}
                 <br />
-                <span className="text-sm">3秒後にダッシュボードに移動します...</span>
+                <span className="text-sm">3秒後にログインページに移動します...</span>
               </AlertDescription>
             </Alert>
           )}
