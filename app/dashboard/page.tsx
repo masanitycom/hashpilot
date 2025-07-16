@@ -103,6 +103,20 @@ export default function DashboardPage() {
         return
       }
 
+      // パスワードリセット中のユーザーは適切にリダイレクト
+      const user = session.user
+      const isRecoverySession = (
+        user.recovery_sent_at !== null ||
+        user.email_change_sent_at !== null ||
+        (user.aud === 'authenticated' && Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000) // 10分以内のセッション
+      )
+      
+      if (isRecoverySession) {
+        console.log("Recovery session detected, redirecting to password update")
+        router.push("/update-password?from=reset")
+        return
+      }
+
       console.log("User authenticated:", session.user.id, "Email:", session.user.email)
       setUser(session.user)
       await fetchUserData(session.user)

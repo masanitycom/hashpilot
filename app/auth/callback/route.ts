@@ -29,7 +29,24 @@ export async function GET(request: NextRequest) {
       if (data.user) {
         // パスワードリセットの場合は専用ページにリダイレクト
         if (type === "recovery") {
-          return NextResponse.redirect(`${requestUrl.origin}/update-password`)
+          console.log("Password reset detected via type parameter, redirecting to update-password")
+          return NextResponse.redirect(`${requestUrl.origin}/update-password?from=reset&token=${code}`)
+        }
+        
+        // セッションがパスワードリセット用かどうかをチェック
+        if (data.session?.user) {
+          const user = data.session.user
+          // パスワードリセットセッションの特徴をチェック
+          const isRecoverySession = (
+            user.recovery_sent_at !== null ||
+            user.email_change_sent_at !== null ||
+            (user.aud === 'authenticated' && user.recovery_sent_at)
+          )
+          
+          if (isRecoverySession) {
+            console.log("Recovery session detected via user metadata, redirecting to update-password")
+            return NextResponse.redirect(`${requestUrl.origin}/update-password?from=reset&token=${code}`)
+          }
         }
         
         // メール確認完了後、ダッシュボードにリダイレクト
