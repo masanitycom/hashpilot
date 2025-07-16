@@ -85,21 +85,29 @@ export function TotalProfitCard({
       const personalMonthly = monthlyData ? 
         monthlyData.reduce((sum, record) => sum + record.daily_profit, 0) : 0
 
-      // 紹介報酬を取得
+      // 紹介報酬を取得（直接クエリに変更）
       const { data: referralData, error: referralError } = await supabase
-        .rpc('get_referral_profits', {
-          p_user_id: userId,
-          p_date: yesterdayStr,
-          p_month_start: monthStart,
-          p_month_end: monthEnd
-        })
+        .from('user_daily_profit')
+        .select('date, referral_profit')
+        .eq('user_id', userId)
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
 
       let referralYesterday = 0
       let referralMonthly = 0
 
       if (referralData) {
-        referralYesterday = referralData.reduce((sum, row) => sum + parseFloat(row.yesterday_profit), 0)
-        referralMonthly = referralData.reduce((sum, row) => sum + parseFloat(row.monthly_profit), 0)
+        referralData.forEach(row => {
+          const profit = parseFloat(row.referral_profit) || 0
+          
+          // 昨日の紹介報酬
+          if (row.date === yesterdayStr) {
+            referralYesterday += profit
+          }
+          
+          // 月間累計紹介報酬
+          referralMonthly += profit
+        })
       }
 
       // 合計を計算
