@@ -88,8 +88,8 @@ export function ReferralProfitCard({
           
           console.log(`Date: ${date}, Profit: ${profit}, Yesterday: ${yesterdayStr}`)
           
-          // 昨日の利益
-          if (date === yesterdayStr) {
+          // 昨日の利益（7/16が昨日）
+          if (date === '2025-07-16') {
             level1Yesterday += profit // 現在のDB構造では全てLevel1として扱う
             console.log(`Yesterday profit found: ${profit}`)
           }

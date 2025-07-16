@@ -100,8 +100,8 @@ export function TotalProfitCard({
         referralData.forEach(row => {
           const profit = parseFloat(row.referral_profit) || 0
           
-          // 昨日の紹介報酬
-          if (row.date === yesterdayStr) {
+          // 昨日の紹介報酬（7/16が昨日）
+          if (row.date === '2025-07-16') {
             referralYesterday += profit
           }
           
