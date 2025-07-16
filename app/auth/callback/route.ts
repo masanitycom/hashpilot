@@ -22,6 +22,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${requestUrl.origin}/login?error=${encodeURIComponent(error_description || error)}`)
   }
 
+  // パスワードリセットの場合（codeがなくてもtype=recoveryがある場合）
+  if (type === "recovery") {
+    console.log("Password reset detected (no code), redirecting to update-password")
+    return NextResponse.redirect(`${requestUrl.origin}/update-password?from=reset`)
+  }
+
   if (code) {
     const cookieStore = cookies()
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore })

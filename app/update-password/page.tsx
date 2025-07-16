@@ -41,7 +41,7 @@ export default function UpdatePasswordPage() {
       })
 
       // パスワードリセット用のアクセスかチェック
-      if (isFromReset && resetToken) {
+      if (isFromReset) {
         console.log("Valid password reset access detected")
         setHasRecoverySession(true)
       } else {
@@ -95,39 +95,33 @@ export default function UpdatePasswordPage() {
     setSuccess("")
 
     try {
-      // トークンを使用してパスワードをリセット
-      const urlParams = new URLSearchParams(window.location.search)
-      const resetToken = urlParams.get('token')
+      // 現在のセッションでパスワードを更新を試行
+      const { data: currentSession } = await supabase.auth.getSession()
       
-      if (!resetToken) {
-        throw new Error("リセットトークンが見つかりません")
+      if (currentSession.session) {
+        // セッションがある場合は直接更新
+        const { data, error } = await supabase.auth.updateUser({
+          password: password
+        })
+
+        if (error) {
+          throw error
+        }
+
+        setSuccess("パスワードが正常に更新されました")
+        
+        // パスワード更新完了フラグをセットしてからログアウト
+        localStorage.setItem('password_update_completed', 'true')
+        
+        // 即座にセッションを終了してログインページに移動
+        await supabase.auth.signOut()
+        
+        // すぐにログインページにリダイレクト
+        window.location.href = "/login"
+      } else {
+        // セッションがない場合は、パスワードリセットメールを再送信してもらう
+        setError("セッションの有効期限が切れています。パスワードリセットを再度実行してください。")
       }
-
-      // トークンを使用してセッションを作成してからパスワードを更新
-      const { data: sessionData, error: sessionError } = await supabase.auth.exchangeCodeForSession(resetToken)
-      
-      if (sessionError) {
-        throw new Error(`セッションの作成に失敗しました: ${sessionError.message}`)
-      }
-
-      const { data, error } = await supabase.auth.updateUser({
-        password: password
-      })
-
-      if (error) {
-        throw error
-      }
-
-      setSuccess("パスワードが正常に更新されました")
-      
-      // パスワード更新完了フラグをセットしてからログアウト
-      localStorage.setItem('password_update_completed', 'true')
-      
-      // 即座にセッションを終了してログインページに移動
-      await supabase.auth.signOut()
-      
-      // すぐにログインページにリダイレクト
-      window.location.href = "/login"
       
     } catch (error: any) {
       console.error("Password update error:", error)
