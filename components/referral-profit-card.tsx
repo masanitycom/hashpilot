@@ -46,7 +46,7 @@ export function ReferralProfitCard({
       setLoading(true)
       setError("")
 
-      // 昨日の日付を取得
+      // 昨日の日付を取得（7/16）
       const yesterday = new Date()
       yesterday.setDate(yesterday.getDate() - 1)
       const yesterdayStr = yesterday.toISOString().split('T')[0]
@@ -61,14 +61,14 @@ export function ReferralProfitCard({
       const level2Rate = 0.10 // 10%
       const level3Rate = 0.05 // 5%
 
-      // RPC関数で紹介報酬を取得（RLS制限回避）
+      // 直接データベースクエリで紹介報酬を取得（RPC関数404エラー回避）
       const { data: referralData, error: referralError } = await supabase
-        .rpc('get_referral_profits', {
-          p_user_id: userId,
-          p_date: yesterdayStr,
-          p_month_start: monthStart,
-          p_month_end: monthEnd
-        })
+        .from('user_daily_profit')
+        .select('date, referral_profit')
+        .eq('user_id', userId)
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+        .order('date', { ascending: true })
 
       if (referralError) {
         throw referralError
@@ -79,22 +79,26 @@ export function ReferralProfitCard({
       let level1Monthly = 0, level2Monthly = 0, level3Monthly = 0
 
       if (referralData) {
+        console.log('Referral data:', referralData)
+        console.log('Yesterday string:', yesterdayStr)
+        
         referralData.forEach(row => {
-          const level = row.level
-          const yesterdayProfit = parseFloat(row.yesterday_profit) || 0
-          const monthlyProfit = parseFloat(row.monthly_profit) || 0
-
-          if (level === 1) {
-            level1Yesterday = yesterdayProfit
-            level1Monthly = monthlyProfit
-          } else if (level === 2) {
-            level2Yesterday = yesterdayProfit
-            level2Monthly = monthlyProfit
-          } else if (level === 3) {
-            level3Yesterday = yesterdayProfit
-            level3Monthly = monthlyProfit
+          const profit = parseFloat(row.referral_profit) || 0
+          const date = row.date
+          
+          console.log(`Date: ${date}, Profit: ${profit}, Yesterday: ${yesterdayStr}`)
+          
+          // 昨日の利益
+          if (date === yesterdayStr) {
+            level1Yesterday += profit // 現在のDB構造では全てLevel1として扱う
+            console.log(`Yesterday profit found: ${profit}`)
           }
+          
+          // 月間累計利益
+          level1Monthly += profit
         })
+        
+        console.log(`Final results - Yesterday: ${level1Yesterday}, Monthly: ${level1Monthly}`)
       }
 
       const totalYesterdayReferralProfit = level1Yesterday + level2Yesterday + level3Yesterday
