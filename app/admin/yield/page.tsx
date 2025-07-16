@@ -229,11 +229,11 @@ export default function AdminYieldPage() {
     setMessage(null)
 
     try {
-      // 本番モード固定: サイクル処理付き日利設定
+      // 本番モード固定: サイクル処理付き日利設定（紹介報酬対応）
       const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
         p_date: date,
         p_yield_rate: Number.parseFloat(yieldRate) / 100,
-        p_margin_rate: Number.parseFloat(marginRate) / 100,
+        p_margin_rate: Number.parseFloat(marginRate),
         p_is_test_mode: false,
       })
 

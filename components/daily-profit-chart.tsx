@@ -22,6 +22,8 @@ interface DailyProfitRecord {
   daily_profit: number
   base_amount: number
   phase: string
+  user_rate?: number
+  yield_rate?: number
 }
 
 export function DailyProfitChart({ userId }: DailyProfitChartProps) {
@@ -49,7 +51,7 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
       // 個人利益データの取得
       const { data: dailyProfitData, error } = await supabase
         .from('user_daily_profit')
-        .select('date, daily_profit, base_amount, phase')
+        .select('date, daily_profit, base_amount, phase, user_rate, yield_rate')
         .eq('user_id', userId)
         .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
         .order('date', { ascending: true })
@@ -82,10 +84,13 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
         // 実際のデータを使用
         const formattedData: DailyPNLData[] = dailyProfitData.map((item: DailyProfitRecord) => {
           const date = new Date(item.date)
+          // 管理者が設定した実際の日利率を使用（user_rateは実際のユーザー受取率）
+          const actualYieldRate = item.user_rate || 0
+          
           return {
             date: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
             pnl: parseFloat(item.daily_profit) || 0,
-            yieldRate: parseFloat(item.base_amount) > 0 ? parseFloat(item.daily_profit) / parseFloat(item.base_amount) : 0,
+            yieldRate: actualYieldRate,
             formattedDate: date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
           }
         })
