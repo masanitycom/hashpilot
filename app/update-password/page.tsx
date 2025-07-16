@@ -105,9 +105,6 @@ export default function UpdatePasswordPage() {
     if (!/(?=.*[a-z])/.test(password)) {
       return "パスワードに小文字を含める必要があります"
     }
-    if (!/(?=.*[A-Z])/.test(password)) {
-      return "パスワードに大文字を含める必要があります"
-    }
     if (!/(?=.*\d)/.test(password)) {
       return "パスワードに数字を含める必要があります"
     }
@@ -306,7 +303,7 @@ export default function UpdatePasswordPage() {
               <p className="text-sm text-blue-400 font-medium mb-2">パスワード要件:</p>
               <ul className="text-xs text-blue-300 space-y-1">
                 <li>• 8文字以上</li>
-                <li>• 大文字と小文字を含む</li>
+                <li>• 小文字を含む</li>
                 <li>• 数字を含む</li>
               </ul>
             </div>
