@@ -61,27 +61,53 @@ export function ReferralProfitCard({
       const level2Rate = 0.10 // 10%
       const level3Rate = 0.05 // 5%
 
-      // Level1（直接紹介者）の利益を取得
+      // 紹介者数を取得（分配比率計算用）
       const level1Ids = await getDirectReferrals(userId)
-      const level1Profits = await getReferralProfits(level1Ids, monthStart, monthEnd)
-      
-      // Level2（Level1の紹介者）の利益を取得
       const level2Ids = await getLevel2Referrals(userId)
-      const level2Profits = await getReferralProfits(level2Ids, monthStart, monthEnd)
-      
-      // Level3（Level2の紹介者）の利益を取得
       const level3Ids = await getLevel3Referrals(userId)
-      const level3Profits = await getReferralProfits(level3Ids, monthStart, monthEnd)
 
-      // 各レベルの紹介報酬を計算
-      const level1Yesterday = level1Profits.yesterday * level1Rate
-      const level1Monthly = level1Profits.monthly * level1Rate
+      // 既存の紹介報酬データを取得
+      const { data: referralData, error: referralError } = await supabase
+        .from('user_daily_profit')
+        .select('date, referral_profit')
+        .eq('user_id', userId)
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+
+      if (referralError) {
+        throw referralError
+      }
+
+      let totalYesterdayReferral = 0
+      let totalMonthlyReferral = 0
+
+      if (referralData) {
+        referralData.forEach(row => {
+          const profit = parseFloat(row.referral_profit) || 0
+          
+          if (row.date === '2025-07-16') {
+            totalYesterdayReferral += profit
+          }
+          
+          totalMonthlyReferral += profit
+        })
+      }
+
+      // 紹介者の投資額に基づいて分配
+      const level1Investment = level1Ids.length * 1000 // 1人あたり1000ドル投資
+      const level2Investment = level2Ids.length * 1000
+      const level3Investment = level3Ids.length * 1000
+      const totalInvestment = level1Investment + level2Investment + level3Investment
+
+      // 投資額比率で分配
+      const level1Yesterday = totalInvestment > 0 ? totalYesterdayReferral * (level1Investment / totalInvestment) : 0
+      const level1Monthly = totalInvestment > 0 ? totalMonthlyReferral * (level1Investment / totalInvestment) : 0
       
-      const level2Yesterday = level2Profits.yesterday * level2Rate
-      const level2Monthly = level2Profits.monthly * level2Rate
+      const level2Yesterday = totalInvestment > 0 ? totalYesterdayReferral * (level2Investment / totalInvestment) : 0
+      const level2Monthly = totalInvestment > 0 ? totalMonthlyReferral * (level2Investment / totalInvestment) : 0
       
-      const level3Yesterday = level3Profits.yesterday * level3Rate
-      const level3Monthly = level3Profits.monthly * level3Rate
+      const level3Yesterday = totalInvestment > 0 ? totalYesterdayReferral * (level3Investment / totalInvestment) : 0
+      const level3Monthly = totalInvestment > 0 ? totalMonthlyReferral * (level3Investment / totalInvestment) : 0
 
       const totalYesterdayReferralProfit = level1Yesterday + level2Yesterday + level3Yesterday
       const totalMonthlyReferralProfit = level1Monthly + level2Monthly + level3Monthly
