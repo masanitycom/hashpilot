@@ -19,6 +19,10 @@ interface User {
   full_name: string | null
   coinw_uid: string | null
   nft_receive_address: string | null
+  nft_distributed: boolean
+  nft_distributed_at: string | null
+  nft_distributed_by: string | null
+  nft_distribution_notes: string | null
   total_purchases: number
   referrer_user_id: string | null
   created_at: string
@@ -42,6 +46,8 @@ export default function AdminUsersPage() {
     nft_receive_address: "",
   })
   const [saving, setSaving] = useState(false)
+  const [updatingDistribution, setUpdatingDistribution] = useState<string | null>(null)
+  const [currentUser, setCurrentUser] = useState<any>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -62,6 +68,8 @@ export default function AdminUsersPage() {
         router.push("/admin-login")
         return
       }
+      
+      setCurrentUser(user)
 
       // 緊急対応: basarasystems@gmail.com または support@dshsupport.biz のアクセス許可
       if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
@@ -288,6 +296,44 @@ export default function AdminUsersPage() {
     }
   }
 
+  const handleNftDistribution = async (userId: string, isDistributed: boolean) => {
+    if (!currentUser) {
+      setError("管理者情報が取得できません")
+      return
+    }
+
+    try {
+      setUpdatingDistribution(userId)
+      setError("")
+
+      const { data, error } = await supabase.rpc("update_nft_distribution_status", {
+        p_user_id: userId,
+        p_is_distributed: isDistributed,
+        p_admin_user_id: currentUser.email,
+        p_notes: isDistributed ? "NFT配布完了" : "配布状況をリセット"
+      })
+
+      if (error) {
+        throw error
+      }
+
+      if (data && data[0]) {
+        const result = data[0]
+        if (result.success) {
+          await fetchUsers()
+          alert(result.message)
+        } else {
+          throw new Error(result.message)
+        }
+      }
+    } catch (error: any) {
+      console.error("NFT distribution update error:", error)
+      setError(`NFT配布状況の更新に失敗しました: ${error.message}`)
+    } finally {
+      setUpdatingDistribution(null)
+    }
+  }
+
   const exportUsers = () => {
     const csvContent = [
       ["ユーザーID", "メール", "CoinW UID", "投資額", "紹介者", "作成日"].join(","),
@@ -437,6 +483,28 @@ export default function AdminUsersPage() {
                             <span className="text-purple-400 font-mono text-xs break-all">{user.nft_receive_address}</span>
                           </div>
                         )}
+                        <div className="col-span-full mt-2">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-gray-400">NFT配布状況: </span>
+                            {user.nft_distributed ? (
+                              <div className="flex items-center space-x-2">
+                                <span className="text-green-400 font-semibold">配布済み</span>
+                                {user.nft_distributed_at && (
+                                  <span className="text-xs text-gray-500">
+                                    {new Date(user.nft_distributed_at).toLocaleDateString('ja-JP')}
+                                  </span>
+                                )}
+                                {user.nft_distributed_by && (
+                                  <span className="text-xs text-gray-500">
+                                    by {user.nft_distributed_by}
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-red-400 font-semibold">未配布</span>
+                            )}
+                          </div>
+                        </div>
                       </div>
 
                     </div>
@@ -450,6 +518,24 @@ export default function AdminUsersPage() {
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
+                      
+                      {/* NFT配布状況ボタン */}
+                      <Button
+                        onClick={() => handleNftDistribution(user.user_id, !user.nft_distributed)}
+                        variant="outline"
+                        size="sm"
+                        disabled={updatingDistribution === user.user_id}
+                        className={`border-purple-600 text-purple-400 hover:bg-purple-900 bg-transparent disabled:opacity-50 ${
+                          user.nft_distributed ? 'bg-purple-900/20' : ''
+                        }`}
+                      >
+                        {updatingDistribution === user.user_id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <>{user.nft_distributed ? '配布リセット' : '配布済み'}</>
+                        )}
+                      </Button>
+                      
                       <Button
                         onClick={() => {
                           console.log("🔴 削除ボタンクリック - 新しいコード実行中")
@@ -519,6 +605,36 @@ export default function AdminUsersPage() {
                   <p className="text-xs text-gray-500 mt-1">
                     管理者がNFTを送付する際に使用されます
                   </p>
+                </div>
+
+                <div className="bg-gray-700/50 rounded-lg p-3">
+                  <Label className="text-gray-300 text-sm font-medium">NFT配布状況</Label>
+                  <div className="mt-2 space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-400">状況: </span>
+                      <span className={`font-semibold ${
+                        editingUser?.nft_distributed ? 'text-green-400' : 'text-red-400'
+                      }`}>
+                        {editingUser?.nft_distributed ? '配布済み' : '未配布'}
+                      </span>
+                    </div>
+                    {editingUser?.nft_distributed && editingUser.nft_distributed_at && (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-gray-400">配布日: </span>
+                        <span className="text-gray-300 text-sm">
+                          {new Date(editingUser.nft_distributed_at).toLocaleDateString('ja-JP')}
+                        </span>
+                      </div>
+                    )}
+                    {editingUser?.nft_distributed_by && (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-gray-400">実行者: </span>
+                        <span className="text-gray-300 text-sm">
+                          {editingUser.nft_distributed_by}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
 

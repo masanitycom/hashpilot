@@ -55,6 +55,7 @@ export default function DashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [latestApprovalDate, setLatestApprovalDate] = useState<string | null>(null)
   const [showCoinwAlert, setShowCoinwAlert] = useState(false)
+  const [showNftAddressAlert, setShowNftAddressAlert] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -157,6 +158,11 @@ export default function DashboardPage() {
           setTimeout(() => {
             setShowCoinwAlert(true)
           }, 2000) // 2秒後に表示
+        } else if (!userRecord.nft_receive_address || userRecord.nft_receive_address.trim() === '') {
+          // CoinW UIDが設定済みで、NFT受取アドレスが未設定の場合
+          setTimeout(() => {
+            setShowNftAddressAlert(true)
+          }, 2000) // 2秒後に表示
         }
         return
       }
@@ -179,6 +185,11 @@ export default function DashboardPage() {
       if (!userRecord.coinw_uid || userRecord.coinw_uid.trim() === '') {
         setTimeout(() => {
           setShowCoinwAlert(true)
+        }, 2000) // 2秒後に表示
+      } else if (!userRecord.nft_receive_address || userRecord.nft_receive_address.trim() === '') {
+        // CoinW UIDが設定済みで、NFT受取アドレスが未設定の場合
+        setTimeout(() => {
+          setShowNftAddressAlert(true)
         }, 2000) // 2秒後に表示
       }
     } catch (error) {
@@ -840,6 +851,60 @@ export default function DashboardPage() {
                 <Button
                   variant="outline"
                   onClick={() => setShowCoinwAlert(false)}
+                  className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  後で設定する
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* NFT受取アドレス設定促進ポップアップ */}
+      {showNftAddressAlert && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="bg-gray-900 border-purple-500/50 max-w-md w-full mx-4 shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl font-bold text-purple-400 flex items-center space-x-2">
+                  <Coins className="h-6 w-6" />
+                  <span>NFT受取アドレス設定のお願い</span>
+                </CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowNftAddressAlert(false)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center">
+                <div className="bg-purple-500/20 rounded-full p-3 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Coins className="h-8 w-8 text-purple-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  NFT受取アドレスの設定が必要です
+                </h3>
+                <p className="text-gray-300 text-sm mb-4">
+                  NFT受取アドレスの設定がないと、管理者がNFTを送付できません。プロフィール設定からNFT受取アドレスを登録してください。
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/profile">
+                  <Button
+                    onClick={() => setShowNftAddressAlert(false)}
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white w-full"
+                  >
+                    プロフィール設定へ
+                  </Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowNftAddressAlert(false)}
                   className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
                 >
                   後で設定する
