@@ -103,7 +103,10 @@ export default function UpdatePasswordPage() {
         throw new Error("不正なアクセスです。パスワードリセットメールから再度アクセスしてください。")
       }
 
-      // 現在のセッションを確認
+      // パスワードリセットの場合は、セッションなしでも更新を試行
+      console.log("Attempting password reset without session validation")
+      
+      // まずセッションを確認
       const { data: currentSession } = await supabase.auth.getSession()
       console.log("Current session for password update:", currentSession)
       
@@ -117,7 +120,7 @@ export default function UpdatePasswordPage() {
         if (error) {
           // 同じパスワードエラーの場合は、より詳細なエラーメッセージを表示
           if (error.message.includes("should be different")) {
-            setError("新しいパスワードは現在のパスワードと異なるものを設定してください。")
+            setError("新しいパスワードは現在のパスワードと異なるものを設定してください。現在のパスワードを忘れた場合は、パスワードリセットを再度実行してください。")
           } else {
             throw error
           }
@@ -135,11 +138,8 @@ export default function UpdatePasswordPage() {
         // すぐにログインページにリダイレクト
         window.location.href = "/login"
       } else {
-        // セッションがない場合は、一時的にパスワードリセット用の認証を試行
-        console.log("No session found, attempting password reset without session")
-        
-        // メールアドレスを入力してもらう必要があるため、エラーを表示
-        setError("セッションの有効期限が切れています。パスワードリセットを再度実行してください。")
+        // セッションがない場合のエラーメッセージを改善
+        setError("パスワードリセットのセッションが見つかりません。パスワードリセットを再度実行してください。リセットメールのリンクは一度しか使用できません。")
       }
       
     } catch (error: any) {

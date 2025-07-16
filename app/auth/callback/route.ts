@@ -24,7 +24,13 @@ export async function GET(request: NextRequest) {
 
   // パスワードリセットの場合（codeがなくてもtype=recoveryがある場合）
   if (type === "recovery") {
-    console.log("Password reset detected (no code), redirecting to update-password")
+    console.log("Password reset detected (no code), clearing session and redirecting to update-password")
+    
+    // 既存のセッションを削除
+    const cookieStore = cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+    await supabase.auth.signOut()
+    
     return NextResponse.redirect(`${requestUrl.origin}/update-password?from=reset`)
   }
 

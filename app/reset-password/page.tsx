@@ -37,6 +37,9 @@ export default function ResetPasswordPage() {
     }
 
     try {
+      // 現在のセッションを削除してからリセットメールを送信
+      await supabase.auth.signOut()
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
       })
