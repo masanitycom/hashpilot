@@ -95,17 +95,33 @@ export default function UpdatePasswordPage() {
     setSuccess("")
 
     try {
-      // 現在のセッションでパスワードを更新を試行
+      // URLパラメータを確認
+      const urlParams = new URLSearchParams(window.location.search)
+      const isFromReset = urlParams.get('from') === 'reset'
+      
+      if (!isFromReset) {
+        throw new Error("不正なアクセスです。パスワードリセットメールから再度アクセスしてください。")
+      }
+
+      // 現在のセッションを確認
       const { data: currentSession } = await supabase.auth.getSession()
+      console.log("Current session for password update:", currentSession)
       
       if (currentSession.session) {
         // セッションがある場合は直接更新
+        console.log("Updating password with existing session")
         const { data, error } = await supabase.auth.updateUser({
           password: password
         })
 
         if (error) {
-          throw error
+          // 同じパスワードエラーの場合は、より詳細なエラーメッセージを表示
+          if (error.message.includes("should be different")) {
+            setError("新しいパスワードは現在のパスワードと異なるものを設定してください。")
+          } else {
+            throw error
+          }
+          return
         }
 
         setSuccess("パスワードが正常に更新されました")
@@ -119,7 +135,10 @@ export default function UpdatePasswordPage() {
         // すぐにログインページにリダイレクト
         window.location.href = "/login"
       } else {
-        // セッションがない場合は、パスワードリセットメールを再送信してもらう
+        // セッションがない場合は、一時的にパスワードリセット用の認証を試行
+        console.log("No session found, attempting password reset without session")
+        
+        // メールアドレスを入力してもらう必要があるため、エラーを表示
         setError("セッションの有効期限が切れています。パスワードリセットを再度実行してください。")
       }
       
