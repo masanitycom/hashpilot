@@ -91,23 +91,22 @@ SELECT
 FROM daily_yield_log
 WHERE date >= '2025-07-02'
 UNION ALL
--- デフォルト値で埋める
+-- デフォルト値で埋める（修正版）
 SELECT 
-    generate_series(
-        '2025-07-02'::date,
-        CURRENT_DATE - 1,
-        '1 day'::interval
-    )::date as date,
+    date_series.date,
     0.016 as yield_rate,
     30 as margin_rate,
     ((0.016 * (100 - 30) / 100) * 0.6) as user_rate
-WHERE NOT EXISTS (
-    SELECT 1 FROM daily_yield_log dyl 
-    WHERE dyl.date = generate_series(
+FROM (
+    SELECT generate_series(
         '2025-07-02'::date,
         CURRENT_DATE - 1,
         '1 day'::interval
-    )::date
+    )::date as date
+) date_series
+WHERE NOT EXISTS (
+    SELECT 1 FROM daily_yield_log dyl 
+    WHERE dyl.date = date_series.date
 );
 
 -- 5. 各ユーザーの利益を計算して挿入
