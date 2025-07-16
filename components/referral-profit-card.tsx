@@ -61,44 +61,27 @@ export function ReferralProfitCard({
       const level2Rate = 0.10 // 10%
       const level3Rate = 0.05 // 5%
 
-      // 既存のreferral_profitデータを使用（システムが既に計算済み）
-      const { data: referralData, error: referralError } = await supabase
-        .from('user_daily_profit')
-        .select('date, referral_profit')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
-
-      if (referralError) {
-        throw referralError
-      }
-
-      let totalYesterdayReferral = 0
-      let totalMonthlyReferral = 0
-
-      if (referralData) {
-        referralData.forEach(row => {
-          const profit = parseFloat(row.referral_profit) || 0
-          
-          // 昨日の紹介報酬（7/16）
-          if (row.date === '2025-07-16') {
-            totalYesterdayReferral += profit
-          }
-          
-          // 月間累計紹介報酬
-          totalMonthlyReferral += profit
-        })
-      }
-
-      // Level1に全ての紹介報酬を表示（現在のDB構造）
-      const level1Yesterday = totalYesterdayReferral
-      const level1Monthly = totalMonthlyReferral
+      // Level1（直接紹介者）の利益を取得
+      const level1Ids = await getDirectReferrals(userId)
+      const level1Profits = await getReferralProfits(level1Ids, monthStart, monthEnd)
       
-      // Level2、Level3は現在のDB構造では分離されていないため0
-      const level2Yesterday = 0
-      const level2Monthly = 0
-      const level3Yesterday = 0
-      const level3Monthly = 0
+      // Level2（Level1の紹介者）の利益を取得
+      const level2Ids = await getLevel2Referrals(userId)
+      const level2Profits = await getReferralProfits(level2Ids, monthStart, monthEnd)
+      
+      // Level3（Level2の紹介者）の利益を取得
+      const level3Ids = await getLevel3Referrals(userId)
+      const level3Profits = await getReferralProfits(level3Ids, monthStart, monthEnd)
+
+      // 各レベルの紹介報酬を計算
+      const level1Yesterday = level1Profits.yesterday * level1Rate
+      const level1Monthly = level1Profits.monthly * level1Rate
+      
+      const level2Yesterday = level2Profits.yesterday * level2Rate
+      const level2Monthly = level2Profits.monthly * level2Rate
+      
+      const level3Yesterday = level3Profits.yesterday * level3Rate
+      const level3Monthly = level3Profits.monthly * level3Rate
 
       const totalYesterdayReferralProfit = level1Yesterday + level2Yesterday + level3Yesterday
       const totalMonthlyReferralProfit = level1Monthly + level2Monthly + level3Monthly
@@ -132,7 +115,7 @@ export function ReferralProfitCard({
 
     const { data, error } = await supabase
       .from('user_daily_profit')
-      .select('date, personal_profit, user_id')
+      .select('date, daily_profit, user_id')
       .in('user_id', userIds)
       .gte('date', monthStart)
       .lte('date', monthEnd)
@@ -149,7 +132,7 @@ export function ReferralProfitCard({
     let monthly = 0
 
     data.forEach(row => {
-      const profit = parseFloat(row.personal_profit) || 0
+      const profit = parseFloat(row.daily_profit) || 0
       
       // 昨日の利益（7/16）
       if (row.date === '2025-07-16') {
