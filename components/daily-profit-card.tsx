@@ -39,42 +39,30 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
       // デバッグ用: 固定日付でテスト
       // const yesterdayStr = '2025-07-09'
 
-      console.log('DailyProfitCard Debug:', {
-        userId,
-        yesterdayStr,
-        searchingFor: `user_id: ${userId}, date: ${yesterdayStr}`,
-        today: new Date().toISOString(),
-        yesterday: yesterday.toISOString()
-      })
 
-      // user_daily_profitテーブルから昨日の確定利益とユーザー受取率を取得
+      // user_daily_profitテーブルから昨日の確定利益のみ取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, user_rate')
+        .select('daily_profit, base_amount')
         .eq('user_id', userId)
         .eq('date', yesterdayStr)
         .single()
 
-      console.log('Daily profit query result:', {
-        data: profitData,
-        error: profitError
-      })
-
       if (profitError) {
         // データが見つからない場合は0として扱う
         if (profitError.code === 'PGRST116') {
-          console.log('No data found for yesterday')
           setProfit(0)
           setYieldRate(0)
         } else {
           throw profitError
         }
       } else {
-        console.log('Found daily profit:', profitData?.daily_profit)
         const profitValue = parseFloat(profitData?.daily_profit) || 0
-        const yieldRateValue = parseFloat(profitData?.user_rate) || 0
+        const baseAmount = parseFloat(profitData?.base_amount) || 0
+        // 受取率を計算で求める（APIで露出させない）
+        const calculatedRate = baseAmount > 0 ? profitValue / baseAmount : 0
         setProfit(profitValue)
-        setYieldRate(yieldRateValue)
+        setYieldRate(calculatedRate)
       }
     } catch (err: any) {
       console.error("昨日の利益取得エラー:", err)

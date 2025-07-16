@@ -42,16 +42,11 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
       // 月名を設定
       setCurrentMonth(`${year}年${month + 1}月`)
 
-      console.log('Monthly profit query:', {
-        userId,
-        monthStart,
-        monthEnd
-      })
 
-      // 個人の今月の累積利益とユーザー受取率を取得
+      // 個人の今月の累積利益のみ取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, user_rate')
+        .select('daily_profit, base_amount')
         .eq('user_id', userId)
         .gte('date', monthStart)
         .lte('date', monthEnd)
@@ -60,9 +55,7 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         throw profitError
       }
 
-      console.log('Monthly profit data:', profitData)
-
-      // 個人利益と平均日利率を計算
+      // 個人利益と平均受取率を計算
       let personalProfit = 0
       let totalYieldRate = 0
       let validDays = 0
@@ -70,17 +63,17 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
       if (profitData && profitData.length > 0) {
         profitData.forEach(record => {
           const dailyValue = parseFloat(record.daily_profit) || 0
-          const yieldValue = parseFloat(record.user_rate) || 0
-          console.log(`Daily profit for ${record.date || 'unknown'}: ${record.daily_profit} -> parsed: ${dailyValue}`)
+          const baseAmount = parseFloat(record.base_amount) || 0
           personalProfit += dailyValue
-          if (yieldValue !== 0) {
-            totalYieldRate += yieldValue
+          if (baseAmount > 0) {
+            const calculatedRate = dailyValue / baseAmount
+            totalYieldRate += calculatedRate
             validDays++
           }
         })
       }
 
-      // 平均日利率を計算
+      // 平均受取率を計算
       const avgYieldRate = validDays > 0 ? totalYieldRate / validDays : 0
       setAverageYieldRate(avgYieldRate)
 
@@ -100,9 +93,6 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
       // 合計利益を計算
       const totalProfit = personalProfit + referralProfit
 
-      console.log('Profit data array:', profitData)
-      console.log('Total monthly profit calculated:', totalProfit)
-      console.log('Profit data length:', profitData?.length)
       setProfit(totalProfit)
     } catch (err: any) {
       console.error("今月の利益取得エラー:", err)

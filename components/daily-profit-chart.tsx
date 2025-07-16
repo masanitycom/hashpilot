@@ -20,7 +20,7 @@ interface DailyProfitChartProps {
 interface DailyProfitRecord {
   date: string
   daily_profit: number
-  user_rate: number
+  base_amount: number
   phase: string
 }
 
@@ -46,13 +46,10 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
         return
       }
 
-      // 実際のデータベースから日利データを取得
-      console.log('正確な利益計算確認 - User:', userId)
-      
       // 個人利益データの取得
       const { data: dailyProfitData, error } = await supabase
         .from('user_daily_profit')
-        .select('date, daily_profit, user_rate, phase')
+        .select('date, daily_profit, base_amount, phase')
         .eq('user_id', userId)
         .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
         .order('date', { ascending: true })
@@ -72,31 +69,6 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
         .eq('admin_approved', true)
         .order('admin_approved_at', { ascending: false })
       
-      console.log('=== 利益計算確認 ===')
-      console.log('個人利益データ:', dailyProfitData)
-      console.log('サイクルデータ:', cycleData)
-      console.log('購入データ:', purchases)
-      console.log('エラー:', error, cycleError, purchaseError)
-      
-      // 管理者チェック
-      const { data: adminCheck } = await supabase
-        .from('admins')
-        .select('user_id, role')
-        .eq('user_id', userId)
-      
-      const isAdmin = adminCheck && adminCheck.length > 0
-      console.log('管理者チェック:', isAdmin, adminCheck)
-      
-      // 運用開始日の計算
-      if (purchases && purchases.length > 0) {
-        const latestApproval = purchases[0].admin_approved_at
-        const operationStart = new Date(latestApproval)
-        operationStart.setDate(operationStart.getDate() + 15)
-        
-        console.log('承認日:', new Date(latestApproval).toLocaleDateString())
-        console.log('運用開始予定日:', operationStart.toLocaleDateString())
-        console.log('現在運用中:', new Date() >= operationStart)
-      }
 
       if (error) {
         console.error('Database error:', error)
@@ -113,7 +85,7 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
           return {
             date: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
             pnl: parseFloat(item.daily_profit) || 0,
-            yieldRate: parseFloat(item.user_rate) || 0,
+            yieldRate: parseFloat(item.base_amount) > 0 ? parseFloat(item.daily_profit) / parseFloat(item.base_amount) : 0,
             formattedDate: date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
           }
         })
@@ -125,13 +97,8 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
           setCurrentPNL(formattedData[formattedData.length - 1].pnl)
         }
         
-        // 計算確認のログ
-        const totalProfit = dailyProfitData.reduce((sum, item) => sum + parseFloat(item.daily_profit || 0), 0)
-        console.log('個人利益合計:', totalProfit.toFixed(3))
-        console.log('サイクル累積:', cycleData ? parseFloat(cycleData.cum_usdt || 0).toFixed(3) : '0.000')
       } else {
         // データが存在しない場合は0のデータを表示
-        console.log('利益データなし - 管理者:', isAdmin)
         const emptyData: DailyPNLData[] = []
         const today = new Date()
         for (let i = 29; i >= 0; i--) {
