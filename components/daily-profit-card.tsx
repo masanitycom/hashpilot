@@ -11,6 +11,7 @@ interface DailyProfitCardProps {
 
 export function DailyProfitCard({ userId }: DailyProfitCardProps) {
   const [profit, setProfit] = useState<number>(0)
+  const [yieldRate, setYieldRate] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>("")
 
@@ -46,10 +47,10 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         yesterday: yesterday.toISOString()
       })
 
-      // user_daily_profitテーブルから昨日の確定利益を取得
+      // user_daily_profitテーブルから昨日の確定利益と日利率を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit')
+        .select('daily_profit, yield_rate')
         .eq('user_id', userId)
         .eq('date', yesterdayStr)
         .single()
@@ -64,18 +65,22 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         if (profitError.code === 'PGRST116') {
           console.log('No data found for yesterday')
           setProfit(0)
+          setYieldRate(0)
         } else {
           throw profitError
         }
       } else {
         console.log('Found daily profit:', profitData?.daily_profit)
         const profitValue = parseFloat(profitData?.daily_profit) || 0
+        const yieldRateValue = parseFloat(profitData?.yield_rate) || 0
         setProfit(profitValue)
+        setYieldRate(yieldRateValue)
       }
     } catch (err: any) {
       console.error("昨日の利益取得エラー:", err)
       setError("データの取得に失敗しました")
       setProfit(0)
+      setYieldRate(0)
     } finally {
       setLoading(false)
     }
@@ -109,10 +114,17 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
           ) : (
             <TrendingDown className="h-5 w-5 text-red-400" />
           )}
-          <span className={`text-2xl font-bold ${profit >= 0 ? "text-green-400" : "text-red-400"}`}>
-            ${profit >= 0 ? "+" : ""}
-            {profit.toFixed(3)}
-          </span>
+          <div className="flex flex-col">
+            <span className={`text-2xl font-bold ${profit >= 0 ? "text-green-400" : "text-red-400"}`}>
+              ${profit >= 0 ? "+" : ""}
+              {profit.toFixed(3)}
+            </span>
+            {yieldRate !== 0 && (
+              <span className="text-sm text-gray-400">
+                日利率: {(yieldRate * 100).toFixed(3)}%
+              </span>
+            )}
+          </div>
         </div>
         <p className="text-xs text-gray-500 mt-1">
           {error ? error : "前日の確定済み利益"}

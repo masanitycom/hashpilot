@@ -11,6 +11,7 @@ interface MonthlyProfitCardProps {
 
 export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
   const [profit, setProfit] = useState<number>(0)
+  const [averageYieldRate, setAverageYieldRate] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>("")
   const [currentMonth, setCurrentMonth] = useState("")
@@ -47,10 +48,10 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         monthEnd
       })
 
-      // 個人の今月の累積利益を取得
+      // 個人の今月の累積利益と日利率を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit')
+        .select('daily_profit, yield_rate')
         .eq('user_id', userId)
         .gte('date', monthStart)
         .lte('date', monthEnd)
@@ -61,12 +62,27 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
 
       console.log('Monthly profit data:', profitData)
 
-      // 個人利益を計算
-      const personalProfit = profitData?.reduce((sum, record) => {
-        const dailyValue = parseFloat(record.daily_profit) || 0
-        console.log(`Daily profit for ${record.date || 'unknown'}: ${record.daily_profit} -> parsed: ${dailyValue}`)
-        return sum + dailyValue
-      }, 0) || 0
+      // 個人利益と平均日利率を計算
+      let personalProfit = 0
+      let totalYieldRate = 0
+      let validDays = 0
+
+      if (profitData && profitData.length > 0) {
+        profitData.forEach(record => {
+          const dailyValue = parseFloat(record.daily_profit) || 0
+          const yieldValue = parseFloat(record.yield_rate) || 0
+          console.log(`Daily profit for ${record.date || 'unknown'}: ${record.daily_profit} -> parsed: ${dailyValue}`)
+          personalProfit += dailyValue
+          if (yieldValue !== 0) {
+            totalYieldRate += yieldValue
+            validDays++
+          }
+        })
+      }
+
+      // 平均日利率を計算
+      const avgYieldRate = validDays > 0 ? totalYieldRate / validDays : 0
+      setAverageYieldRate(avgYieldRate)
 
       // 紹介報酬を取得
       const { data: referralData, error: referralError } = await supabase
@@ -125,10 +141,17 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
           ) : (
             <TrendingDown className="h-5 w-5 text-red-400" />
           )}
-          <span className={`text-2xl font-bold ${profit >= 0 ? "text-purple-400" : "text-red-400"}`}>
-            ${profit >= 0 ? "+" : ""}
-            {profit.toFixed(3)}
-          </span>
+          <div className="flex flex-col">
+            <span className={`text-2xl font-bold ${profit >= 0 ? "text-purple-400" : "text-red-400"}`}>
+              ${profit >= 0 ? "+" : ""}
+              {profit.toFixed(3)}
+            </span>
+            {averageYieldRate !== 0 && (
+              <span className="text-sm text-gray-400">
+                平均日利率: {(averageYieldRate * 100).toFixed(3)}%
+              </span>
+            )}
+          </div>
         </div>
         <p className="text-xs text-gray-500 mt-1">
           {error ? error : `${currentMonth}の累積利益`}
