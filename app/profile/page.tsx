@@ -19,6 +19,7 @@ interface UserProfile {
   user_id: string
   email: string
   coinw_uid: string
+  nft_receive_address: string | null
   created_at: string
   total_purchases: number
   referral_count: number
@@ -34,6 +35,7 @@ export default function ProfilePage() {
   const [success, setSuccess] = useState("")
   const [editForm, setEditForm] = useState({
     coinw_uid: "",
+    nft_receive_address: "",
   })
   const [showQR, setShowQR] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -78,6 +80,7 @@ export default function ProfilePage() {
           user_id,
           email,
           coinw_uid,
+          nft_receive_address,
           created_at,
           total_purchases
         `)
@@ -108,6 +111,7 @@ export default function ProfilePage() {
       setProfile(profileData)
       setEditForm({
         coinw_uid: userData.coinw_uid || "",
+        nft_receive_address: userData.nft_receive_address || "",
       })
 
       // ポップアップ機能をダッシュボードに移動したため削除
@@ -135,6 +139,7 @@ export default function ProfilePage() {
         .from("users")
         .update({
           coinw_uid: editForm.coinw_uid,
+          nft_receive_address: editForm.nft_receive_address,
         })
         .eq("id", user.id)
 
@@ -378,6 +383,25 @@ export default function ProfilePage() {
                     {profile?.coinw_uid || "未設定"}
                   </div>
                 )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-300">NFT受取アドレス</Label>
+                {editing ? (
+                  <Input
+                    value={editForm.nft_receive_address}
+                    onChange={(e) => setEditForm({ ...editForm, nft_receive_address: e.target.value })}
+                    className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500/20"
+                    placeholder="NFT受取用のウォレットアドレスを入力"
+                  />
+                ) : (
+                  <div className="bg-gray-800/50 border border-gray-600/50 rounded-lg p-3 text-white font-mono text-sm">
+                    {profile?.nft_receive_address || "未設定"}
+                  </div>
+                )}
+                <p className="text-xs text-gray-400">
+                  NFT送付用のウォレットアドレスです。管理者がNFTを送付する際に使用されます。
+                </p>
               </div>
 
               <div className="space-y-2">

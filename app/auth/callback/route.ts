@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get("code")
   const error = requestUrl.searchParams.get("error")
   const error_description = requestUrl.searchParams.get("error_description")
+  const type = requestUrl.searchParams.get("type")
 
   if (error) {
     console.error("Auth callback error:", error, error_description)
@@ -26,6 +27,11 @@ export async function GET(request: NextRequest) {
       }
 
       if (data.user) {
+        // パスワードリセットの場合は専用ページにリダイレクト
+        if (type === "recovery") {
+          return NextResponse.redirect(`${requestUrl.origin}/update-password`)
+        }
+        
         // メール確認完了後、ダッシュボードにリダイレクト
         return NextResponse.redirect(`${requestUrl.origin}/dashboard`)
       }

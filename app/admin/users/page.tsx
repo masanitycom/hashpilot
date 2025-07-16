@@ -18,6 +18,7 @@ interface User {
   email: string
   full_name: string | null
   coinw_uid: string | null
+  nft_receive_address: string | null
   total_purchases: number
   referrer_user_id: string | null
   created_at: string
@@ -38,6 +39,7 @@ export default function AdminUsersPage() {
   const [editForm, setEditForm] = useState({
     coinw_uid: "",
     referrer_user_id: "",
+    nft_receive_address: "",
   })
   const [saving, setSaving] = useState(false)
   const router = useRouter()
@@ -160,6 +162,7 @@ export default function AdminUsersPage() {
     setEditForm({
       coinw_uid: user.coinw_uid || "",
       referrer_user_id: user.referrer_user_id || "",
+      nft_receive_address: user.nft_receive_address || "",
     })
   }
 
@@ -175,6 +178,7 @@ export default function AdminUsersPage() {
         .update({
           coinw_uid: editForm.coinw_uid || null,
           referrer_user_id: editForm.referrer_user_id || null,
+          nft_receive_address: editForm.nft_receive_address || null,
           updated_at: new Date().toISOString(),
         })
         .eq("id", editingUser.id)
@@ -427,6 +431,12 @@ export default function AdminUsersPage() {
                             <span className="text-yellow-400">{user.referrer_user_id}</span>
                           </div>
                         )}
+                        {user.nft_receive_address && (
+                          <div className="col-span-full mt-2">
+                            <span className="text-gray-400">NFT受取アドレス: </span>
+                            <span className="text-purple-400 font-mono text-xs break-all">{user.nft_receive_address}</span>
+                          </div>
+                        )}
                       </div>
 
                     </div>
@@ -496,6 +506,19 @@ export default function AdminUsersPage() {
                     className="bg-gray-700 border-gray-600 text-white"
                     placeholder="紹介者のユーザーID"
                   />
+                </div>
+
+                <div>
+                  <Label className="text-gray-300">NFT受取アドレス</Label>
+                  <Input
+                    value={editForm.nft_receive_address}
+                    onChange={(e) => setEditForm({ ...editForm, nft_receive_address: e.target.value })}
+                    className="bg-gray-700 border-gray-600 text-white font-mono text-sm"
+                    placeholder="NFT受取用のウォレットアドレス"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    管理者がNFTを送付する際に使用されます
+                  </p>
                 </div>
 
 
