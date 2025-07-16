@@ -43,10 +43,10 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
       setCurrentMonth(`${year}年${month + 1}月`)
 
 
-      // 個人の今月の累積利益のみ取得
+      // 個人の今月の累積利益+紹介報酬を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, base_amount')
+        .select('daily_profit, base_amount, referral_profit')
         .eq('user_id', userId)
         .gte('date', monthStart)
         .lte('date', monthEnd)
@@ -55,16 +55,19 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         throw profitError
       }
 
-      // 個人利益と平均受取率を計算
+      // 個人利益+紹介報酬と平均受取率を計算
       let personalProfit = 0
+      let referralProfit = 0
       let totalYieldRate = 0
       let validDays = 0
 
       if (profitData && profitData.length > 0) {
         profitData.forEach(record => {
           const dailyValue = parseFloat(record.daily_profit) || 0
+          const referralValue = parseFloat(record.referral_profit) || 0
           const baseAmount = parseFloat(record.base_amount) || 0
           personalProfit += dailyValue
+          referralProfit += referralValue
           if (baseAmount > 0) {
             const calculatedRate = dailyValue / baseAmount
             totalYieldRate += calculatedRate
@@ -77,20 +80,7 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
       const avgYieldRate = validDays > 0 ? totalYieldRate / validDays : 0
       setAverageYieldRate(avgYieldRate)
 
-      // 紹介報酬を取得
-      const { data: referralData, error: referralError } = await supabase
-        .rpc('get_referral_profits', {
-          p_user_id: userId,
-          p_month_start: monthStart,
-          p_month_end: monthEnd
-        })
-
-      let referralProfit = 0
-      if (referralData) {
-        referralProfit = referralData.reduce((sum, row) => sum + parseFloat(row.monthly_profit), 0)
-      }
-
-      // 合計利益を計算
+      // 合計利益を計算（個人+紹介報酬）
       const totalProfit = personalProfit + referralProfit
 
       setProfit(totalProfit)
