@@ -146,13 +146,14 @@ export default function UpdatePasswordPage() {
 
       setSuccess("パスワードが正常に更新されました")
       
+      // パスワード更新完了フラグをセットしてからログアウト
+      localStorage.setItem('password_update_completed', 'true')
+      
       // 即座にセッションを終了してログインページに移動
       await supabase.auth.signOut()
       
-      // すぐにログインページにリダイレクト（セッション終了を待つ）
-      setTimeout(() => {
-        window.location.href = "/login"
-      }, 1000)
+      // すぐにログインページにリダイレクト
+      window.location.href = "/login"
       
     } catch (error: any) {
       console.error("Password update error:", error)

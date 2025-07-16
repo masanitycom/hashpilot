@@ -106,19 +106,27 @@ export default function DashboardPage() {
       // パスワードリセット中のユーザーは適切にリダイレクト
       // ただし、パスワード更新完了後は除外
       const user = session.user
-      const isRecoverySession = (
-        user.recovery_sent_at !== null ||
-        user.email_change_sent_at !== null ||
-        // 新規セッションでも、パスワード更新が完了していれば除外
-        (user.aud === 'authenticated' && 
-         Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000 && // 10分以内のセッション
-         !user.last_sign_in_at) // パスワード更新後は除外
-      )
+      const passwordUpdateCompleted = localStorage.getItem('password_update_completed')
       
-      if (isRecoverySession) {
-        console.log("Recovery session detected, redirecting to password update")
-        router.push("/update-password?from=reset")
-        return
+      // パスワード更新完了フラグがある場合は、リカバリーセッションチェックをスキップ
+      if (!passwordUpdateCompleted) {
+        const isRecoverySession = (
+          user.recovery_sent_at !== null ||
+          user.email_change_sent_at !== null ||
+          // 新規セッションでも、パスワード更新が完了していれば除外
+          (user.aud === 'authenticated' && 
+           Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000) // 10分以内のセッション
+        )
+        
+        if (isRecoverySession) {
+          console.log("Recovery session detected, redirecting to password update")
+          router.push("/update-password?from=reset")
+          return
+        }
+      } else {
+        // パスワード更新完了フラグをクリア
+        localStorage.removeItem('password_update_completed')
+        console.log("Password update completed, skipping recovery session check")
       }
 
       console.log("User authenticated:", session.user.id, "Email:", session.user.email)
