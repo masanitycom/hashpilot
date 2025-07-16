@@ -61,11 +61,6 @@ export function ReferralProfitCard({
       const level2Rate = 0.10 // 10%
       const level3Rate = 0.05 // 5%
 
-      // 紹介者数を取得（分配比率計算用）
-      const level1Ids = await getDirectReferrals(userId)
-      const level2Ids = await getLevel2Referrals(userId)
-      const level3Ids = await getLevel3Referrals(userId)
-
       // 既存の紹介報酬データを取得
       const { data: referralData, error: referralError } = await supabase
         .from('user_daily_profit')
@@ -93,21 +88,17 @@ export function ReferralProfitCard({
         })
       }
 
-      // 紹介者の投資額に基づいて分配
-      const level1Investment = level1Ids.length * 1000 // 1人あたり1000ドル投資
-      const level2Investment = level2Ids.length * 1000
-      const level3Investment = level3Ids.length * 1000
-      const totalInvestment = level1Investment + level2Investment + level3Investment
-
-      // 投資額比率で分配
-      const level1Yesterday = totalInvestment > 0 ? totalYesterdayReferral * (level1Investment / totalInvestment) : 0
-      const level1Monthly = totalInvestment > 0 ? totalMonthlyReferral * (level1Investment / totalInvestment) : 0
+      // 紹介報酬率に基づいて分配（20%:10%:5% = 4:2:1の比率）
+      const totalRatio = 4 + 2 + 1 // 7
       
-      const level2Yesterday = totalInvestment > 0 ? totalYesterdayReferral * (level2Investment / totalInvestment) : 0
-      const level2Monthly = totalInvestment > 0 ? totalMonthlyReferral * (level2Investment / totalInvestment) : 0
+      const level1Yesterday = totalYesterdayReferral * (4 / totalRatio)  // 20%分
+      const level1Monthly = totalMonthlyReferral * (4 / totalRatio)
       
-      const level3Yesterday = totalInvestment > 0 ? totalYesterdayReferral * (level3Investment / totalInvestment) : 0
-      const level3Monthly = totalInvestment > 0 ? totalMonthlyReferral * (level3Investment / totalInvestment) : 0
+      const level2Yesterday = totalYesterdayReferral * (2 / totalRatio)  // 10%分
+      const level2Monthly = totalMonthlyReferral * (2 / totalRatio)
+      
+      const level3Yesterday = totalYesterdayReferral * (1 / totalRatio)  // 5%分
+      const level3Monthly = totalMonthlyReferral * (1 / totalRatio)
 
       const totalYesterdayReferralProfit = level1Yesterday + level2Yesterday + level3Yesterday
       const totalMonthlyReferralProfit = level1Monthly + level2Monthly + level3Monthly
