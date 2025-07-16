@@ -59,7 +59,7 @@ export default function AdminYieldPage() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [yieldRate, setYieldRate] = useState("")
   const [marginRate, setMarginRate] = useState("30")
-  const [isTestMode, setIsTestMode] = useState(true)
+  const [isTestMode, setIsTestMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
   const [history, setHistory] = useState<YieldHistory[]>([])
@@ -229,75 +229,46 @@ export default function AdminYieldPage() {
     setMessage(null)
 
     try {
-      if (isTestMode) {
-        // テストモード: サイクル処理のシミュレーション
-        const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
-          p_date: date,
-          p_yield_rate: Number.parseFloat(yieldRate) / 100,
-          p_margin_rate: Number.parseFloat(marginRate) / 100,
-          p_is_test_mode: true,
+      // 本番モード固定: サイクル処理付き日利設定
+      const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
+        p_date: date,
+        p_yield_rate: Number.parseFloat(yieldRate) / 100,
+        p_margin_rate: Number.parseFloat(marginRate) / 100,
+        p_is_test_mode: false,
+      })
+
+      if (error) throw error
+
+      if (data && data.length > 0) {
+        const result = data[0]
+        
+        // デバッグ用にレスポンスをログ出力
+        console.log('サイクル処理結果:', result)
+        
+        // 安全な値の取得と変換（データベース関数の実際のフィールド名に合わせる）
+        const totalUsers = result.processed_users || result.total_users || 0
+        const totalProfit = Number.parseFloat(result.total_profit_distributed || result.total_profit || result.total_user_profit || 0) || 0
+        const autoNftPurchases = result.auto_purchases_created || result.auto_purchases || result.auto_nft_purchases || 0
+        
+        // カスタムメッセージがある場合はそれを使用、なければデフォルトメッセージ
+        const messageText = result.message || 
+          `サイクル処理完了！${totalUsers}名のユーザーに総額$${totalProfit.toFixed(2)}の利益を配布し、${autoNftPurchases}回の自動NFT購入を実行しました。`
+        
+        setMessage({
+          type: "success",
+          text: messageText,
         })
-
-        if (error) throw error
-
-        if (data && data.length > 0) {
-          const result = data[0]
-          
-          // デバッグ用にレスポンスをログ出力
-          console.log('テスト処理結果:', result)
-          
-          // 安全な値の取得と変換（データベース関数の実際のフィールド名に合わせる）
-          const totalUsers = result.processed_users || result.total_users || 0
-          const totalProfit = Number.parseFloat(result.total_profit_distributed || result.total_profit || result.total_user_profit || 0) || 0
-          const autoNftPurchases = result.auto_purchases_created || result.auto_purchases || result.auto_nft_purchases || 0
-          
-          setMessage({
-            type: "success",
-            text: `🧪 テスト実行完了: ${totalUsers}名処理予定、総額$${totalProfit.toFixed(2)}配布予定、${autoNftPurchases}回自動NFT購入予定（実際のデータは変更されません）`,
-          })
-        }
       } else {
-        // 本番モード: 新しいサイクル処理付き日利設定
-        const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
-          p_date: date,
-          p_yield_rate: Number.parseFloat(yieldRate) / 100,
-          p_margin_rate: Number.parseFloat(marginRate) / 100,
-          p_is_test_mode: false,
+        setMessage({
+          type: "success",
+          text: "日利設定が完了しました。",
         })
-
-        if (error) throw error
-
-        if (data && data.length > 0) {
-          const result = data[0]
-          
-          // デバッグ用にレスポンスをログ出力
-          console.log('サイクル処理結果:', result)
-          
-          // 安全な値の取得と変換（データベース関数の実際のフィールド名に合わせる）
-          const totalUsers = result.processed_users || result.total_users || 0
-          const totalProfit = Number.parseFloat(result.total_profit_distributed || result.total_profit || result.total_user_profit || 0) || 0
-          const autoNftPurchases = result.auto_purchases_created || result.auto_purchases || result.auto_nft_purchases || 0
-          
-          // カスタムメッセージがある場合はそれを使用、なければデフォルトメッセージ
-          const messageText = result.message || 
-            `サイクル処理完了！${totalUsers}名のユーザーに総額$${totalProfit.toFixed(2)}の利益を配布し、${autoNftPurchases}回の自動NFT購入を実行しました。`
-          
-          setMessage({
-            type: "success",
-            text: messageText,
-          })
-        } else {
-          setMessage({
-            type: "success",
-            text: "日利設定が完了しました。",
-          })
-        }
-
-        setYieldRate("")
-        setDate(new Date().toISOString().split("T")[0])
-        fetchHistory()
-        fetchStats()
       }
+
+      setYieldRate("")
+      setDate(new Date().toISOString().split("T")[0])
+      fetchHistory()
+      fetchStats()
     } catch (error: any) {
       setMessage({
         type: "error",
@@ -736,46 +707,22 @@ export default function AdminYieldPage() {
           </div>
         </div>
 
-        {/* テストモード切り替え */}
-        <Card className={`border-2 bg-gray-800 ${isTestMode ? "border-blue-500" : "border-red-500"}`}>
+        {/* 本番モード固定 */}
+        <Card className="border-2 bg-gray-800 border-green-500">
           <CardHeader>
-            <CardTitle className={`flex items-center gap-2 ${isTestMode ? "text-blue-400" : "text-red-400"}`}>
-              {isTestMode ? <TestTube className="h-5 w-5" /> : <Shield className="h-5 w-5" />}
-              {isTestMode ? "安全テストモード" : "本番モード"}
+            <CardTitle className="flex items-center gap-2 text-green-400">
+              <Shield className="h-5 w-5" />
+              本番モード（固定）
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className={`space-y-2 ${isTestMode ? "text-blue-300" : "text-red-300"}`}>
-                <p className="font-medium">
-                  {isTestMode
-                    ? "🔒 安全テストモード: 本番データに影響しません"
-                    : "⚠️ 本番モード: ユーザーの実際の残高に影響します"}
-                </p>
-                <p className="text-sm">
-                  {isTestMode
-                    ? "計算シミュレーションのみ実行。ユーザー認証・紹介関係は完全保護"
-                    : "設定すると即座にユーザーの利益に反映されます"}
-                </p>
-                {isTestMode && testResults.length > 0 && (
-                  <div className="mt-3">
-                    <Button 
-                      onClick={clearTestResults}
-                      size="sm" 
-                      variant="outline"
-                      className="border-blue-600 text-blue-300 hover:bg-blue-900/30 text-xs"
-                    >
-                      テスト結果クリア
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center space-x-2">
-                <Label htmlFor="test-mode" className="text-white">
-                  安全テスト
-                </Label>
-                <Switch id="test-mode" checked={isTestMode} onCheckedChange={setIsTestMode} />
-              </div>
+            <div className="text-green-300 space-y-2">
+              <p className="font-medium">
+                ✅ 本番モード: ユーザーの実際の残高に影響します
+              </p>
+              <p className="text-sm">
+                設定すると即座にユーザーの利益に反映されます
+              </p>
             </div>
           </CardContent>
         </Card>
