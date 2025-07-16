@@ -121,7 +121,7 @@ export function ReferralProfitCard({
 
     const { data, error } = await supabase
       .from('user_daily_profit')
-      .select('date, personal_profit')
+      .select('date, personal_profit, user_id')
       .in('user_id', userIds)
       .gte('date', monthStart)
       .lte('date', monthEnd)
@@ -130,6 +130,9 @@ export function ReferralProfitCard({
       console.error('Error fetching referral profits:', error)
       return { yesterday: 0, monthly: 0 }
     }
+
+    console.log('Raw data for userIds:', userIds)
+    console.log('Raw data result:', data)
 
     let yesterday = 0
     let monthly = 0
