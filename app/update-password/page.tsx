@@ -29,66 +29,25 @@ export default function UpdatePasswordPage() {
 
   const checkRecoverySession = async () => {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error) {
-        console.error("Session check error:", error)
-        setError("セッションの確認でエラーが発生しました")
-        setSessionChecked(true)
-        return
-      }
-
       // URLパラメータからリセットモードをチェック
       const urlParams = new URLSearchParams(window.location.search)
       const isFromReset = urlParams.get('from') === 'reset'
-      const hasToken = urlParams.get('token') !== null
+      const resetToken = urlParams.get('token')
 
-      console.log("Password reset detection:", {
+      console.log("Password reset page accessed:", {
         isFromReset,
-        hasToken,
-        hasSession: !!session?.user,
+        hasToken: !!resetToken,
         url: window.location.href
       })
 
-      // パスワードリセット用のセッションがあるかチェック
-      if (session?.user) {
-        const user = session.user
-        
-        // より確実なリセット検出ロジック
-        const isRecoverySession = (
-          isFromReset ||  // URLパラメータで明示的にリセットと判定
-          hasToken ||     // トークンが存在
-          user.recovery_sent_at !== null || 
-          user.email_change_sent_at !== null ||
-          // 新しいセッションの場合（リセット直後）
-          (user.aud === 'authenticated' && Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000) // 10分以内のセッション
-        )
-        
-        if (isRecoverySession) {
-          setHasRecoverySession(true)
-          console.log("Recovery session found:", user.id, {
-            recovery_sent_at: user.recovery_sent_at,
-            email_change_sent_at: user.email_change_sent_at,
-            isFromReset: isFromReset,
-            hasToken: hasToken,
-            created_at: user.created_at,
-            sessionAge: Date.now() - new Date(user.created_at).getTime()
-          })
-        } else {
-          setHasRecoverySession(false)
-          setError("パスワード変更セッションが見つかりません。パスワードリセットメールから再度アクセスしてください。")
-          console.log("Recovery session not detected:", {
-            recovery_sent_at: user.recovery_sent_at,
-            email_change_sent_at: user.email_change_sent_at,
-            isFromReset: isFromReset,
-            hasToken: hasToken,
-            sessionAge: Date.now() - new Date(user.created_at).getTime()
-          })
-        }
+      // パスワードリセット用のアクセスかチェック
+      if (isFromReset && resetToken) {
+        console.log("Valid password reset access detected")
+        setHasRecoverySession(true)
       } else {
+        console.log("Invalid password reset access - missing parameters")
         setHasRecoverySession(false)
         setError("パスワード変更セッションが見つかりません。パスワードリセットメールから再度アクセスしてください。")
-        console.log("No session found")
       }
     } catch (error: any) {
       console.error("Recovery session check error:", error)
@@ -136,6 +95,21 @@ export default function UpdatePasswordPage() {
     setSuccess("")
 
     try {
+      // トークンを使用してパスワードをリセット
+      const urlParams = new URLSearchParams(window.location.search)
+      const resetToken = urlParams.get('token')
+      
+      if (!resetToken) {
+        throw new Error("リセットトークンが見つかりません")
+      }
+
+      // トークンを使用してセッションを作成してからパスワードを更新
+      const { data: sessionData, error: sessionError } = await supabase.auth.exchangeCodeForSession(resetToken)
+      
+      if (sessionError) {
+        throw new Error(`セッションの作成に失敗しました: ${sessionError.message}`)
+      }
+
       const { data, error } = await supabase.auth.updateUser({
         password: password
       })

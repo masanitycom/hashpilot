@@ -27,9 +27,11 @@ export async function GET(request: NextRequest) {
       }
 
       if (data.user) {
-        // パスワードリセットの場合は専用ページにリダイレクト
+        // パスワードリセットの場合は専用ページにリダイレクト（セッションを作成しない）
         if (type === "recovery") {
-          console.log("Password reset detected via type parameter, redirecting to update-password")
+          console.log("Password reset detected - redirecting to update-password WITHOUT creating session")
+          // セッションを削除してからリダイレクト
+          await supabase.auth.signOut()
           return NextResponse.redirect(`${requestUrl.origin}/update-password?from=reset&token=${code}`)
         }
         
@@ -44,7 +46,9 @@ export async function GET(request: NextRequest) {
           )
           
           if (isRecoverySession) {
-            console.log("Recovery session detected via user metadata, redirecting to update-password")
+            console.log("Recovery session detected - signing out and redirecting to update-password")
+            // セッションを削除してからリダイレクト
+            await supabase.auth.signOut()
             return NextResponse.redirect(`${requestUrl.origin}/update-password?from=reset&token=${code}`)
           }
         }
