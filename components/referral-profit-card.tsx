@@ -63,15 +63,21 @@ export function ReferralProfitCard({
 
       // Level1（直接紹介者）の利益を取得
       const level1Ids = await getDirectReferrals(userId)
+      console.log('Level1 IDs:', level1Ids)
       const level1Profits = await getReferralProfits(level1Ids, monthStart, monthEnd)
+      console.log('Level1 Profits:', level1Profits)
       
       // Level2（Level1の紹介者）の利益を取得
       const level2Ids = await getLevel2Referrals(userId)
+      console.log('Level2 IDs:', level2Ids)
       const level2Profits = await getReferralProfits(level2Ids, monthStart, monthEnd)
+      console.log('Level2 Profits:', level2Profits)
       
       // Level3（Level2の紹介者）の利益を取得
       const level3Ids = await getLevel3Referrals(userId)
+      console.log('Level3 IDs:', level3Ids)
       const level3Profits = await getReferralProfits(level3Ids, monthStart, monthEnd)
+      console.log('Level3 Profits:', level3Profits)
 
       // 昨日と月間の紹介報酬を計算
       const level1Yesterday = level1Profits.yesterday * level1Rate
