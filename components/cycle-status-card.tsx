@@ -44,20 +44,12 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit')
+        .select('daily_profit, referral_profit')
         .eq('user_id', userId)
         .gte('date', monthStart)
         .lte('date', monthEnd)
 
       if (profitError && profitError.code !== 'PGRST116') throw profitError
-
-      // 紹介報酬を取得
-      const { data: referralData, error: referralError } = await supabase
-        .rpc('get_referral_profits', {
-          p_user_id: userId,
-          p_month_start: monthStart,
-          p_month_end: monthEnd
-        })
 
       // NFTデータを取得
       const { data: nftData, error: nftError } = await supabase
@@ -72,10 +64,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       const personalProfit = profitData?.reduce((sum, p) => sum + (p.daily_profit || 0), 0) || 0
       
       // 紹介報酬を計算
-      let referralProfit = 0
-      if (referralData) {
-        referralProfit = referralData.reduce((sum, row) => sum + parseFloat(row.monthly_profit), 0)
-      }
+      const referralProfit = profitData?.reduce((sum, p) => sum + (p.referral_profit || 0), 0) || 0
 
       // 合計利益を計算（個人+紹介報酬）
       const totalProfit = personalProfit + referralProfit
