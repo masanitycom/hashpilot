@@ -109,7 +109,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
             </span>
             {yieldRate !== 0 && (
               <span className="text-sm text-gray-400">
-                受取率: {(yieldRate * 100).toFixed(3)}%
+                日利: {(yieldRate * 100).toFixed(3)}%
               </span>
             )}
           </div>

@@ -225,7 +225,7 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
                   return [`$${value >= 0 ? "+" : ""}${value.toFixed(2)}`, "日利"]
                 }
                 if (name === "yieldRate") {
-                  return [`${(value * 100).toFixed(3)}%`, "受取率"]
+                  return [`${(value * 100).toFixed(3)}%`, "日利"]
                 }
                 return [value, name]
               }}

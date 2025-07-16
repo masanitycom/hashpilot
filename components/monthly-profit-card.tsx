@@ -138,7 +138,7 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
             </span>
             {averageYieldRate !== 0 && (
               <span className="text-sm text-gray-400">
-                平均受取率: {(averageYieldRate * 100).toFixed(3)}%
+                平均日利: {(averageYieldRate * 100).toFixed(3)}%
               </span>
             )}
           </div>
