@@ -40,7 +40,22 @@ export default function LoginPage() {
       const {
         data: { session },
       } = await supabase.auth.getSession()
+      
       if (session?.user) {
+        // パスワードリセット関連のセッションは除外
+        const user = session.user
+        const isRecoverySession = (
+          user.recovery_sent_at !== null ||
+          user.email_change_sent_at !== null ||
+          (user.aud === 'authenticated' && Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000)
+        )
+        
+        if (isRecoverySession) {
+          console.log("Recovery session detected in login page, signing out")
+          await supabase.auth.signOut()
+          return
+        }
+        
         // basarasystems@gmail.com は管理画面にリダイレクト
         if (session.user.email === "basarasystems@gmail.com" || session.user.email === "support@dshsupport.biz") {
           router.push("/admin")
