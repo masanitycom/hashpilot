@@ -47,10 +47,10 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         yesterday: yesterday.toISOString()
       })
 
-      // user_daily_profitテーブルから昨日の確定利益と日利率を取得
+      // user_daily_profitテーブルから昨日の確定利益とユーザー受取率を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, yield_rate')
+        .select('daily_profit, user_rate')
         .eq('user_id', userId)
         .eq('date', yesterdayStr)
         .single()
@@ -72,7 +72,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
       } else {
         console.log('Found daily profit:', profitData?.daily_profit)
         const profitValue = parseFloat(profitData?.daily_profit) || 0
-        const yieldRateValue = parseFloat(profitData?.yield_rate) || 0
+        const yieldRateValue = parseFloat(profitData?.user_rate) || 0
         setProfit(profitValue)
         setYieldRate(yieldRateValue)
       }
@@ -121,7 +121,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
             </span>
             {yieldRate !== 0 && (
               <span className="text-sm text-gray-400">
-                日利率: {(yieldRate * 100).toFixed(3)}%
+                受取率: {(yieldRate * 100).toFixed(3)}%
               </span>
             )}
           </div>

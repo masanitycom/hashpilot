@@ -48,10 +48,10 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         monthEnd
       })
 
-      // 個人の今月の累積利益と日利率を取得
+      // 個人の今月の累積利益とユーザー受取率を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, yield_rate')
+        .select('daily_profit, user_rate')
         .eq('user_id', userId)
         .gte('date', monthStart)
         .lte('date', monthEnd)
@@ -70,7 +70,7 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
       if (profitData && profitData.length > 0) {
         profitData.forEach(record => {
           const dailyValue = parseFloat(record.daily_profit) || 0
-          const yieldValue = parseFloat(record.yield_rate) || 0
+          const yieldValue = parseFloat(record.user_rate) || 0
           console.log(`Daily profit for ${record.date || 'unknown'}: ${record.daily_profit} -> parsed: ${dailyValue}`)
           personalProfit += dailyValue
           if (yieldValue !== 0) {
@@ -148,7 +148,7 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
             </span>
             {averageYieldRate !== 0 && (
               <span className="text-sm text-gray-400">
-                平均日利率: {(averageYieldRate * 100).toFixed(3)}%
+                平均受取率: {(averageYieldRate * 100).toFixed(3)}%
               </span>
             )}
           </div>
