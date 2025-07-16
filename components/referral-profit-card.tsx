@@ -121,7 +121,7 @@ export function ReferralProfitCard({
 
     const { data, error } = await supabase
       .from('user_daily_profit')
-      .select('date, daily_profit')
+      .select('date, personal_profit')
       .in('user_id', userIds)
       .gte('date', monthStart)
       .lte('date', monthEnd)
@@ -135,7 +135,7 @@ export function ReferralProfitCard({
     let monthly = 0
 
     data.forEach(row => {
-      const profit = parseFloat(row.daily_profit) || 0
+      const profit = parseFloat(row.personal_profit) || 0
       
       // 昨日の利益（7/16）
       if (row.date === '2025-07-16') {
