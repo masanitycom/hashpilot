@@ -56,6 +56,8 @@ export default function DashboardPage() {
   const [latestApprovalDate, setLatestApprovalDate] = useState<string | null>(null)
   const [showCoinwAlert, setShowCoinwAlert] = useState(false)
   const [showNftAddressAlert, setShowNftAddressAlert] = useState(false)
+  const [userHasCoinwUid, setUserHasCoinwUid] = useState(true)
+  const [userHasNftAddress, setUserHasNftAddress] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -153,12 +155,19 @@ export default function DashboardPage() {
         setUserData(userRecord)
         await calculateStats(userRecord)
         
-        // CoinW UID未設定の場合はポップアップを表示
-        if (!userRecord.coinw_uid || userRecord.coinw_uid.trim() === '') {
+        // 警告表示の状況を記録
+        const hasCoinwUid = userRecord.coinw_uid && userRecord.coinw_uid.trim() !== ''
+        const hasNftAddress = userRecord.nft_receive_address && userRecord.nft_receive_address.trim() !== ''
+        
+        setUserHasCoinwUid(hasCoinwUid)
+        setUserHasNftAddress(hasNftAddress)
+        
+        // CoinW UIDが未設定の場合は最初に表示
+        if (!hasCoinwUid) {
           setTimeout(() => {
             setShowCoinwAlert(true)
           }, 2000) // 2秒後に表示
-        } else if (!userRecord.nft_receive_address || userRecord.nft_receive_address.trim() === '') {
+        } else if (!hasNftAddress) {
           // CoinW UIDが設定済みで、NFT受取アドレスが未設定の場合
           setTimeout(() => {
             setShowNftAddressAlert(true)
@@ -181,12 +190,19 @@ export default function DashboardPage() {
       await calculateStats(userRecord)
       await fetchLatestApprovalDate(userRecord.user_id)
       
-      // CoinW UID未設定の場合はポップアップを表示
-      if (!userRecord.coinw_uid || userRecord.coinw_uid.trim() === '') {
+      // 警告表示の状況を記録
+      const hasCoinwUid = userRecord.coinw_uid && userRecord.coinw_uid.trim() !== ''
+      const hasNftAddress = userRecord.nft_receive_address && userRecord.nft_receive_address.trim() !== ''
+      
+      setUserHasCoinwUid(hasCoinwUid)
+      setUserHasNftAddress(hasNftAddress)
+      
+      // CoinW UIDが未設定の場合は最初に表示
+      if (!hasCoinwUid) {
         setTimeout(() => {
           setShowCoinwAlert(true)
         }, 2000) // 2秒後に表示
-      } else if (!userRecord.nft_receive_address || userRecord.nft_receive_address.trim() === '') {
+      } else if (!hasNftAddress) {
         // CoinW UIDが設定済みで、NFT受取アドレスが未設定の場合
         setTimeout(() => {
           setShowNftAddressAlert(true)
@@ -363,6 +379,16 @@ export default function DashboardPage() {
     } catch (error) {
       console.error("Logout error:", error)
       router.push("/")
+    }
+  }
+
+  const handleCoinwAlertClose = () => {
+    setShowCoinwAlert(false)
+    // CoinW UID警告を閉じた後、NFTアドレスが未設定の場合は次の警告を表示
+    if (!userHasNftAddress) {
+      setTimeout(() => {
+        setShowNftAddressAlert(true)
+      }, 500) // 0.5秒後に表示
     }
   }
 
@@ -820,7 +846,7 @@ export default function DashboardPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowCoinwAlert(false)}
+                  onClick={handleCoinwAlertClose}
                   className="text-gray-400 hover:text-white"
                 >
                   <X className="h-4 w-4" />
@@ -842,7 +868,7 @@ export default function DashboardPage() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href="/profile">
                   <Button
-                    onClick={() => setShowCoinwAlert(false)}
+                    onClick={handleCoinwAlertClose}
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white w-full"
                   >
                     プロフィール設定へ
@@ -850,7 +876,7 @@ export default function DashboardPage() {
                 </Link>
                 <Button
                   variant="outline"
-                  onClick={() => setShowCoinwAlert(false)}
+                  onClick={handleCoinwAlertClose}
                   className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
                 >
                   後で設定する
