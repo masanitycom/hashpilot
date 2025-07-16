@@ -72,9 +72,7 @@ export default function DashboardPage() {
         return
       }
 
-      // セッション情報を強制的にリフレッシュ
-      await supabase.auth.refreshSession()
-
+      // セッション情報を取得（リフレッシュはしない）
       const {
         data: { session },
         error: sessionError,
@@ -92,6 +90,18 @@ export default function DashboardPage() {
 
       if (!session?.user) {
         console.log("No session found, redirecting to login")
+        // セッションが無い場合は確実にログアウト
+        await supabase.auth.signOut()
+        router.push("/login")
+        return
+      }
+
+      // セッションの有効性をさらに確認
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError || !user) {
+        console.error("User verification failed:", userError)
+        await supabase.auth.signOut()
         router.push("/login")
         return
       }
