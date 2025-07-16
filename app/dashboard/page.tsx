@@ -104,11 +104,15 @@ export default function DashboardPage() {
       }
 
       // パスワードリセット中のユーザーは適切にリダイレクト
+      // ただし、パスワード更新完了後は除外
       const user = session.user
       const isRecoverySession = (
         user.recovery_sent_at !== null ||
         user.email_change_sent_at !== null ||
-        (user.aud === 'authenticated' && Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000) // 10分以内のセッション
+        // 新規セッションでも、パスワード更新が完了していれば除外
+        (user.aud === 'authenticated' && 
+         Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000 && // 10分以内のセッション
+         !user.last_sign_in_at) // パスワード更新後は除外
       )
       
       if (isRecoverySession) {
