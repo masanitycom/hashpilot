@@ -877,7 +877,7 @@ export default function DashboardPage() {
                 <Button
                   variant="outline"
                   onClick={handleCoinwAlertClose}
-                  className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
+                  className="flex-1 border-gray-400 text-gray-200 hover:bg-gray-600 hover:text-white bg-gray-700/50"
                 >
                   後で設定する
                 </Button>
@@ -931,7 +931,7 @@ export default function DashboardPage() {
                 <Button
                   variant="outline"
                   onClick={() => setShowNftAddressAlert(false)}
-                  className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-700"
+                  className="flex-1 border-gray-400 text-gray-200 hover:bg-gray-600 hover:text-white bg-gray-700/50"
                 >
                   後で設定する
                 </Button>
