@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 HASHPILOT 緊急利益計算ツール</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #000;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .input-section {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .result-section {
+            background: #002200;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .error {
+            background: #220000;
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        input, button, select {
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        button {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #00ff00;
+            color: #000;
+        }
+        .profit-card {
+            display: inline-block;
+            background: #001100;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 250px;
+            vertical-align: top;
+        }
+        .level-breakdown {
+            font-size: 0.9em;
+            margin-left: 20px;
+            opacity: 0.8;
+        }
+        .debug-section {
+            background: #111;
+            border: 1px solid #666;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .loading {
+            color: #ffff00;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 HASHPILOT 緊急利益計算ツール 🚨</h1>
+            <p>本番環境での正確な利益計算</p>
+        </div>
+
+        <div class="input-section">
+            <h3>📊 計算設定</h3>
+            <label>ユーザーID:</label>
+            <input type="text" id="userId" value="7A9637" placeholder="ユーザーIDを入力">
+            
+            <label>計算日:</label>
+            <input type="date" id="targetDate" value="">
+            
+            <button onclick="calculateProfits()">🚀 計算実行</button>
+            <button onclick="debugDatabase()">🔍 データベース確認</button>
+        </div>
+
+        <div id="results"></div>
+        <div id="errors"></div>
+        <div id="debug" class="debug-section" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Supabase設定
+        const SUPABASE_URL = 'https://soghqozaxfswtxxbgeer.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvZ2hxb3pheGZzd3R4eGJnZWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTA3NTUsImV4cCI6MjA2NTcyNjc1NX0.dhHJiyDIsjDEMGJIEpIbUdVbtaAzTOPHUu8YpMjMWM8';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 今日の日付を設定
+        document.getElementById('targetDate').value = new Date().toISOString().split('T')[0];
+
+        function showError(message) {
+            document.getElementById('errors').innerHTML = `
+                <div class="error">
+                    <h3>❌ エラー</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function showLoading() {
+            document.getElementById('results').innerHTML = `
+                <div class="result-section loading">
+                    <h3>⏳ 計算中...</h3>
+                    <p>データベースから情報を取得しています...</p>
+                </div>
+            `;
+        }
+
+        function debugLog(message) {
+            const debugDiv = document.getElementById('debug');
+            debugDiv.style.display = 'block';
+            debugDiv.innerHTML += `<p style="margin: 5px 0;">${new Date().toLocaleTimeString()}: ${message}</p>`;
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+        }
+
+        async function debugDatabase() {
+            debugLog('🔍 データベース接続確認開始...');
+            
+            try {
+                // usersテーブル確認
+                debugLog('📊 usersテーブル確認...');
+                const { data: usersData, error: usersError } = await supabase
+                    .from('users')
+                    .select('user_id, total_purchases, has_approved_nft')
+                    .limit(10);
+
+                if (usersError) {
+                    debugLog(`❌ usersテーブルエラー: ${usersError.message}`);
+                } else {
+                    debugLog(`✅ usersテーブル: ${usersData.length}件取得`);
+                    usersData.forEach(user => {
+                        debugLog(`  - ${user.user_id}: $${user.total_purchases} (NFT: ${user.has_approved_nft})`);
+                    });
+                }
+
+                // affiliate_cycleテーブル確認
+                debugLog('🔄 affiliate_cycleテーブル確認...');
+                const { data: cycleData, error: cycleError } = await supabase
+                    .from('affiliate_cycle')
+                    .select('user_id, total_nft_count, cum_usdt, available_usdt')
+                    .limit(10);
+
+                if (cycleError) {
+                    debugLog(`❌ affiliate_cycleエラー: ${cycleError.message}`);
+                } else {
+                    debugLog(`✅ affiliate_cycle: ${cycleData.length}件取得`);
+                    cycleData.forEach(cycle => {
+                        debugLog(`  - ${cycle.user_id}: NFT${cycle.total_nft_count}個, 累積$${cycle.cum_usdt}, 利用可能$${cycle.available_usdt}`);
+                    });
+                }
+
+                // daily_yield_logテーブル確認
+                debugLog('📈 daily_yield_log確認...');
+                const { data: yieldData, error: yieldError } = await supabase
+                    .from('daily_yield_log')
+                    .select('date, yield_rate, margin_rate, user_rate')
+                    .order('date', { ascending: false })
+                    .limit(5);
+
+                if (yieldError) {
+                    debugLog(`❌ daily_yield_logエラー: ${yieldError.message}`);
+                } else {
+                    debugLog(`✅ 日利設定: ${yieldData.length}件取得`);
+                    yieldData.forEach(day => {
+                        debugLog(`  - ${day.date}: ${(day.yield_rate * 100).toFixed(3)}% → ${(day.user_rate * 100).toFixed(3)}%`);
+                    });
+                }
+
+            } catch (error) {
+                debugLog(`💥 デバッグエラー: ${error.message}`);
+            }
+        }
+
+        async function calculateProfits() {
+            const userId = document.getElementById('userId').value;
+            const targetDate = document.getElementById('targetDate').value;
+            
+            if (!userId) {
+                showError('ユーザーIDを入力してください');
+                return;
+            }
+
+            showLoading();
+            debugLog(`🚀 利益計算開始: User ${userId}, Date ${targetDate}`);
+
+            try {
+                // 1. ユーザー基本情報取得
+                debugLog('👤 ユーザー基本情報取得...');
+                const { data: userData, error: userError } = await supabase
+                    .from('users')
+                    .select('user_id, total_purchases, has_approved_nft')
+                    .eq('user_id', userId)
+                    .single();
+
+                if (userError) {
+                    debugLog(`❌ ユーザー情報エラー: ${userError.message}`);
+                    showError(`ユーザー情報取得エラー: ${userError.message}`);
+                    return;
+                }
+
+                debugLog(`✅ ユーザー情報: $${userData.total_purchases}, NFT承認: ${userData.has_approved_nft}`);
+
+                // 2. affiliate_cycle情報取得
+                debugLog('🔄 affiliate_cycle情報取得...');
+                const { data: cycleData, error: cycleError } = await supabase
+                    .from('affiliate_cycle')
+                    .select('total_nft_count, cum_usdt, available_usdt')
+                    .eq('user_id', userId)
+                    .single();
+
+                if (cycleError) {
+                    debugLog(`❌ affiliate_cycleエラー: ${cycleError.message}`);
+                    showError(`サイクル情報取得エラー: ${cycleError.message}`);
+                    return;
+                }
+
+                debugLog(`✅ サイクル情報: NFT${cycleData.total_nft_count}個, 累積$${cycleData.cum_usdt}`);
+
+                // 3. 日利設定取得
+                debugLog('📈 日利設定取得...');
+                const { data: yieldSettings, error: yieldError } = await supabase
+                    .from('daily_yield_log')
+                    .select('date, yield_rate, margin_rate, user_rate')
+                    .order('date', { ascending: false })
+                    .limit(30);
+
+                if (yieldError) {
+                    debugLog(`❌ 日利設定エラー: ${yieldError.message}`);
+                    showError(`日利設定取得エラー: ${yieldError.message}`);
+                    return;
+                }
+
+                debugLog(`✅ 日利設定: ${yieldSettings.length}日分取得`);
+
+                // 4. 紹介者構造取得
+                debugLog('🌳 紹介者構造取得...');
+                
+                // Level1 (直接紹介者)
+                const { data: level1Users, error: l1Error } = await supabase
+                    .from('users')
+                    .select('user_id, total_purchases')
+                    .eq('referrer_user_id', userId);
+
+                if (l1Error) {
+                    debugLog(`❌ Level1取得エラー: ${l1Error.message}`);
+                } else {
+                    debugLog(`✅ Level1紹介者: ${level1Users.length}名`);
+                }
+
+                // Level2 (2段目紹介者)
+                let level2Users = [];
+                if (level1Users && level1Users.length > 0) {
+                    const level1Ids = level1Users.map(u => u.user_id);
+                    const { data: l2Data, error: l2Error } = await supabase
+                        .from('users')
+                        .select('user_id, total_purchases, referrer_user_id')
+                        .in('referrer_user_id', level1Ids);
+
+                    if (!l2Error && l2Data) {
+                        level2Users = l2Data;
+                        debugLog(`✅ Level2紹介者: ${level2Users.length}名`);
+                    }
+                }
+
+                // Level3 (3段目紹介者)
+                let level3Users = [];
+                if (level2Users && level2Users.length > 0) {
+                    const level2Ids = level2Users.map(u => u.user_id);
+                    const { data: l3Data, error: l3Error } = await supabase
+                        .from('users')
+                        .select('user_id, total_purchases, referrer_user_id')
+                        .in('referrer_user_id', level2Ids);
+
+                    if (!l3Error && l3Data) {
+                        level3Users = l3Data;
+                        debugLog(`✅ Level3紹介者: ${level3Users.length}名`);
+                    }
+                }
+
+                // 5. 昨日の利益計算
+                const yesterday = new Date(targetDate);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+                debugLog(`💰 ${yesterdayStr}の利益計算開始...`);
+
+                const yesterdaySettings = yieldSettings.find(s => s.date === yesterdayStr);
+                if (!yesterdaySettings) {
+                    debugLog(`⚠️ ${yesterdayStr}の日利設定なし`);
+                }
+
+                // 個人利益計算
+                const personalProfit = yesterdaySettings ? 
+                    cycleData.total_nft_count * 1000 * yesterdaySettings.user_rate : 0;
+
+                debugLog(`📊 個人利益: NFT${cycleData.total_nft_count} × $1000 × ${yesterdaySettings?.user_rate || 0} = $${personalProfit.toFixed(3)}`);
+
+                // 紹介報酬計算（簡易版）
+                const level1Profit = personalProfit * 0.20; // 仮計算
+                const level2Profit = personalProfit * 0.10; // 仮計算
+                const level3Profit = personalProfit * 0.05; // 仮計算
+
+                // 6. 結果表示
+                const results = `
+                    <div class="result-section">
+                        <h3>✅ 利益計算結果 - User ${userId}</h3>
+                        
+                        <div class="profit-card">
+                            <h4>💰 個人投資利益</h4>
+                            <p><strong>投資額:</strong> $${userData.total_purchases}</p>
+                            <p><strong>NFT数:</strong> ${cycleData.total_nft_count}個</p>
+                            <p><strong>運用額:</strong> $${cycleData.total_nft_count * 1000}</p>
+                            <p><strong>昨日の利益:</strong> <span style="color: #00ff00; font-size: 1.2em;">$${personalProfit.toFixed(3)}</span></p>
+                            ${yesterdaySettings ? `
+                                <div class="level-breakdown">
+                                    <p>日利率: ${(yesterdaySettings.yield_rate * 100).toFixed(3)}%</p>
+                                    <p>ユーザー利率: ${(yesterdaySettings.user_rate * 100).toFixed(3)}%</p>
+                                </div>
+                            ` : '<p style="color: #ff8800;">日利設定なし</p>'}
+                        </div>
+
+                        <div class="profit-card">
+                            <h4>🎯 紹介報酬 (簡易計算)</h4>
+                            <p><strong>Level1 (${level1Users?.length || 0}名):</strong> $${level1Profit.toFixed(3)}</p>
+                            <p><strong>Level2 (${level2Users?.length || 0}名):</strong> $${level2Profit.toFixed(3)}</p>
+                            <p><strong>Level3 (${level3Users?.length || 0}名):</strong> $${level3Profit.toFixed(3)}</p>
+                            <p><strong>紹介報酬合計:</strong> <span style="color: #00ff00; font-size: 1.2em;">$${(level1Profit + level2Profit + level3Profit).toFixed(3)}</span></p>
+                            <div class="level-breakdown">
+                                <p>※ 実際の計算には各紹介者の個人利益が必要</p>
+                            </div>
+                        </div>
+
+                        <div class="profit-card">
+                            <h4>📈 合計利益</h4>
+                            <p><strong>昨日の総利益:</strong> <span style="color: #ffff00; font-size: 1.5em;">$${(personalProfit + level1Profit + level2Profit + level3Profit).toFixed(3)}</span></p>
+                            <p><strong>累積USDT:</strong> $${cycleData.cum_usdt}</p>
+                            <p><strong>利用可能USDT:</strong> $${cycleData.available_usdt}</p>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('results').innerHTML = results;
+                document.getElementById('errors').innerHTML = '';
+                debugLog('✅ 計算完了');
+
+            } catch (error) {
+                debugLog(`💥 計算エラー: ${error.message}`);
+                showError(`計算エラー: ${error.message}`);
+            }
+        }
+
+        // ページ読み込み時にデバッグ実行
+        window.onload = function() {
+            debugLog('🚀 ブラウザ版利益計算ツール起動');
+            setTimeout(debugDatabase, 1000);
+        };
+    </script>
+</body>
+</html>

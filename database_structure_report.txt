@@ -1,0 +1,31 @@
+🔍 HASHPILOT データベース構造レポート
+==================================================
+実行日時: 2025-07-16T21:09:42.633Z
+
+📋 全テーブル一覧
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+👤 users テーブル構造
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+📈 user_daily_profit テーブル構造
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+🔄 affiliate_cycle テーブル構造
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+🔐 ユニーク制約
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+❗ user_daily_profit 重複データ確認
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+⚙️ 日利処理関連関数
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+🔄 affiliate_cycle サンプルデータ
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+
+👨‍💼 管理者アカウント一覧
+❌ エラー: Could not find the function public.execute_sql(query) in the schema cache
+

@@ -233,7 +233,7 @@ export default function AdminYieldPage() {
       const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
         p_date: date,
         p_yield_rate: Number.parseFloat(yieldRate) / 100,
-        p_margin_rate: Number.parseFloat(marginRate),
+        p_margin_rate: Number.parseFloat(marginRate) / 100,
         p_is_test_mode: false,
       })
 

@@ -1,0 +1,25 @@
+{
+  "name": "hashpilot-profit-calculator",
+  "version": "1.0.0",
+  "description": "緊急利益計算ツール for HASHPILOT本番環境",
+  "main": "profit-calculator.js",
+  "scripts": {
+    "start": "node profit-calculator.js",
+    "test": "node profit-calculator.js 7A9637",
+    "install-deps": "npm install @supabase/supabase-js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.51.0"
+  },
+  "bin": {
+    "hashpilot-calc": "./profit-calculator.js"
+  },
+  "keywords": [
+    "hashpilot",
+    "profit",
+    "calculator",
+    "emergency"
+  ],
+  "author": "Emergency Response Team",
+  "license": "MIT"
+}

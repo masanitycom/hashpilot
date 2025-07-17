@@ -40,7 +40,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
       // user_daily_profitテーブルから昨日の確定利益と日利設定を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, base_amount, user_rate')
+        .select('daily_profit, base_amount, user_rate, yield_rate')
         .eq('user_id', userId)
         .eq('date', yesterdayStr)
         .single()
@@ -55,10 +55,10 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         }
       } else {
         const profitValue = parseFloat(profitData?.daily_profit) || 0
-        const userRate = parseFloat(profitData?.user_rate) || 0
+        const actualYieldRate = parseFloat(profitData?.yield_rate) || 0
         
         setProfit(profitValue)
-        setYieldRate(userRate * 100) // パーセント表示
+        setYieldRate(actualYieldRate * 100) // yield_rate（実際の日利率）をパーセント表示
       }
     } catch (err: any) {
       console.error("昨日の利益取得エラー:", err)

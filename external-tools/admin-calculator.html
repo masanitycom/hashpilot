@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 HASHPILOT 管理者用利益計算ツール</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #000;
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .admin-header {
+            text-align: center;
+            border-bottom: 2px solid #ff0000;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            color: #ff0000;
+        }
+        .login-section {
+            background: #220000;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .calc-section {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .result-section {
+            background: #002200;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .error {
+            background: #220000;
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        input, button, select {
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .admin-button {
+            background: #220000;
+            color: #ff0000;
+            border: 1px solid #ff0000;
+        }
+        button {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #00ff00;
+            color: #000;
+        }
+        .admin-button:hover {
+            background: #ff0000;
+            color: #000;
+        }
+        .profit-card {
+            display: inline-block;
+            background: #001100;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 250px;
+            vertical-align: top;
+        }
+        .debug-section {
+            background: #111;
+            border: 1px solid #666;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .warning {
+            background: #332200;
+            border: 1px solid #ff8800;
+            color: #ff8800;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-header">
+            <h1>🔐 HASHPILOT 管理者用利益計算ツール</h1>
+            <p>⚠️ 管理者権限でのデータベースアクセス</p>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ 重要な注意事項</h3>
+            <p>1. このツールは管理者権限が必要です</p>
+            <p>2. まず管理者アカウントでHASHPILOTにログインしてください</p>
+            <p>3. ログイン後、このページをリロードしてください</p>
+        </div>
+
+        <div class="login-section">
+            <h3>🔐 管理者認証確認</h3>
+            <button class="admin-button" onclick="checkAdminAuth()">管理者権限確認</button>
+            <div id="authStatus"></div>
+        </div>
+
+        <div id="calcSection" class="calc-section">
+            <h3>📊 利益計算</h3>
+            <label>ユーザーID:</label>
+            <input type="text" id="userId" value="7A9637" placeholder="ユーザーIDを入力">
+            
+            <label>計算日:</label>
+            <input type="date" id="targetDate" value="">
+            
+            <button onclick="calculateWithAdminAuth()">🚀 管理者権限で計算実行</button>
+        </div>
+
+        <div id="results"></div>
+        <div id="errors"></div>
+        <div id="debug" class="debug-section" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Supabase設定
+        const SUPABASE_URL = 'https://soghqozaxfswtxxbgeer.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvZ2hxb3pheGZzd3R4eGJnZWVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTA3NTUsImV4cCI6MjA2NTcyNjc1NX0.dhHJiyDIsjDEMGJIEpIbUdVbtaAzTOPHUu8YpMjMWM8';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 今日の日付を設定
+        document.getElementById('targetDate').value = new Date().toISOString().split('T')[0];
+
+        function debugLog(message, isError = false) {
+            const debugDiv = document.getElementById('debug');
+            debugDiv.style.display = 'block';
+            const color = isError ? '#ff0000' : '#00ff00';
+            debugDiv.innerHTML += `<p style="margin: 5px 0; color: ${color};">${new Date().toLocaleTimeString()}: ${message}</p>`;
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+        }
+
+        function showError(message) {
+            document.getElementById('errors').innerHTML = `
+                <div class="error">
+                    <h3>❌ エラー</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        async function checkAdminAuth() {
+            debugLog('🔐 管理者権限確認開始...');
+
+            try {
+                // 現在のセッション確認
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                if (sessionError) {
+                    debugLog(`❌ セッションエラー: ${sessionError.message}`, true);
+                    document.getElementById('authStatus').innerHTML = `
+                        <p style="color: #ff0000;">❌ ログインが必要です</p>
+                        <p>HASHPILOTの管理画面にログインしてからこのページをリロードしてください</p>
+                    `;
+                    return false;
+                }
+
+                if (!session) {
+                    debugLog('❌ セッションなし', true);
+                    document.getElementById('authStatus').innerHTML = `
+                        <p style="color: #ff0000;">❌ ログインセッションがありません</p>
+                        <p>HASHPILOTの管理画面にログインしてからこのページをリロードしてください</p>
+                    `;
+                    return false;
+                }
+
+                debugLog(`✅ ログイン中: ${session.user.email}`);
+
+                // 管理者権限確認
+                const { data: adminData, error: adminError } = await supabase.rpc('is_admin');
+                
+                if (adminError) {
+                    debugLog(`❌ 管理者権限確認エラー: ${adminError.message}`, true);
+                } else if (adminData) {
+                    debugLog('✅ 管理者権限確認済み');
+                    document.getElementById('authStatus').innerHTML = `
+                        <p style="color: #00ff00;">✅ 管理者権限で認証済み</p>
+                        <p>ユーザー: ${session.user.email}</p>
+                    `;
+                    document.getElementById('calcSection').style.display = 'block';
+                    
+                    // 管理者権限でデータ確認
+                    await testAdminDataAccess();
+                    return true;
+                } else {
+                    debugLog('❌ 管理者権限なし', true);
+                    document.getElementById('authStatus').innerHTML = `
+                        <p style="color: #ff0000;">❌ 管理者権限がありません</p>
+                        <p>ユーザー: ${session.user.email}</p>
+                    `;
+                    return false;
+                }
+
+            } catch (error) {
+                debugLog(`💥 認証確認エラー: ${error.message}`, true);
+                document.getElementById('authStatus').innerHTML = `
+                    <p style="color: #ff0000;">❌ 認証確認エラー: ${error.message}</p>
+                `;
+                return false;
+            }
+        }
+
+        async function testAdminDataAccess() {
+            debugLog('📊 管理者権限でのデータアクセステスト...');
+
+            try {
+                // usersテーブル確認
+                const { data: usersData, error: usersError } = await supabase
+                    .from('users')
+                    .select('user_id, total_purchases, has_approved_nft')
+                    .limit(5);
+
+                if (usersError) {
+                    debugLog(`❌ usersテーブルエラー: ${usersError.message}`, true);
+                } else {
+                    debugLog(`✅ usersテーブル: ${usersData.length}件取得`);
+                    usersData.forEach(user => {
+                        debugLog(`  - ${user.user_id}: $${user.total_purchases} (NFT: ${user.has_approved_nft})`);
+                    });
+                }
+
+                // 特定ユーザー確認
+                const { data: user7A9637, error: userError } = await supabase
+                    .from('users')
+                    .select('user_id, total_purchases, has_approved_nft')
+                    .eq('user_id', '7A9637')
+                    .single();
+
+                if (userError) {
+                    debugLog(`❌ User 7A9637 エラー: ${userError.message}`, true);
+                } else {
+                    debugLog(`✅ User 7A9637: $${user7A9637.total_purchases}, NFT: ${user7A9637.has_approved_nft}`);
+                }
+
+            } catch (error) {
+                debugLog(`💥 データアクセステストエラー: ${error.message}`, true);
+            }
+        }
+
+        async function calculateWithAdminAuth() {
+            const userId = document.getElementById('userId').value;
+            const targetDate = document.getElementById('targetDate').value;
+
+            if (!userId) {
+                showError('ユーザーIDを入力してください');
+                return;
+            }
+
+            debugLog(`🚀 管理者権限で計算開始: User ${userId}`);
+
+            try {
+                // 1. ユーザー基本情報取得（管理者権限）
+                const { data: userData, error: userError } = await supabase
+                    .from('users')
+                    .select('user_id, total_purchases, has_approved_nft')
+                    .eq('user_id', userId)
+                    .single();
+
+                if (userError) {
+                    debugLog(`❌ ユーザー情報エラー: ${userError.message}`, true);
+                    showError(`ユーザー情報取得エラー: ${userError.message}`);
+                    return;
+                }
+
+                debugLog(`✅ ユーザー情報取得: $${userData.total_purchases}`);
+
+                // 2. affiliate_cycle情報取得
+                const { data: cycleData, error: cycleError } = await supabase
+                    .from('affiliate_cycle')
+                    .select('total_nft_count, cum_usdt, available_usdt')
+                    .eq('user_id', userId)
+                    .single();
+
+                if (cycleError) {
+                    debugLog(`❌ サイクル情報エラー: ${cycleError.message}`, true);
+                    showError(`サイクル情報取得エラー: ${cycleError.message}`);
+                    return;
+                }
+
+                debugLog(`✅ サイクル情報: NFT${cycleData.total_nft_count}個`);
+
+                // 3. 日利設定取得（昨日分）
+                const yesterday = new Date(targetDate);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+                const { data: yieldData, error: yieldError } = await supabase
+                    .from('daily_yield_log')
+                    .select('date, yield_rate, margin_rate, user_rate')
+                    .eq('date', yesterdayStr)
+                    .single();
+
+                let personalProfit = 0;
+                if (yieldError) {
+                    debugLog(`⚠️ ${yesterdayStr}の日利設定なし`, true);
+                } else {
+                    personalProfit = cycleData.total_nft_count * 1000 * yieldData.user_rate;
+                    debugLog(`💰 個人利益計算: ${cycleData.total_nft_count} × $1000 × ${yieldData.user_rate} = $${personalProfit.toFixed(3)}`);
+                }
+
+                // 4. 紹介者数確認
+                const { data: level1Users, error: l1Error } = await supabase
+                    .from('users')
+                    .select('user_id')
+                    .eq('referrer_user_id', userId);
+
+                const level1Count = level1Users ? level1Users.length : 0;
+                debugLog(`🌳 Level1紹介者: ${level1Count}名`);
+
+                // 5. 結果表示
+                const results = `
+                    <div class="result-section">
+                        <h3>✅ 管理者権限での計算結果 - User ${userId}</h3>
+                        
+                        <div class="profit-card">
+                            <h4>💰 基本情報</h4>
+                            <p><strong>投資額:</strong> $${userData.total_purchases}</p>
+                            <p><strong>NFT数:</strong> ${cycleData.total_nft_count}個</p>
+                            <p><strong>運用額:</strong> $${cycleData.total_nft_count * 1000}</p>
+                            <p><strong>NFT承認:</strong> ${userData.has_approved_nft ? '✅' : '❌'}</p>
+                        </div>
+
+                        <div class="profit-card">
+                            <h4>📊 ${yesterdayStr}の利益</h4>
+                            <p><strong>個人利益:</strong> <span style="color: #00ff00; font-size: 1.2em;">$${personalProfit.toFixed(3)}</span></p>
+                            ${yieldData ? `
+                                <p>日利率: ${(yieldData.yield_rate * 100).toFixed(3)}%</p>
+                                <p>ユーザー利率: ${(yieldData.user_rate * 100).toFixed(3)}%</p>
+                            ` : '<p style="color: #ff8800;">日利設定なし</p>'}
+                        </div>
+
+                        <div class="profit-card">
+                            <h4>🎯 紹介情報</h4>
+                            <p><strong>Level1紹介者:</strong> ${level1Count}名</p>
+                            <p><strong>累積USDT:</strong> $${cycleData.cum_usdt}</p>
+                            <p><strong>利用可能USDT:</strong> $${cycleData.available_usdt}</p>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('results').innerHTML = results;
+                document.getElementById('errors').innerHTML = '';
+                debugLog('✅ 計算完了');
+
+            } catch (error) {
+                debugLog(`💥 計算エラー: ${error.message}`, true);
+                showError(`計算エラー: ${error.message}`);
+            }
+        }
+
+        // ページ読み込み時に自動チェック
+        window.onload = function() {
+            debugLog('🔐 管理者用利益計算ツール起動');
+            setTimeout(checkAdminAuth, 1000);
+        };
+    </script>
+</body>
+</html>
