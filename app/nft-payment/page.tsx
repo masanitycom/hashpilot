@@ -99,9 +99,12 @@ export default function NFTPaymentPage() {
         throw error
       }
 
-      // 送金完了後はダッシュボードに戻る
-      alert("送金情報を送信しました。管理者の確認をお待ちください。承認後にNFTが有効化されます。")
-      router.push("/dashboard")
+      // 送金完了確認ページに遷移
+      const params = new URLSearchParams({
+        amount: purchase.amount_usd.toString(),
+        nftCount: purchase.nft_quantity.toString()
+      })
+      router.push(`/payment-submitted?${params.toString()}`)
     } catch (error: any) {
       console.error("Update error:", error)
       setError(`更新でエラーが発生しました: ${error.message}`)
