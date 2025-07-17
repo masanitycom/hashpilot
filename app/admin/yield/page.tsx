@@ -230,12 +230,20 @@ export default function AdminYieldPage() {
 
     try {
       // 本番モード固定: サイクル処理付き日利設定（紹介報酬対応）
+      console.log('日利設定送信:', {
+        date,
+        yield_rate: Number.parseFloat(yieldRate) / 100,
+        margin_rate: Number.parseFloat(marginRate) / 100
+      })
+
       const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
         p_date: date,
         p_yield_rate: Number.parseFloat(yieldRate) / 100,
         p_margin_rate: Number.parseFloat(marginRate) / 100,
         p_is_test_mode: false,
       })
+
+      console.log('RPC実行結果:', { data, error })
 
       if (error) throw error
 
@@ -244,6 +252,11 @@ export default function AdminYieldPage() {
         
         // デバッグ用にレスポンスをログ出力
         console.log('サイクル処理結果:', result)
+        
+        // エラーチェック
+        if (result.status === 'error' || result.error) {
+          throw new Error(result.message || 'データベース処理でエラーが発生しました')
+        }
         
         // 安全な値の取得と変換（データベース関数の実際のフィールド名に合わせる）
         const totalUsers = result.processed_users || result.total_users || 0
@@ -258,6 +271,17 @@ export default function AdminYieldPage() {
           type: "success",
           text: messageText,
         })
+        
+        // データ確認のための追加ログ
+        console.log(`${date}の日利設定完了:`, {
+          totalUsers,
+          totalProfit,
+          yield_rate: Number.parseFloat(yieldRate),
+          margin_rate: Number.parseFloat(marginRate)
+        })
+      } else if (data === null) {
+        // dataがnullの場合は処理失敗の可能性
+        throw new Error('データベース処理が正常に完了しませんでした。管理者に連絡してください。')
       } else {
         setMessage({
           type: "success",

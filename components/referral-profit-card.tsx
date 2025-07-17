@@ -128,13 +128,18 @@ export function ReferralProfitCard({
       return { yesterday: 0, monthly: 0 }
     }
 
-    // NFT承認済みユーザーのみフィルター（簡易版）
-    console.log('🔍 Checking NFT approval status for users:', userIds)
+    // NFT承認済みかつ実際に運用開始しているユーザーのみフィルター
+    console.log('🔍 Checking operational status for users:', userIds)
     const { data: usersData, error: usersError } = await supabase
       .from('users')
-      .select('user_id, has_approved_nft')
+      .select(`
+        user_id, 
+        has_approved_nft,
+        affiliate_cycle!inner(total_nft_count)
+      `)
       .in('user_id', userIds)
       .eq('has_approved_nft', true)
+      .gt('affiliate_cycle.total_nft_count', 0)
 
     if (usersError) {
       console.error('❌ Error fetching user approval status:', usersError)
