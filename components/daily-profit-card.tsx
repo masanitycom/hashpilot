@@ -31,11 +31,10 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         return
       }
 
-      // 昨日の日付を取得（7/16固定）
-      const yesterdayStr = '2025-07-16'
-      
-      // デバッグ用: 固定日付でテスト
-      // const yesterdayStr = '2025-07-09'
+      // 昨日の日付を取得（実際の昨日）
+      const yesterday = new Date()
+      yesterday.setDate(yesterday.getDate() - 1)
+      const yesterdayStr = yesterday.toISOString().split('T')[0]
 
 
       // user_daily_profitテーブルから昨日の確定利益と日利設定を取得
