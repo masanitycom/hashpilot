@@ -32,6 +32,107 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
     }
   }, [userId])
 
+  // 月間紹介報酬を計算する関数
+  const calculateMonthlyReferralProfit = async (userId: string, monthStart: string, monthEnd: string): Promise<number> => {
+    try {
+      // 紹介報酬率の定義
+      const level1Rate = 0.20 // 20%
+      const level2Rate = 0.10 // 10%  
+      const level3Rate = 0.05 // 5%
+
+      // 各レベルの紹介者IDを取得
+      const level1UserIds = await getDirectReferrals(userId)
+      const level2UserIds = await getLevel2Referrals(userId)
+      const level3UserIds = await getLevel3Referrals(userId)
+
+      // 各レベルの紹介者の利益を取得
+      const level1Profits = await getReferralProfits(level1UserIds, monthStart, monthEnd)
+      const level2Profits = await getReferralProfits(level2UserIds, monthStart, monthEnd)
+      const level3Profits = await getReferralProfits(level3UserIds, monthStart, monthEnd)
+
+      // 紹介報酬計算
+      const level1Reward = level1Profits * level1Rate
+      const level2Reward = level2Profits * level2Rate
+      const level3Reward = level3Profits * level3Rate
+
+      return level1Reward + level2Reward + level3Reward
+    } catch (error) {
+      console.error('紹介報酬計算エラー:', error)
+      return 0
+    }
+  }
+
+  // 直接紹介者のIDを取得
+  const getDirectReferrals = async (userId: string): Promise<string[]> => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id')
+      .eq('referrer_user_id', userId)
+
+    if (error) return []
+    return data.map(user => user.user_id)
+  }
+
+  // Level2紹介者のIDを取得
+  const getLevel2Referrals = async (userId: string): Promise<string[]> => {
+    const level1Ids = await getDirectReferrals(userId)
+    if (level1Ids.length === 0) return []
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id')
+      .in('referrer_user_id', level1Ids)
+
+    if (error) return []
+    return data.map(user => user.user_id)
+  }
+
+  // Level3紹介者のIDを取得
+  const getLevel3Referrals = async (userId: string): Promise<string[]> => {
+    const level2Ids = await getLevel2Referrals(userId)
+    if (level2Ids.length === 0) return []
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id')
+      .in('referrer_user_id', level2Ids)
+
+    if (error) return []
+    return data.map(user => user.user_id)
+  }
+
+  // 指定されたユーザーIDリストの利益を取得
+  const getReferralProfits = async (userIds: string[], monthStart: string, monthEnd: string): Promise<number> => {
+    if (userIds.length === 0) return 0
+
+    // NFT承認済みかつ実際に運用開始しているユーザーのみフィルター
+    const { data: usersData, error: usersError } = await supabase
+      .from('users')
+      .select(`
+        user_id, 
+        has_approved_nft,
+        affiliate_cycle!inner(total_nft_count)
+      `)
+      .in('user_id', userIds)
+      .eq('has_approved_nft', true)
+      .gt('affiliate_cycle.total_nft_count', 0)
+
+    if (usersError) return 0
+
+    const eligibleUserIds = usersData.map(user => user.user_id)
+    if (eligibleUserIds.length === 0) return 0
+
+    const { data, error } = await supabase
+      .from('user_daily_profit')
+      .select('daily_profit')
+      .in('user_id', eligibleUserIds)
+      .gte('date', monthStart)
+      .lte('date', monthEnd)
+
+    if (error) return 0
+    return data.reduce((sum, row) => sum + (parseFloat(row.daily_profit) || 0), 0)
+  }
+
   const fetchCycleData = async () => {
     try {
       setLoading(true)
@@ -44,7 +145,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, referral_profit')
+        .select('daily_profit')
         .eq('user_id', userId)
         .gte('date', monthStart)
         .lte('date', monthEnd)
@@ -61,10 +162,10 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       if (nftError) throw nftError
 
       // 個人利益を計算
-      const personalProfit = profitData?.reduce((sum, p) => sum + (p.daily_profit || 0), 0) || 0
+      const personalProfit = profitData?.reduce((sum, p) => sum + (parseFloat(p.daily_profit) || 0), 0) || 0
       
-      // 紹介報酬を計算
-      const referralProfit = profitData?.reduce((sum, p) => sum + (p.referral_profit || 0), 0) || 0
+      // 紹介報酬を計算（referral-profit-card.tsxと同じロジックを使用）
+      const referralProfit = await calculateMonthlyReferralProfit(userId, monthStart, monthEnd)
 
       // 合計利益を計算（個人+紹介報酬）
       const totalProfit = personalProfit + referralProfit
