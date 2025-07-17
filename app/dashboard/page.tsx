@@ -195,9 +195,9 @@ export default function DashboardPage() {
       // NFT購入チェック
       const { hasApprovedPurchase } = await checkUserNFTPurchase(userRecord.user_id)
       if (!hasApprovedPurchase) {
-        console.log("User has no approved NFT purchase, redirecting to /nft")
-        router.push("/nft")
-        return
+        console.log("User has no approved NFT purchase, staying on dashboard with NFT purchase prompt")
+        // NFTを持っていない場合でもダッシュボードに留まり、NFT購入を促す
+        setError("NFTの購入が完了していません。投資を開始するにはNFTの購入と承認が必要です。")
       }
       
       setUserData(userRecord)

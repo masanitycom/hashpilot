@@ -107,7 +107,7 @@ export default function WithdrawalPage() {
       const { hasApprovedPurchase } = await checkUserNFTPurchase(userRecord.user_id)
       if (!hasApprovedPurchase) {
         console.log("User has no approved NFT purchase, redirecting to /nft")
-        router.push("/nft")
+        router.push("/dashboard")
         return
       }
       

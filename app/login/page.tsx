@@ -73,7 +73,7 @@ export default function LoginPage() {
             
             if (!hasApprovedPurchase) {
               // NFT未購入者は購入画面へリダイレクト
-              router.push("/nft")
+              router.push("/dashboard")
             } else {
               // NFT購入済みユーザーはダッシュボードへ
               router.push("/dashboard")

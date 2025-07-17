@@ -93,7 +93,7 @@ export default function ProfilePage() {
       const { hasApprovedPurchase } = await checkUserNFTPurchase(userData.user_id)
       if (!hasApprovedPurchase) {
         console.log("User has no approved NFT purchase, redirecting to /nft")
-        router.push("/nft")
+        router.push("/dashboard")
         return
       }
 

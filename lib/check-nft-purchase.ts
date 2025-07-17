@@ -52,7 +52,7 @@ export async function redirectIfNoNFT(router: any, userId: string): Promise<bool
   const { hasApprovedPurchase } = await checkUserNFTPurchase(userId)
   
   if (!hasApprovedPurchase) {
-    router.push("/nft")
+    router.push("/dashboard")
     return true
   }
   

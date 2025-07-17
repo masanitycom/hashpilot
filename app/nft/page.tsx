@@ -344,6 +344,14 @@ export default function NFTPage() {
                   )}
                 </Button>
 
+                <Button
+                  onClick={() => router.push("/dashboard")}
+                  variant="outline"
+                  className="w-full border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white mt-3"
+                >
+                  ダッシュボードに戻る
+                </Button>
+
                 <p className="text-xs text-gray-400 text-center">
                   購入後は管理者の承認が必要です。承認後にNFTが送付されます。
                 </p>

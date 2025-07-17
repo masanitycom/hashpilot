@@ -52,7 +52,7 @@ export default function NftBuybackPage() {
       const { hasApprovedPurchase } = await checkUserNFTPurchase(userInfo.user_id)
       if (!hasApprovedPurchase) {
         console.log("User has no approved NFT purchase, redirecting to /nft")
-        router.push("/nft")
+        router.push("/dashboard")
         return
       }
 
