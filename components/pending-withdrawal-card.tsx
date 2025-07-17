@@ -4,9 +4,10 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Clock, DollarSign, AlertTriangle, ExternalLink } from "lucide-react"
+import { Clock, DollarSign, AlertTriangle, ExternalLink, CheckCircle } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
+import { RewardTaskPopup } from "./reward-task-popup"
 
 interface PendingWithdrawalCardProps {
   userId: string
@@ -17,12 +18,15 @@ interface WithdrawalData {
   type: 'monthly_profit' | 'pending_withdrawal'
   status?: string
   latest_month?: string | null
+  task_required?: boolean
+  task_completed?: boolean
 }
 
 export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   const [withdrawalData, setWithdrawalData] = useState<WithdrawalData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [showTaskPopup, setShowTaskPopup] = useState(false)
 
   useEffect(() => {
     if (userId) {
@@ -139,7 +143,9 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
           amount: totalPendingAmount,
           type: 'pending_withdrawal',
           status: latestWithdrawal.status,
-          latest_month: latestWithdrawal.withdrawal_month
+          latest_month: latestWithdrawal.withdrawal_month,
+          task_required: latestWithdrawal.status === 'on_hold',
+          task_completed: latestWithdrawal.task_completed || false
         })
         return
       }
@@ -181,7 +187,9 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
 
       setWithdrawalData({
         amount: monthlyProfit,
-        type: 'monthly_profit'
+        type: 'monthly_profit',
+        task_required: false,
+        task_completed: false
       })
 
     } catch (err: any) {
@@ -226,8 +234,21 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   const displayAmount = withdrawalData?.amount || 0
   const isPendingWithdrawal = withdrawalData?.type === 'pending_withdrawal'
   const isMonthlyProfit = withdrawalData?.type === 'monthly_profit'
+  const needsTask = withdrawalData?.task_required && !withdrawalData?.task_completed
+
+  const handleTaskComplete = () => {
+    setShowTaskPopup(false)
+    fetchWithdrawalData() // Refresh data after task completion
+  }
 
   return (
+    <>
+      <RewardTaskPopup
+        userId={userId}
+        isOpen={showTaskPopup}
+        onClose={() => setShowTaskPopup(false)}
+        onComplete={handleTaskComplete}
+      />
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader className="p-3 pb-2">
         <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
@@ -247,7 +268,24 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
           {isPendingWithdrawal && (
             <div>
               {withdrawalData?.status === 'pending' && '送金処理中'}
-              {withdrawalData?.status === 'on_hold' && '保留中'}
+              {withdrawalData?.status === 'on_hold' && !withdrawalData?.task_completed && (
+                <div className="flex items-center gap-1">
+                  <span>アンケートタスク待ち</span>
+                  <Button
+                    onClick={() => setShowTaskPopup(true)}
+                    size="sm"
+                    className="text-xs bg-yellow-600 hover:bg-yellow-700 px-2 py-1 h-auto"
+                  >
+                    開始
+                  </Button>
+                </div>
+              )}
+              {withdrawalData?.status === 'on_hold' && withdrawalData?.task_completed && (
+                <div className="flex items-center gap-1 text-green-400">
+                  <CheckCircle className="h-3 w-3" />
+                  タスク完了済み・処理待ち
+                </div>
+              )}
               {withdrawalData?.latest_month && ` (${formatMonth(withdrawalData.latest_month)})`}
             </div>
           )}
@@ -260,6 +298,7 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
         </div>
       </CardContent>
     </Card>
+    </>
   )
 }
 

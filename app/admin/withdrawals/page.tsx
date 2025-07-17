@@ -32,6 +32,8 @@ interface WithdrawalRecord {
   created_at: string
   completed_at: string | null
   notes: string | null
+  task_completed: boolean
+  task_completed_at: string | null
 }
 
 interface MonthlyStats {
@@ -173,7 +175,7 @@ export default function AdminWithdrawalsPage() {
   const exportCSV = () => {
     const headers = [
       "ユーザーID", "メールアドレス", "報酬額", "送金方法", "CoinW UID/送金先", 
-      "ステータス", "作成日", "完了日", "備考"
+      "ステータス", "タスク状況", "作成日", "完了日", "備考"
     ]
     
     const csvData = filteredWithdrawals.map(w => [
@@ -183,6 +185,7 @@ export default function AdminWithdrawalsPage() {
       w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
       w.withdrawal_address || "未設定",
       w.status,
+      w.task_completed ? "完了" : "未完了",
       new Date(w.created_at).toLocaleDateString('ja-JP'),
       w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
       w.notes || ""
@@ -397,6 +400,7 @@ export default function AdminWithdrawalsPage() {
                     <th className="text-left py-3 px-2 text-gray-300">報酬額</th>
                     <th className="text-left py-3 px-2 text-gray-300">CoinW UID/送金先</th>
                     <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
+                    <th className="text-left py-3 px-2 text-gray-300">タスク状況</th>
                     <th className="text-left py-3 px-2 text-gray-300">作成日</th>
                   </tr>
                 </thead>
@@ -447,6 +451,18 @@ export default function AdminWithdrawalsPage() {
                       </td>
                       <td className="py-3 px-2">
                         {getStatusBadge(withdrawal.status)}
+                      </td>
+                      <td className="py-3 px-2">
+                        {withdrawal.task_completed ? (
+                          <Badge className="bg-green-600 text-white">完了済み</Badge>
+                        ) : (
+                          <Badge className="bg-yellow-600 text-white">未完了</Badge>
+                        )}
+                        {withdrawal.task_completed_at && (
+                          <div className="text-xs text-gray-400 mt-1">
+                            {new Date(withdrawal.task_completed_at).toLocaleDateString('ja-JP')}
+                          </div>
+                        )}
                       </td>
                       <td className="py-3 px-2 text-gray-300">
                         {new Date(withdrawal.created_at).toLocaleDateString('ja-JP')}

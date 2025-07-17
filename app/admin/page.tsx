@@ -391,6 +391,24 @@ export default function AdminDashboard() {
             </Card>
           </Link>
 
+          {/* 報酬受取タスク管理 */}
+          <Link href="/admin/tasks">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-indigo-600 rounded-lg group-hover:bg-indigo-700 transition-colors">
+                    <BarChart3 className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">報酬受取タスク管理</h3>
+                    <p className="text-gray-400 text-sm">月末アンケート設問管理</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
           {/* システム設定 */}
           <Link href="/admin/settings">
             <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
