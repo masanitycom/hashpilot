@@ -45,60 +45,58 @@ export function ReferralProfitCard({
     try {
       setLoading(true)
       setError("")
+      console.log('🚀 ReferralProfitCard: fetchReferralProfit started for userId:', userId)
 
       // 昨日の日付を取得（7/16）
       const yesterday = new Date()
       yesterday.setDate(yesterday.getDate() - 1)
       const yesterdayStr = yesterday.toISOString().split('T')[0]
+      console.log('📅 Target date - Yesterday:', yesterdayStr)
 
       // 今月の開始日と終了日を取得
       const now = new Date()
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
       const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
+      console.log('📅 Month range:', monthStart, 'to', monthEnd)
 
       // 紹介報酬率の定義
       const level1Rate = 0.20 // 20%
       const level2Rate = 0.10 // 10%
       const level3Rate = 0.05 // 5%
 
-      // 既存の紹介報酬データを取得
-      const { data: referralData, error: referralError } = await supabase
-        .from('user_daily_profit')
-        .select('date, referral_profit')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
+      // 各レベルの実際の紹介者IDを取得
+      console.log('🔍 Fetching referral user IDs...')
+      const level1UserIds = await getDirectReferrals(userId)
+      const level2UserIds = await getLevel2Referrals(userId)
+      const level3UserIds = await getLevel3Referrals(userId)
 
-      if (referralError) {
-        throw referralError
-      }
+      console.log('Level 1 referrals:', level1UserIds)
+      console.log('Level 2 referrals:', level2UserIds)
+      console.log('Level 3 referrals:', level3UserIds)
 
-      let totalYesterdayReferral = 0
-      let totalMonthlyReferral = 0
+      // 各レベルの紹介者の個人利益を取得し、報酬率を適用
+      const level1Profits = await getReferralProfits(level1UserIds, monthStart, monthEnd, yesterdayStr)
+      const level2Profits = await getReferralProfits(level2UserIds, monthStart, monthEnd, yesterdayStr)
+      const level3Profits = await getReferralProfits(level3UserIds, monthStart, monthEnd, yesterdayStr)
 
-      if (referralData) {
-        referralData.forEach(row => {
-          const profit = parseFloat(row.referral_profit) || 0
-          
-          if (row.date === '2025-07-16') {
-            totalYesterdayReferral += profit
-          }
-          
-          totalMonthlyReferral += profit
-        })
-      }
+      console.log('Level 1 profits:', level1Profits)
+      console.log('Level 2 profits:', level2Profits)
+      console.log('Level 3 profits:', level3Profits)
 
-      // 紹介報酬率に基づいて分配（20%:10%:5% = 4:2:1の比率）
-      const totalRatio = 4 + 2 + 1 // 7
+      // 正しい紹介報酬計算: 各レベルの個人利益 × 報酬率
+      const level1Yesterday = level1Profits.yesterday * level1Rate
+      const level1Monthly = level1Profits.monthly * level1Rate
       
-      const level1Yesterday = totalYesterdayReferral * (4 / totalRatio)  // 20%分
-      const level1Monthly = totalMonthlyReferral * (4 / totalRatio)
+      const level2Yesterday = level2Profits.yesterday * level2Rate
+      const level2Monthly = level2Profits.monthly * level2Rate
       
-      const level2Yesterday = totalYesterdayReferral * (2 / totalRatio)  // 10%分
-      const level2Monthly = totalMonthlyReferral * (2 / totalRatio)
-      
-      const level3Yesterday = totalYesterdayReferral * (1 / totalRatio)  // 5%分
-      const level3Monthly = totalMonthlyReferral * (1 / totalRatio)
+      const level3Yesterday = level3Profits.yesterday * level3Rate
+      const level3Monthly = level3Profits.monthly * level3Rate
+
+      console.log('Calculated referral profits:')
+      console.log('L1 Yesterday:', level1Yesterday, 'L1 Monthly:', level1Monthly)
+      console.log('L2 Yesterday:', level2Yesterday, 'L2 Monthly:', level2Monthly)
+      console.log('L3 Yesterday:', level3Yesterday, 'L3 Monthly:', level3Monthly)
 
       const totalYesterdayReferralProfit = level1Yesterday + level2Yesterday + level3Yesterday
       const totalMonthlyReferralProfit = level1Monthly + level2Monthly + level3Monthly
@@ -124,26 +122,54 @@ export function ReferralProfitCard({
     }
   }
 
-  // 指定されたユーザーIDリストの利益を取得
-  const getReferralProfits = async (userIds: string[], monthStart: string, monthEnd: string) => {
+  // 指定されたユーザーIDリストの利益を取得（運用開始日チェック付き）
+  const getReferralProfits = async (userIds: string[], monthStart: string, monthEnd: string, yesterdayStr: string) => {
     if (userIds.length === 0) {
       return { yesterday: 0, monthly: 0 }
     }
 
+    // NFT承認済みユーザーのみフィルター（簡易版）
+    console.log('🔍 Checking NFT approval status for users:', userIds)
+    const { data: usersData, error: usersError } = await supabase
+      .from('users')
+      .select('user_id, has_approved_nft')
+      .in('user_id', userIds)
+      .eq('has_approved_nft', true)
+
+    if (usersError) {
+      console.error('❌ Error fetching user approval status:', usersError)
+      return { yesterday: 0, monthly: 0 }
+    }
+
+    console.log('✅ NFT approved users found:', usersData)
+
+    // NFT承認済みユーザーIDを取得
+    const eligibleUserIds = usersData.map(user => user.user_id)
+
+    console.log('✅ Eligible users for profit calculation:', eligibleUserIds)
+
+    if (eligibleUserIds.length === 0) {
+      console.log('⚠️ No eligible users found')
+      return { yesterday: 0, monthly: 0 }
+    }
+
+    console.log('📊 Fetching profit data for users:', eligibleUserIds)
+    console.log('📊 Date range:', monthStart, 'to', monthEnd)
+    
     const { data, error } = await supabase
       .from('user_daily_profit')
       .select('date, daily_profit, user_id')
-      .in('user_id', userIds)
+      .in('user_id', eligibleUserIds)
       .gte('date', monthStart)
       .lte('date', monthEnd)
 
     if (error) {
-      console.error('Error fetching referral profits:', error)
+      console.error('❌ Error fetching referral profits:', error)
       return { yesterday: 0, monthly: 0 }
     }
 
-    console.log('Raw data for userIds:', userIds)
-    console.log('Raw data result:', data)
+    console.log('✅ Raw profit data for eligible users:', data)
+    console.log('📊 Data count:', data?.length || 0)
 
     let yesterday = 0
     let monthly = 0
@@ -151,8 +177,8 @@ export function ReferralProfitCard({
     data.forEach(row => {
       const profit = parseFloat(row.daily_profit) || 0
       
-      // 昨日の利益（7/16）
-      if (row.date === '2025-07-16') {
+      // 昨日の利益
+      if (row.date === yesterdayStr) {
         yesterday += profit
       }
       
