@@ -40,7 +40,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
       // user_daily_profitテーブルから昨日の確定利益と日利設定を取得
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
-        .select('daily_profit, base_amount, user_rate, yield_rate')
+        .select('daily_profit, base_amount, user_rate')
         .eq('user_id', userId)
         .eq('date', yesterdayStr)
         .single()
@@ -55,10 +55,10 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         }
       } else {
         const profitValue = parseFloat(profitData?.daily_profit) || 0
-        const actualYieldRate = parseFloat(profitData?.yield_rate) || 0
+        const userRate = parseFloat(profitData?.user_rate) || 0
         
         setProfit(profitValue)
-        setYieldRate(actualYieldRate * 100) // yield_rate（実際の日利率）をパーセント表示
+        setYieldRate(userRate * 100) // ユーザー利率をパーセント表示
       }
     } catch (err: any) {
       console.error("昨日の利益取得エラー:", err)
@@ -74,7 +74,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
     return (
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader className="pb-3">
-          <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定利益</CardTitle>
+          <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定日利</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-2">
@@ -89,7 +89,7 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
   return (
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader className="pb-3">
-        <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定利益</CardTitle>
+        <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定日利</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-2">
@@ -99,19 +99,18 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
             <TrendingDown className="h-5 w-5 text-red-400" />
           )}
           <div className="flex flex-col">
-            <span className={`text-2xl font-bold ${profit >= 0 ? "text-green-400" : "text-red-400"}`}>
-              ${profit >= 0 ? "+" : ""}
-              {profit.toFixed(3)}
-            </span>
             {yieldRate !== 0 && (
-              <span className="text-sm text-gray-400">
-                日利: {yieldRate.toFixed(3)}%
+              <span className={`text-2xl font-bold ${yieldRate >= 0 ? "text-green-400" : "text-red-400"}`}>
+                {yieldRate >= 0 ? "+" : ""}{yieldRate.toFixed(3)}%
               </span>
             )}
+            <span className={`text-sm ${profit >= 0 ? "text-green-300" : "text-red-300"}`}>
+              確定利益: ${profit >= 0 ? "+" : ""}{profit.toFixed(3)}
+            </span>
           </div>
         </div>
         <p className="text-xs text-gray-500 mt-1">
-          {error ? error : "前日の確定済み利益"}
+          {error ? error : "前日のユーザー受取率"}
         </p>
       </CardContent>
     </Card>
