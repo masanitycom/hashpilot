@@ -335,8 +335,7 @@ export default function AdminTasksPage() {
                 </Button>
                 <Button
                   onClick={() => setShowCreateForm(false)}
-                  variant="outline"
-                  className="border-gray-600 text-gray-300"
+                  className="bg-gray-600 hover:bg-gray-700 text-white"
                 >
                   <X className="h-4 w-4 mr-2" />
                   キャンセル
@@ -396,8 +395,7 @@ export default function AdminTasksPage() {
                         <Button
                           onClick={() => setEditingQuestion(null)}
                           size="sm"
-                          variant="outline"
-                          className="border-gray-600 text-gray-300"
+                          className="bg-gray-600 hover:bg-gray-700 text-white"
                         >
                           <X className="h-4 w-4 mr-2" />
                           キャンセル
@@ -422,8 +420,11 @@ export default function AdminTasksPage() {
                           <Button
                             onClick={() => toggleQuestionStatus(question)}
                             size="sm"
-                            variant="outline"
-                            className="border-gray-600 text-gray-300"
+                            className={`${
+                              question.is_active 
+                                ? "bg-red-600 hover:bg-red-700 text-white" 
+                                : "bg-green-600 hover:bg-green-700 text-white"
+                            }`}
                             disabled={processing}
                           >
                             {question.is_active ? "無効にする" : "有効にする"}
@@ -431,16 +432,14 @@ export default function AdminTasksPage() {
                           <Button
                             onClick={() => setEditingQuestion(question)}
                             size="sm"
-                            variant="outline"
-                            className="border-gray-600 text-gray-300"
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button
                             onClick={() => handleDeleteQuestion(question.id)}
                             size="sm"
-                            variant="outline"
-                            className="border-red-600 text-red-300"
+                            className="bg-red-600 hover:bg-red-700 text-white"
                             disabled={processing}
                           >
                             <Trash2 className="h-4 w-4" />
