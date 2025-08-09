@@ -614,7 +614,7 @@ const LazyLoadedContent = ({ userData, userStats }: { userData: UserData | null,
             <div className="flex items-center space-x-1">
               <DollarSign className="h-4 w-4 text-green-400 flex-shrink-0" />
               <span className="text-base md:text-xl lg:text-2xl font-bold text-green-400 truncate">
-                ${userStats?.total_investment.toLocaleString()}
+                ${(userStats?.total_investment || 0).toLocaleString()}
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-1">{Math.floor((userData?.total_purchases || 0) / 1100)} NFT保有</p>
@@ -655,7 +655,7 @@ const LazyLoadedContent = ({ userData, userStats }: { userData: UserData | null,
             <div className="flex items-center space-x-1">
               <Gift className="h-4 w-4 text-orange-400 flex-shrink-0" />
               <span className="text-base md:text-xl lg:text-2xl font-bold text-orange-400 truncate">
-                ${userStats?.total_referral_investment.toLocaleString()}
+                ${(userStats?.total_referral_investment || 0).toLocaleString()}
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-1">報酬の基準額</p>
@@ -754,7 +754,7 @@ const LevelStats = ({ userStats }: { userStats: UserStats | null }) => (
             </div>
           </div>
           <div className="text-xl font-bold text-blue-400 truncate">
-            ${userStats?.level1_investment.toLocaleString()}
+            ${(userStats?.level1_investment || 0).toLocaleString()}
           </div>
         </div>
 
@@ -767,7 +767,7 @@ const LevelStats = ({ userStats }: { userStats: UserStats | null }) => (
             </div>
           </div>
           <div className="text-xl font-bold text-green-400 truncate">
-            ${userStats?.level2_investment.toLocaleString()}
+            ${(userStats?.level2_investment || 0).toLocaleString()}
           </div>
         </div>
 
@@ -780,7 +780,7 @@ const LevelStats = ({ userStats }: { userStats: UserStats | null }) => (
             </div>
           </div>
           <div className="text-xl font-bold text-purple-400 truncate">
-            ${userStats?.level3_investment.toLocaleString()}
+            ${(userStats?.level3_investment || 0).toLocaleString()}
           </div>
         </div>
       </div>

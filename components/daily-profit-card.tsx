@@ -28,41 +28,41 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
 
       if (!userId) {
         setError("ユーザーIDが見つかりません")
+        setProfit(0)
+        setYieldRate(0)
         return
       }
 
-      // 昨日の日付を取得（実際の昨日）
-      const yesterday = new Date()
-      yesterday.setDate(yesterday.getDate() - 1)
-      const yesterdayStr = yesterday.toISOString().split('T')[0]
-
-
-      // user_daily_profitテーブルから昨日の確定利益と日利設定を取得
+      // まずuser_daily_profitテーブルの存在を確認
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
         .select('daily_profit, base_amount, user_rate')
         .eq('user_id', userId)
-        .eq('date', yesterdayStr)
-        .single()
+        .order('date', { ascending: false })
+        .limit(1)
+        .maybeSingle()
 
       if (profitError) {
-        // データが見つからない場合は0として扱う
-        if (profitError.code === 'PGRST116') {
-          setProfit(0)
-          setYieldRate(0)
-        } else {
-          throw profitError
-        }
-      } else {
-        const profitValue = parseFloat(profitData?.daily_profit) || 0
-        const userRate = parseFloat(profitData?.user_rate) || 0
+        console.log('user_daily_profit table access error:', profitError)
+        // テーブルが存在しないか、アクセスできない場合はデフォルト値を設定
+        setProfit(0)
+        setYieldRate(0)
+        setError("利益データ未設定")
+      } else if (profitData) {
+        const profitValue = parseFloat(profitData.daily_profit) || 0
+        const userRate = parseFloat(profitData.user_rate) || 0
         
         setProfit(profitValue)
         setYieldRate(userRate * 100) // ユーザー利率をパーセント表示
+      } else {
+        // データが存在しない場合
+        setProfit(0)
+        setYieldRate(0)
+        setError("利益データ未生成")
       }
     } catch (err: any) {
       console.error("昨日の利益取得エラー:", err)
-      setError("データの取得に失敗しました")
+      setError("利益データ読み込み中")
       setProfit(0)
       setYieldRate(0)
     } finally {
