@@ -156,10 +156,19 @@ export function ReferralTreeOptimized({ userId }: ReferralTreeProps) {
   const [showTree, setShowTree] = useState(false)
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768)
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    const checkIsMobile = () => {
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth < 768)
+      }
+    }
+    
+    checkIsMobile()
+    
+    if (typeof window !== 'undefined') {
+      const handleResize = () => setIsMobile(window.innerWidth < 768)
+      window.addEventListener("resize", handleResize)
+      return () => window.removeEventListener("resize", handleResize)
+    }
   }, [])
 
   const fetchReferralTree = useCallback(async () => {

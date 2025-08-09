@@ -224,19 +224,37 @@ export default function OptimizedDashboardPage() {
         .select("user_id, total_purchases, referrer_user_id")
         .gt("total_purchases", 0)
 
-      if (allUsersError) throw allUsersError
+      if (allUsersError) {
+        console.error("All users fetch error:", allUsersError)
+        throw allUsersError
+      }
+
+      if (!allUsers || allUsers.length === 0) {
+        setUserStats({
+          total_investment: totalInvestment,
+          direct_referrals: 0,
+          total_referrals: 0,
+          total_referral_investment: 0,
+          level4_plus_referrals: 0,
+          level4_plus_investment: 0,
+          level1_investment: 0,
+          level2_investment: 0,
+          level3_investment: 0,
+        })
+        return
+      }
 
       // メモリ内で階層構造を構築
-      const userMap = new Map(allUsers?.map(u => [u.user_id, u]) || [])
+      const userMap = new Map(allUsers.map(u => [u.user_id, u]))
       
       // レベル別に分類
-      const level1 = allUsers?.filter(u => u.referrer_user_id === userRecord.user_id) || []
+      const level1 = allUsers.filter(u => u.referrer_user_id === userRecord.user_id)
       const level1Ids = new Set(level1.map(u => u.user_id))
       
-      const level2 = allUsers?.filter(u => level1Ids.has(u.referrer_user_id || '')) || []
+      const level2 = allUsers.filter(u => level1Ids.has(u.referrer_user_id || ''))
       const level2Ids = new Set(level2.map(u => u.user_id))
       
-      const level3 = allUsers?.filter(u => level2Ids.has(u.referrer_user_id || '')) || []
+      const level3 = allUsers.filter(u => level2Ids.has(u.referrer_user_id || ''))
       const level3Ids = new Set(level3.map(u => u.user_id))
       
       // レベル4以降を計算（再帰的に最大10レベルまで）
@@ -244,7 +262,7 @@ export default function OptimizedDashboardPage() {
       let currentLevelIds = level3Ids
       
       for (let level = 4; level <= 10; level++) {
-        const nextLevel = allUsers?.filter(u => currentLevelIds.has(u.referrer_user_id || '')) || []
+        const nextLevel = allUsers.filter(u => currentLevelIds.has(u.referrer_user_id || ''))
         if (nextLevel.length === 0) break
         
         level4Plus.push(...nextLevel)
@@ -351,7 +369,7 @@ export default function OptimizedDashboardPage() {
           <CardContent className="space-y-4">
             <p className="text-white">{error}</p>
             <div className="flex space-x-2">
-              <Button onClick={() => window.location.reload()} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+              <Button onClick={() => typeof window !== 'undefined' && window.location.reload()} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
                 再読み込み
               </Button>
               <Link href="/nft">
