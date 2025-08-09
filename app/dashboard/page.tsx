@@ -346,10 +346,23 @@ export default function OptimizedDashboardPage() {
       const coinwDismissed = localStorage.getItem('coinw_alert_dismissed') === 'true'
       const nftAddressDismissed = localStorage.getItem('nft_address_alert_dismissed') === 'true'
       
+      console.log('Alert check:', {
+        userHasCoinwUid,
+        userHasNftAddress,
+        coinwDismissed,
+        nftAddressDismissed
+      })
+      
+      // CoinW UIDアラートを優先表示
       if (!userHasCoinwUid && !coinwDismissed) {
         setShowCoinwAlert(true)
+        setShowNftAddressAlert(false)
       } else if (!userHasNftAddress && !nftAddressDismissed) {
-        setShowNftAddressAlert(true)
+        setShowNftAddressAlert(true)  
+        setShowCoinwAlert(false)
+      } else {
+        setShowCoinwAlert(false)
+        setShowNftAddressAlert(false)
       }
     }
   }, [userData, loading, userHasCoinwUid, userHasNftAddress])
@@ -432,6 +445,18 @@ export default function OptimizedDashboardPage() {
                   出金状況
                 </Button>
               </Link>
+              <Button 
+                onClick={() => {
+                  localStorage.removeItem('coinw_alert_dismissed')
+                  localStorage.removeItem('nft_address_alert_dismissed')
+                  window.location.reload()
+                }} 
+                variant="outline" 
+                size="sm" 
+                className="text-gray-300 hover:text-white mr-2"
+              >
+                テスト
+              </Button>
               <Button onClick={handleLogout} variant="ghost" size="sm" className="text-gray-300 hover:text-white">
                 <LogOut className="h-4 w-4 mr-2" />
                 ログアウト
