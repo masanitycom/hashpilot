@@ -332,31 +332,25 @@ export default function OptimizedDashboardPage() {
 
   const handleCoinwAlertClose = () => {
     setShowCoinwAlert(false)
-    localStorage.setItem('coinw_alert_dismissed', 'true')
     
     // CoinW UIDアラートを閉じた後、NFTアドレスが設定されていない場合はNFTアドレスアラートを表示
-    if (!userHasNftAddress && localStorage.getItem('nft_address_alert_dismissed') !== 'true') {
+    if (!userHasNftAddress) {
       setTimeout(() => setShowNftAddressAlert(true), 300) // 少し遅延して表示
     }
   }
 
   const handleNftAddressAlertClose = () => {
     setShowNftAddressAlert(false)
-    localStorage.setItem('nft_address_alert_dismissed', 'true')
   }
 
-  // アラート表示の判定
+  // アラート表示の判定（毎回表示）
   useEffect(() => {
     if (userData && !loading) {
-      const coinwDismissed = localStorage.getItem('coinw_alert_dismissed') === 'true'
-      const nftAddressDismissed = localStorage.getItem('nft_address_alert_dismissed') === 'true'
-      
-      
       // CoinW UIDアラートを優先表示
-      if (!userHasCoinwUid && !coinwDismissed) {
+      if (!userHasCoinwUid) {
         setShowCoinwAlert(true)
         setShowNftAddressAlert(false)
-      } else if (!userHasNftAddress && !nftAddressDismissed) {
+      } else if (!userHasNftAddress) {
         setShowNftAddressAlert(true)  
         setShowCoinwAlert(false)
       } else {
