@@ -172,7 +172,13 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         .lte('date', monthEnd)
 
       if (profitError) {
-        throw profitError
+        console.log('user_daily_profit access error:', profitError)
+        // テーブルが存在しない場合は利益0として続行
+        if (profitError.code === '42P01' || profitError.code === 'PGRST116') {
+          // テーブル不存在またはデータなしの場合
+        } else {
+          throw profitError
+        }
       }
 
       // 紹介報酬を計算するための紹介者データを取得

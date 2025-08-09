@@ -62,9 +62,10 @@ export function TotalProfitCard({
         .select('daily_profit')
         .eq('user_id', userId)
         .eq('date', yesterdayStr)
-        .single()
+        .maybeSingle()
 
-      if (yesterdayError && yesterdayError.code !== 'PGRST116') {
+      if (yesterdayError && yesterdayError.code !== 'PGRST116' && yesterdayError.code !== '42P01') {
+        console.log('Yesterday total profit error:', yesterdayError)
         throw yesterdayError
       }
 
@@ -76,7 +77,8 @@ export function TotalProfitCard({
         .gte('date', monthStart)
         .lte('date', monthEnd)
 
-      if (monthlyError && monthlyError.code !== 'PGRST116') {
+      if (monthlyError && monthlyError.code !== 'PGRST116' && monthlyError.code !== '42P01') {
+        console.log('Monthly total profit error:', monthlyError)
         throw monthlyError
       }
 

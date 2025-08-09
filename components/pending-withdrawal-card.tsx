@@ -113,7 +113,10 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       .in('user_id', eligibleUserIds)
       .gte('date', monthStart)
       .lte('date', monthEnd)
-    if (error) return 0
+    if (error) {
+      console.log('getReferralProfits error:', error)
+      return 0
+    }
     return data.reduce((sum, row) => sum + (parseFloat(row.daily_profit) || 0), 0)
   }
 
@@ -166,7 +169,13 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
         .lte('date', monthEnd)
 
       if (profitError) {
-        throw profitError
+        console.log('user_daily_profit access error:', profitError)
+        // テーブルが存在しない場合は利益0として続行
+        if (profitError.code === '42P01' || profitError.code === 'PGRST116') {
+          // テーブル不存在またはデータなしの場合
+        } else {
+          throw profitError
+        }
       }
 
       // 個人利益を計算
