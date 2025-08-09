@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X, Coins, Settings, AlertCircle } from "lucide-react"
 import { supabase } from "@/lib/supabase"
-import { ReferralTree } from "@/components/referral-tree"
+import { ReferralTreeOptimized } from "@/components/referral-tree-optimized"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
 import { DailyProfitCard } from "@/components/daily-profit-card"
 import { LatestProfitCard } from "@/components/latest-profit-card"
@@ -751,7 +751,7 @@ export default function DashboardPage() {
 
         {/* 紹介ツリーセクション */}
         <div className="mb-6 md:mb-8">
-          <ReferralTree userId={userData?.user_id || ""} />
+          <ReferralTreeOptimized userId={userData?.user_id || ""} />
         </div>
 
         {/* レベル別投資額統計セクション */}
