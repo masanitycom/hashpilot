@@ -261,7 +261,7 @@ export default function DashboardPage() {
       }
 
       // 個人投資額
-      const totalInvestment = Math.floor((userRecord.total_purchases || 0) / 1000) * 1000
+      const totalInvestment = Math.floor((userRecord.total_purchases || 0) / 1100) * 1000
 
       // 直接紹介者数を取得（Level1）
       const { data: directReferrals, error: directError } = await supabase
@@ -275,7 +275,7 @@ export default function DashboardPage() {
 
       const directCount = directReferrals ? directReferrals.length : 0
       const level1Investment = directReferrals
-        ? directReferrals.reduce((sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000, 0)
+        ? directReferrals.reduce((sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1100) * 1000, 0)
         : 0
 
       // 間接紹介者数を取得（レベル2とレベル3）
@@ -297,7 +297,7 @@ export default function DashboardPage() {
           if (!level2Error && level2Refs) {
             totalReferrals += level2Refs.length
             const level2InvestmentAmount = level2Refs.reduce(
-              (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
+              (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1100) * 1000,
               0,
             )
             level2Investment += level2InvestmentAmount
@@ -313,7 +313,7 @@ export default function DashboardPage() {
               if (!level3Error && level3Refs) {
                 totalReferrals += level3Refs.length
                 const level3InvestmentAmount = level3Refs.reduce(
-                  (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
+                  (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1100) * 1000,
                   0,
                 )
                 level3Investment += level3InvestmentAmount
@@ -339,12 +339,12 @@ export default function DashboardPage() {
         if (!error && refs && refs.length > 0) {
           level4PlusReferrals += refs.length
           level4PlusInvestment += refs.reduce(
-            (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
+            (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1100) * 1000,
             0,
           )
           totalReferrals += refs.length
           totalReferralInvestment += refs.reduce(
-            (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1000) * 1000,
+            (sum, ref) => sum + Math.floor((ref.total_purchases || 0) / 1100) * 1000,
             0,
           )
 
@@ -371,7 +371,7 @@ export default function DashboardPage() {
     } catch (error) {
       console.error("Stats calculation error:", error)
       setUserStats({
-        total_investment: Math.floor((userRecord.total_purchases || 0) / 1000) * 1000,
+        total_investment: Math.floor((userRecord.total_purchases || 0) / 1100) * 1000,
         direct_referrals: 0,
         total_referrals: 0,
         total_referral_investment: 0,
@@ -446,7 +446,7 @@ export default function DashboardPage() {
     )
   }
 
-  const nftCount = Math.floor((userData?.total_purchases || 0) / 1000)
+  const nftCount = Math.floor((userData?.total_purchases || 0) / 1100)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
