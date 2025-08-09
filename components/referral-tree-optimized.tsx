@@ -84,7 +84,7 @@ const TreeNode = memo(({
         {!isMobile && (
           <div className="text-right ml-2">
             <div className="text-green-400 font-semibold text-sm">
-              ${node.total_investment.toLocaleString()}
+              ${(node.total_investment || 0).toLocaleString()}
             </div>
             {hasChildren && (
               <div className="text-gray-400 text-xs">
@@ -384,7 +384,7 @@ export function ReferralTreeOptimized({ userId }: ReferralTreeProps) {
           <div className="bg-gray-800 rounded-lg p-2 text-center">
             <div className="text-xs text-gray-400">総投資額</div>
             <div className="text-lg font-bold text-green-400">
-              ${stats.totalInvestment.toLocaleString()}
+              ${(stats.totalInvestment || 0).toLocaleString()}
             </div>
           </div>
           <div className="bg-gray-800 rounded-lg p-2 text-center">

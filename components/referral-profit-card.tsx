@@ -273,7 +273,7 @@ export function ReferralProfitCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-xs text-gray-400 mb-3">
-          Level1-3投資額: ${totalLevel3Investment.toLocaleString()}
+          Level1-3投資額: ${(totalLevel3Investment || 0).toLocaleString()}
         </div>
         
         {/* 昨日の紹介報酬 */}

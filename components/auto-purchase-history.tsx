@@ -160,7 +160,7 @@ export function AutoPurchaseHistory({ userId }: AutoPurchaseHistoryProps) {
                       {formatDate(purchase.purchase_date)}
                     </span>
                     <span className="text-green-400 font-medium">
-                      ${Number(purchase.amount_usd).toLocaleString()}
+                      ${(Number(purchase.amount_usd) || 0).toLocaleString()}
                     </span>
                   </div>
                 </div>

@@ -286,8 +286,8 @@ export function TotalProfitCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-xs text-gray-400 mb-3 space-y-1">
-          <div>個人投資: ${totalInvestment.toLocaleString()}</div>
-          <div>紹介投資: ${totalReferralInvestment.toLocaleString()}</div>
+          <div>個人投資: ${(totalInvestment || 0).toLocaleString()}</div>
+          <div>紹介投資: ${(totalReferralInvestment || 0).toLocaleString()}</div>
         </div>
         
         {/* 昨日の合計利益 */}
