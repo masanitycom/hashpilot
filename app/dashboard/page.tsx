@@ -729,22 +729,19 @@ export default function DashboardPage() {
         {/* NFT買い取り申請リンク */}
         <div className="mb-6 md:mb-8">
           <Card className="bg-gray-900/50 border-gray-700">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-purple-600 rounded-lg">
-                    <Coins className="h-6 w-6 text-white" />
+            <CardContent className="p-4 md:p-6">
+              <div className="flex items-center justify-between flex-wrap gap-3 md:gap-4">
+                <div className="flex items-center space-x-3 md:space-x-4">
+                  <div className="p-2 md:p-3 bg-purple-600 rounded-lg flex-shrink-0">
+                    <Coins className="h-5 w-5 md:h-6 md:w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white mb-2">NFT買い取り申請</h3>
-                    <p className="text-gray-400 mb-4">
-                      保有中のNFTを買い取り申請できます。
-                    </p>
+                    <h3 className="text-lg md:text-xl font-bold text-white">NFT買い取り申請</h3>
                   </div>
                 </div>
                 <Link href="/nft-buyback">
-                  <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
-                    買い取り申請ページへ
+                  <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm md:text-base px-4 md:px-6 py-2 md:py-3">
+                    申請ページへ
                   </Button>
                 </Link>
               </div>
