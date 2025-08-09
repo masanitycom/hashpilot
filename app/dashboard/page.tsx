@@ -191,7 +191,7 @@ export default function OptimizedDashboardPage() {
       
       // CoinW UIDとNFTアドレスの確認（空文字も false として扱う）
       setUserHasCoinwUid(!!userRecord.coinw_uid && userRecord.coinw_uid.trim() !== '')
-      setUserHasNftAddress(!!userRecord.nft_address && userRecord.nft_address.trim() !== '')
+      setUserHasNftAddress(!!userRecord.nft_address && typeof userRecord.nft_address === 'string' && userRecord.nft_address.trim() !== '')
       
       // 並列でデータ取得を開始
       await Promise.all([
@@ -333,6 +333,11 @@ export default function OptimizedDashboardPage() {
   const handleCoinwAlertClose = () => {
     setShowCoinwAlert(false)
     localStorage.setItem('coinw_alert_dismissed', 'true')
+    
+    // CoinW UIDアラートを閉じた後、NFTアドレスが設定されていない場合はNFTアドレスアラートを表示
+    if (!userHasNftAddress && localStorage.getItem('nft_address_alert_dismissed') !== 'true') {
+      setTimeout(() => setShowNftAddressAlert(true), 300) // 少し遅延して表示
+    }
   }
 
   const handleNftAddressAlertClose = () => {
