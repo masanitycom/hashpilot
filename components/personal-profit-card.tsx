@@ -21,7 +21,7 @@ export function PersonalProfitCard({ userId, totalInvestment }: PersonalProfitCa
   const [error, setError] = useState("")
 
   useEffect(() => {
-    if (userId && totalInvestment > 0) {
+    if (userId) {
       fetchPersonalProfit()
     }
   }, [userId, totalInvestment])

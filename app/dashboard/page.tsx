@@ -189,9 +189,9 @@ export default function OptimizedDashboardPage() {
       
       setUserData(userRecord)
       
-      // CoinW UIDとNFTアドレスの確認
-      setUserHasCoinwUid(!!userRecord.coinw_uid)
-      setUserHasNftAddress(!!userRecord.nft_address)
+      // CoinW UIDとNFTアドレスの確認（空文字も false として扱う）
+      setUserHasCoinwUid(!!userRecord.coinw_uid && userRecord.coinw_uid.trim() !== '')
+      setUserHasNftAddress(!!userRecord.nft_address && userRecord.nft_address.trim() !== '')
       
       // 並列でデータ取得を開始
       await Promise.all([
@@ -696,7 +696,7 @@ const DelayedContent = ({ userData, userStats }: { userData: UserData | null, us
       {/* 運用状況セクション */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <CycleStatusCard userId={userData?.user_id || ""} />
-        <PersonalProfitCard userId={userData?.user_id || ""} />
+        <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={userStats?.total_investment || 0} />
         <ReferralProfitCard userId={userData?.user_id || ""} />
       </div>
 
