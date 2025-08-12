@@ -258,12 +258,13 @@ export default function OptimizedDashboardPage() {
       const level3 = allUsers.filter(u => level2Ids.has(u.referrer_user_id || ''))
       const level3Ids = new Set(level3.map(u => u.user_id))
       
-      // レベル4以降を計算（再帰的に最大10レベルまで）
+      // レベル4以降を計算（無限レベルまで - 実際の紹介ツリーの深さまで）
       let level4Plus: any[] = []
       let currentLevelIds = new Set(level3Ids) // コピーを作成
       let allProcessedIds = new Set([...level1Ids, ...level2Ids, ...level3Ids])
       
-      for (let level = 4; level <= 10; level++) {
+      let level = 4
+      while (currentLevelIds.size > 0 && level <= 100) { // 無限ループ防止のため最大100レベル
         const nextLevel = allUsers.filter(u => 
           currentLevelIds.has(u.referrer_user_id || '') && 
           !allProcessedIds.has(u.user_id)
@@ -274,6 +275,7 @@ export default function OptimizedDashboardPage() {
         const newIds = new Set(nextLevel.map(u => u.user_id))
         newIds.forEach(id => allProcessedIds.add(id))
         currentLevelIds = newIds
+        level++
       }
 
       // 投資額計算
