@@ -264,7 +264,7 @@ export default function OptimizedDashboardPage() {
       let allProcessedIds = new Set([...level1Ids, ...level2Ids, ...level3Ids])
       
       let level = 4
-      while (currentLevelIds.size > 0 && level <= 100) { // 無限ループ防止のため最大100レベル
+      while (currentLevelIds.size > 0 && level <= 500) { // 無限ループ防止のため最大500レベル
         const nextLevel = allUsers.filter(u => 
           currentLevelIds.has(u.referrer_user_id || '') && 
           !allProcessedIds.has(u.user_id)

@@ -1,7 +1,7 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
-import { CalendarDays, TrendingUp, Clock } from "lucide-react"
+import { CalendarDays, TrendingUp, Clock, AlertCircle } from "lucide-react"
 
 interface OperationStatusProps {
   approvalDate: string | null
@@ -39,6 +39,9 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
   const isOperating = todayDateOnly >= operationStartDateOnly
   const daysUntilStart = Math.ceil((operationStartDateOnly.getTime() - todayDateOnly.getTime()) / (1000 * 60 * 60 * 24))
   
+  // システム準備中フラグ（実際の運用開始まで）
+  const isSystemPreparing = process.env.NEXT_PUBLIC_SYSTEM_PREPARING === 'true'
+  
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('ja-JP', {
       year: 'numeric',
@@ -50,7 +53,9 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
   if (variant === "compact") {
     return (
       <div className="text-xs">
-        {isOperating ? (
+        {isSystemPreparing ? (
+          <span className="text-blue-600 font-medium">準備中</span>
+        ) : isOperating ? (
           <span className="text-green-600 font-medium">運用中</span>
         ) : (
           <span className="text-orange-600">{formatDate(operationStart)}開始</span>
@@ -67,7 +72,22 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
       </div>
       
       <div className="flex items-center gap-3">
-        {isOperating ? (
+        {isSystemPreparing ? (
+          <>
+            <Badge variant="outline" className="border-blue-400 text-blue-400 bg-blue-900/20 flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              システム準備中
+            </Badge>
+            <span className="text-sm text-gray-300">
+              運用開始予定: {formatDate(operationStart)}
+              {isOperating && (
+                <span className="text-yellow-400 font-medium ml-1">
+                  (15日経過済み)
+                </span>
+              )}
+            </span>
+          </>
+        ) : isOperating ? (
           <>
             <Badge variant="default" className="bg-green-600 flex items-center gap-1">
               <TrendingUp className="h-3 w-3" />
@@ -98,6 +118,14 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
       <div className="text-xs text-gray-400">
         承認日: {formatDate(approval)}
       </div>
+      
+      {isSystemPreparing && (
+        <div className="mt-2 p-2 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+          <p className="text-xs text-blue-300">
+            ※ 現在メインシステムの準備を進めています。15日ルールは適用されますが、実際の運用開始はシステム準備完了後となります。
+          </p>
+        </div>
+      )}
     </div>
   )
 }
