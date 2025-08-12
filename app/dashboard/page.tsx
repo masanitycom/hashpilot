@@ -259,14 +259,20 @@ export default function OptimizedDashboardPage() {
       
       // レベル4以降を計算（再帰的に最大10レベルまで）
       let level4Plus: any[] = []
-      let currentLevelIds = level3Ids
+      let currentLevelIds = new Set(level3Ids) // コピーを作成
+      let allProcessedIds = new Set([...level1Ids, ...level2Ids, ...level3Ids])
       
       for (let level = 4; level <= 10; level++) {
-        const nextLevel = allUsers.filter(u => currentLevelIds.has(u.referrer_user_id || ''))
+        const nextLevel = allUsers.filter(u => 
+          currentLevelIds.has(u.referrer_user_id || '') && 
+          !allProcessedIds.has(u.user_id)
+        )
         if (nextLevel.length === 0) break
         
         level4Plus.push(...nextLevel)
-        currentLevelIds = new Set(nextLevel.map(u => u.user_id))
+        const newIds = new Set(nextLevel.map(u => u.user_id))
+        newIds.forEach(id => allProcessedIds.add(id))
+        currentLevelIds = newIds
       }
 
       // 投資額計算
