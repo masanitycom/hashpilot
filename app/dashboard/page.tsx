@@ -739,9 +739,50 @@ const DelayedContent = ({ userData, userStats }: { userData: UserData | null, us
 
       {/* レベル別統計 */}
       <LevelStats userStats={userStats} />
+      
+      {/* Level4以降の統計 */}
+      <Level4PlusStats userStats={userStats} />
     </>
   )
 }
+
+// Level4以降統計コンポーネント
+const Level4PlusStats = ({ userStats }: { userStats: UserStats | null }) => (
+  <Card className="bg-gray-900/50 border-gray-700">
+    <CardHeader>
+      <CardTitle className="text-white text-lg">Level4以降の総計</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gradient-to-r from-orange-900/20 to-orange-900/10 border border-orange-600/30 rounded-lg p-4">
+          <div className="flex items-center space-x-2 mb-3">
+            <Users className="h-6 w-6 text-orange-400 flex-shrink-0" />
+            <div>
+              <h3 className="text-sm font-semibold text-orange-400">Level4以降の人数</h3>
+              <p className="text-xs text-gray-400">Level4以降の合計人数</p>
+            </div>
+          </div>
+          <div className="text-xl font-bold text-orange-400">
+            {userStats?.level4_plus_referrals || 0}人
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-orange-900/20 to-orange-900/10 border border-orange-600/30 rounded-lg p-4">
+          <div className="flex items-center space-x-2 mb-3">
+            <DollarSign className="h-6 w-6 text-orange-400 flex-shrink-0" />
+            <div>
+              <h3 className="text-sm font-semibold text-orange-400">Level4以降の投資額</h3>
+              <p className="text-xs text-gray-400">Level4以降の投資合計</p>
+            </div>
+          </div>
+          <div className="text-xl font-bold text-orange-400 truncate">
+            ${(userStats?.level4_plus_investment || 0).toLocaleString()}
+          </div>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+)
 
 // レベル別統計コンポーネント
 const LevelStats = ({ userStats }: { userStats: UserStats | null }) => (
