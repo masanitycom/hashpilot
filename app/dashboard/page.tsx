@@ -28,6 +28,7 @@ interface UserData {
   email: string
   full_name: string | null
   coinw_uid: string | null
+  nft_receive_address: string | null
   total_purchases: number
   referrer_user_id: string | null
   created_at: string
@@ -191,7 +192,7 @@ export default function OptimizedDashboardPage() {
       
       // CoinW UIDとNFTアドレスの確認（空文字も false として扱う）
       setUserHasCoinwUid(!!userRecord.coinw_uid && userRecord.coinw_uid.trim() !== '')
-      setUserHasNftAddress(!!userRecord.nft_address && typeof userRecord.nft_address === 'string' && userRecord.nft_address.trim() !== '')
+      setUserHasNftAddress(!!userRecord.nft_receive_address && typeof userRecord.nft_receive_address === 'string' && userRecord.nft_receive_address.trim() !== '')
       
       // 並列でデータ取得を開始
       await Promise.all([
