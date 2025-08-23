@@ -227,7 +227,7 @@ export function formatUnifiedStats(stats: UnifiedReferralStats) {
     // ダッシュボード用（購入者ベース）
     dashboard: {
       totalReferrals: stats.purchasedReferrals,
-      totalInvestment: stats.totalInvestment,
+      totalInvestment: stats.totalInvestment, // 運用額（手数料除く）
       level4Plus: stats.levelBreakdown
         .filter(l => l.level >= 4)
         .reduce((sum, l) => sum + l.purchasedCount, 0),
@@ -236,10 +236,10 @@ export function formatUnifiedStats(stats: UnifiedReferralStats) {
         .reduce((sum, l) => sum + l.investment, 0)
     },
     
-    // 管理画面用（全紹介者ベース）
+    // 管理画面用（全紹介者ベース）- 運用額で統一
     admin: {
       totalReferrals: stats.totalReferrals,
-      totalInvestment: stats.actualPurchases, // 実購入額
+      totalInvestment: stats.totalInvestment, // 運用額（手数料除く）
       purchasedCount: stats.purchasedReferrals,
       unpurchasedCount: stats.unpurchasedReferrals
     },
@@ -247,7 +247,8 @@ export function formatUnifiedStats(stats: UnifiedReferralStats) {
     // 詳細情報
     details: {
       maxLevel: stats.maxLevel,
-      levelBreakdown: stats.levelBreakdown
+      levelBreakdown: stats.levelBreakdown,
+      actualPurchases: stats.actualPurchases // 参考用（手数料含む）
     }
   }
 }
