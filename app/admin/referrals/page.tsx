@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Users, Shield, RefreshCw, Search, TrendingUp, Network } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { UnifiedReferralCalculator } from "@/lib/unified-referral-calculator"
+import { AdminReferralTreeFixed } from "@/components/admin-referral-tree-fixed"
 import Link from "next/link"
 
 interface User {
@@ -46,9 +47,6 @@ export default function AdminReferralsPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedUserId, setSelectedUserId] = useState("")
-  const [treeData, setTreeData] = useState<ReferralNode[]>([])
-  const [treeStats, setTreeStats] = useState<ReferralStats | null>(null)
-  const [treeLoading, setTreeLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState("")
@@ -384,7 +382,6 @@ export default function AdminReferralsPage() {
                           }`}
                           onClick={() => {
                             setSelectedUserId(user.user_id)
-                            fetchReferralTree(user.user_id)
                           }}
                         >
                           <div className="flex items-center justify-between">
@@ -409,59 +406,25 @@ export default function AdminReferralsPage() {
                 </CardContent>
               </Card>
 
-              {/* 紹介ツリー表示 */}
-              <Card className="bg-gray-700 border-gray-600">
-                <CardHeader>
-                  <CardTitle className="text-white text-lg flex items-center">
-                    <TrendingUp className="w-5 h-5 mr-2" />
-                    紹介ツリー
-                    {selectedUserId && <span className="ml-2 text-blue-400">- {selectedUserId}</span>}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="max-h-96 overflow-y-auto">
-                  {!selectedUserId ? (
+              {/* 紹介ツリー表示 - 修正版コンポーネントを使用 */}
+              {selectedUserId ? (
+                <AdminReferralTreeFixed userId={selectedUserId} />
+              ) : (
+                <Card className="bg-gray-700 border-gray-600">
+                  <CardHeader>
+                    <CardTitle className="text-white text-lg flex items-center">
+                      <TrendingUp className="w-5 h-5 mr-2" />
+                      紹介ツリー
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     <div className="text-center py-8 text-gray-400">
                       <Network className="w-12 h-12 mx-auto mb-4 opacity-50" />
                       <p>左側のユーザーを選択して紹介ツリーを表示</p>
                     </div>
-                  ) : treeLoading ? (
-                    <div className="text-center py-8">
-                      <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-4 text-blue-400" />
-                      <p className="text-white">紹介ツリーを読み込み中...</p>
-                    </div>
-                  ) : treeData.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400">
-                      <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                      <p>このユーザーには紹介者がいません</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      {/* 統計情報 */}
-                      {treeStats && (
-                        <div className="bg-gray-600 rounded-lg p-4 mb-4">
-                          <div className="grid grid-cols-2 gap-4 text-center">
-                            <div>
-                              <div className="text-2xl font-bold text-blue-400">
-                                {treeStats.total_direct_referrals + treeStats.total_indirect_referrals}
-                              </div>
-                              <div className="text-sm text-gray-300">総紹介人数</div>
-                            </div>
-                            <div>
-                              <div className="text-2xl font-bold text-green-400">
-                                ${treeStats.total_referral_purchases.toFixed(2)}
-                              </div>
-                              <div className="text-sm text-gray-300">総投資額</div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* ツリー表示 */}
-                      {treeData.map(renderTreeNode)}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             {/* 全体統計 */}
