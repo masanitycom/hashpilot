@@ -25,6 +25,10 @@ export interface UnifiedReferralStats {
   maxLevel: number                // 最大レベル深度
   directReferrals: number         // 直接紹介者数（Level 1）
   indirectReferrals: number       // 間接紹介者数（Level 2+）
+  
+  // 管理画面用の追加フィールド
+  personal_purchases?: number
+  subtree_total?: number
 }
 
 export interface UnifiedUser {
@@ -42,6 +46,10 @@ export interface UnifiedUser {
  */
 export class UnifiedReferralCalculator {
   private allUsers: UnifiedUser[] = []
+  
+  constructor() {
+    // コンストラクタ
+  }
   
   /**
    * 全ユーザーデータを読み込み

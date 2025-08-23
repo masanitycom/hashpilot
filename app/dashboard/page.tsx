@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X, Coins, Settings, AlertCircle } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { UnifiedReferralCalculator } from "@/lib/unified-referral-calculator"
 import { ReferralTreeOptimized } from "@/components/referral-tree-optimized"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
 import { DailyProfitCard } from "@/components/daily-profit-card"
@@ -209,7 +210,7 @@ export default function OptimizedDashboardPage() {
     }
   }
 
-  // 最適化された統計計算（単一クエリ + メモリ内処理）
+  // 統一システムによる統計計算
   const calculateStatsOptimized = useCallback(async (userRecord: UserData) => {
     try {
       setLoadingStage(3)
@@ -218,6 +219,32 @@ export default function OptimizedDashboardPage() {
 
       // 個人投資額
       const totalInvestment = Math.floor((userRecord.total_purchases || 0) / 1100) * 1000
+      
+      // 統一計算システムを使用
+      const calculator = new UnifiedReferralCalculator()
+      const unifiedStats = await calculator.calculateCompleteStats(userRecord.user_id)
+      
+      // ダッシュボード用にフォーマット
+      setUserStats({
+        total_investment: totalInvestment,
+        direct_referrals: unifiedStats.directReferrals,
+        total_referrals: unifiedStats.purchasedReferrals, // 購入者のみ
+        total_referral_investment: unifiedStats.totalInvestment, // 運用額
+        level4_plus_referrals: unifiedStats.levelBreakdown
+          .filter(l => l.level >= 4)
+          .reduce((sum, l) => sum + l.purchasedCount, 0),
+        level4_plus_investment: unifiedStats.levelBreakdown
+          .filter(l => l.level >= 4)
+          .reduce((sum, l) => sum + l.investment, 0),
+        level1_investment: unifiedStats.levelBreakdown
+          .find(l => l.level === 1)?.investment || 0,
+        level2_investment: unifiedStats.levelBreakdown
+          .find(l => l.level === 2)?.investment || 0,
+        level3_investment: unifiedStats.levelBreakdown
+          .find(l => l.level === 3)?.investment || 0,
+      })
+      
+      return // 早期リターン（以下の古いコードは実行されない）
 
       // 全ユーザーを一度に取得（大幅な最適化）
       const { data: allUsers, error: allUsersError } = await supabase
@@ -287,17 +314,7 @@ export default function OptimizedDashboardPage() {
       const level3Investment = calculateInvestment(level3)
       const level4PlusInvestment = calculateInvestment(level4Plus)
 
-      setUserStats({
-        total_investment: totalInvestment,
-        direct_referrals: level1.length,
-        total_referrals: level1.length + level2.length + level3.length + level4Plus.length,
-        total_referral_investment: level1Investment + level2Investment + level3Investment + level4PlusInvestment,
-        level4_plus_referrals: level4Plus.length,
-        level4_plus_investment: level4PlusInvestment,
-        level1_investment: level1Investment,
-        level2_investment: level2Investment,
-        level3_investment: level3Investment,
-      })
+      // この部分は統一システムで置き換え済み（上記参照）
 
     } catch (error) {
       console.error("Stats calculation error:", error)

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Users, Shield, RefreshCw, Search, TrendingUp, Network } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { UnifiedReferralCalculator } from "@/lib/unified-referral-calculator"
 import Link from "next/link"
 
 interface User {
@@ -157,32 +158,41 @@ export default function AdminReferralsPage() {
 
       console.log("Fetching referral tree for user:", userId)
 
-      // 紹介ツリーデータを取得
-      const { data: treeResult, error: treeError } = await supabase.rpc("get_referral_tree", {
-        root_user_id: userId,
-      })
-
-      if (treeError) {
-        console.error("Tree data error:", treeError)
-        throw treeError
+      // 統一計算システムを使用
+      const calculator = new UnifiedReferralCalculator()
+      const stats = await calculator.calculateCompleteStats(userId)
+      
+      // ツリーデータを構築
+      const treeNodes: ReferralNode[] = []
+      
+      // SQL関数を試す（フォールバック用）
+      try {
+        const { data: treeResult, error: treeError } = await supabase.rpc("get_referral_tree", {
+          root_user_id: userId,
+        })
+        
+        if (!treeError && treeResult) {
+          // SQL関数の結果を運用額ベースに修正
+          const correctedTreeData = treeResult.map((node: any) => ({
+            ...node,
+            personal_purchases: node.personal_purchases || 0,
+            subtree_total: node.subtree_total || 0,
+          }))
+          setTreeData(correctedTreeData)
+        }
+      } catch (sqlError) {
+        console.log("SQL関数エラー、統一システムを使用")
       }
-
-      console.log("Tree result:", treeResult)
-
-      // 統計データを取得
-      const { data: statsResult, error: statsError } = await supabase.rpc("get_referral_stats", {
-        target_user_id: userId,
-      })
-
-      if (statsError) {
-        console.error("Stats data error:", statsError)
-        // 統計エラーは無視して続行
+      
+      // 統計データを統一システムから設定
+      const unifiedStats = {
+        total_direct_referrals: stats.directReferrals,
+        total_indirect_referrals: stats.indirectReferrals,
+        total_referral_purchases: stats.totalInvestment, // 運用額
+        max_tree_depth: stats.maxLevel
       }
-
-      console.log("Stats result:", statsResult)
-
-      setTreeData(treeResult || [])
-      setTreeStats(statsResult?.[0] || null)
+      
+      setTreeStats(unifiedStats)
     } catch (error: any) {
       console.error("Error fetching referral tree:", error)
       alert(`紹介ツリーの取得に失敗しました: ${error.message}`)
@@ -193,7 +203,10 @@ export default function AdminReferralsPage() {
 
   const renderTreeNode = (node: ReferralNode) => {
     const indentLevel = (node.level_num - 1) * 20
-    const totalAmount = node.personal_purchases + node.subtree_total
+    // 運用額計算（手数料除く）
+    const personalInvestment = Math.floor(node.personal_purchases / 1100) * 1000
+    const subtreeInvestment = Math.floor(node.subtree_total / 1100) * 1000
+    const totalInvestment = personalInvestment + subtreeInvestment
 
     return (
       <div
@@ -216,16 +229,16 @@ export default function AdminReferralsPage() {
 
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div className="text-center">
-              <div className="text-gray-400">個人購入</div>
-              <div className="font-semibold text-green-400">${node.personal_purchases.toFixed(2)}</div>
+              <div className="text-gray-400">個人投資</div>
+              <div className="font-semibold text-green-400">${personalInvestment.toLocaleString()}</div>
             </div>
             <div className="text-center">
               <div className="text-gray-400">下位合計</div>
-              <div className="font-semibold text-blue-400">${node.subtree_total.toFixed(2)}</div>
+              <div className="font-semibold text-blue-400">${subtreeInvestment.toLocaleString()}</div>
             </div>
             <div className="text-center">
               <div className="text-gray-400">総合計</div>
-              <div className="font-semibold text-yellow-400">${totalAmount.toFixed(2)}</div>
+              <div className="font-semibold text-yellow-400">${totalInvestment.toLocaleString()}</div>
             </div>
           </div>
         </div>
@@ -437,7 +450,7 @@ export default function AdminReferralsPage() {
                               <div className="text-2xl font-bold text-green-400">
                                 ${treeStats.total_referral_purchases.toFixed(2)}
                               </div>
-                              <div className="text-sm text-gray-300">総購入額</div>
+                              <div className="text-sm text-gray-300">総投資額</div>
                             </div>
                           </div>
                         </div>
