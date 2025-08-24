@@ -76,9 +76,21 @@ export default function AdminYieldPage() {
   useEffect(() => {
     const yield_rate = Number.parseFloat(yieldRate) || 0
     const margin_rate = Number.parseFloat(marginRate) || 0
-    // 正しい計算式: 日利率 × (1 - マージン率/100) × 0.6
-    const after_margin = yield_rate * (1 - margin_rate / 100)
-    const calculated_user_rate = after_margin * 0.6
+    
+    // プラス/マイナスでマージンの適用方法を変更
+    let calculated_user_rate: number
+    if (yield_rate > 0) {
+      // プラスの場合: マージンを引いてから0.6を掛ける
+      const after_margin = yield_rate * (1 - margin_rate / 100)
+      calculated_user_rate = after_margin * 0.6
+    } else if (yield_rate < 0) {
+      // マイナスの場合: マージンを戻す（会社が30%補填）
+      const after_margin = yield_rate * (1 + margin_rate / 100)  // 1.3倍
+      calculated_user_rate = after_margin * 0.6
+    } else {
+      // ゼロの場合
+      calculated_user_rate = 0
+    }
     
     setUserRate(calculated_user_rate)
   }, [yieldRate, marginRate])
@@ -236,10 +248,14 @@ export default function AdminYieldPage() {
         margin_rate: Number.parseFloat(marginRate) / 100
       })
 
+      // プラス/マイナスでマージンの適用方法を変更
+      const yieldValue = Number.parseFloat(yieldRate) / 100
+      const marginValue = Number.parseFloat(marginRate) / 100  // 常にマージン率を送る（SQL側で処理）
+      
       const { data, error } = await supabase.rpc("process_daily_yield_with_cycles", {
         p_date: date,
-        p_yield_rate: Number.parseFloat(yieldRate) / 100,
-        p_margin_rate: Number.parseFloat(marginRate) / 100,
+        p_yield_rate: yieldValue,
+        p_margin_rate: marginValue,
         p_is_test_mode: false,
       })
 
@@ -361,7 +377,23 @@ export default function AdminYieldPage() {
       const totalUsers = cycleData?.length || 0
       const yield_rate = Number.parseFloat(yieldRate) / 100
       const margin_rate = Number.parseFloat(marginRate) / 100
-      const user_rate = yield_rate * (1 - margin_rate) * 0.6
+      
+      // プラス/マイナスでマージンの適用方法を変更
+      let user_rate: number
+      let company_margin_rate: number
+      
+      if (yield_rate > 0) {
+        // プラス: マージンを引く
+        user_rate = yield_rate * (1 - margin_rate) * 0.6
+        company_margin_rate = margin_rate
+      } else if (yield_rate < 0) {
+        // マイナス: マージンを戻す（会社が補填）
+        user_rate = yield_rate * (1 + margin_rate) * 0.6
+        company_margin_rate = -margin_rate  // 会社が負担
+      } else {
+        user_rate = 0
+        company_margin_rate = 0
+      }
 
       let totalUserProfit = 0
       let totalCompanyProfit = 0
@@ -369,7 +401,14 @@ export default function AdminYieldPage() {
       cycleData?.forEach((user) => {
         const baseAmount = user.total_nft_count * 1100
         const userProfit = baseAmount * user_rate
-        const companyProfit = baseAmount * margin_rate + baseAmount * (yield_rate - margin_rate) * 0.1
+        
+        // 会社利益（プラス時は利益、マイナス時は補填）
+        let companyProfit = 0
+        if (yield_rate > 0) {
+          companyProfit = baseAmount * margin_rate + baseAmount * (yield_rate - margin_rate) * 0.1
+        } else if (yield_rate < 0) {
+          companyProfit = baseAmount * company_margin_rate  // マイナス値（補填）
+        }
         
         totalUserProfit += userProfit
         totalCompanyProfit += companyProfit
@@ -888,7 +927,12 @@ export default function AdminYieldPage() {
                   {userRate.toFixed(3)}%
                 </div>
                 <p className="text-sm text-gray-400">
-                  {yieldRate}% × (1 - {marginRate}%/100) × 0.6 = ユーザー受取 {userRate.toFixed(3)}%
+                  {Number.parseFloat(yieldRate) > 0 
+                    ? `${yieldRate}% × (1 - ${marginRate}%/100) × 0.6 = ユーザー受取 ${userRate.toFixed(3)}%`
+                    : Number.parseFloat(yieldRate) < 0
+                    ? `${yieldRate}% × (1 + ${marginRate}%/100) × 0.6 = ユーザー受取 ${userRate.toFixed(3)}% (マイナス時は会社が${marginRate}%補填)`
+                    : `0% = ユーザー受取 0%`
+                  }
                 </p>
                 {stats && yieldRate && (
                   <div className="mt-2 p-3 bg-gray-700 rounded-lg">
