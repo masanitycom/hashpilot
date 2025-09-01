@@ -216,7 +216,11 @@ export function AdminReferralTreeSimple({ userId }: Props) {
         
         {isExpanded && hasChildren && (
           <div>
-            {node.children.map(child => renderNode(child, depth + 1))}
+            {console.log(`[DEBUG] レンダリング中の子ノード数: ${node.children.length}`)}
+            {node.children.map((child, index) => {
+              console.log(`[DEBUG] 子ノード ${index + 1}/${node.children.length}: ${child.user_id}`)
+              return renderNode(child, depth + 1)
+            })}
           </div>
         )}
       </div>
