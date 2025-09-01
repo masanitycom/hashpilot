@@ -50,10 +50,21 @@ export function AdminReferralTreeSimple({ userId }: Props) {
       
       console.log(`[DEBUG] 全ユーザー数: ${allUsers.length}`)
       
-      // シンプルなツリー構築（デバッグ用）
-      const buildSimpleTree = (rootId: string, level: number = 0): TreeNode | null => {
+      // 完全なツリー構築（再帰的）
+      const buildCompleteTree = (
+        rootId: string, 
+        level: number = 0,
+        visited: Set<string> = new Set()
+      ): TreeNode | null => {
+        // 循環参照を防ぐ
+        if (visited.has(rootId)) return null
+        
         const user = allUsers.find(u => u.user_id === rootId)
         if (!user) return null
+        
+        // このノードを処理済みに追加
+        const newVisited = new Set(visited)
+        newVisited.add(rootId)
         
         console.log(`[DEBUG] ユーザー処理: ${user.user_id} (Lv.${level})`)
         
@@ -61,28 +72,23 @@ export function AdminReferralTreeSimple({ userId }: Props) {
         const directReferrals = allUsers.filter(u => u.referrer_user_id === rootId)
         
         console.log(`[DEBUG] ${user.user_id} の直接紹介者: ${directReferrals.length}人`)
-        directReferrals.forEach((ref, i) => {
-          console.log(`[DEBUG]   ${i+1}. ${ref.user_id} (${ref.email})`)
-        })
+        if (level <= 2) { // レベル2までログ出力
+          directReferrals.forEach((ref, i) => {
+            console.log(`[DEBUG]   ${i+1}. ${ref.user_id} (${ref.email})`)
+          })
+        }
         
         const children: TreeNode[] = []
         let subtreeTotal = 0
         
-        // 直接の子ノードのみ構築（再帰なし）
+        // 再帰的に全ての子ノードを構築
         for (const referral of directReferrals) {
-          const childPersonalInvestment = Math.floor(referral.total_purchases / 1100) * 1000
-          const childNode: TreeNode = {
-            user_id: referral.user_id,
-            email: referral.email,
-            level: level + 1,
-            personalInvestment: childPersonalInvestment,
-            subtreeTotal: 0, // 今回は子の子は計算しない
-            totalAmount: childPersonalInvestment,
-            children: []
+          const childNode = buildCompleteTree(referral.user_id, level + 1, newVisited)
+          if (childNode) {
+            children.push(childNode)
+            subtreeTotal += childNode.totalAmount
+            console.log(`[DEBUG] 子ノード追加: ${childNode.user_id}`)
           }
-          children.push(childNode)
-          subtreeTotal += childPersonalInvestment
-          console.log(`[DEBUG] 子ノード追加: ${childNode.user_id}`)
         }
         
         const totalAmount = personalInvestment + subtreeTotal
@@ -97,13 +103,13 @@ export function AdminReferralTreeSimple({ userId }: Props) {
           children
         }
         
-        console.log(`[DEBUG] ${user.user_id} 完了: children=${children.length}`)
+        console.log(`[DEBUG] ${user.user_id} 完了: children=${children.length}, total=$${totalAmount}`)
         
         return result
       }
       
       // ツリーを構築
-      const tree = buildSimpleTree(userId)
+      const tree = buildCompleteTree(userId)
       if (!tree) throw new Error("ツリー構築失敗")
       
       console.log(`[DEBUG] 最終ツリー: ${tree.user_id} - children: ${tree.children.length}`)
