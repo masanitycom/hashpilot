@@ -69,7 +69,7 @@ export function AdminReferralTreeFixed({ userId }: Props) {
         
         // 各子ノードを再帰的に構築
         for (const referral of directReferrals) {
-          const childNode = buildTreeNode(referral.user_id, level + 1, new Set(visited))
+          const childNode = buildTreeNode(referral.user_id, level + 1, visited)
           if (childNode) {
             children.push(childNode)
             // 子ノードの総合計を下位合計に加算
