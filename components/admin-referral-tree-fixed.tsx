@@ -54,10 +54,13 @@ export function AdminReferralTreeFixed({ userId }: Props) {
       ): TreeNode | null => {
         // 循環参照を防ぐ
         if (visited.has(rootId)) return null
-        visited.add(rootId)
         
         const user = allUsers.find(u => u.user_id === rootId)
         if (!user) return null
+        
+        // このノードを処理済みに追加
+        const newVisited = new Set(visited)
+        newVisited.add(rootId)
         
         // 個人投資額（手数料除く）
         const personalInvestment = Math.floor(user.total_purchases / 1100) * 1000
@@ -69,7 +72,7 @@ export function AdminReferralTreeFixed({ userId }: Props) {
         
         // 各子ノードを再帰的に構築
         for (const referral of directReferrals) {
-          const childNode = buildTreeNode(referral.user_id, level + 1, visited)
+          const childNode = buildTreeNode(referral.user_id, level + 1, newVisited)
           if (childNode) {
             children.push(childNode)
             // 子ノードの総合計を下位合計に加算
