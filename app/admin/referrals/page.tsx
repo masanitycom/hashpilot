@@ -10,6 +10,7 @@ import { Users, Shield, RefreshCw, Search, TrendingUp, Network } from "lucide-re
 import { supabase } from "@/lib/supabase"
 import { UnifiedReferralCalculator } from "@/lib/unified-referral-calculator"
 import { AdminReferralTreeFixed } from "@/components/admin-referral-tree-fixed"
+import { AdminReferralTreeSimple } from "@/components/admin-referral-tree-simple"
 import Link from "next/link"
 
 interface User {
@@ -406,9 +407,9 @@ export default function AdminReferralsPage() {
                 </CardContent>
               </Card>
 
-              {/* 紹介ツリー表示 - 修正版コンポーネントを使用 */}
+              {/* 紹介ツリー表示 - シンプル版を使用（デバッグ用） */}
               {selectedUserId ? (
-                <AdminReferralTreeFixed userId={selectedUserId} />
+                <AdminReferralTreeSimple userId={selectedUserId} />
               ) : (
                 <Card className="bg-gray-700 border-gray-600">
                   <CardHeader>
