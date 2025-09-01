@@ -51,7 +51,7 @@ export function AdminReferralTreeSimple({ userId }: Props) {
       console.log(`[DEBUG] 全ユーザー数: ${allUsers.length}`)
       
       // シンプルなツリー構築（デバッグ用）
-      const buildSimpleTree = (rootId: string, level: number = 1): TreeNode | null => {
+      const buildSimpleTree = (rootId: string, level: number = 0): TreeNode | null => {
         const user = allUsers.find(u => u.user_id === rootId)
         if (!user) return null
         
@@ -165,18 +165,20 @@ export function AdminReferralTreeSimple({ userId }: Props) {
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
-                    <Badge 
-                      variant="outline" 
-                      className={`
-                        ${node.level === 1 ? 'bg-blue-600' : ''}
-                        ${node.level === 2 ? 'bg-green-600' : ''}
-                        ${node.level === 3 ? 'bg-purple-600' : ''}
-                        ${node.level >= 4 ? 'bg-orange-600' : ''}
-                        text-white
-                      `}
-                    >
-                      Lv.{node.level}
-                    </Badge>
+                    {node.level > 0 && (
+                      <Badge 
+                        variant="outline" 
+                        className={`
+                          ${node.level === 1 ? 'bg-blue-600' : ''}
+                          ${node.level === 2 ? 'bg-green-600' : ''}
+                          ${node.level === 3 ? 'bg-purple-600' : ''}
+                          ${node.level >= 4 ? 'bg-orange-600' : ''}
+                          text-white
+                        `}
+                      >
+                        Lv.{node.level}
+                      </Badge>
+                    )}
                     <div>
                       <div className="font-semibold text-white">{node.user_id}</div>
                       <div className="text-sm text-gray-300">{node.email}</div>

@@ -49,7 +49,7 @@ export function AdminReferralTreeFixed({ userId }: Props) {
       // 再帰的にツリーを構築（下位合計を正しく計算）
       const buildTreeNode = (
         rootId: string, 
-        level: number = 1, 
+        level: number = 0, 
         visited: Set<string> = new Set()
       ): TreeNode | null => {
         // 循環参照を防ぐ
@@ -166,18 +166,20 @@ export function AdminReferralTreeFixed({ userId }: Props) {
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
-                    <Badge 
-                      variant="outline" 
-                      className={`
-                        ${node.level === 1 ? 'bg-blue-600' : ''}
-                        ${node.level === 2 ? 'bg-green-600' : ''}
-                        ${node.level === 3 ? 'bg-purple-600' : ''}
-                        ${node.level >= 4 ? 'bg-orange-600' : ''}
-                        text-white
-                      `}
-                    >
-                      Lv.{node.level}
-                    </Badge>
+                    {node.level > 0 && (
+                      <Badge 
+                        variant="outline" 
+                        className={`
+                          ${node.level === 1 ? 'bg-blue-600' : ''}
+                          ${node.level === 2 ? 'bg-green-600' : ''}
+                          ${node.level === 3 ? 'bg-purple-600' : ''}
+                          ${node.level >= 4 ? 'bg-orange-600' : ''}
+                          text-white
+                        `}
+                      >
+                        Lv.{node.level}
+                      </Badge>
+                    )}
                     <div>
                       <div className="font-semibold text-white">{node.user_id}</div>
                       <div className="text-sm text-gray-300">{node.email}</div>
