@@ -540,11 +540,11 @@ export default function OptimizedDashboardPage() {
       <div className="container mx-auto px-4 py-8">
         {/* LINE登録促進バナー */}
         <div className="mb-6">
-          <Card className="bg-gradient-to-r from-green-900/30 to-green-800/30 border-green-600/50">
+          <Card className="bg-gradient-to-r from-green-700 to-green-600 border-green-500">
             <CardContent className="p-4">
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-lg font-bold text-green-400 mb-1">📢 重要なお知らせ</h3>
+                  <h3 className="text-lg font-bold text-white mb-1">📢 重要なお知らせ</h3>
                   <p className="text-white text-sm sm:text-base">
                     大切なアナウンスを配信中！公式LINEに登録して最新情報を受け取りましょう
                   </p>
