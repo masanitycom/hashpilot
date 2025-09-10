@@ -154,6 +154,7 @@ export function ReferralTreeOptimized({ userId }: ReferralTreeProps) {
   const [error, setError] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [showTree, setShowTree] = useState(false)
+  const [showDescription, setShowDescription] = useState(true)
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -304,6 +305,29 @@ export function ReferralTreeOptimized({ userId }: ReferralTreeProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {/* 説明文 */}
+          {showDescription && (
+            <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+              <div className="flex items-start space-x-2">
+                <div className="text-blue-400 text-sm flex-shrink-0 mt-0.5">ℹ️</div>
+                <div className="text-blue-200 text-sm leading-relaxed">
+                  <p className="mb-2">紹介ネットワークは<span className="font-semibold text-blue-100">自身より三段目まで</span>が表示されます。</p>
+                  <div className="text-xs text-blue-300 space-y-1 mb-2">
+                    <div>・Lv.1: あなたが直接紹介した方</div>
+                    <div>・Lv.2: Lv.1の方が紹介した方</div>
+                    <div>・Lv.3: Lv.2の方が紹介した方</div>
+                  </div>
+                  <button 
+                    onClick={() => setShowDescription(false)}
+                    className="text-xs text-blue-400 hover:text-blue-300 underline"
+                  >
+                    非表示にする
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div className="text-center py-6">
             <p className="text-gray-400 mb-4">
               紹介ネットワークを表示するには、下のボタンをクリックしてください

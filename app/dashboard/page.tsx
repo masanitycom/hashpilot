@@ -538,6 +538,35 @@ export default function OptimizedDashboardPage() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
+        {/* LINE登録促進バナー */}
+        <div className="mb-6">
+          <Card className="bg-gradient-to-r from-green-900/30 to-green-800/30 border-green-600/50">
+            <CardContent className="p-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="text-lg font-bold text-green-400 mb-1">📢 重要なお知らせ</h3>
+                  <p className="text-white text-sm sm:text-base">
+                    大切なアナウンスを配信中！公式LINEに登録して最新情報を受け取りましょう
+                  </p>
+                </div>
+                <a 
+                  href="https://lin.ee/nacHdfq" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto"
+                >
+                  <Button className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3">
+                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12c0 4.95 3.61 9.05 8.34 9.86v.02c.32 0 .44-.21.33-.43l-.01-.03c-.06-.15-.11-.31-.17-.46-.01-.03-.02-.06-.03-.09-.66-1.78-1.43-3.83-1.78-4.78-.03-.09-.06-.17-.09-.26-.21-.59-.43-1.21-.63-1.79-.33-.99-.63-1.88-.78-2.28-.03-.08-.05-.15-.07-.22-.08-.28-.13-.45-.13-.47 0-.21.16-.38.36-.38.16 0 .3.11.35.26.04.11.08.23.13.35.15.4.45 1.29.78 2.28.2.58.42 1.2.63 1.79.03.09.06.17.09.26.35.95 1.12 3 1.78 4.78.01.03.02.06.03.09.06.15.11.31.17.46l.01.03c.04.09.04.14.04.14s0-.05-.04-.14l-.01-.03c-.06-.15-.11-.31-.17-.46-.01-.03-.02-.06-.03-.09-.66-1.78-1.43-3.83-1.78-4.78-.03-.09-.06-.17-.09-.26-.21-.59-.43-1.21-.63-1.79-.33-.99-.63-1.88-.78-2.28-.05-.12-.09-.24-.13-.35-.05-.15-.19-.26-.35-.26-.2 0-.36.17-.36.38 0 .02.05.19.13.47.02.07.04.14.07.22.15.4.45 1.29.78 2.28.2.58.42 1.2.63 1.79.03.09.06.17.09.26.35.95 1.12 3 1.78 4.78.01.03.02.06.03.09.06.15.11.31.17.46l.01.03c.11.22-.01.43-.33.43v-.02C5.61 21.05 2 16.95 2 12 2 6.48 6.48 2 12 2z"/>
+                    </svg>
+                    公式LINEに登録
+                  </Button>
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* エラーメッセージ */}
         {error && (
           <div className="mb-6">
