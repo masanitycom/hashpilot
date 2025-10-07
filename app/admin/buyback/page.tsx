@@ -126,49 +126,9 @@ export default function AdminBuybackPage() {
       const { data: buybackData, error: buybackError } = await query
 
       if (buybackError) {
-        console.warn("Buyback requests table access failed:", buybackError)
-        // テーブルアクセスできない場合はサンプルデータを表示
-        const sampleData: BuybackRequest[] = [
-          {
-            id: "sample-1",
-            user_id: "7A9637",
-            email: "sample@example.com",
-            request_date: new Date().toISOString(),
-            manual_nft_count: 2,
-            auto_nft_count: 1,
-            total_nft_count: 3,
-            manual_buyback_amount: 1500,
-            auto_buyback_amount: 500,
-            total_buyback_amount: 2000,
-            wallet_address: "TKx8dBWs3F4d3Fj8Qf5VzKz8Gf4sD3F2Bx9W5K3s",
-            wallet_type: "USDT-BEP20",
-            status: "pending",
-            processed_by: null,
-            processed_at: null,
-            transaction_hash: null
-          },
-          {
-            id: "sample-2", 
-            user_id: "B43A3D",
-            email: "test@example.com",
-            request_date: new Date(Date.now() - 86400000).toISOString(),
-            manual_nft_count: 1,
-            auto_nft_count: 2,
-            total_nft_count: 3,
-            manual_buyback_amount: 800,
-            auto_buyback_amount: 1000,
-            total_buyback_amount: 1800,
-            wallet_address: "123456789",
-            wallet_type: "CoinW",
-            status: "pending",
-            processed_by: null,
-            processed_at: null,
-            transaction_hash: null
-          }
-        ]
-        
-        const filteredSample = filter === "all" ? sampleData : sampleData.filter(item => item.status === filter)
-        setRequests(filteredSample)
+        console.error("Buyback requests table access failed:", buybackError)
+        setRequests([])
+        setMessage({ type: "error", text: "データの取得に失敗しました" })
         return
       }
 
@@ -208,24 +168,24 @@ export default function AdminBuybackPage() {
       const { data, error } = await supabase.rpc("process_buyback_request", {
         p_request_id: selectedRequest.id,
         p_action: action,
-        p_admin_user_id: adminUser.id,
         p_transaction_hash: action === "complete" ? transactionHash : null,
-        p_admin_notes: adminNotes || null
+        p_admin_notes: adminNotes || null,
+        p_admin_email: adminUser.email
       })
 
       if (error) throw error
 
-      if (data && data[0]?.success) {
-        setMessage({ 
-          type: "success", 
-          text: action === "complete" ? "買い取りが完了しました" : "申請がキャンセルされました" 
+      if (data && data[0]?.status === "SUCCESS") {
+        setMessage({
+          type: "success",
+          text: action === "complete" ? "買い取りが完了しました" : "申請を却下しました"
         })
-        
+
         // モーダルをクリア
         setSelectedRequest(null)
         setTransactionHash("")
         setAdminNotes("")
-        
+
         // リストを更新
         fetchRequests()
       } else {
@@ -264,7 +224,7 @@ export default function AdminBuybackPage() {
         return (
           <Badge className="bg-red-900/50 text-red-400 border-red-700">
             <XCircle className="h-3 w-3 mr-1" />
-            キャンセル
+            却下
           </Badge>
         )
       default:
@@ -367,7 +327,7 @@ export default function AdminBuybackPage() {
               {status === "all" && "すべて"}
               {status === "pending" && "申請中"}
               {status === "completed" && "完了"}
-              {status === "cancelled" && "キャンセル"}
+              {status === "cancelled" && "却下"}
             </Button>
           ))}
         </div>
@@ -583,46 +543,46 @@ export default function AdminBuybackPage() {
                   />
                 </div>
 
-                <div className="flex space-x-3 pt-4">
+                <div className="space-y-3 pt-4">
                   <Button
                     onClick={() => processRequest("complete")}
                     disabled={processingId === selectedRequest.id || !transactionHash}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
                   >
                     {processingId === selectedRequest.id ? (
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
                     ) : (
                       <CheckCircle className="h-4 w-4 mr-2" />
                     )}
-                    送金完了
+                    送金完了（承認）
                   </Button>
+
                   <Button
                     onClick={() => processRequest("cancel")}
                     disabled={processingId === selectedRequest.id}
-                    variant="outline"
-                    className="flex-1 text-white bg-red-600 border-red-600 hover:bg-red-700"
+                    className="w-full text-white bg-red-600 border-red-600 hover:bg-red-700"
                   >
                     {processingId === selectedRequest.id ? (
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
                     ) : (
                       <XCircle className="h-4 w-4 mr-2" />
                     )}
-                    キャンセル
+                    却下する
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      setSelectedRequest(null)
+                      setTransactionHash("")
+                      setAdminNotes("")
+                    }}
+                    variant="outline"
+                    className="w-full text-white border-gray-600 hover:bg-gray-800"
+                    disabled={processingId === selectedRequest.id}
+                  >
+                    閉じる
                   </Button>
                 </div>
-
-                <Button
-                  onClick={() => {
-                    setSelectedRequest(null)
-                    setTransactionHash("")
-                    setAdminNotes("")
-                  }}
-                  variant="ghost"
-                  className="w-full text-white bg-gray-600 hover:bg-gray-700 border border-gray-500"
-                  disabled={processingId === selectedRequest.id}
-                >
-                  閉じる
-                </Button>
               </CardContent>
             </Card>
           </div>
