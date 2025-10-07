@@ -149,6 +149,39 @@ node comprehensive_referral_verification.js
 
 ---
 
+## 🔄 NFTサイクルシステム（2025年10月7日更新）
+
+### 基本仕様
+- **サイクル計算対象**: 紹介報酬のみ（個人利益は含めない）
+- **NFT自動付与**: 紹介報酬が2200ドル到達時に自動的にNFTが付与される
+- **フェーズ管理**:
+  - **USDTフェーズ**: 紹介報酬 < 1100ドル（即時受取可能）
+  - **HOLDフェーズ**: 紹介報酬 >= 1100ドル（次のNFT付与待ち、出金不可）
+  - **NFT付与**: 紹介報酬 >= 2200ドル（自動NFT付与 + 1100ドル受取可能）
+
+### 重要な注意事項
+1. **個人利益（日利）はサイクルに含まれない**
+   - 個人利益は`available_usdt`に直接加算される
+   - サイクル計算は紹介報酬のみで行われる
+
+2. **二重払い防止**
+   - HOLDフェーズ中（cum_usdt >= 1100）の金額は出金不可
+   - 次のNFT購入に使用される予定のため
+
+3. **自動NFT付与の動作**
+   - `cum_usdt >= 2200`到達時に`process_daily_yield_with_cycles`関数で自動処理
+   - `nft_master`テーブルに実際のNFTレコードが作成される
+   - `purchases`テーブルに`is_auto_purchase = true`のレコードが作成される
+
+### データベーステーブル
+- `affiliate_cycle.cum_usdt`: 紹介報酬の累積額
+- `affiliate_cycle.available_usdt`: 即時受取可能な金額（個人利益 + NFT付与時の1100ドル）
+- `affiliate_cycle.phase`: 現在のフェーズ（USDT/HOLD）
+- `affiliate_cycle.auto_nft_count`: 自動付与されたNFT数
+- `affiliate_cycle.manual_nft_count`: 手動購入したNFT数
+
+---
+
 ## 🛠 開発環境
 
 - Next.js 14 + TypeScript
@@ -168,4 +201,4 @@ node comprehensive_referral_verification.js
 
 ---
 
-最終更新: 2025年8月24日
+最終更新: 2025年10月7日

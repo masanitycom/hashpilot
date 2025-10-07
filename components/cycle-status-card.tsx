@@ -161,14 +161,12 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       if (cycleError) throw cycleError
 
-      // 個人利益を計算
-      const personalProfit = profitData?.reduce((sum, p) => sum + (parseFloat(p.daily_profit) || 0), 0) || 0
-
       // 紹介報酬を計算（referral-profit-card.tsxと同じロジックを使用）
+      // ⭐ NFTサイクルは紹介報酬のみで計算（個人利益は含めない）
       const referralProfit = await calculateMonthlyReferralProfit(userId, monthStart, monthEnd)
 
-      // 合計利益を計算（個人+紹介報酬）
-      const totalProfit = personalProfit + referralProfit
+      // サイクル計算用の利益（紹介報酬のみ）
+      const totalProfit = referralProfit
 
       // affiliate_cycleから正確なNFT数を取得
       const totalNfts = cycleInfo?.total_nft_count || 0
