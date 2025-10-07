@@ -255,14 +255,14 @@ export default function AdminAutoNFTGrantsPage() {
                   <tbody>
                     {grants.map((grant) => (
                       <tr key={grant.id} className="border-b border-gray-700 hover:bg-gray-700/30">
-                        <td className="p-3 text-sm">{formatDate(grant.granted_at)}</td>
+                        <td className="p-3 text-sm text-gray-200">{formatDate(grant.granted_at)}</td>
                         <td className="p-3">
                           <div className="flex flex-col">
-                            <span className="font-medium">{grant.full_name || "未設定"}</span>
+                            <span className="font-medium text-white">{grant.full_name || "未設定"}</span>
                             <span className="text-xs text-gray-400">{grant.user_id}</span>
                           </div>
                         </td>
-                        <td className="p-3 text-sm">{grant.email}</td>
+                        <td className="p-3 text-sm text-gray-200">{grant.email}</td>
                         <td className="p-3 text-right">
                           <Badge variant="secondary" className="bg-purple-900/30 text-purple-300">
                             {grant.nft_quantity}個
@@ -271,7 +271,7 @@ export default function AdminAutoNFTGrantsPage() {
                         <td className="p-3 text-right">
                           <span className="text-sm text-gray-300">{grant.current_auto_nft_count}個</span>
                         </td>
-                        <td className="p-3 text-right font-medium">
+                        <td className="p-3 text-right font-medium text-white">
                           ${grant.amount_usd.toLocaleString()}
                         </td>
                         <td className="p-3 text-center">
