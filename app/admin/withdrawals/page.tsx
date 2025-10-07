@@ -34,6 +34,9 @@ interface WithdrawalRecord {
   notes: string | null
   task_completed: boolean
   task_completed_at: string | null
+  is_pegasus_exchange?: boolean
+  pegasus_exchange_date?: string | null
+  pegasus_withdrawal_unlock_date?: string | null
 }
 
 interface MonthlyStats {
@@ -90,10 +93,17 @@ export default function AdminWithdrawalsPage() {
 
       const targetDate = `${selectedMonth}-01`
       
-      // 月間出金記録を取得
+      // 月間出金記録を取得（usersテーブルからペガサス情報も取得）
       const { data: withdrawalData, error: withdrawalError } = await supabase
         .from("monthly_withdrawals")
-        .select("*")
+        .select(`
+          *,
+          users!inner(
+            is_pegasus_exchange,
+            pegasus_exchange_date,
+            pegasus_withdrawal_unlock_date
+          )
+        `)
         .eq("withdrawal_month", targetDate)
         .order("created_at", { ascending: false })
 
@@ -101,7 +111,18 @@ export default function AdminWithdrawalsPage() {
         throw withdrawalError
       }
 
-      setWithdrawals(withdrawalData || [])
+      // データを整形（JOINで取得したusers情報を展開）
+      const formattedData = (withdrawalData || []).map((item: any) => {
+        const userData = item.users || {}
+        return {
+          ...item,
+          is_pegasus_exchange: userData.is_pegasus_exchange || false,
+          pegasus_exchange_date: userData.pegasus_exchange_date || null,
+          pegasus_withdrawal_unlock_date: userData.pegasus_withdrawal_unlock_date || null,
+        }
+      })
+
+      setWithdrawals(formattedData)
 
       // 統計情報を計算
       const stats: MonthlyStats = {
@@ -425,6 +446,11 @@ export default function AdminWithdrawalsPage() {
                         <div>
                           <div className="font-medium text-white">{withdrawal.user_id}</div>
                           <div className="text-xs text-gray-400">{withdrawal.email}</div>
+                          {withdrawal.is_pegasus_exchange && (
+                            <div className="mt-1">
+                              <Badge className="bg-yellow-600 text-white text-xs">🐴 ペガサス交換</Badge>
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="py-3 px-2">

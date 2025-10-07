@@ -39,6 +39,9 @@ interface BuybackRequest {
   processed_by: string | null
   processed_at: string | null
   transaction_hash: string | null
+  is_pegasus_exchange?: boolean
+  pegasus_exchange_date?: string | null
+  pegasus_withdrawal_unlock_date?: string | null
 }
 
 export default function AdminBuybackPage() {
@@ -103,10 +106,17 @@ export default function AdminBuybackPage() {
     try {
       setLoading(true)
       
-      // 買い取り申請データを取得
+      // 買い取り申請データを取得（usersテーブルからペガサス情報も取得）
       let query = supabase
         .from("buyback_requests")
-        .select("*")
+        .select(`
+          *,
+          users!inner(
+            is_pegasus_exchange,
+            pegasus_exchange_date,
+            pegasus_withdrawal_unlock_date
+          )
+        `)
         .order("request_date", { ascending: false })
 
       if (filter !== "all") {
@@ -162,29 +172,15 @@ export default function AdminBuybackPage() {
         return
       }
 
-      // ユーザーデータを取得（エラーは無視）
-      const userIds = buybackData?.map(item => item.user_id) || []
-      let usersData = []
-      
-      try {
-        const { data, error } = await supabase
-          .from("users")
-          .select("id, email")
-          .in("id", userIds)
-        
-        if (!error) {
-          usersData = data || []
-        }
-      } catch (err) {
-        console.warn("Users table access failed, using user_id as email:", err)
-      }
-
-      // データを結合
-      const formattedData = (buybackData || []).map(item => {
-        const user = usersData?.find(u => u.id === item.user_id)
+      // データを整形（JOINで取得したusers情報を展開）
+      const formattedData = (buybackData || []).map((item: any) => {
+        const userData = item.users || {}
         return {
           ...item,
-          email: user?.email || item.user_id || 'Unknown'
+          email: item.email || item.user_id || 'Unknown',
+          is_pegasus_exchange: userData.is_pegasus_exchange || false,
+          pegasus_exchange_date: userData.pegasus_exchange_date || null,
+          pegasus_withdrawal_unlock_date: userData.pegasus_withdrawal_unlock_date || null,
         }
       })
 
@@ -424,6 +420,11 @@ export default function AdminBuybackPage() {
                         <td className="p-3">
                           <div className="text-white">{request.email}</div>
                           <div className="text-xs text-gray-500">{request.user_id}</div>
+                          {request.is_pegasus_exchange && (
+                            <div className="mt-1">
+                              <Badge className="bg-yellow-600 text-white text-xs">🐴 ペガサス交換</Badge>
+                            </div>
+                          )}
                         </td>
                         <td className="p-3 text-center text-white">
                           {request.manual_nft_count}枚
