@@ -30,6 +30,7 @@ interface User {
   is_pegasus_exchange?: boolean
   pegasus_exchange_date?: string | null
   pegasus_withdrawal_unlock_date?: string | null
+  first_purchase_date?: string | null
 }
 
 export default function AdminUsersPage() {
@@ -48,7 +49,6 @@ export default function AdminUsersPage() {
     referrer_user_id: "",
     nft_receive_address: "",
     is_pegasus_exchange: false,
-    pegasus_exchange_date: "",
     pegasus_withdrawal_unlock_date: "",
   })
   const [saving, setSaving] = useState(false)
@@ -146,7 +146,30 @@ export default function AdminUsersPage() {
         throw usersError
       }
 
-      setUsers(usersData || [])
+      // 購入日を取得（ペガサス交換ユーザー用）
+      const { data: purchasesData } = await supabase
+        .from("purchases")
+        .select("user_id, admin_approved_at")
+        .eq("admin_approved", true)
+        .order("admin_approved_at", { ascending: true })
+
+      // ユーザーごとの最初の購入日をマップ
+      const firstPurchaseMap = new Map<string, string>()
+      if (purchasesData) {
+        purchasesData.forEach(p => {
+          if (p.user_id && p.admin_approved_at && !firstPurchaseMap.has(p.user_id)) {
+            firstPurchaseMap.set(p.user_id, p.admin_approved_at)
+          }
+        })
+      }
+
+      // ユーザーデータに購入日を追加
+      const enrichedUsers = (usersData || []).map(user => ({
+        ...user,
+        first_purchase_date: firstPurchaseMap.get(user.user_id) || null
+      }))
+
+      setUsers(enrichedUsers)
     } catch (error: any) {
       console.error("Fetch users error:", error)
       setError(`ユーザーデータの取得に失敗しました: ${error.message}`)
@@ -178,7 +201,6 @@ export default function AdminUsersPage() {
       referrer_user_id: user.referrer_user_id || "",
       nft_receive_address: user.nft_receive_address || "",
       is_pegasus_exchange: user.is_pegasus_exchange || false,
-      pegasus_exchange_date: user.pegasus_exchange_date || "",
       pegasus_withdrawal_unlock_date: user.pegasus_withdrawal_unlock_date || "",
     })
   }
@@ -197,7 +219,6 @@ export default function AdminUsersPage() {
           referrer_user_id: editForm.referrer_user_id || null,
           nft_receive_address: editForm.nft_receive_address || null,
           is_pegasus_exchange: editForm.is_pegasus_exchange,
-          pegasus_exchange_date: editForm.pegasus_exchange_date || null,
           pegasus_withdrawal_unlock_date: editForm.pegasus_withdrawal_unlock_date || null,
           updated_at: new Date().toISOString(),
         })
@@ -522,9 +543,9 @@ export default function AdminUsersPage() {
                             <div className="flex items-center space-x-2">
                               <span className="text-gray-400">ペガサス交換: </span>
                               <Badge className="bg-yellow-600 text-white">🐴 ペガサスNFT交換</Badge>
-                              {user.pegasus_exchange_date && typeof user.pegasus_exchange_date === 'string' && user.pegasus_exchange_date.length > 0 && (
+                              {user.first_purchase_date && (
                                 <span className="text-xs text-gray-500">
-                                  交換日: {new Date(user.pegasus_exchange_date).toLocaleDateString('ja-JP')}
+                                  交換日（購入日）: {new Date(user.first_purchase_date).toLocaleDateString('ja-JP')}
                                 </span>
                               )}
                               {user.pegasus_withdrawal_unlock_date && typeof user.pegasus_withdrawal_unlock_date === 'string' && user.pegasus_withdrawal_unlock_date.length > 0 && (
@@ -687,15 +708,14 @@ export default function AdminUsersPage() {
 
                     {editForm.is_pegasus_exchange && (
                       <>
-                        <div>
-                          <Label className="text-gray-300 text-sm">交換日</Label>
-                          <Input
-                            type="date"
-                            value={editForm.pegasus_exchange_date}
-                            onChange={(e) => setEditForm({ ...editForm, pegasus_exchange_date: e.target.value })}
-                            className="bg-gray-700 border-gray-600 text-white mt-1"
-                          />
-                        </div>
+                        {editingUser?.first_purchase_date && (
+                          <div className="bg-gray-700/50 rounded p-2">
+                            <span className="text-xs text-gray-400">交換日（購入日）: </span>
+                            <span className="text-sm text-white">
+                              {new Date(editingUser.first_purchase_date).toLocaleDateString('ja-JP')}
+                            </span>
+                          </div>
+                        )}
 
                         <div>
                           <Label className="text-gray-300 text-sm">出金解禁日</Label>
