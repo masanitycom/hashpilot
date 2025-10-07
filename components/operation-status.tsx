@@ -62,8 +62,9 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
   // システム準備中フラグ（実際の運用開始まで）
   const isSystemPreparing = process.env.NEXT_PUBLIC_SYSTEM_PREPARING === 'true'
   
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('ja-JP', {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date
+    return dateObj.toLocaleDateString('ja-JP', {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric'
