@@ -39,11 +39,19 @@
 
 ### ステップ1: データベーススキーマ作成
 
-```bash
-# Supabase SQL Editorで実行
+⚠️ **重要: 以下の順序で実行してください**
+
+#### 1-1. user_referral_profit テーブル作成（必須・最初に実行）
+```sql
+-- scripts/create-user-referral-profit-table.sql の内容を実行
 ```
 
-#### 1-1. 休眠ユーザーフラグと会社ボーナステーブル
+**作成されるもの:**
+- `user_referral_profit` テーブル
+- `user_referral_profit_summary` ビュー
+- `user_total_referral_profit` ビュー
+
+#### 1-2. 休眠ユーザーフラグと会社ボーナステーブル
 ```sql
 -- scripts/implement-dormant-user-company-bonus.sql の内容を実行
 ```
@@ -55,7 +63,7 @@
 - `dormant_users_list` ビュー
 - 自動更新トリガー
 
-#### 1-2. 紹介報酬計算ロジック更新
+#### 1-3. 紹介報酬計算ロジック更新
 ```sql
 -- scripts/update-referral-calculation-for-dormant.sql の内容を実行
 ```
