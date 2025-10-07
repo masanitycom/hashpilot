@@ -136,7 +136,7 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
       </div>
       
       <div className="text-xs text-gray-400">
-        承認日: {formatDate(approval)}
+        承認日: {formatDate(approvalDate)}
       </div>
       
       {isSystemPreparing && (

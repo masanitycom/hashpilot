@@ -27,6 +27,9 @@ interface User {
   referrer_user_id: string | null
   created_at: string
   is_active: boolean
+  is_pegasus_exchange?: boolean
+  pegasus_exchange_date?: string | null
+  pegasus_withdrawal_unlock_date?: string | null
 }
 
 export default function AdminUsersPage() {
@@ -44,6 +47,9 @@ export default function AdminUsersPage() {
     coinw_uid: "",
     referrer_user_id: "",
     nft_receive_address: "",
+    is_pegasus_exchange: false,
+    pegasus_exchange_date: "",
+    pegasus_withdrawal_unlock_date: "",
   })
   const [saving, setSaving] = useState(false)
   const [updatingDistribution, setUpdatingDistribution] = useState<string | null>(null)
@@ -171,6 +177,9 @@ export default function AdminUsersPage() {
       coinw_uid: user.coinw_uid || "",
       referrer_user_id: user.referrer_user_id || "",
       nft_receive_address: user.nft_receive_address || "",
+      is_pegasus_exchange: user.is_pegasus_exchange || false,
+      pegasus_exchange_date: user.pegasus_exchange_date || "",
+      pegasus_withdrawal_unlock_date: user.pegasus_withdrawal_unlock_date || "",
     })
   }
 
@@ -187,6 +196,9 @@ export default function AdminUsersPage() {
           coinw_uid: editForm.coinw_uid || null,
           referrer_user_id: editForm.referrer_user_id || null,
           nft_receive_address: editForm.nft_receive_address || null,
+          is_pegasus_exchange: editForm.is_pegasus_exchange,
+          pegasus_exchange_date: editForm.pegasus_exchange_date || null,
+          pegasus_withdrawal_unlock_date: editForm.pegasus_withdrawal_unlock_date || null,
           updated_at: new Date().toISOString(),
         })
         .eq("id", editingUser.id)
@@ -505,6 +517,24 @@ export default function AdminUsersPage() {
                             )}
                           </div>
                         </div>
+                        {user.is_pegasus_exchange === true && (
+                          <div className="col-span-full mt-2">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-gray-400">ペガサス交換: </span>
+                              <Badge className="bg-yellow-600 text-white">🐴 ペガサスNFT交換</Badge>
+                              {user.pegasus_exchange_date && (
+                                <span className="text-xs text-gray-500">
+                                  交換日: {new Date(user.pegasus_exchange_date).toLocaleDateString('ja-JP')}
+                                </span>
+                              )}
+                              {user.pegasus_withdrawal_unlock_date && (
+                                <span className="text-xs text-orange-400 font-semibold">
+                                  出金制限: {new Date(user.pegasus_withdrawal_unlock_date).toLocaleDateString('ja-JP')}まで
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                     </div>
@@ -633,6 +663,53 @@ export default function AdminUsersPage() {
                           {editingUser.nft_distributed_by}
                         </span>
                       </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3">
+                  <Label className="text-yellow-400 text-sm font-medium flex items-center">
+                    🐴 ペガサスNFT交換設定
+                  </Label>
+                  <div className="mt-3 space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="is_pegasus_exchange"
+                        checked={editForm.is_pegasus_exchange}
+                        onChange={(e) => setEditForm({ ...editForm, is_pegasus_exchange: e.target.checked })}
+                        className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-yellow-600 focus:ring-yellow-600"
+                      />
+                      <Label htmlFor="is_pegasus_exchange" className="text-gray-300 cursor-pointer">
+                        ペガサスNFT交換ユーザー
+                      </Label>
+                    </div>
+
+                    {editForm.is_pegasus_exchange && (
+                      <>
+                        <div>
+                          <Label className="text-gray-300 text-sm">交換日</Label>
+                          <Input
+                            type="date"
+                            value={editForm.pegasus_exchange_date}
+                            onChange={(e) => setEditForm({ ...editForm, pegasus_exchange_date: e.target.value })}
+                            className="bg-gray-700 border-gray-600 text-white mt-1"
+                          />
+                        </div>
+
+                        <div>
+                          <Label className="text-gray-300 text-sm">出金解禁日</Label>
+                          <Input
+                            type="date"
+                            value={editForm.pegasus_withdrawal_unlock_date}
+                            onChange={(e) => setEditForm({ ...editForm, pegasus_withdrawal_unlock_date: e.target.value })}
+                            className="bg-gray-700 border-gray-600 text-white mt-1"
+                          />
+                          <p className="text-xs text-orange-400 mt-1">
+                            ⚠️ この日付まで出金制限されます
+                          </p>
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
