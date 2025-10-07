@@ -61,6 +61,9 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
   
   // システム準備中フラグ（実際の運用開始まで）
   const isSystemPreparing = process.env.NEXT_PUBLIC_SYSTEM_PREPARING === 'true'
+
+  // テスト注意書き表示フラグ（10/14まで表示）
+  const showTestNotice = process.env.NEXT_PUBLIC_SHOW_TEST_NOTICE === 'true'
   
   const formatDate = (date: Date | string) => {
     const dateObj = typeof date === 'string' ? new Date(date) : date
@@ -140,7 +143,7 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
         承認日: {formatDate(approvalDate)}
       </div>
       
-      {isSystemPreparing && (
+      {showTestNotice && (
         <div className="mt-2 p-2 bg-blue-900/20 border border-blue-500/30 rounded-lg">
           <p className="text-xs text-blue-300">
             ※ 現在メインシステムの準備を進めています。運用開始日ルールは適用されますが、実際の運用開始はシステム準備完了後となります。
