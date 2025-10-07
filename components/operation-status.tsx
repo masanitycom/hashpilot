@@ -27,14 +27,34 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
     )
   }
 
-  const approval = new Date(approvalDate)
-  const operationStart = new Date(approval.getTime() + 15 * 24 * 60 * 60 * 1000) // 15日後
-  const today = new Date()
-  
+  // 日本時間（JST）で承認日を取得
+  const approvalUTC = new Date(approvalDate)
+  const approvalJST = new Date(approvalUTC.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
+  const approvalDay = approvalJST.getDate()
+  const approvalMonth = approvalJST.getMonth()
+  const approvalYear = approvalJST.getFullYear()
+
+  // 運用開始日の計算（日本時間基準）
+  let operationStart: Date
+  if (approvalDay <= 5) {
+    // 5日までに承認 → 当月15日より運用開始
+    operationStart = new Date(approvalYear, approvalMonth, 15)
+  } else if (approvalDay <= 20) {
+    // 20日までに承認 → 翌月1日より運用開始
+    operationStart = new Date(approvalYear, approvalMonth + 1, 1)
+  } else {
+    // 20日以降に承認 → 翌々月1日より運用開始
+    operationStart = new Date(approvalYear, approvalMonth + 2, 1)
+  }
+
+  // 今日の日付（日本時間）
+  const todayUTC = new Date()
+  const todayJST = new Date(todayUTC.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
+
   // 日付のみで比較（時間を無視）
-  const approvalDateOnly = new Date(approval.getFullYear(), approval.getMonth(), approval.getDate())
+  const approvalDateOnly = new Date(approvalYear, approvalMonth, approvalDay)
   const operationStartDateOnly = new Date(operationStart.getFullYear(), operationStart.getMonth(), operationStart.getDate())
-  const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const todayDateOnly = new Date(todayJST.getFullYear(), todayJST.getMonth(), todayJST.getDate())
   
   const isOperating = todayDateOnly >= operationStartDateOnly
   const daysUntilStart = Math.ceil((operationStartDateOnly.getTime() - todayDateOnly.getTime()) / (1000 * 60 * 60 * 24))
@@ -122,7 +142,13 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
       {isSystemPreparing && (
         <div className="mt-2 p-2 bg-blue-900/20 border border-blue-500/30 rounded-lg">
           <p className="text-xs text-blue-300">
-            ※ 現在メインシステムの準備を進めています。15日ルールは適用されますが、実際の運用開始はシステム準備完了後となります。
+            ※ 現在メインシステムの準備を進めています。運用開始日ルールは適用されますが、実際の運用開始はシステム準備完了後となります。
+          </p>
+          <p className="text-xs text-green-300 mt-2 font-bold">
+            🚀 運用開始日：2025年10月15日
+          </p>
+          <p className="text-xs text-yellow-300 mt-2 font-semibold">
+            ⚠️ 現在、反映テストを行っています。実際の数値ではありません。日利設定をしていって実際に計算が合っているか確認中です。
           </p>
         </div>
       )}
