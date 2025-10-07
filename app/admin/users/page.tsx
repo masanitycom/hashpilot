@@ -522,12 +522,12 @@ export default function AdminUsersPage() {
                             <div className="flex items-center space-x-2">
                               <span className="text-gray-400">ペガサス交換: </span>
                               <Badge className="bg-yellow-600 text-white">🐴 ペガサスNFT交換</Badge>
-                              {user.pegasus_exchange_date && (
+                              {user.pegasus_exchange_date && typeof user.pegasus_exchange_date === 'string' && user.pegasus_exchange_date.length > 0 && (
                                 <span className="text-xs text-gray-500">
                                   交換日: {new Date(user.pegasus_exchange_date).toLocaleDateString('ja-JP')}
                                 </span>
                               )}
-                              {user.pegasus_withdrawal_unlock_date && (
+                              {user.pegasus_withdrawal_unlock_date && typeof user.pegasus_withdrawal_unlock_date === 'string' && user.pegasus_withdrawal_unlock_date.length > 0 && (
                                 <span className="text-xs text-orange-400 font-semibold">
                                   出金制限: {new Date(user.pegasus_withdrawal_unlock_date).toLocaleDateString('ja-JP')}まで
                                 </span>
