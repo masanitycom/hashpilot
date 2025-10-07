@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download, Search } from "lucide-react"
+import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download, Search, Zap } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { sendApprovalEmailViaAuth } from "@/lib/send-approval-email"
 import { OperationStatus } from "@/components/operation-status"
@@ -590,8 +590,17 @@ export default function AdminPurchasesPage() {
                 >
                   管理者ダッシュボード
                 </Button>
-                <Button 
-                  onClick={exportToCSV} 
+                <Button
+                  onClick={() => router.push("/admin/auto-nft-grants")}
+                  size="sm"
+                  variant="outline"
+                  className="bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  自動NFT付与履歴
+                </Button>
+                <Button
+                  onClick={exportToCSV}
                   size="sm"
                   variant="outline"
                   className="bg-green-600 hover:bg-green-700 text-white border-green-600"
