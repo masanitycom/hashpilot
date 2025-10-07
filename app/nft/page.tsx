@@ -234,11 +234,11 @@ export default function NFTPage() {
                     <Input
                       type="number"
                       min="1"
-                      max="100"
+                      max="1000"
                       value={nftQuantity}
                       onChange={(e) => {
                         const value = parseInt(e.target.value) || 1
-                        setNftQuantity(Math.max(1, Math.min(100, value)))
+                        setNftQuantity(Math.max(1, Math.min(1000, value)))
                       }}
                       className="w-20 text-center bg-gray-700 border-gray-600 text-white text-lg font-bold"
                     />
@@ -246,13 +246,13 @@ export default function NFTPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setNftQuantity(Math.min(100, nftQuantity + 1))}
+                      onClick={() => setNftQuantity(Math.min(1000, nftQuantity + 1))}
                       className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
                     >
                       +
                     </Button>
                   </div>
-                  <p className="text-xs text-gray-400">最大100NFTまで購入可能</p>
+                  <p className="text-xs text-gray-400">最大1000NFTまで購入可能</p>
                 </div>
 
                 <div className="flex justify-between items-center">
