@@ -152,27 +152,28 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       if (profitError && profitError.code !== 'PGRST116') throw profitError
 
-      // NFTデータを取得
-      const { data: nftData, error: nftError } = await supabase
-        .from('purchases')
-        .select('nft_quantity')
+      // affiliate_cycleから正確なNFTデータを取得
+      const { data: cycleInfo, error: cycleError } = await supabase
+        .from('affiliate_cycle')
+        .select('total_nft_count, manual_nft_count, auto_nft_count, cum_usdt, available_usdt')
         .eq('user_id', userId)
-        .eq('admin_approved', true)
+        .single()
 
-      if (nftError) throw nftError
+      if (cycleError) throw cycleError
 
       // 個人利益を計算
       const personalProfit = profitData?.reduce((sum, p) => sum + (parseFloat(p.daily_profit) || 0), 0) || 0
-      
+
       // 紹介報酬を計算（referral-profit-card.tsxと同じロジックを使用）
       const referralProfit = await calculateMonthlyReferralProfit(userId, monthStart, monthEnd)
 
       // 合計利益を計算（個人+紹介報酬）
       const totalProfit = personalProfit + referralProfit
-      const totalNfts = nftData?.reduce((sum, n) => sum + (n.nft_quantity || 0), 0) || 0
-      // 自動/手動の区別は一旦なしで総数のみ表示
-      const manualNfts = totalNfts
-      const autoNfts = 0
+
+      // affiliate_cycleから正確なNFT数を取得
+      const totalNfts = cycleInfo?.total_nft_count || 0
+      const manualNfts = cycleInfo?.manual_nft_count || 0
+      const autoNfts = cycleInfo?.auto_nft_count || 0
 
       // 1100ドルサイクル計算
       const cyclesCompleted = Math.floor(totalProfit / 1100)
