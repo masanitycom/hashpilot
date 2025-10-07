@@ -305,8 +305,21 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                   }}
                   className="bg-gray-800 border-gray-700 text-white"
                 />
-                <div className="text-xs text-gray-400 mt-1">
-                  最大: {nftData.manual_nft_count}枚
+                <div className="flex items-center justify-between mt-1">
+                  <div className="text-xs text-gray-400">
+                    最大: {nftData.manual_nft_count}枚
+                  </div>
+                  {nftData.manual_nft_count > 0 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setManualCount(nftData.manual_nft_count)}
+                      className="text-xs h-6 border-yellow-600 text-yellow-400 hover:bg-yellow-900/20"
+                    >
+                      全て選択
+                    </Button>
+                  )}
                 </div>
               </div>
               <div>
@@ -323,11 +336,69 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                   }}
                   className="bg-gray-800 border-gray-700 text-white"
                 />
-                <div className="text-xs text-gray-400 mt-1">
-                  最大: {nftData.auto_nft_count}枚
+                <div className="flex items-center justify-between mt-1">
+                  <div className="text-xs text-gray-400">
+                    最大: {nftData.auto_nft_count}枚
+                  </div>
+                  {nftData.auto_nft_count > 0 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setAutoCount(nftData.auto_nft_count)}
+                      className="text-xs h-6 border-yellow-600 text-yellow-400 hover:bg-yellow-900/20"
+                    >
+                      全て選択
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
+
+            {/* 一括買い取りボタン */}
+            {(nftData.manual_nft_count > 0 || nftData.auto_nft_count > 0) && (
+              <div className="flex gap-2">
+                {nftData.manual_nft_count > 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setManualCount(nftData.manual_nft_count)
+                      setAutoCount(0)
+                    }}
+                    className="flex-1 border-blue-600 text-blue-400 hover:bg-blue-900/20"
+                  >
+                    手動NFT全て買い取り
+                  </Button>
+                )}
+                {nftData.auto_nft_count > 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setManualCount(0)
+                      setAutoCount(nftData.auto_nft_count)
+                    }}
+                    className="flex-1 border-green-600 text-green-400 hover:bg-green-900/20"
+                  >
+                    自動NFT全て買い取り
+                  </Button>
+                )}
+                {nftData.manual_nft_count > 0 && nftData.auto_nft_count > 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setManualCount(nftData.manual_nft_count)
+                      setAutoCount(nftData.auto_nft_count)
+                    }}
+                    className="flex-1 border-purple-600 text-purple-400 hover:bg-purple-900/20"
+                  >
+                    全NFT一括買い取り
+                  </Button>
+                )}
+              </div>
+            )}
 
             <div>
               <Label htmlFor="wallet" className="text-white">送金先ウォレットアドレス</Label>
