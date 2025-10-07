@@ -92,7 +92,7 @@ export default function NftBuybackPage() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">NFT買い取り申請</h1>
-            <p className="text-gray-400">保有中のNFTを買い取り申請できます。手動購入NFTは1000ドル-利益額、自動購入NFTは500ドル-利益額で買い取り可能です。</p>
+            <p className="text-gray-400">保有中のNFTを買い取り申請できます。手動購入NFTは1000ドル - (そのNFTの利益 ÷ 2)、自動購入NFTは500ドル - (そのNFTの利益 ÷ 2)で買い取り可能です。</p>
           </div>
         </div>
 

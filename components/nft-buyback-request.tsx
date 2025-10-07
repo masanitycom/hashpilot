@@ -119,14 +119,12 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
   const calculateBuybackAmount = () => {
     if (!nftData) return
 
-    // 手動NFTの買い取り額計算
-    const profitPerNft = nftData.manual_nft_count > 0 ? userProfit / nftData.manual_nft_count : 0
-    const manualBuyback = Math.max(0, (1000 * manualCount) - (profitPerNft * manualCount))
-    
-    // 自動NFTの買い取り額計算（500ドル-利益額）
-    const autoProfitPerNft = nftData.auto_nft_count > 0 ? userProfit / nftData.auto_nft_count : 0
-    const autoBuyback = Math.max(0, (500 * autoCount) - (autoProfitPerNft * autoCount))
-    
+    // 手動NFTの買い取り額計算: 1000 - (個人利益 ÷ 2)
+    const manualBuyback = Math.max(0, (1000 * manualCount) - (userProfit / 2))
+
+    // 自動NFTの買い取り額計算: 500 - (個人利益 ÷ 2)
+    const autoBuyback = Math.max(0, (500 * autoCount) - (userProfit / 2))
+
     setBuybackAmount({
       manual: manualBuyback,
       auto: autoBuyback,
@@ -270,21 +268,30 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         </CardHeader>
         <CardContent className="space-y-6">
           {/* 現在の保有状況 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-gray-800/50 rounded-lg p-4">
               <div className="text-sm text-gray-400">手動購入NFT</div>
               <div className="text-2xl font-bold text-white">{nftData.manual_nft_count}枚</div>
-              <div className="text-xs text-gray-500">買い取り額: 1000 - 利益</div>
+              <div className="text-xs text-gray-400 mt-1">計算式: 1000ドル - (そのNFTの利益 ÷ 2)</div>
+              <div className="text-sm text-yellow-400 font-semibold mt-2">
+                概算: {nftData.manual_nft_count > 0 ? (() => {
+                  const totalBuyback = Math.max(0, (1000 * nftData.manual_nft_count) - (userProfit / 2))
+                  return `$${totalBuyback.toFixed(2)}`
+                })() : '$0.00'}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">※ 正確な金額は申請時に計算されます</div>
             </div>
             <div className="bg-gray-800/50 rounded-lg p-4">
               <div className="text-sm text-gray-400">自動購入NFT</div>
               <div className="text-2xl font-bold text-white">{nftData.auto_nft_count}枚</div>
-              <div className="text-xs text-gray-500">買い取り額: 500ドル-利益額</div>
-            </div>
-            <div className="bg-gray-800/50 rounded-lg p-4">
-              <div className="text-sm text-gray-400">累計利益</div>
-              <div className="text-2xl font-bold text-yellow-400">${userProfit.toFixed(2)}</div>
-              <div className="text-xs text-gray-500">手動NFTから差引</div>
+              <div className="text-xs text-gray-400 mt-1">計算式: 500ドル - (そのNFTの利益 ÷ 2)</div>
+              <div className="text-sm text-yellow-400 font-semibold mt-2">
+                概算: {nftData.auto_nft_count > 0 ? (() => {
+                  const totalBuyback = Math.max(0, (500 * nftData.auto_nft_count) - (userProfit / 2))
+                  return `$${totalBuyback.toFixed(2)}`
+                })() : '$0.00'}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">※ 正確な金額は申請時に計算されます</div>
             </div>
           </div>
 
@@ -410,6 +417,9 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                 placeholder="USDT BEP20アドレス"
                 className="bg-gray-800 border-gray-700 text-white"
               />
+              <div className="mt-2 text-xs text-red-400 font-semibold">
+                ⚠️ 誤ったアドレスを入力された場合の責任は一切負いかねます。必ずご自身のウォレットアドレスをご確認の上、正確に入力してください。
+              </div>
             </div>
 
             {/* 買い取り額計算 */}
