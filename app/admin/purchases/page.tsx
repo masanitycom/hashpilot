@@ -374,6 +374,24 @@ export default function AdminPurchasesPage() {
 
       if (updateError) throw updateError
 
+      // operation_start_dateを再計算して更新
+      const { error: operationDateError } = await supabase.rpc('calculate_operation_start_date', {
+        p_approved_at: newDate
+      }).then(async (result) => {
+        if (result.data) {
+          // usersテーブルのoperation_start_dateを更新
+          return await supabase
+            .from('users')
+            .update({ operation_start_date: result.data })
+            .eq('user_id', purchaseData.user_id)
+        }
+        return { error: null }
+      })
+
+      if (operationDateError) {
+        console.warn('operation_start_date更新エラー:', operationDateError)
+      }
+
       // システムログに記録
       await supabase.from("system_logs").insert({
         log_type: 'SUCCESS',
@@ -390,7 +408,7 @@ export default function AdminPurchasesPage() {
         created_at: new Date().toISOString()
       })
 
-      alert(`承認日を更新しました\n旧: ${oldDate ? new Date(oldDate).toLocaleDateString('ja-JP') : 'なし'}\n新: ${new Date(newDate).toLocaleDateString('ja-JP')}`)
+      alert(`承認日を更新しました\n旧: ${oldDate ? new Date(oldDate).toLocaleDateString('ja-JP') : 'なし'}\n新: ${new Date(newDate).toLocaleDateString('ja-JP')}\n\n運用開始日も自動更新されました`)
       fetchPurchases()
       setEditingApprovalDate(null)
       setNewApprovalDate("")
