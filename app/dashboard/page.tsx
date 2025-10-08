@@ -91,6 +91,7 @@ export default function OptimizedDashboardPage() {
   const [userData, setUserData] = useState<UserData | null>(null)
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [currentNftCount, setCurrentNftCount] = useState<number>(0)
+  const [currentInvestment, setCurrentInvestment] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [loadingStage, setLoadingStage] = useState(1)
   const [error, setError] = useState("")
@@ -338,7 +339,7 @@ export default function OptimizedDashboardPage() {
     try {
       const { data: cycleData, error } = await supabase
         .from("affiliate_cycle")
-        .select("total_nft_count")
+        .select("total_nft_count, manual_nft_count, auto_nft_count")
         .eq("user_id", userId)
         .single()
 
@@ -347,7 +348,15 @@ export default function OptimizedDashboardPage() {
         return
       }
 
-      setCurrentNftCount(cycleData?.total_nft_count || 0)
+      const totalNfts = cycleData?.total_nft_count || 0
+      const manualNfts = cycleData?.manual_nft_count || 0
+      const autoNfts = cycleData?.auto_nft_count || 0
+
+      // 現在の投資額 = (手動NFT × 1000) + (自動NFT × 500)
+      const investment = (manualNfts * 1000) + (autoNfts * 500)
+
+      setCurrentNftCount(totalNfts)
+      setCurrentInvestment(investment)
     } catch (error) {
       console.error("Error fetching current NFT count:", error)
     }
@@ -700,7 +709,7 @@ const LazyLoadedContent = ({ userData, userStats }: { userData: UserData | null,
             <div className="flex items-center space-x-1">
               <DollarSign className="h-4 w-4 text-green-400 flex-shrink-0" />
               <span className="text-base md:text-xl lg:text-2xl font-bold text-green-400 truncate">
-                ${(userStats?.total_investment || 0).toLocaleString()}
+                ${currentInvestment.toLocaleString()}
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-1">{currentNftCount} NFT保有</p>
@@ -755,13 +764,13 @@ const LazyLoadedContent = ({ userData, userStats }: { userData: UserData | null,
       </div>
 
       {/* 残りのコンテンツ（さらに遅延） */}
-      <DelayedContent userData={userData} userStats={userStats} />
+      <DelayedContent userData={userData} userStats={userStats} currentInvestment={currentInvestment} />
     </>
   )
 }
 
 // さらに遅延したコンテンツ
-const DelayedContent = ({ userData, userStats }: { userData: UserData | null, userStats: UserStats | null }) => {
+const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: UserData | null, userStats: UserStats | null, currentInvestment: number }) => {
   const [showDelayedContent, setShowDelayedContent] = useState(false)
 
   useEffect(() => {
@@ -782,7 +791,7 @@ const DelayedContent = ({ userData, userStats }: { userData: UserData | null, us
       {/* 運用状況セクション */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <CycleStatusCard userId={userData?.user_id || ""} />
-        <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={userStats?.total_investment || 0} />
+        <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={currentInvestment} />
         <ReferralProfitCard userId={userData?.user_id || ""} />
       </div>
 
