@@ -105,49 +105,42 @@ export default function AdminBuybackPage() {
   const fetchRequests = async () => {
     try {
       setLoading(true)
-      
-      // 買い取り申請データを取得（usersテーブルからペガサス情報も取得）
-      let query = supabase
-        .from("buyback_requests")
-        .select(`
-          *,
-          users!inner(
-            is_pegasus_exchange,
-            pegasus_exchange_date,
-            pegasus_withdrawal_unlock_date
-          )
-        `)
-        .order("request_date", { ascending: false })
 
-      if (filter !== "all") {
-        query = query.eq("status", filter)
-      }
-
-      const { data: buybackData, error: buybackError } = await query
+      // get_all_buyback_requests関数を使用
+      const { data: buybackData, error: buybackError } = await supabase.rpc(
+        "get_all_buyback_requests",
+        filter === "all" ? {} : { p_status: filter }
+      )
 
       if (buybackError) {
-        console.error("Buyback requests table access failed:", buybackError)
+        console.error("Buyback requests fetch failed:", buybackError)
         setRequests([])
         setMessage({ type: "error", text: "データの取得に失敗しました" })
         return
       }
 
-      // データを整形（JOINで取得したusers情報を展開）
-      const formattedData = (buybackData || []).map((item: any) => {
-        const userData = item.users || {}
-        return {
-          ...item,
-          email: item.email || item.user_id || 'Unknown',
-          is_pegasus_exchange: userData.is_pegasus_exchange || false,
-          pegasus_exchange_date: userData.pegasus_exchange_date || null,
-          pegasus_withdrawal_unlock_date: userData.pegasus_withdrawal_unlock_date || null,
-        }
-      })
+      // ペガサス情報を取得するためにusersテーブルから追加情報を取得
+      const requestsWithPegasus = await Promise.all(
+        (buybackData || []).map(async (request: any) => {
+          const { data: userData } = await supabase
+            .from("users")
+            .select("is_pegasus_exchange, pegasus_exchange_date, pegasus_withdrawal_unlock_date")
+            .eq("user_id", request.user_id)
+            .single()
 
-      setRequests(formattedData)
+          return {
+            ...request,
+            is_pegasus_exchange: userData?.is_pegasus_exchange || false,
+            pegasus_exchange_date: userData?.pegasus_exchange_date || null,
+            pegasus_withdrawal_unlock_date: userData?.pegasus_withdrawal_unlock_date || null,
+          }
+        })
+      )
+
+      setRequests(requestsWithPegasus)
     } catch (error) {
       console.error("Error fetching buyback requests:", error)
-      setRequests([]) // エラー時は空配列
+      setRequests([])
     } finally {
       setLoading(false)
     }
