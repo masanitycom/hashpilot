@@ -236,7 +236,7 @@ export default function WithdrawalPage() {
               <CardContent className="p-4">
                 <Link href="/profile">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                    プロフィールで送金先を設定
+                    プロフィールでCoinW UIDを設定
                   </Button>
                 </Link>
               </CardContent>
@@ -265,7 +265,7 @@ export default function WithdrawalPage() {
                 <span className="text-blue-400 font-bold">2.</span>
                 <div>
                   <p className="font-medium text-white">送金方法</p>
-                  <p>プロフィールで設定された送金先に自動送金されます。CoinW UIDが優先され、未設定の場合は報酬受取アドレス（USDT BEP20）に送金されます。</p>
+                  <p>プロフィールで設定されたCoinW UIDに送金されます。CoinW UIDが未設定の場合は出金が保留されます。</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -279,14 +279,7 @@ export default function WithdrawalPage() {
                 <span className="text-blue-400 font-bold">4.</span>
                 <div>
                   <p className="font-medium text-white">送金先未設定の場合</p>
-                  <p>送金先が設定されていない場合、出金は保留状態となり、設定完了後に送金されます。</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <span className="text-blue-400 font-bold">5.</span>
-                <div>
-                  <p className="font-medium text-white">確認メール</p>
-                  <p>出金処理が完了すると、登録メールアドレスに確認メールが送信されます。</p>
+                  <p>CoinW UIDが設定されていない場合、出金は保留状態となり、設定完了後に送金されます。</p>
                 </div>
               </div>
             </div>
