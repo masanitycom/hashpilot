@@ -166,20 +166,29 @@ export default function AdminWithdrawalsPage() {
     try {
       setProcessing(true)
 
-      const { error } = await supabase
-        .from("monthly_withdrawals")
-        .update({ 
-          status: 'completed',
-          completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .in("id", ids)
+      // 新しいRPC関数を使用して出金完了処理（available_usdtも減算）
+      const { data, error } = await supabase.rpc("complete_withdrawals_batch", {
+        p_withdrawal_ids: ids.map(id => parseInt(id))
+      })
 
       if (error) {
         throw error
       }
 
-      alert(`${ids.length}件の出金を完了済みにしました`)
+      // 結果を確認
+      const results = data || []
+      const successCount = results.filter((r: any) => r.success).length
+      const failCount = results.filter((r: any) => !r.success).length
+
+      if (failCount > 0) {
+        const errors = results.filter((r: any) => !r.success).map((r: any) =>
+          `ID ${r.withdrawal_id}: ${r.error_message}`
+        ).join('\n')
+        alert(`出金完了処理結果:\n成功: ${successCount}件\n失敗: ${failCount}件\n\nエラー詳細:\n${errors}`)
+      } else {
+        alert(`${successCount}件の出金を完了済みにしました（available_usdtから減算済み）`)
+      }
+
       setSelectedIds(new Set())
       fetchWithdrawals()
     } catch (err: any) {

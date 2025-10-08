@@ -211,8 +211,8 @@ export default function WithdrawalPage() {
               </div>
               <div className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                 <AlertTriangle className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                <p className="text-purple-300 font-medium">最小額$10</p>
-                <p className="text-sm text-gray-300">$10以上で自動出金</p>
+                <p className="text-purple-300 font-medium">最小額$100</p>
+                <p className="text-sm text-gray-300">$100以上で自動出金</p>
               </div>
             </div>
           </CardContent>
@@ -265,14 +265,14 @@ export default function WithdrawalPage() {
                 <span className="text-blue-400 font-bold">2.</span>
                 <div>
                   <p className="font-medium text-white">送金方法</p>
-                  <p>プロフィールで設定された報酬受取アドレス（USDT BEP20）またはCoinW UIDに送金されます。</p>
+                  <p>プロフィールで設定された送金先に自動送金されます。CoinW UIDが優先され、未設定の場合は報酬受取アドレス（USDT BEP20）に送金されます。</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <span className="text-blue-400 font-bold">3.</span>
                 <div>
                   <p className="font-medium text-white">最小出金額</p>
-                  <p>$10以上の報酬がある場合に自動出金されます。$10未満の場合は翌月に繰り越されます。</p>
+                  <p>$100以上の報酬がある場合に自動出金されます。$100未満の場合は翌月に繰り越されます。</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">

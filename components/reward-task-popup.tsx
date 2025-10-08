@@ -172,9 +172,12 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
             <div className="text-center py-8">
               <CheckCircle className="h-12 w-12 mx-auto text-green-400 mb-4" />
               <h3 className="text-white font-medium mb-2">タスク完了！</h3>
+              <p className="text-green-400 text-base font-medium mb-2">
+                出金申請完了しました。
+              </p>
               <p className="text-gray-400 text-sm">
                 アンケートにご協力いただき、ありがとうございました。
-                <br />月末報酬の出金処理が可能になりました。
+                <br />5日以内に送金処理を行います。
               </p>
             </div>
           ) : submitting ? (
