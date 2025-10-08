@@ -352,8 +352,9 @@ export default function OptimizedDashboardPage() {
       const manualNfts = cycleData?.manual_nft_count || 0
       const autoNfts = cycleData?.auto_nft_count || 0
 
-      // 現在の投資額 = (手動NFT × 1000) + (自動NFT × 500)
-      const investment = (manualNfts * 1000) + (autoNfts * 500)
+      // 現在の投資額 = 全NFT × 1000 (運用額は手動も自動も同じ$1,000)
+      // ※ 買い取り時は自動NFTは$500だが、運用額は$1,000
+      const investment = totalNfts * 1000
 
       setCurrentNftCount(totalNfts)
       setCurrentInvestment(investment)
