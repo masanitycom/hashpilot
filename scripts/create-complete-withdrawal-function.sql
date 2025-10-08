@@ -140,12 +140,12 @@ GRANT EXECUTE ON FUNCTION complete_withdrawals_batch(INTEGER[]) TO authenticated
 -- 完了メッセージ
 DO $$
 BEGIN
-    RAISE NOTICE '==========================================='::TEXT;
-    RAISE NOTICE '✅ 出金完了処理関数を作成しました'::TEXT;
-    RAISE NOTICE '==========================================='::TEXT;
-    RAISE NOTICE '機能:'::TEXT;
-    RAISE NOTICE '  - 出金を completed に更新'::TEXT;
-    RAISE NOTICE '  - affiliate_cycle.available_usdt から減算'::TEXT;
-    RAISE NOTICE '  - 複数出金の一括処理対応'::TEXT;
-    RAISE NOTICE '==========================================='::TEXT;
+    RAISE NOTICE '===========================================';
+    RAISE NOTICE '✅ 出金完了処理関数を作成しました';
+    RAISE NOTICE '===========================================';
+    RAISE NOTICE '機能:';
+    RAISE NOTICE '  - 出金を completed に更新';
+    RAISE NOTICE '  - affiliate_cycle.available_usdt から減算';
+    RAISE NOTICE '  - 複数出金の一括処理対応';
+    RAISE NOTICE '===========================================';
 END $$;
