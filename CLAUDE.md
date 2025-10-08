@@ -96,6 +96,12 @@
 - 日利処理と紹介報酬計算で運用開始日をチェック
 - 運用開始前のユーザーは日利・紹介報酬の対象外
 
+**フロントエンドの運用開始日チェック:**
+- `referral-profit-card.tsx`: 紹介報酬計算時に`operation_start_date`をチェック
+- `total-profit-card.tsx`: 合計利益計算時に`operation_start_date`をチェック
+- `monthly-profit-card.tsx`: 月次利益計算時に`operation_start_date`をチェック
+- 条件: `operation_start_date IS NOT NULL AND operation_start_date <= 今日`
+
 **旧ルール（廃止）:**
 - ~~承認日から15日後に運用開始~~ → 2025年10月に新ルールへ変更
 

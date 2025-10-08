@@ -210,12 +210,16 @@ export function TotalProfitCard({
       return { yesterday: 0, monthly: 0 }
     }
 
-    // NFT承認済みユーザーのみフィルター
+    // NFT承認済みかつ運用開始済みユーザーのみフィルター
+    const today = new Date().toISOString().split('T')[0]
+
     const { data: usersData, error: usersError } = await supabase
       .from('users')
-      .select('user_id, has_approved_nft')
+      .select('user_id, has_approved_nft, operation_start_date')
       .in('user_id', userIds)
       .eq('has_approved_nft', true)
+      .not('operation_start_date', 'is', null)
+      .lte('operation_start_date', today)
 
     if (usersError) {
       console.error('Error fetching user approval status:', usersError)

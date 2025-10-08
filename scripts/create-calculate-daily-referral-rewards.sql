@@ -161,15 +161,6 @@ SELECT
     END as result;
 
 -- 完了メッセージ
-DO $$
-BEGIN
-    RAISE NOTICE '===========================================';
-    RAISE NOTICE '✅ 紹介報酬計算関数を作成しました';
-    RAISE NOTICE '===========================================';
-    RAISE NOTICE '機能:';
-    RAISE NOTICE '  - Level 1: 20%、Level 2: 10%、Level 3: 5%';
-    RAISE NOTICE '  - 運用開始日チェック付き';
-    RAISE NOTICE '  - 運用開始前のユーザーは除外';
-    RAISE NOTICE '  - nft_daily_profitから日利を取得して計算';
-    RAISE NOTICE '===========================================';
-END $$;
+SELECT '紹介報酬計算関数を作成しました' as completion_message;
+SELECT 'Level 1: 20%, Level 2: 10%, Level 3: 5%' as rates;
+SELECT '運用開始日チェック付き - 運用開始前のユーザーは除外' as feature;

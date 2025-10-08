@@ -108,16 +108,21 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
     if (userIds.length === 0) return 0
 
     // NFT承認済みかつ実際に運用開始しているユーザーのみフィルター
+    const today = new Date().toISOString().split('T')[0]
+
     const { data: usersData, error: usersError } = await supabase
       .from('users')
       .select(`
-        user_id, 
+        user_id,
         has_approved_nft,
+        operation_start_date,
         affiliate_cycle!inner(total_nft_count)
       `)
       .in('user_id', userIds)
       .eq('has_approved_nft', true)
       .gt('affiliate_cycle.total_nft_count', 0)
+      .not('operation_start_date', 'is', null)
+      .lte('operation_start_date', today)
 
     if (usersError) {
       console.error('Error fetching user approval status:', usersError)

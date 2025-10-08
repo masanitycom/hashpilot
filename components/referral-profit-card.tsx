@@ -130,16 +130,23 @@ export function ReferralProfitCard({
 
     // NFT承認済みかつ実際に運用開始しているユーザーのみフィルター
     console.log('🔍 Checking operational status for users:', userIds)
+
+    // 今日の日付を取得（運用開始日との比較用）
+    const today = new Date().toISOString().split('T')[0]
+
     const { data: usersData, error: usersError } = await supabase
       .from('users')
       .select(`
-        user_id, 
+        user_id,
         has_approved_nft,
+        operation_start_date,
         affiliate_cycle!inner(total_nft_count)
       `)
       .in('user_id', userIds)
       .eq('has_approved_nft', true)
       .gt('affiliate_cycle.total_nft_count', 0)
+      .not('operation_start_date', 'is', null)
+      .lte('operation_start_date', today)
 
     if (usersError) {
       console.error('❌ Error fetching user approval status:', usersError)
@@ -147,11 +154,12 @@ export function ReferralProfitCard({
     }
 
     console.log('✅ NFT approved users found:', usersData)
+    console.log('✅ Operation start date check applied (must be <= today)')
 
-    // NFT承認済みユーザーIDを取得
+    // NFT承認済みかつ運用開始済みユーザーIDを取得
     const eligibleUserIds = usersData.map(user => user.user_id)
 
-    console.log('✅ Eligible users for profit calculation:', eligibleUserIds)
+    console.log('✅ Eligible users for profit calculation (operation started):', eligibleUserIds)
 
     if (eligibleUserIds.length === 0) {
       console.log('⚠️ No eligible users found')

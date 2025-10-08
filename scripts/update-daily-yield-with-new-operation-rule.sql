@@ -263,14 +263,5 @@ GRANT EXECUTE ON FUNCTION process_daily_yield_with_cycles(DATE, NUMERIC, NUMERIC
 GRANT EXECUTE ON FUNCTION process_daily_yield_with_cycles(DATE, NUMERIC, NUMERIC, BOOLEAN, BOOLEAN) TO authenticated;
 
 -- 完了メッセージ
-DO $$
-BEGIN
-    RAISE NOTICE '===========================================';
-    RAISE NOTICE '✅ 日利処理関数を新しい運用開始日ルールに更新しました';
-    RAISE NOTICE '===========================================';
-    RAISE NOTICE '変更点:';
-    RAISE NOTICE '  - operation_start_dateカラムを使用';
-    RAISE NOTICE '  - 運用開始日 <= 処理日のユーザーのみ処理';
-    RAISE NOTICE '  - NFT日利計算と紹介報酬計算で運用開始日をチェック';
-    RAISE NOTICE '===========================================';
-END $$;
+SELECT '日利処理関数を新しい運用開始日ルールに更新しました' as completion_message;
+SELECT 'operation_start_dateカラムを使用 - 運用開始日チェック追加' as changes;
