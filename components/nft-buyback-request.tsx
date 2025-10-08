@@ -167,15 +167,15 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
       if (error) throw error
 
       if (data && data[0]?.success) {
-        setMessage({ 
-          type: "success", 
-          text: `買い取り申請が完了しました。買い取り額: $${data[0].total_amount}` 
+        setMessage({
+          type: "success",
+          text: `買い取り申請が完了しました。買い取り額: $${data[0].total_buyback_amount}`
         })
-        
+
         // フォームをリセット
         setManualCount(0)
         setAutoCount(0)
-        
+
         // データを再取得
         fetchNftData()
         fetchBuybackHistory()
