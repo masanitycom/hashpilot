@@ -41,6 +41,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
   const [history, setHistory] = useState<BuybackHistory[]>([])
   const [userProfit, setUserProfit] = useState(0)
   const [cancellingId, setCancellingId] = useState<string | null>(null)
+  const [calculatingAmount, setCalculatingAmount] = useState(false)
 
   useEffect(() => {
     fetchNftData()
@@ -128,18 +129,43 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     }
   }
 
-  const calculateBuybackAmount = () => {
+  const calculateBuybackAmount = async () => {
     if (!nftData) return
+    if (manualCount === 0 && autoCount === 0) {
+      setBuybackAmount({ manual: 0, auto: 0, total: 0 })
+      return
+    }
 
-    // 最大買い取り額を表示（利益控除前）
-    // 実際の金額は、各NFTの累積利益に基づいてバックエンドで正確に計算されます
-    const maxBuyback = (1000 * manualCount) + (500 * autoCount)
+    setCalculatingAmount(true)
+    try {
+      // バックエンドで正確な買い取り額を計算
+      const { data, error } = await supabase.rpc('calculate_buyback_preview', {
+        p_user_id: userId,
+        p_manual_nft_count: manualCount,
+        p_auto_nft_count: autoCount
+      })
 
-    setBuybackAmount({
-      manual: 0, // 内訳は表示しない
-      auto: 0,   // 内訳は表示しない
-      total: maxBuyback // 最大額を表示
-    })
+      if (error) throw error
+
+      if (data && data[0]) {
+        setBuybackAmount({
+          manual: data[0].manual_buyback_amount || 0,
+          auto: data[0].auto_buyback_amount || 0,
+          total: data[0].total_buyback_amount || 0
+        })
+      }
+    } catch (error) {
+      console.error('Error calculating buyback amount:', error)
+      // エラー時は最大額を表示
+      const maxBuyback = (1000 * manualCount) + (500 * autoCount)
+      setBuybackAmount({
+        manual: 0,
+        auto: 0,
+        total: maxBuyback
+      })
+    } finally {
+      setCalculatingAmount(false)
+    }
   }
 
   const handleSubmit = async () => {
@@ -366,29 +392,37 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
               </div>
             </div>
 
-            {/* 買い取り額概算 */}
+            {/* 買い取り額 */}
             {(manualCount > 0 || autoCount > 0) && (
               <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-                <div className="text-sm text-blue-400 mb-2">最大買い取り額（利益控除前）</div>
+                <div className="text-sm text-blue-400 mb-2 flex items-center gap-2">
+                  買い取り金額
+                  {calculatingAmount && <Loader2 className="h-4 w-4 animate-spin" />}
+                </div>
                 <div className="space-y-2 text-white">
-                  {manualCount > 0 && (
+                  {manualCount > 0 && buybackAmount.manual > 0 && (
                     <div className="text-sm text-gray-300">
-                      手動NFT {manualCount}枚 × $1,000 = ${(manualCount * 1000).toLocaleString()}
+                      手動NFT {manualCount}枚: ${buybackAmount.manual.toLocaleString()}
                     </div>
                   )}
-                  {autoCount > 0 && (
+                  {autoCount > 0 && buybackAmount.auto > 0 && (
                     <div className="text-sm text-gray-300">
-                      自動NFT {autoCount}枚 × $500 = ${(autoCount * 500).toLocaleString()}
+                      自動NFT {autoCount}枚: ${buybackAmount.auto.toLocaleString()}
                     </div>
                   )}
                   <div className="border-t border-gray-700 pt-2 mt-2">
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-lg">最大合計</span>
-                      <span className="font-bold text-2xl text-yellow-400">${buybackAmount.total.toLocaleString()}</span>
+                      <span className="font-bold text-lg">買い取り合計</span>
+                      <span className="font-bold text-2xl text-yellow-400">
+                        {calculatingAmount ? (
+                          <Loader2 className="h-6 w-6 animate-spin inline" />
+                        ) : (
+                          `$${buybackAmount.total.toLocaleString()}`
+                        )}
+                      </span>
                     </div>
                     <div className="text-xs text-gray-400 mt-2">
-                      ※ 実際の買い取り額は、各NFTの累積利益を差し引いて計算されます。<br/>
-                      正確な金額は申請後に確定します。
+                      ※ 各NFTの累積利益を差し引いた実際の買い取り金額です
                     </div>
                   </div>
                 </div>
