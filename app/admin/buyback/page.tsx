@@ -569,8 +569,7 @@ export default function AdminBuybackPage() {
                       setTransactionHash("")
                       setAdminNotes("")
                     }}
-                    variant="outline"
-                    className="w-full bg-gray-700 text-white border-gray-600 hover:bg-gray-800"
+                    className="w-full bg-gray-700 text-white border-gray-600 hover:bg-gray-800 hover:text-white"
                     disabled={processingId === selectedRequest.id}
                   >
                     閉じる
