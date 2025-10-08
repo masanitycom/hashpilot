@@ -43,8 +43,8 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
     // 20日までに承認 → 翌月1日より運用開始
     operationStart = new Date(approvalYear, approvalMonth + 1, 1)
   } else {
-    // 20日以降に承認 → 翌々月1日より運用開始
-    operationStart = new Date(approvalYear, approvalMonth + 2, 1)
+    // 20日より後に承認 → 翌月1日より運用開始
+    operationStart = new Date(approvalYear, approvalMonth + 1, 1)
   }
 
   // 今日の日付（日本時間）
