@@ -93,17 +93,10 @@ export default function AdminWithdrawalsPage() {
 
       const targetDate = `${selectedMonth}-01`
       
-      // 月間出金記録を取得（usersテーブルからペガサス情報も取得）
+      // 月間出金記録を取得
       const { data: withdrawalData, error: withdrawalError } = await supabase
         .from("monthly_withdrawals")
-        .select(`
-          *,
-          users!fk_monthly_withdrawals_user(
-            is_pegasus_exchange,
-            pegasus_exchange_date,
-            pegasus_withdrawal_unlock_date
-          )
-        `)
+        .select("*")
         .eq("withdrawal_month", targetDate)
         .order("created_at", { ascending: false })
 
@@ -111,16 +104,23 @@ export default function AdminWithdrawalsPage() {
         throw withdrawalError
       }
 
-      // データを整形（JOINで取得したusers情報を展開）
-      const formattedData = (withdrawalData || []).map((item: any) => {
-        const userData = item.users || {}
-        return {
-          ...item,
-          is_pegasus_exchange: userData.is_pegasus_exchange || false,
-          pegasus_exchange_date: userData.pegasus_exchange_date || null,
-          pegasus_withdrawal_unlock_date: userData.pegasus_withdrawal_unlock_date || null,
-        }
-      })
+      // ユーザー情報を別途取得してマージ
+      const formattedData = await Promise.all(
+        (withdrawalData || []).map(async (item: any) => {
+          const { data: userData } = await supabase
+            .from("users")
+            .select("is_pegasus_exchange, pegasus_exchange_date, pegasus_withdrawal_unlock_date")
+            .eq("user_id", item.user_id)
+            .single()
+
+          return {
+            ...item,
+            is_pegasus_exchange: userData?.is_pegasus_exchange || false,
+            pegasus_exchange_date: userData?.pegasus_exchange_date || null,
+            pegasus_withdrawal_unlock_date: userData?.pegasus_withdrawal_unlock_date || null,
+          }
+        })
+      )
 
       setWithdrawals(formattedData)
 
