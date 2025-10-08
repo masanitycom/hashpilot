@@ -45,7 +45,7 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
       setLoading(true)
       setError("")
 
-      const { data, error } = await supabase.rpc("get_random_questions", { p_count: 5 })
+      const { data, error } = await supabase.rpc("get_random_questions", { p_count: 1 })
 
       if (error) {
         throw error
@@ -102,7 +102,7 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
 
       const { error } = await supabase.rpc("complete_reward_task", {
         p_user_id: userId,
-        p_answers: JSON.stringify(answersData)
+        p_answers: answersData
       })
 
       if (error) {
