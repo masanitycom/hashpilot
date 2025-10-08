@@ -82,23 +82,7 @@ SELECT
 FROM pg_proc
 WHERE proname = 'calculate_daily_referral_rewards';
 
-SELECT '=== 7. 7E0A1Eの紹介報酬履歴（最近10件） ===' as section;
-
-SELECT
-    date,
-    level_1_profit,
-    level_1_reward,
-    level_2_profit,
-    level_2_reward,
-    level_3_profit,
-    level_3_reward,
-    total_reward
-FROM daily_referral_rewards
-WHERE user_id = '7E0A1E'
-ORDER BY date DESC
-LIMIT 10;
-
-SELECT '=== 8. 直接テスト: 7E0A1Eの今日の紹介報酬を計算 ===' as section;
+SELECT '=== 7. 直接テスト: 7E0A1Eの今日の紹介報酬を計算 ===' as section;
 
 SELECT
     referral_user_id,
