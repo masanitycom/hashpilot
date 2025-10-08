@@ -47,7 +47,7 @@ BEGIN
     v_year := EXTRACT(YEAR FROM v_target_month);
     v_month := EXTRACT(MONTH FROM v_target_month);
 
-    -- 出金処理（available_usdt >= 100のユーザー）
+    -- 出金処理（available_usdt >= 10のユーザー）
     -- ⭐ ペガサス交換ユーザーで出金制限期間内のユーザーを除外
     FOR v_user_record IN
         SELECT
@@ -60,7 +60,7 @@ BEGIN
             u.pegasus_withdrawal_unlock_date
         FROM affiliate_cycle ac
         INNER JOIN users u ON ac.user_id = u.user_id
-        WHERE ac.available_usdt >= 100  -- 最低出金額100 USDT
+        WHERE ac.available_usdt >= 10  -- 最低出金額10 USDT
           -- ⭐ ペガサス交換ユーザーで出金制限期間内のユーザーを除外
           AND NOT (
               COALESCE(u.is_pegasus_exchange, FALSE) = TRUE
@@ -283,7 +283,7 @@ BEGIN
     RAISE NOTICE '===========================================';
     RAISE NOTICE '機能:';
     RAISE NOTICE '  - 日本時間での月末判定';
-    RAISE NOTICE '  - available_usdt >= 100 のユーザーに出金申請作成';
+    RAISE NOTICE '  - available_usdt >= 10 のユーザーに出金申請作成';
     RAISE NOTICE '  - ペガサス交換ユーザー（制限中）を除外';
     RAISE NOTICE '  - 初期ステータス: on_hold（タスク未完了）';
     RAISE NOTICE '  - タスク完了時に status を pending に変更';
