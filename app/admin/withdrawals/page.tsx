@@ -98,7 +98,7 @@ export default function AdminWithdrawalsPage() {
         .from("monthly_withdrawals")
         .select(`
           *,
-          users!inner(
+          users!fk_monthly_withdrawals_user(
             is_pegasus_exchange,
             pegasus_exchange_date,
             pegasus_withdrawal_unlock_date
