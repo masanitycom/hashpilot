@@ -198,23 +198,21 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
                 <div className="space-y-3">
                   <Button
                     onClick={() => handleAnswer('A')}
-                    variant={getCurrentAnswer() === 'A' ? 'default' : 'outline'}
                     className={`w-full justify-start text-left ${
-                      getCurrentAnswer() === 'A' 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                        : 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                      getCurrentAnswer() === 'A'
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
+                        : 'bg-gray-800 border-2 border-gray-600 text-white hover:bg-gray-700 hover:border-gray-500'
                     }`}
                   >
                     A. {questions[currentQuestionIndex]?.option_a}
                   </Button>
-                  
+
                   <Button
                     onClick={() => handleAnswer('B')}
-                    variant={getCurrentAnswer() === 'B' ? 'default' : 'outline'}
                     className={`w-full justify-start text-left ${
-                      getCurrentAnswer() === 'B' 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                        : 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                      getCurrentAnswer() === 'B'
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
+                        : 'bg-gray-800 border-2 border-gray-600 text-white hover:bg-gray-700 hover:border-gray-500'
                     }`}
                   >
                     B. {questions[currentQuestionIndex]?.option_b}
@@ -227,9 +225,8 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
                 <Button
                   onClick={goToPreviousQuestion}
                   disabled={currentQuestionIndex === 0}
-                  variant="outline"
                   size="sm"
-                  className="border-gray-600 text-gray-300"
+                  className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
                 >
                   前の問題
                 </Button>
@@ -238,7 +235,7 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
                   {answers.length === questions.length && (
                     <Button
                       onClick={() => submitAnswers()}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-green-600 hover:bg-green-700 text-white"
                       size="sm"
                     >
                       回答送信
