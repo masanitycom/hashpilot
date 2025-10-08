@@ -90,6 +90,7 @@ export default function OptimizedDashboardPage() {
   const [user, setUser] = useState<any>(null)
   const [userData, setUserData] = useState<UserData | null>(null)
   const [userStats, setUserStats] = useState<UserStats | null>(null)
+  const [currentNftCount, setCurrentNftCount] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [loadingStage, setLoadingStage] = useState(1)
   const [error, setError] = useState("")
@@ -198,7 +199,8 @@ export default function OptimizedDashboardPage() {
       // 並列でデータ取得を開始
       await Promise.all([
         calculateStatsOptimized(userRecord),
-        fetchLatestApprovalDate(userRecord.user_id)
+        fetchLatestApprovalDate(userRecord.user_id),
+        fetchCurrentNftCount(userRecord.user_id)
       ])
       
     } catch (error) {
@@ -331,6 +333,25 @@ export default function OptimizedDashboardPage() {
       })
     }
   }, [])
+
+  const fetchCurrentNftCount = async (userId: string) => {
+    try {
+      const { data: cycleData, error } = await supabase
+        .from("affiliate_cycle")
+        .select("total_nft_count")
+        .eq("user_id", userId)
+        .single()
+
+      if (error) {
+        console.error("Error fetching NFT count:", error)
+        return
+      }
+
+      setCurrentNftCount(cycleData?.total_nft_count || 0)
+    } catch (error) {
+      console.error("Error fetching current NFT count:", error)
+    }
+  }
 
   const fetchLatestApprovalDate = async (userId: string) => {
     try {
@@ -682,7 +703,7 @@ const LazyLoadedContent = ({ userData, userStats }: { userData: UserData | null,
                 ${(userStats?.total_investment || 0).toLocaleString()}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{Math.floor((userData?.total_purchases || 0) / 1100)} NFT保有</p>
+            <p className="text-xs text-gray-500 mt-1">{currentNftCount} NFT保有</p>
           </CardContent>
         </Card>
 
