@@ -4,12 +4,38 @@ import { Badge } from "@/components/ui/badge"
 import { CalendarDays, TrendingUp, Clock, AlertCircle } from "lucide-react"
 
 interface OperationStatusProps {
-  approvalDate: string | null
+  approvalDate?: string | null
+  operationStartDate?: string | null
   variant?: "default" | "compact"
 }
 
-export function OperationStatus({ approvalDate, variant = "default" }: OperationStatusProps) {
-  if (!approvalDate) {
+export function OperationStatus({ approvalDate, operationStartDate, variant = "default" }: OperationStatusProps) {
+  // operation_start_dateが提供されている場合はそれを優先使用
+  let operationStart: Date | null = null
+  let approvalDateForDisplay: Date | null = null
+
+  if (operationStartDate) {
+    // データベースのoperation_start_dateを使用（最も信頼できる）
+    operationStart = new Date(operationStartDate)
+  } else if (approvalDate) {
+    // approvalDateから計算（後方互換性のため）
+    const approvalUTC = new Date(approvalDate)
+    const approvalJST = new Date(approvalUTC.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
+    approvalDateForDisplay = approvalJST
+    const approvalDay = approvalJST.getDate()
+    const approvalMonth = approvalJST.getMonth()
+    const approvalYear = approvalJST.getFullYear()
+
+    if (approvalDay <= 5) {
+      operationStart = new Date(approvalYear, approvalMonth, 15)
+    } else if (approvalDay <= 20) {
+      operationStart = new Date(approvalYear, approvalMonth + 1, 1)
+    } else {
+      operationStart = new Date(approvalYear, approvalMonth + 1, 1)
+    }
+  }
+
+  if (!operationStart) {
     if (variant === "compact") {
       return (
         <div className="text-xs">
@@ -27,35 +53,14 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
     )
   }
 
-  // 日本時間（JST）で承認日を取得
-  const approvalUTC = new Date(approvalDate)
-  const approvalJST = new Date(approvalUTC.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
-  const approvalDay = approvalJST.getDate()
-  const approvalMonth = approvalJST.getMonth()
-  const approvalYear = approvalJST.getFullYear()
-
-  // 運用開始日の計算（日本時間基準）
-  let operationStart: Date
-  if (approvalDay <= 5) {
-    // 5日までに承認 → 当月15日より運用開始
-    operationStart = new Date(approvalYear, approvalMonth, 15)
-  } else if (approvalDay <= 20) {
-    // 20日までに承認 → 翌月1日より運用開始
-    operationStart = new Date(approvalYear, approvalMonth + 1, 1)
-  } else {
-    // 20日より後に承認 → 翌月1日より運用開始
-    operationStart = new Date(approvalYear, approvalMonth + 1, 1)
-  }
-
   // 今日の日付（日本時間）
   const todayUTC = new Date()
   const todayJST = new Date(todayUTC.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
 
   // 日付のみで比較（時間を無視）
-  const approvalDateOnly = new Date(approvalYear, approvalMonth, approvalDay)
   const operationStartDateOnly = new Date(operationStart.getFullYear(), operationStart.getMonth(), operationStart.getDate())
   const todayDateOnly = new Date(todayJST.getFullYear(), todayJST.getMonth(), todayJST.getDate())
-  
+
   const isOperating = todayDateOnly >= operationStartDateOnly
   const daysUntilStart = Math.ceil((operationStartDateOnly.getTime() - todayDateOnly.getTime()) / (1000 * 60 * 60 * 24))
   
@@ -138,11 +143,13 @@ export function OperationStatus({ approvalDate, variant = "default" }: Operation
           </>
         )}
       </div>
-      
-      <div className="text-xs text-gray-400">
-        承認日: {formatDate(approvalDate)}
-      </div>
-      
+
+      {approvalDate && (
+        <div className="text-xs text-gray-400">
+          承認日: {formatDate(approvalDate)}
+        </div>
+      )}
+
       {showTestNotice && (
         <div className="mt-2 p-2 bg-blue-900/20 border border-blue-500/30 rounded-lg">
           <p className="text-xs text-blue-300">

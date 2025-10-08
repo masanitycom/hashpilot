@@ -33,6 +33,7 @@ interface UserData {
   total_purchases: number
   referrer_user_id: string | null
   created_at: string
+  operation_start_date: string | null
 }
 
 interface UserStats {
@@ -636,7 +637,10 @@ export default function OptimizedDashboardPage() {
               
               {/* 運用ステータス */}
               <div className="mt-4">
-                <OperationStatus approvalDate={latestApprovalDate} />
+                <OperationStatus
+                  operationStartDate={userData?.operation_start_date}
+                  approvalDate={latestApprovalDate}
+                />
               </div>
             </div>
             <div className="hidden md:block">
