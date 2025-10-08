@@ -18,26 +18,18 @@ SELECT '=== 2. 新規関数の確認 ===' as section;
 
 -- complete_withdrawal 関数
 SELECT
-    routine_name,
-    routine_type,
-    data_type as return_type
-FROM information_schema.routines
-WHERE routine_name IN ('complete_withdrawal', 'complete_withdrawals_batch')
-ORDER BY routine_name;
+    proname as function_name,
+    pronargs as num_args
+FROM pg_proc
+WHERE proname IN ('complete_withdrawal', 'complete_withdrawals_batch')
+ORDER BY proname;
 
--- get_auto_purchase_history 関数の戻り値型
+-- get_auto_purchase_history 関数
 SELECT
-    routine_name,
-    parameter_name,
-    data_type,
-    parameter_mode
-FROM information_schema.parameters
-WHERE specific_name IN (
-    SELECT specific_name
-    FROM information_schema.routines
-    WHERE routine_name = 'get_auto_purchase_history'
-)
-ORDER BY ordinal_position;
+    proname as function_name,
+    pronargs as num_args
+FROM pg_proc
+WHERE proname = 'get_auto_purchase_history';
 
 SELECT '=== 3. データ整合性チェック ===' as section;
 
@@ -129,31 +121,12 @@ FROM get_auto_purchase_history('7E0A1E', 5);
 
 SELECT '=== 8. 変更された関数のバージョン確認 ===' as section;
 
--- process_daily_yield_with_cycles のパラメータ確認
+-- process_daily_yield_with_cycles 関数の存在確認
 SELECT
-    routine_name,
-    COUNT(*) as parameter_count
-FROM information_schema.parameters
-WHERE specific_name IN (
-    SELECT specific_name
-    FROM information_schema.routines
-    WHERE routine_name = 'process_daily_yield_with_cycles'
-)
-GROUP BY routine_name;
-
--- 戻り値のカラム数（8列あるべき）
-SELECT
-    parameter_name,
-    data_type,
-    ordinal_position
-FROM information_schema.parameters
-WHERE specific_name IN (
-    SELECT specific_name
-    FROM information_schema.routines
-    WHERE routine_name = 'process_daily_yield_with_cycles'
-)
-  AND parameter_mode = 'OUT'
-ORDER BY ordinal_position;
+    proname as function_name,
+    pronargs as num_args
+FROM pg_proc
+WHERE proname = 'process_daily_yield_with_cycles';
 
 SELECT '=== 完了 ===' as section;
 SELECT '全ての確認が完了しました。' as message;
