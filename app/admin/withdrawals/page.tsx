@@ -92,7 +92,9 @@ export default function AdminWithdrawalsPage() {
       setError("")
 
       const targetDate = `${selectedMonth}-01`
-      
+
+      console.log('=== Fetching withdrawals for:', targetDate)
+
       // 月間出金記録を取得（シンプルに）
       const { data: withdrawalData, error: withdrawalError } = await supabase
         .from("monthly_withdrawals")
@@ -100,7 +102,11 @@ export default function AdminWithdrawalsPage() {
         .eq("withdrawal_month", targetDate)
         .order("created_at", { ascending: false })
 
+      console.log('=== Withdrawal data:', withdrawalData)
+      console.log('=== Withdrawal error:', withdrawalError)
+
       if (withdrawalError) {
+        console.error('=== Error fetching withdrawals:', withdrawalError)
         throw withdrawalError
       }
 
@@ -112,6 +118,7 @@ export default function AdminWithdrawalsPage() {
         pegasus_withdrawal_unlock_date: null,
       }))
 
+      console.log('=== Formatted data count:', formattedData.length)
       setWithdrawals(formattedData)
 
       // 統計情報を計算
