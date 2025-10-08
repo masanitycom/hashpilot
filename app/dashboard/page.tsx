@@ -658,7 +658,7 @@ export default function OptimizedDashboardPage() {
         </div>
 
         {/* 遅延読み込みコンテンツ */}
-        <LazyLoadedContent userData={userData} userStats={userStats} />
+        <LazyLoadedContent userData={userData} userStats={userStats} currentInvestment={currentInvestment} currentNftCount={currentNftCount} />
         
         {/* アラート類 */}
         {showCoinwAlert && (
@@ -673,8 +673,8 @@ export default function OptimizedDashboardPage() {
   )
 }
 
-// 遅延読み込みコンテンツ  
-const LazyLoadedContent = ({ userData, userStats }: { userData: UserData | null, userStats: UserStats | null }) => {
+// 遅延読み込みコンテンツ
+const LazyLoadedContent = ({ userData, userStats, currentInvestment, currentNftCount }: { userData: UserData | null, userStats: UserStats | null, currentInvestment: number, currentNftCount: number }) => {
   const [showContent, setShowContent] = useState(false)
 
   useEffect(() => {
