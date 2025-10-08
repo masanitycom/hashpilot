@@ -64,7 +64,7 @@ CREATE OR REPLACE FUNCTION get_auto_purchase_history(
 )
 RETURNS TABLE(
     purchase_id UUID,
-    purchase_date TIMESTAMP,
+    purchase_date TIMESTAMPTZ,
     nft_quantity INTEGER,
     amount_usd TEXT,
     cycle_number INTEGER
