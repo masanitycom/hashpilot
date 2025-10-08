@@ -66,7 +66,7 @@ RETURNS TABLE(
     purchase_id UUID,
     purchase_date TIMESTAMPTZ,
     nft_quantity INTEGER,
-    amount_usd TEXT,
+    amount_usd NUMERIC,
     cycle_number INTEGER
 )
 LANGUAGE plpgsql

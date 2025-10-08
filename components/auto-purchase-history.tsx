@@ -15,7 +15,7 @@ interface AutoPurchase {
   purchase_id: string
   purchase_date: string
   nft_quantity: number
-  amount_usd: string
+  amount_usd: number
   cycle_number: number
 }
 
