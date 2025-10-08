@@ -83,10 +83,21 @@
    - バッジ: 🟢 運用中
    - 運用開始日表示
 
-### 15日ルール
-- **承認日から15日後に自動的に運用開始日を計算**
-- システム準備中でも15日ルールのカウントは進行
-- 実際の運用はシステム準備完了後
+### 運用開始日ルール（2025年10月更新）
+
+**新ルール:**
+- **毎月5日までに購入** → 当月15日より運用開始
+- **毎月20日までに購入** → 翌月1日より運用開始
+- **毎月20日より後に購入** → 翌月1日より運用開始
+
+**実装:**
+- `calculate_operation_start_date()`関数で自動計算
+- `users.operation_start_date`カラムに保存
+- 日利処理と紹介報酬計算で運用開始日をチェック
+- 運用開始前のユーザーは日利・紹介報酬の対象外
+
+**旧ルール（廃止）:**
+- ~~承認日から15日後に運用開始~~ → 2025年10月に新ルールへ変更
 
 ---
 
@@ -199,6 +210,85 @@ node comprehensive_referral_verification.js
 
 ---
 
+## 💸 月末自動出金システム（2025年10月実装）
+
+### 基本仕様
+- **実行タイミング**: 月末の日利処理後に自動実行
+- **対象ユーザー**: `available_usdt >= 10`のユーザー
+- **初期ステータス**: `on_hold`（タスク未完了）
+- **送金方法**: CoinW UIDのみ（BEP20アドレスは未対応）
+
+### 処理フロー
+1. **月末検知**: `is_month_end()`関数で日本時間の月末を判定
+2. **出金申請作成**:
+   - `monthly_withdrawals`テーブルにレコード作成
+   - `status = 'on_hold'`, `task_completed = false`
+3. **タスクポップアップ表示**:
+   - ユーザーに1問のアンケートタスクを表示
+   - タスク完了まで閉じられない（必須）
+4. **タスク完了**:
+   - `status`が`on_hold` → `pending`に変更
+   - `task_completed = true`
+5. **管理者送金**:
+   - 管理画面で「完了済みにする」をクリック
+   - `complete_withdrawals_batch()`関数で処理
+   - `available_usdt`から出金額を減算
+   - `status`が`pending` → `completed`に変更
+
+### 重要な注意事項
+1. **ペガサス交換ユーザー**: 出金制限期間中は自動出金の対象外
+2. **最小出金額**: $10以上
+3. **メール通知**: 未実装（将来実装予定）
+4. **タスク問題**: 20問からランダムに1問表示
+
+### データベーステーブル
+- `monthly_withdrawals`: 月末出金申請レコード
+  - `status`: `on_hold` / `pending` / `completed`
+  - `task_completed`: タスク完了フラグ
+  - `withdrawal_method`: `coinw` のみ
+  - `withdrawal_address`: CoinW UID
+- `monthly_reward_tasks`: タスク完了記録
+  - `is_completed`: タスク完了フラグ
+  - `answers`: 回答内容（JSONB）
+
+### 関連関数
+- `process_monthly_withdrawals(DATE)`: 月末出金処理
+- `complete_reward_task(VARCHAR, JSONB)`: タスク完了処理
+- `complete_withdrawals_batch(INTEGER[])`: 一括出金完了処理
+
+---
+
+## 🔢 自動NFT購入履歴のサイクル番号（2025年10月実装）
+
+### 仕様
+- **サイクル番号記録**: 購入時点のサイクル番号を記録
+- **表示**: ダッシュボードの自動NFT購入履歴で表示
+- **目的**: 各購入が何回目のサイクルで行われたかを明確化
+
+### 実装
+- `purchases.cycle_number_at_purchase`カラムに記録
+- `process_daily_yield_with_cycles()`関数で自動記録
+- `get_auto_purchase_history()`関数で取得・表示
+
+### データ型
+- `purchase_date`: TIMESTAMPTZ（タイムゾーン付き）
+- `amount_usd`: NUMERIC（数値型）
+- `cycle_number`: INTEGER（購入時のサイクル番号）
+
+---
+
+## 🏷️ サイト情報
+
+### サイト名
+- **現在**: HASH PILOT NFT
+- **以前**: HASH PILOT Database（2025年10月変更）
+
+### 表示場所
+- ブラウザタブのタイトル
+- `app/layout.tsx`の`metadata.title`で設定
+
+---
+
 ## 🛠 開発環境
 
 - Next.js 14 + TypeScript
@@ -218,4 +308,4 @@ node comprehensive_referral_verification.js
 
 ---
 
-最終更新: 2025年10月7日
+最終更新: 2025年10月9日
