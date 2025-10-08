@@ -570,7 +570,7 @@ export default function AdminBuybackPage() {
                       setAdminNotes("")
                     }}
                     variant="outline"
-                    className="w-full text-white border-gray-600 hover:bg-gray-800"
+                    className="w-full bg-gray-700 text-white border-gray-600 hover:bg-gray-800"
                     disabled={processingId === selectedRequest.id}
                   >
                     閉じる
