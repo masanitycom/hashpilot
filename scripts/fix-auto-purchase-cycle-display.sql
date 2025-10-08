@@ -93,10 +93,10 @@ $$;
 -- 既存の関数を確認
 DO $$
 BEGIN
-    RAISE NOTICE '==========================================='::TEXT;
-    RAISE NOTICE 'process_daily_yield_with_cycles関数の修正が必要です'::TEXT;
-    RAISE NOTICE '次のステップ: add-cycle-number-to-auto-purchase.sqlを実行'::TEXT;
-    RAISE NOTICE '==========================================='::TEXT;
+    RAISE NOTICE '===========================================';
+    RAISE NOTICE 'process_daily_yield_with_cycles関数の修正が必要です';
+    RAISE NOTICE '次のステップ: add-cycle-number-to-auto-purchase.sqlを実行';
+    RAISE NOTICE '===========================================';
 END $$;
 
 -- 権限付与
@@ -106,16 +106,16 @@ GRANT EXECUTE ON FUNCTION get_auto_purchase_history(TEXT, INTEGER) TO authentica
 -- 完了メッセージ
 DO $$
 BEGIN
-    RAISE NOTICE '==========================================='::TEXT;
-    RAISE NOTICE '✅ 自動購入履歴のサイクル表示を修正しました'::TEXT;
-    RAISE NOTICE '==========================================='::TEXT;
-    RAISE NOTICE '変更内容:'::TEXT;
-    RAISE NOTICE '  - purchases.cycle_number_at_purchase カラムを追加'::TEXT;
-    RAISE NOTICE '  - 既存データに連番でサイクル番号を設定'::TEXT;
-    RAISE NOTICE '  - get_auto_purchase_history関数を修正'::TEXT;
-    RAISE NOTICE ''::TEXT;
-    RAISE NOTICE '次のステップ:'::TEXT;
-    RAISE NOTICE '  - process_daily_yield_with_cycles関数を修正'::TEXT;
-    RAISE NOTICE '    (自動購入時にサイクル番号を記録)'::TEXT;
-    RAISE NOTICE '==========================================='::TEXT;
+    RAISE NOTICE '===========================================';
+    RAISE NOTICE '✅ 自動購入履歴のサイクル表示を修正しました';
+    RAISE NOTICE '===========================================';
+    RAISE NOTICE '変更内容:';
+    RAISE NOTICE '  - purchases.cycle_number_at_purchase カラムを追加';
+    RAISE NOTICE '  - 既存データに連番でサイクル番号を設定';
+    RAISE NOTICE '  - get_auto_purchase_history関数を修正';
+    RAISE NOTICE '';
+    RAISE NOTICE '次のステップ:';
+    RAISE NOTICE '  - process_daily_yield_with_cycles関数を修正';
+    RAISE NOTICE '    (自動購入時にサイクル番号を記録)';
+    RAISE NOTICE '===========================================';
 END $$;

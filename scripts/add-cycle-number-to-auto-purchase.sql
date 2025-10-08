@@ -259,11 +259,11 @@ GRANT EXECUTE ON FUNCTION process_daily_yield_with_cycles(DATE, NUMERIC, NUMERIC
 -- 完了メッセージ
 DO $$
 BEGIN
-    RAISE NOTICE '==========================================='::TEXT;
-    RAISE NOTICE '✅ 日利処理関数を更新しました'::TEXT;
-    RAISE NOTICE '==========================================='::TEXT;
-    RAISE NOTICE '変更点:'::TEXT;
-    RAISE NOTICE '  - 自動NFT購入時にcycle_number_at_purchaseを記録'::TEXT;
-    RAISE NOTICE '  - 購入レコードに正確なサイクル番号が保存される'::TEXT;
-    RAISE NOTICE '==========================================='::TEXT;
+    RAISE NOTICE '===========================================';
+    RAISE NOTICE '✅ 日利処理関数を更新しました';
+    RAISE NOTICE '===========================================';
+    RAISE NOTICE '変更点:';
+    RAISE NOTICE '  - 自動NFT購入時にcycle_number_at_purchaseを記録';
+    RAISE NOTICE '  - 購入レコードに正確なサイクル番号が保存される';
+    RAISE NOTICE '===========================================';
 END $$;
