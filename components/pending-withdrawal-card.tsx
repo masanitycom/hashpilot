@@ -34,6 +34,15 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
     }
   }, [userId])
 
+  // タスク未完了の出金申請がある場合は自動的にポップアップ表示
+  useEffect(() => {
+    if (withdrawalData?.type === 'pending_withdrawal' &&
+        withdrawalData?.task_required &&
+        !withdrawalData?.task_completed) {
+      setShowTaskPopup(true)
+    }
+  }, [withdrawalData])
+
   // 月間紹介報酬を計算する関数
   const calculateMonthlyReferralProfit = async (userId: string, monthStart: string, monthEnd: string): Promise<number> => {
     try {
@@ -245,9 +254,9 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   const isMonthlyProfit = withdrawalData?.type === 'monthly_profit'
   const needsTask = withdrawalData?.task_required && !withdrawalData?.task_completed
 
-  const handleTaskComplete = () => {
-    setShowTaskPopup(false)
-    fetchWithdrawalData() // Refresh data after task completion
+  const handleTaskComplete = async () => {
+    await fetchWithdrawalData() // Refresh data after task completion
+    setShowTaskPopup(false) // タスク完了後にポップアップを閉じる
   }
 
   return (
@@ -255,7 +264,6 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       <RewardTaskPopup
         userId={userId}
         isOpen={showTaskPopup}
-        onClose={() => setShowTaskPopup(false)}
         onComplete={handleTaskComplete}
       />
     <Card className="bg-gray-800 border-gray-700">

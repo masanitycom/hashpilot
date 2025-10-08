@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { 
-  X, 
   CheckCircle, 
   Loader2,
   AlertTriangle,
@@ -23,11 +22,10 @@ interface Question {
 interface RewardTaskPopupProps {
   userId: string
   isOpen: boolean
-  onClose: () => void
   onComplete: () => void
 }
 
-export function RewardTaskPopup({ userId, isOpen, onClose, onComplete }: RewardTaskPopupProps) {
+export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupProps) {
   const [questions, setQuestions] = useState<Question[]>([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<{ questionId: string, answer: string }[]>([])
@@ -114,7 +112,6 @@ export function RewardTaskPopup({ userId, isOpen, onClose, onComplete }: RewardT
       setCompleted(true)
       setTimeout(() => {
         onComplete()
-        onClose()
       }, 2000)
 
     } catch (err: any) {
@@ -148,16 +145,7 @@ export function RewardTaskPopup({ userId, isOpen, onClose, onComplete }: RewardT
               <HelpCircle className="h-5 w-5 text-blue-400" />
               月末報酬受取タスク
             </CardTitle>
-            {!completed && !submitting && (
-              <Button
-                onClick={onClose}
-                variant="ghost"
-                size="sm"
-                className="text-gray-400 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
+            <Badge className="bg-red-600 text-white text-xs">必須</Badge>
           </div>
           {!completed && questions.length > 0 && (
             <div className="flex items-center justify-between text-sm text-gray-400">
