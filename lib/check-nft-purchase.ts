@@ -30,8 +30,10 @@ export async function checkUserNFTPurchase(userId: string): Promise<{
       .single()
 
     const totalNFTs = cycleData?.total_nft_count || 0
-    const hasApprovedPurchase = userData.has_approved_nft === true
-    const hasPurchased = hasApprovedPurchase || totalNFTs > 0
+    const hasApprovedNftFlag = userData.has_approved_nft === true
+    // NFTを持っているか、またはhas_approved_nftフラグがtrueならOK
+    const hasApprovedPurchase = hasApprovedNftFlag || totalNFTs > 0
+    const hasPurchased = hasApprovedPurchase
 
     return {
       hasPurchased,
