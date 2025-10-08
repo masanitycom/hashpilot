@@ -3,7 +3,14 @@
 -- 原因: get_buyback_requests関数が存在しないか、SECURITY DEFINERが設定されていない
 
 -- ============================================
--- STEP 1: get_buyback_requests関数を作成/更新
+-- STEP 1: 既存関数を削除
+-- ============================================
+
+DROP FUNCTION IF EXISTS get_buyback_requests(TEXT);
+DROP FUNCTION IF EXISTS create_buyback_request(TEXT, INTEGER, INTEGER, TEXT, TEXT);
+
+-- ============================================
+-- STEP 2: get_buyback_requests関数を作成
 -- ============================================
 
 CREATE OR REPLACE FUNCTION get_buyback_requests(p_user_id TEXT)
@@ -53,13 +60,8 @@ END;
 $$;
 
 -- ============================================
--- STEP 2: create_buyback_request関数を更新
+-- STEP 3: create_buyback_request関数を作成
 -- ============================================
-
--- 既存の関数を削除
-DROP FUNCTION IF EXISTS create_buyback_request(TEXT, INTEGER, INTEGER, TEXT, TEXT);
-
--- 新しい関数を作成（SECURITY DEFINERとSET search_pathを追加）
 CREATE OR REPLACE FUNCTION create_buyback_request(
     p_user_id TEXT,
     p_manual_nft_count INTEGER,
@@ -240,7 +242,7 @@ END;
 $$;
 
 -- ============================================
--- STEP 3: 権限付与
+-- STEP 4: 権限付与
 -- ============================================
 
 GRANT EXECUTE ON FUNCTION get_buyback_requests(TEXT) TO anon;
@@ -259,9 +261,10 @@ BEGIN
     RAISE NOTICE '✅ NFT買い取り申請の権限エラーを修正しました';
     RAISE NOTICE '=========================================';
     RAISE NOTICE '修正内容:';
-    RAISE NOTICE '  1. get_buyback_requests関数を作成（SECURITY DEFINER）';
-    RAISE NOTICE '  2. create_buyback_request関数を更新（SET search_path追加）';
-    RAISE NOTICE '  3. 両関数に権限を付与（anon, authenticated）';
+    RAISE NOTICE '  1. 既存関数を削除';
+    RAISE NOTICE '  2. get_buyback_requests関数を作成（SECURITY DEFINER）';
+    RAISE NOTICE '  3. create_buyback_request関数を作成（SET search_path追加）';
+    RAISE NOTICE '  4. 両関数に権限を付与（anon, authenticated）';
     RAISE NOTICE '';
     RAISE NOTICE 'これでユーザー側から買い取り申請できるようになります';
     RAISE NOTICE '=========================================';
