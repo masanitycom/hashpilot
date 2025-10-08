@@ -5,20 +5,23 @@
 SELECT '=== 1. 633DF2の基本情報 ===' as section;
 
 SELECT
-    user_id,
-    email,
-    referrer_user_id,
-    has_approved_nft,
-    admin_approved_at::date as approved_date,
-    operation_start_date,
-    CURRENT_DATE - operation_start_date::date as days_since_operation_start,
+    u.user_id,
+    u.email,
+    u.referrer_user_id,
+    u.has_approved_nft,
+    u.operation_start_date,
     CASE
-        WHEN operation_start_date IS NULL THEN '運用開始日未設定'
-        WHEN CURRENT_DATE < operation_start_date::date THEN '運用開始前'
+        WHEN u.operation_start_date IS NULL THEN '運用開始日未設定'
+        WHEN CURRENT_DATE < u.operation_start_date THEN '運用開始前'
         ELSE '運用開始済み'
-    END as operation_status
-FROM users
-WHERE user_id = '633DF2';
+    END as operation_status,
+    CASE
+        WHEN u.operation_start_date IS NULL THEN NULL
+        WHEN CURRENT_DATE < u.operation_start_date THEN u.operation_start_date - CURRENT_DATE
+        ELSE CURRENT_DATE - u.operation_start_date
+    END as days_diff
+FROM users u
+WHERE u.user_id = '633DF2';
 
 SELECT '=== 2. 633DF2のNFT情報 ===' as section;
 
