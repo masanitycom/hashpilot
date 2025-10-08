@@ -128,12 +128,6 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
     return answers.find(a => a.questionId === currentQuestion.id)?.answer || null
   }
 
-  const goToPreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1)
-    }
-  }
-
   if (!isOpen) return null
 
   return (
@@ -220,29 +214,18 @@ export function RewardTaskPopup({ userId, isOpen, onComplete }: RewardTaskPopupP
                 </div>
               </div>
 
-              {/* ナビゲーションボタン */}
-              <div className="flex justify-between">
-                <Button
-                  onClick={goToPreviousQuestion}
-                  disabled={currentQuestionIndex === 0}
-                  size="sm"
-                  className="bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
-                >
-                  前の問題
-                </Button>
-                
-                <div className="flex space-x-2">
-                  {answers.length === questions.length && (
-                    <Button
-                      onClick={() => submitAnswers()}
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                      size="sm"
-                    >
-                      回答送信
-                    </Button>
-                  )}
+              {/* 回答送信ボタン */}
+              {answers.length === questions.length && (
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => submitAnswers()}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                    size="sm"
+                  >
+                    回答送信
+                  </Button>
                 </div>
-              </div>
+              )}
 
               {/* 進捗インジケーター */}
               <div className="mt-4 bg-gray-700 rounded-full h-2">
