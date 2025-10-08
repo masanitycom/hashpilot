@@ -153,13 +153,25 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       if (profitError && profitError.code !== 'PGRST116') throw profitError
 
       // affiliate_cycleから正確なNFTデータを取得
+      // タイムスタンプを追加してキャッシュを回避
+      const timestamp = Date.now()
       const { data: cycleInfo, error: cycleError } = await supabase
         .from('affiliate_cycle')
-        .select('total_nft_count, manual_nft_count, auto_nft_count, cum_usdt, available_usdt')
+        .select('total_nft_count, manual_nft_count, auto_nft_count, cum_usdt, available_usdt, last_updated')
         .eq('user_id', userId)
         .single()
 
       if (cycleError) throw cycleError
+
+      // デバッグ: 取得したデータをコンソールに出力
+      console.log('🔍 CycleStatusCard - Fetched data:', {
+        userId,
+        timestamp,
+        cycleInfo,
+        manual_nft_count: cycleInfo?.manual_nft_count,
+        auto_nft_count: cycleInfo?.auto_nft_count,
+        total_nft_count: cycleInfo?.total_nft_count
+      })
 
       // 紹介報酬を計算（referral-profit-card.tsxと同じロジックを使用）
       // ⭐ NFTサイクルは紹介報酬のみで計算（個人利益は含めない）

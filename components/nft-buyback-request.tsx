@@ -57,6 +57,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
   const fetchNftData = async () => {
     try {
+      const timestamp = Date.now()
       const { data, error } = await supabase
         .from("affiliate_cycle")
         .select("manual_nft_count, auto_nft_count, total_nft_count")
@@ -64,6 +65,17 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         .single()
 
       if (error) throw error
+
+      // デバッグ: 取得したデータをコンソールに出力
+      console.log('🔍 NftBuybackRequest - Fetched data:', {
+        userId,
+        timestamp: new Date(timestamp).toISOString(),
+        data,
+        manual_nft_count: data?.manual_nft_count,
+        auto_nft_count: data?.auto_nft_count,
+        total_nft_count: data?.total_nft_count
+      })
+
       setNftData(data)
     } catch (error) {
       console.error("Error fetching NFT data:", error)
