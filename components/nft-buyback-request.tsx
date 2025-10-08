@@ -123,14 +123,9 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     const totalBase = (1000 * manualCount) + (500 * autoCount)
     const totalBuyback = Math.max(0, totalBase - (userProfit / 2))
 
-    // 手動と自動の比率で按分（概算）
-    const totalNfts = manualCount + autoCount
-    const manualRatio = totalNfts > 0 ? manualCount / totalNfts : 0
-    const autoRatio = totalNfts > 0 ? autoCount / totalNfts : 0
-
     setBuybackAmount({
-      manual: totalBuyback * manualRatio,
-      auto: totalBuyback * autoRatio,
+      manual: 0, // 内訳は表示しない
+      auto: 0,   // 内訳は表示しない
       total: totalBuyback
     })
   }
@@ -275,32 +270,12 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
             <div className="bg-gray-800/50 rounded-lg p-4">
               <div className="text-sm text-gray-400">手動購入NFT</div>
               <div className="text-2xl font-bold text-white">{nftData.manual_nft_count}枚</div>
-              <div className="text-xs text-gray-400 mt-1">各NFT: 1000ドル - (そのNFTの利益 ÷ 2)</div>
-              <div className="text-sm text-yellow-400 font-semibold mt-2">
-                全て売却時の概算: {nftData.manual_nft_count > 0 ? (() => {
-                  const totalBase = (1000 * nftData.manual_nft_count) + (500 * nftData.auto_nft_count)
-                  const totalBuyback = Math.max(0, totalBase - (userProfit / 2))
-                  const totalNfts = nftData.manual_nft_count + nftData.auto_nft_count
-                  const manualPortion = totalBuyback * (nftData.manual_nft_count / totalNfts)
-                  return `$${manualPortion.toFixed(2)}`
-                })() : '$0.00'}
-              </div>
-              <div className="text-xs text-gray-500 mt-1">※ 正確な金額は申請時に計算されます</div>
+              <div className="text-xs text-gray-400 mt-2">買い取り単価: 1000ドル - (NFTの利益 ÷ 2)</div>
             </div>
             <div className="bg-gray-800/50 rounded-lg p-4">
               <div className="text-sm text-gray-400">自動購入NFT</div>
               <div className="text-2xl font-bold text-white">{nftData.auto_nft_count}枚</div>
-              <div className="text-xs text-gray-400 mt-1">各NFT: 500ドル - (そのNFTの利益 ÷ 2)</div>
-              <div className="text-sm text-yellow-400 font-semibold mt-2">
-                全て売却時の概算: {nftData.auto_nft_count > 0 ? (() => {
-                  const totalBase = (1000 * nftData.manual_nft_count) + (500 * nftData.auto_nft_count)
-                  const totalBuyback = Math.max(0, totalBase - (userProfit / 2))
-                  const totalNfts = nftData.manual_nft_count + nftData.auto_nft_count
-                  const autoPortion = totalBuyback * (nftData.auto_nft_count / totalNfts)
-                  return `$${autoPortion.toFixed(2)}`
-                })() : '$0.00'}
-              </div>
-              <div className="text-xs text-gray-500 mt-1">※ 正確な金額は申請時に計算されます</div>
+              <div className="text-xs text-gray-400 mt-2">買い取り単価: 500ドル - (NFTの利益 ÷ 2)</div>
             </div>
           </div>
 
@@ -379,23 +354,28 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
               </div>
             </div>
 
-            {/* 買い取り額計算 */}
+            {/* 買い取り額概算 */}
             {(manualCount > 0 || autoCount > 0) && (
               <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
-                <div className="text-sm text-blue-400 mb-2">買い取り額計算</div>
-                <div className="space-y-1 text-white">
-                  <div className="flex justify-between">
-                    <span>手動NFT ({manualCount}枚)</span>
-                    <span>${buybackAmount.manual.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>自動NFT ({autoCount}枚)</span>
-                    <span>${buybackAmount.auto.toFixed(2)}</span>
-                  </div>
-                  <div className="border-t border-gray-700 pt-1 mt-2">
-                    <div className="flex justify-between font-bold text-yellow-400">
-                      <span>合計</span>
-                      <span>${buybackAmount.total.toFixed(2)}</span>
+                <div className="text-sm text-blue-400 mb-2">買い取り額概算</div>
+                <div className="space-y-2 text-white">
+                  {manualCount > 0 && (
+                    <div className="text-sm text-gray-300">
+                      手動NFT {manualCount}枚
+                    </div>
+                  )}
+                  {autoCount > 0 && (
+                    <div className="text-sm text-gray-300">
+                      自動NFT {autoCount}枚
+                    </div>
+                  )}
+                  <div className="border-t border-gray-700 pt-2 mt-2">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-lg">概算合計</span>
+                      <span className="font-bold text-2xl text-yellow-400">${buybackAmount.total.toFixed(2)}</span>
+                    </div>
+                    <div className="text-xs text-gray-400 mt-2">
+                      ※ 各NFTごとに正確に計算されます。実際の金額は申請後に確定します。
                     </div>
                   </div>
                 </div>
