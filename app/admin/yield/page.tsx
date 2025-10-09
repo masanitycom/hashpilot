@@ -254,7 +254,6 @@ export default function AdminYieldPage() {
       const marginValue = Number.parseFloat(marginRate)
 
       // process_daily_yield_with_cycles RPC関数を呼び出し
-      // 本番モード（p_is_test_mode = false）で実行
       console.log('🔄 RPC関数を呼び出し中...')
       const { data: rpcResult, error: rpcError } = await supabase.rpc('process_daily_yield_with_cycles', {
         p_date: date,
@@ -278,10 +277,10 @@ export default function AdminYieldPage() {
         text: `✅ ${result.message || '日利設定完了'}
 
 処理詳細:
-- 日利配布: ${result.total_users || 0}名に総額$${(result.total_user_profit || 0).toFixed(2)}
-- 紹介報酬: ${result.referral_rewards_processed || 0}名に配布
-- NFT自動付与: ${result.auto_nft_purchases || 0}名に付与
-- サイクル更新: ${result.cycle_updates || 0}件`,
+• 日利配布: ${result.total_users || 0}名に総額$${(result.total_user_profit || 0).toFixed(2)}
+• 紹介報酬: ${result.referral_rewards_processed || 0}名に配布
+• NFT自動付与: ${result.auto_nft_purchases || 0}名に付与
+• サイクル更新: ${result.cycle_updates || 0}件`,
       })
 
       setYieldRate("")
