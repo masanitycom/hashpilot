@@ -49,6 +49,8 @@ export default function AdminLogsPage() {
   const [logTypeFilter, setLogTypeFilter] = useState("all")
   const [operationFilter, setOperationFilter] = useState("all")
   const [filteredLogs, setFilteredLogs] = useState<SystemLog[]>([])
+  const [dateFilter, setDateFilter] = useState("")
+  const [limitFilter, setLimitFilter] = useState("100")
   const router = useRouter()
 
   useEffect(() => {
@@ -103,11 +105,21 @@ export default function AdminLogsPage() {
   const fetchLogs = async () => {
     try {
       setLoading(true)
-      const { data, error } = await supabase.rpc("get_system_logs", {
-        p_log_type: null,
-        p_operation: null,
-        p_limit: 100
-      })
+
+      let query = supabase
+        .from('system_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(parseInt(limitFilter))
+
+      // 日付フィルターがある場合
+      if (dateFilter) {
+        const startDate = `${dateFilter} 00:00:00`
+        const endDate = `${dateFilter} 23:59:59`
+        query = query.gte('created_at', startDate).lte('created_at', endDate)
+      }
+
+      const { data, error } = await query
 
       if (error) throw error
       setLogs(data || [])
@@ -379,34 +391,118 @@ export default function AdminLogsPage() {
         {/* ログ一覧 */}
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-white">システムログ一覧</CardTitle>
-              <div className="flex gap-2">
-                <Select value={logTypeFilter} onValueChange={setLogTypeFilter}>
-                  <SelectTrigger className="w-32 bg-gray-700 border-gray-600 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">全タイプ</SelectItem>
-                    <SelectItem value="ERROR">エラー</SelectItem>
-                    <SelectItem value="WARNING">警告</SelectItem>
-                    <SelectItem value="SUCCESS">成功</SelectItem>
-                    <SelectItem value="INFO">情報</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={operationFilter} onValueChange={setOperationFilter}>
-                  <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">全操作</SelectItem>
-                    <SelectItem value="DAILY_YIELD">日利処理</SelectItem>
-                    <SelectItem value="AUTO_PURCHASE">自動購入</SelectItem>
-                    <SelectItem value="WITHDRAWAL_REQUEST">出金申請</SelectItem>
-                    <SelectItem value="WITHDRAWAL_APPROVED">出金承認</SelectItem>
-                    <SelectItem value="DAILY_BATCH">日次バッチ</SelectItem>
-                  </SelectContent>
-                </Select>
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-white">システムログ一覧</CardTitle>
+                <div className="flex gap-2">
+                  <Select value={logTypeFilter} onValueChange={setLogTypeFilter}>
+                    <SelectTrigger className="w-32 bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">全タイプ</SelectItem>
+                      <SelectItem value="ERROR">エラー</SelectItem>
+                      <SelectItem value="WARNING">警告</SelectItem>
+                      <SelectItem value="SUCCESS">成功</SelectItem>
+                      <SelectItem value="INFO">情報</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={operationFilter} onValueChange={setOperationFilter}>
+                    <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">全操作</SelectItem>
+                      <SelectItem value="DAILY_YIELD">日利処理</SelectItem>
+                      <SelectItem value="AUTO_PURCHASE">自動購入</SelectItem>
+                      <SelectItem value="WITHDRAWAL_REQUEST">出金申請</SelectItem>
+                      <SelectItem value="WITHDRAWAL_APPROVED">出金承認</SelectItem>
+                      <SelectItem value="DAILY_BATCH">日次バッチ</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* 日付・件数フィルター */}
+              <div className="flex items-center gap-4 p-3 bg-gray-700/30 rounded-lg border border-gray-600">
+                <div className="flex items-center gap-2">
+                  <label className="text-white text-sm whitespace-nowrap">日付:</label>
+                  <input
+                    type="date"
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    className="px-3 py-1.5 bg-gray-700 border border-gray-600 rounded text-white text-sm"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="text-white text-sm whitespace-nowrap">表示件数:</label>
+                  <Select value={limitFilter} onValueChange={setLimitFilter}>
+                    <SelectTrigger className="w-24 bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="50">50件</SelectItem>
+                      <SelectItem value="100">100件</SelectItem>
+                      <SelectItem value="200">200件</SelectItem>
+                      <SelectItem value="500">500件</SelectItem>
+                      <SelectItem value="1000">1000件</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={fetchLogs}
+                    variant="outline"
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white border-blue-500"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    検索
+                  </Button>
+
+                  {dateFilter && (
+                    <Button
+                      onClick={async () => {
+                        setDateFilter("")
+                        // 状態更新後にフィルターなしで再取得
+                        try {
+                          setLoading(true)
+                          const { data, error } = await supabase
+                            .from('system_logs')
+                            .select('*')
+                            .order('created_at', { ascending: false })
+                            .limit(parseInt(limitFilter))
+
+                          if (error) throw error
+                          setLogs(data || [])
+                        } catch (error: any) {
+                          console.error("ログ取得エラー:", error)
+                          setError("システムログの取得に失敗しました")
+                        } finally {
+                          setLoading(false)
+                        }
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="bg-gray-600 hover:bg-gray-500 text-white border-gray-500"
+                    >
+                      クリア
+                    </Button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3 ml-auto">
+                  {dateFilter && (
+                    <span className="text-sm text-blue-300">
+                      📅 {dateFilter} のログを表示中
+                    </span>
+                  )}
+                  <span className="text-sm text-gray-300">
+                    {filteredLogs.length}件表示
+                  </span>
+                </div>
               </div>
             </div>
           </CardHeader>

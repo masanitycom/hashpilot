@@ -241,6 +241,16 @@ export default function AdminYieldPage() {
     setMessage(null)
 
     try {
+      // ========== 重要：未来の日付チェック ==========
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      const selectedDate = new Date(date)
+      selectedDate.setHours(0, 0, 0, 0)
+
+      if (selectedDate > today) {
+        throw new Error(`❌ 未来の日付（${date}）には設定できません。今日は ${today.toISOString().split('T')[0]} です。`)
+      }
+
       console.log('🚀 日利設定開始（直接DB書き込み方式）:', {
         date,
         yield_rate: Number.parseFloat(yieldRate) / 100,
