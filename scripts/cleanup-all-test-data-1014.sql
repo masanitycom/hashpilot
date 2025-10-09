@@ -84,7 +84,6 @@ SET
 SELECT
     user_id,
     email,
-    username,
     created_at
 FROM users
 WHERE email LIKE '%test%' OR email LIKE '%demo%'
