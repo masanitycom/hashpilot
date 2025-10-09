@@ -798,13 +798,17 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <CycleStatusCard userId={userData?.user_id || ""} />
         <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={currentInvestment} />
-        <ReferralProfitCard userId={userData?.user_id || ""} />
+        {!userData?.is_operation_only && (
+          <ReferralProfitCard userId={userData?.user_id || ""} />
+        )}
       </div>
 
       {/* 組織図 */}
-      <div className="mb-6">
-        <ReferralTreeOptimized userId={userData?.user_id || ""} />
-      </div>
+      {!userData?.is_operation_only && (
+        <div className="mb-6">
+          <ReferralTreeOptimized userId={userData?.user_id || ""} />
+        </div>
+      )}
 
       {/* NFT買い取り申請リンク */}
       <div className="mb-6">
@@ -833,10 +837,14 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
       <AutoPurchaseHistory userId={userData?.user_id || ""} />
 
       {/* レベル別統計 */}
-      <LevelStats userStats={userStats} />
-      
+      {!userData?.is_operation_only && (
+        <LevelStats userStats={userStats} />
+      )}
+
       {/* Level4以降の統計 */}
-      <Level4PlusStats userStats={userStats} />
+      {!userData?.is_operation_only && (
+        <Level4PlusStats userStats={userStats} />
+      )}
     </>
   )
 }

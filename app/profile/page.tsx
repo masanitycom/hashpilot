@@ -23,6 +23,7 @@ interface UserProfile {
   created_at: string
   total_purchases: number
   referral_count: number
+  is_operation_only: boolean
 }
 
 export default function ProfilePage() {
@@ -472,61 +473,63 @@ export default function ProfilePage() {
           </div>
 
           {/* 紹介リンク & QRコード */}
-          <div className="space-y-6">
-            <Card className="bg-gray-900/80 border-gray-700/50 backdrop-blur-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
-                  <Share2 className="h-5 w-5 text-blue-400" />
-                  <span>紹介リンク</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium text-gray-300">あなたの専用リンク</Label>
-                  <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-                    <div className="text-xs text-gray-400 mb-2">URL:</div>
-                    <div className="text-white text-sm break-all font-mono leading-relaxed">
-                      {getReferralLink()}
+          {!profile?.is_operation_only && (
+            <div className="space-y-6">
+              <Card className="bg-gray-900/80 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
+                    <Share2 className="h-5 w-5 text-blue-400" />
+                    <span>紹介リンク</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium text-gray-300">あなたの専用リンク</Label>
+                    <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
+                      <div className="text-xs text-gray-400 mb-2">URL:</div>
+                      <div className="text-white text-sm break-all font-mono leading-relaxed">
+                        {getReferralLink()}
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => copyToClipboard(getReferralLink(), "紹介リンク")}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      リンクをコピー
+                    </Button>
+                  </div>
+
+                  <div className="text-sm text-gray-400 text-center px-2">
+                    このリンクから登録されたユーザーがあなたの紹介者になります
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-900/80 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
+                    <QrCode className="h-5 w-5 text-green-400" />
+                    <span>QRコード</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-center">
+                    <div className="bg-white rounded-xl p-6 inline-block shadow-xl border-4 border-gray-600">
+                      <img
+                        src={generateQRCode(getReferralLink())}
+                        alt="紹介リンクQRコード"
+                        className="w-48 h-48 rounded-lg"
+                      />
                     </div>
                   </div>
-                  <Button
-                    onClick={() => copyToClipboard(getReferralLink(), "紹介リンク")}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3"
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    リンクをコピー
-                  </Button>
-                </div>
-                
-                <div className="text-sm text-gray-400 text-center px-2">
-                  このリンクから登録されたユーザーがあなたの紹介者になります
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-900/80 border-gray-700/50 backdrop-blur-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-bold text-white flex items-center space-x-2">
-                  <QrCode className="h-5 w-5 text-green-400" />
-                  <span>QRコード</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center">
-                  <div className="bg-white rounded-xl p-6 inline-block shadow-xl border-4 border-gray-600">
-                    <img 
-                      src={generateQRCode(getReferralLink())} 
-                      alt="紹介リンクQRコード"
-                      className="w-48 h-48 rounded-lg"
-                    />
+                  <div className="text-sm text-gray-400 text-center px-2">
+                    QRコードをスキャンして簡単に紹介リンクにアクセスできます
                   </div>
-                </div>
-                <div className="text-sm text-gray-400 text-center px-2">
-                  QRコードをスキャンして簡単に紹介リンクにアクセスできます
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
 
 
