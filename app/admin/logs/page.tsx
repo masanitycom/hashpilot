@@ -106,23 +106,29 @@ export default function AdminLogsPage() {
     try {
       setLoading(true)
 
-      let query = supabase
-        .from('system_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(parseInt(limitFilter))
-
-      // 日付フィルターがある場合
-      if (dateFilter) {
-        const startDate = `${dateFilter} 00:00:00`
-        const endDate = `${dateFilter} 23:59:59`
-        query = query.gte('created_at', startDate).lte('created_at', endDate)
-      }
-
-      const { data, error } = await query
+      // RPC関数でログを取得（RLSをバイパス）
+      const { data, error } = await supabase.rpc("get_system_logs", {
+        p_log_type: null,
+        p_operation: null,
+        p_limit: parseInt(limitFilter)
+      })
 
       if (error) throw error
-      setLogs(data || [])
+
+      let filteredData = data || []
+
+      // 日付フィルターがある場合はフロントエンド側でフィルタリング
+      if (dateFilter) {
+        const startDate = new Date(`${dateFilter}T00:00:00`)
+        const endDate = new Date(`${dateFilter}T23:59:59`)
+
+        filteredData = filteredData.filter((log: SystemLog) => {
+          const logDate = new Date(log.created_at)
+          return logDate >= startDate && logDate <= endDate
+        })
+      }
+
+      setLogs(filteredData)
     } catch (error: any) {
       console.error("ログ取得エラー:", error)
       setError("システムログの取得に失敗しました")
@@ -464,25 +470,9 @@ export default function AdminLogsPage() {
 
                   {dateFilter && (
                     <Button
-                      onClick={async () => {
+                      onClick={() => {
                         setDateFilter("")
-                        // 状態更新後にフィルターなしで再取得
-                        try {
-                          setLoading(true)
-                          const { data, error } = await supabase
-                            .from('system_logs')
-                            .select('*')
-                            .order('created_at', { ascending: false })
-                            .limit(parseInt(limitFilter))
-
-                          if (error) throw error
-                          setLogs(data || [])
-                        } catch (error: any) {
-                          console.error("ログ取得エラー:", error)
-                          setError("システムログの取得に失敗しました")
-                        } finally {
-                          setLoading(false)
-                        }
+                        setTimeout(() => fetchLogs(), 0)
                       }}
                       variant="outline"
                       size="sm"
