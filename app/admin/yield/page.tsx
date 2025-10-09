@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
 import {
   CalendarIcon,
   TrendingUpIcon,
@@ -19,7 +17,6 @@ import {
   AlertCircle,
   CheckCircle,
   InfoIcon,
-  TestTube,
   Trash2,
   Shield,
   ArrowLeft,
@@ -45,22 +42,10 @@ interface YieldStats {
   total_distributed: number
 }
 
-interface TestResult {
-  date: string
-  yield_rate: number
-  margin_rate: number
-  user_rate: number
-  total_users: number
-  total_user_profit: number
-  total_company_profit: number
-  created_at: string
-}
-
 export default function AdminYieldPage() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [yieldRate, setYieldRate] = useState("")
   const [marginRate, setMarginRate] = useState("30")
-  const [isTestMode, setIsTestMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
   const [history, setHistory] = useState<YieldHistory[]>([])
@@ -68,9 +53,8 @@ export default function AdminYieldPage() {
   const [userRate, setUserRate] = useState(0)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [authLoading, setAuthLoading] = useState(true)
   const [error, setError] = useState("")
-  const [testResults, setTestResults] = useState<TestResult[]>([])
-  const [showTestResults, setShowTestResults] = useState(false)
   const router = useRouter()
 
   // ユーザー受取率を計算
@@ -107,6 +91,7 @@ export default function AdminYieldPage() {
       } = await supabase.auth.getUser()
 
       if (!user) {
+        setAuthLoading(false)
         router.push("/login")
         return
       }
@@ -116,6 +101,7 @@ export default function AdminYieldPage() {
       // 緊急対応: basarasystems@gmail.com と support@dshsupport.biz のアクセス許可
       if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
         setIsAdmin(true)
+        setAuthLoading(false)
         fetchHistory()
         fetchStats()
         return
@@ -133,15 +119,17 @@ export default function AdminYieldPage() {
           .select("is_admin")
           .eq("email", user.email)
           .single()
-        
+
         if (!userError && userCheck?.is_admin) {
           setIsAdmin(true)
+          setAuthLoading(false)
           fetchHistory()
           fetchStats()
           return
         }
-        
+
         setError("管理者権限の確認でエラーが発生しました")
+        setAuthLoading(false)
         return
       }
 
@@ -152,25 +140,29 @@ export default function AdminYieldPage() {
           .select("is_admin")
           .eq("email", user.email)
           .single()
-        
+
         if (!userError && userCheck?.is_admin) {
           setIsAdmin(true)
+          setAuthLoading(false)
           fetchHistory()
           fetchStats()
           return
         }
-        
+
         alert("管理者権限がありません")
+        setAuthLoading(false)
         router.push("/dashboard")
         return
       }
 
       setIsAdmin(true)
+      setAuthLoading(false)
       fetchHistory()
       fetchStats()
     } catch (error) {
       console.error("Admin access check error:", error)
       setError("管理者権限の確認でエラーが発生しました")
+      setAuthLoading(false)
     }
   }
 
@@ -406,125 +398,6 @@ export default function AdminYieldPage() {
       })
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const simulateYieldCalculation = async () => {
-    try {
-      // 複数のデータソースから対象ユーザーを取得
-      let cycleData: any[] = []
-      let dataSource = ""
-
-      // 1. affiliate_cycleテーブルを試す
-      const { data: acData, error: acError } = await supabase
-        .from("affiliate_cycle")
-        .select("user_id, total_nft_count")
-        .gt("total_nft_count", 0)
-
-      if (!acError && acData && acData.length > 0) {
-        cycleData = acData
-        dataSource = "affiliate_cycle"
-      } else {
-        // 2. purchasesテーブルから計算
-        const { data: purchaseData, error: purchaseError } = await supabase
-          .from("purchases")
-          .select("user_id, nft_quantity")
-          .eq("admin_approved", true)
-
-        if (!purchaseError && purchaseData) {
-          // ユーザーごとにNFT数を集計
-          const userNftMap = new Map()
-          purchaseData.forEach(purchase => {
-            const userId = purchase.user_id
-            const nftCount = purchase.nft_quantity || 0
-            userNftMap.set(userId, (userNftMap.get(userId) || 0) + nftCount)
-          })
-
-          cycleData = Array.from(userNftMap.entries()).map(([userId, totalNft]) => ({
-            user_id: userId,
-            total_nft_count: totalNft
-          })).filter(user => user.total_nft_count > 0)
-          
-          dataSource = "purchases"
-        } else {
-          // 3. usersテーブルのtotal_purchasesから推定
-          const { data: userData, error: userError } = await supabase
-            .from("users")
-            .select("user_id, total_purchases")
-            .gt("total_purchases", 0)
-
-          if (!userError && userData) {
-            cycleData = userData.map(user => ({
-              user_id: user.user_id,
-              total_nft_count: Math.floor(user.total_purchases / 1100) // $1100 = 1NFT
-            })).filter(user => user.total_nft_count > 0)
-            
-            dataSource = "users.total_purchases"
-          }
-        }
-      }
-
-      const totalUsers = cycleData?.length || 0
-      const yield_rate = Number.parseFloat(yieldRate) / 100
-      const margin_rate = Number.parseFloat(marginRate) / 100
-      
-      // プラス/マイナスでマージンの適用方法を変更
-      let user_rate: number
-      let company_margin_rate: number
-      
-      if (yield_rate > 0) {
-        // プラス: マージンを引く
-        user_rate = yield_rate * (1 - margin_rate) * 0.6
-        company_margin_rate = margin_rate
-      } else if (yield_rate < 0) {
-        // マイナス: マージンを戻す（会社が補填）
-        user_rate = yield_rate * (1 + margin_rate) * 0.6
-        company_margin_rate = -margin_rate  // 会社が負担
-      } else {
-        user_rate = 0
-        company_margin_rate = 0
-      }
-
-      let totalUserProfit = 0
-      let totalCompanyProfit = 0
-
-      cycleData?.forEach((user) => {
-        const baseAmount = user.total_nft_count * 1100
-        const userProfit = baseAmount * user_rate
-        
-        // 会社利益（プラス時は利益、マイナス時は補填）
-        let companyProfit = 0
-        if (yield_rate > 0) {
-          companyProfit = baseAmount * margin_rate + baseAmount * (yield_rate - margin_rate) * 0.1
-        } else if (yield_rate < 0) {
-          companyProfit = baseAmount * company_margin_rate  // マイナス値（補填）
-        }
-        
-        totalUserProfit += userProfit
-        totalCompanyProfit += companyProfit
-      })
-
-      // テスト結果を状態に保存
-      const testResult: TestResult = {
-        date: date,
-        yield_rate: yield_rate,
-        margin_rate: margin_rate,
-        user_rate: user_rate,
-        total_users: totalUsers,
-        total_user_profit: totalUserProfit,
-        total_company_profit: totalCompanyProfit,
-        created_at: new Date().toISOString()
-      }
-
-      setTestResults(prev => [testResult, ...prev.slice(0, 9)])
-      setShowTestResults(true)
-
-      setMessage({
-        type: "warning",
-        text: `🔒 安全テスト完了: ${totalUsers}名のユーザーに総額$${totalUserProfit.toFixed(2)}の利益が配布される予定です。（データソース: ${dataSource}・本番データ無影響）`,
-      })
-    } catch (error: any) {
-      throw new Error(`テスト計算エラー: ${error.message}`)
     }
   }
 
@@ -814,15 +687,6 @@ export default function AdminYieldPage() {
     }
   }
 
-  const clearTestResults = () => {
-    setTestResults([])
-    setShowTestResults(false)
-    setMessage({
-      type: "success",
-      text: "テスト結果をクリアしました",
-    })
-  }
-
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -868,8 +732,8 @@ export default function AdminYieldPage() {
             </h1>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant={isTestMode ? "secondary" : "destructive"} className="text-sm">
-              {isTestMode ? "テストモード" : "本番モード"}
+            <Badge variant="destructive" className="text-sm">
+              本番モード
             </Badge>
             <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
           </div>
@@ -1054,9 +918,9 @@ export default function AdminYieldPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full md:w-auto ${isTestMode ? "bg-blue-600 hover:bg-blue-700" : "bg-red-600 hover:bg-red-700"}`}
+                className="w-full md:w-auto bg-red-600 hover:bg-red-700"
               >
-                {isLoading ? "処理中..." : isTestMode ? "テスト実行" : "日利を設定"}
+                {isLoading ? "処理中..." : "日利を設定"}
               </Button>
             </form>
 
@@ -1098,19 +962,9 @@ export default function AdminYieldPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-white">
-                {showTestResults ? "テスト結果履歴" : "設定履歴"}
+                設定履歴
               </CardTitle>
               <div className="flex gap-2">
-                {showTestResults && (
-                  <Button 
-                    onClick={() => setShowTestResults(false)} 
-                    size="sm" 
-                    variant="outline"
-                    className="border-gray-600 text-gray-300"
-                  >
-                    本番履歴に戻る
-                  </Button>
-                )}
                 <Button 
                   onClick={async () => {
                     try {
@@ -1143,9 +997,9 @@ export default function AdminYieldPage() {
                 >
                   🔍 DB確認
                 </Button>
-                <Button 
-                  onClick={showTestResults ? () => {} : fetchHistory} 
-                  size="sm" 
+                <Button
+                  onClick={fetchHistory}
+                  size="sm"
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
@@ -1155,53 +1009,7 @@ export default function AdminYieldPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {showTestResults ? (
-              // テスト結果表示
-              testResults.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-400 mb-4">テスト結果がありません</p>
-                  <p className="text-xs text-blue-400">安全テストモードで計算を実行してください</p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded">
-                    <p className="text-blue-300 text-sm">🔒 テスト環境の結果 - 本番データには影響していません</p>
-                  </div>
-                  <table className="w-full text-sm text-white">
-                    <thead>
-                      <tr className="border-b border-gray-600">
-                        <th className="text-left p-2">日付</th>
-                        <th className="text-left p-2">日利率</th>
-                        <th className="text-left p-2">ユーザー利率</th>
-                        <th className="text-left p-2">対象ユーザー</th>
-                        <th className="text-left p-2">ユーザー利益</th>
-                        <th className="text-left p-2">会社利益</th>
-                        <th className="text-left p-2">実行日時</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {testResults.map((item, index) => (
-                        <tr key={index} className="border-b border-gray-700">
-                          <td className="p-2">{new Date(item.date).toLocaleDateString("ja-JP")}</td>
-                          <td className={`p-2 font-medium ${item.yield_rate >= 0 ? "text-green-400" : "text-red-400"}`}>
-                            {(item.yield_rate * 100).toFixed(3)}%
-                          </td>
-                          <td className={`p-2 font-medium ${item.user_rate >= 0 ? "text-green-400" : "text-red-400"}`}>
-                            {(item.user_rate * 100).toFixed(3)}%
-                          </td>
-                          <td className="p-2">{item.total_users}名</td>
-                          <td className="p-2 text-green-400">${item.total_user_profit.toFixed(2)}</td>
-                          <td className="p-2 text-blue-400">${item.total_company_profit.toFixed(2)}</td>
-                          <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )
-            ) : (
-              // 本番履歴表示
-              history.length === 0 ? (
+            {history.length === 0 ? (
                 <p className="text-gray-400">履歴がありません</p>
               ) : (
                 <div className="overflow-x-auto">
@@ -1264,8 +1072,7 @@ export default function AdminYieldPage() {
                     </tbody>
                   </table>
                 </div>
-              )
-            )}
+              )}
           </CardContent>
         </Card>
       </div>
