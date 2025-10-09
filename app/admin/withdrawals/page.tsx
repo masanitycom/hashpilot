@@ -138,30 +138,6 @@ export default function AdminWithdrawalsPage() {
     }
   }
 
-  const processMonthlyWithdrawals = async () => {
-    try {
-      setProcessing(true)
-      
-      const targetDate = `${selectedMonth}-01`
-      
-      const { data, error } = await supabase.rpc("process_monthly_withdrawals", {
-        p_target_month: targetDate
-      })
-
-      if (error) {
-        throw error
-      }
-
-      alert(`月末出金処理が完了しました。処理件数: ${data[0].processed_count}件`)
-      fetchWithdrawals()
-    } catch (err: any) {
-      console.error("Error processing monthly withdrawals:", err)
-      alert("月末出金処理に失敗しました: " + err.message)
-    } finally {
-      setProcessing(false)
-    }
-  }
-
   const markAsCompleted = async (ids: string[]) => {
     try {
       setProcessing(true)
@@ -352,15 +328,6 @@ export default function AdminWithdrawalsPage() {
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
-              
-              <Button
-                onClick={processMonthlyWithdrawals}
-                disabled={processing}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {processing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                月末出金処理実行
-              </Button>
 
               <Button
                 onClick={() => markAsCompleted(Array.from(selectedIds))}
@@ -373,7 +340,7 @@ export default function AdminWithdrawalsPage() {
               <Button
                 onClick={exportCSV}
                 variant="outline"
-                className="border-gray-600 text-gray-300"
+                className="border-gray-600 text-black bg-white hover:bg-gray-100"
               >
                 <Download className="h-4 w-4 mr-2" />
                 CSV出力
