@@ -401,124 +401,6 @@ export default function AdminYieldPage() {
     }
   }
 
-  const simulateYieldCalculation = async () => {
-    try {
-      // 複数のデータソースから対象ユーザーを取得
-      let cycleData: any[] = []
-      let dataSource = ""
-
-      // 1. affiliate_cycleテーブルを試す
-      const { data: acData, error: acError } = await supabase
-        .from("affiliate_cycle")
-        .select("user_id, total_nft_count")
-        .gt("total_nft_count", 0)
-
-      if (!acError && acData && acData.length > 0) {
-        cycleData = acData
-        dataSource = "affiliate_cycle"
-      } else {
-        // 2. purchasesテーブルから計算
-        const { data: purchaseData, error: purchaseError } = await supabase
-          .from("purchases")
-          .select("user_id, nft_quantity")
-          .eq("admin_approved", true)
-
-        if (!purchaseError && purchaseData) {
-          // ユーザーごとにNFT数を集計
-          const userNftMap = new Map()
-          purchaseData.forEach(purchase => {
-            const userId = purchase.user_id
-            const nftCount = purchase.nft_quantity || 0
-            userNftMap.set(userId, (userNftMap.get(userId) || 0) + nftCount)
-          })
-
-          cycleData = Array.from(userNftMap.entries()).map(([userId, totalNft]) => ({
-            user_id: userId,
-            total_nft_count: totalNft
-          })).filter(user => user.total_nft_count > 0)
-          
-          dataSource = "purchases"
-        } else {
-          // 3. usersテーブルのtotal_purchasesから推定
-          const { data: userData, error: userError } = await supabase
-            .from("users")
-            .select("user_id, total_purchases")
-            .gt("total_purchases", 0)
-
-          if (!userError && userData) {
-            cycleData = userData.map(user => ({
-              user_id: user.user_id,
-              total_nft_count: Math.floor(user.total_purchases / 1100) // $1100 = 1NFT
-            })).filter(user => user.total_nft_count > 0)
-            
-            dataSource = "users.total_purchases"
-          }
-        }
-      }
-
-      const totalUsers = cycleData?.length || 0
-      const yield_rate = Number.parseFloat(yieldRate) / 100
-      const margin_rate = Number.parseFloat(marginRate) / 100
-      
-      // プラス/マイナスでマージンの適用方法を変更
-      let user_rate: number
-      let company_margin_rate: number
-      
-      if (yield_rate > 0) {
-        // プラス: マージンを引く
-        user_rate = yield_rate * (1 - margin_rate) * 0.6
-        company_margin_rate = margin_rate
-      } else if (yield_rate < 0) {
-        // マイナス: マージンを戻す（会社が補填）
-        user_rate = yield_rate * (1 + margin_rate) * 0.6
-        company_margin_rate = -margin_rate  // 会社が負担
-      } else {
-        user_rate = 0
-        company_margin_rate = 0
-      }
-
-      let totalUserProfit = 0
-      let totalCompanyProfit = 0
-
-      cycleData?.forEach((user) => {
-        const baseAmount = user.total_nft_count * 1100
-        const userProfit = baseAmount * user_rate
-        
-        // 会社利益（プラス時は利益、マイナス時は補填）
-        let companyProfit = 0
-        if (yield_rate > 0) {
-          companyProfit = baseAmount * margin_rate + baseAmount * (yield_rate - margin_rate) * 0.1
-        } else if (yield_rate < 0) {
-          companyProfit = baseAmount * company_margin_rate  // マイナス値（補填）
-        }
-        
-        totalUserProfit += userProfit
-        totalCompanyProfit += companyProfit
-      })
-
-      // テスト結果を状態に保存
-      const testResult: TestResult = {
-        date: date,
-        yield_rate: yield_rate,
-        margin_rate: margin_rate,
-        user_rate: user_rate,
-        total_users: totalUsers,
-        total_user_profit: totalUserProfit,
-        total_company_profit: totalCompanyProfit,
-        created_at: new Date().toISOString()
-      }
-
-      setTestResults(prev => [testResult, ...prev.slice(0, 9)])
-      setShowTestResults(true)
-
-      setMessage({
-        type: "warning",
-        text: `🔒 安全テスト完了: ${totalUsers}名のユーザーに総額$${totalUserProfit.toFixed(2)}の利益が配布される予定です。（データソース: ${dataSource}・本番データ無影響）`,
-      })
-    } catch (error: any) {
-      throw new Error(`テスト計算エラー: ${error.message}`)
-    }
-  }
 
   const handleEdit = (item: YieldHistory) => {
     // フォームに既存データをセット
@@ -806,14 +688,6 @@ export default function AdminYieldPage() {
     }
   }
 
-  const clearTestResults = () => {
-    setTestResults([])
-    setShowTestResults(false)
-    setMessage({
-      type: "success",
-      text: "テスト結果をクリアしました",
-    })
-  }
 
   if (authLoading) {
     return (
@@ -1082,37 +956,27 @@ export default function AdminYieldPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-white">
-                {showTestResults ? "テスト結果履歴" : "設定履歴"}
+                設定履歴
               </CardTitle>
               <div className="flex gap-2">
-                {showTestResults && (
-                  <Button 
-                    onClick={() => setShowTestResults(false)} 
-                    size="sm" 
-                    variant="outline"
-                    className="border-gray-600 text-gray-300"
-                  >
-                    本番履歴に戻る
-                  </Button>
-                )}
-                <Button 
+                <Button
                   onClick={async () => {
                     try {
                       const { data, error } = await supabase
                         .from("daily_yield_log")
                         .select("*")
                         .order("date", { ascending: false })
-                      
+
                       console.log("全履歴データ:", data)
                       if (error) console.error("履歴取得エラー:", error)
-                      
+
                       const { count, error: countError } = await supabase
                         .from("daily_yield_log")
                         .select("*", { count: "exact", head: true })
-                      
+
                       console.log("総レコード数:", count)
                       if (countError) console.error("カウントエラー:", countError)
-                      
+
                       setMessage({
                         type: "success",
                         text: `デバッグ情報をコンソールに出力しました（${count}件）`
@@ -1121,15 +985,15 @@ export default function AdminYieldPage() {
                       console.error("デバッグエラー:", err)
                     }
                   }}
-                  size="sm" 
+                  size="sm"
                   variant="outline"
                   className="border-yellow-600 text-yellow-300"
                 >
                   🔍 DB確認
                 </Button>
-                <Button 
-                  onClick={showTestResults ? () => {} : fetchHistory} 
-                  size="sm" 
+                <Button
+                  onClick={fetchHistory}
+                  size="sm"
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
