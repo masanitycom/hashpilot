@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
 import {
   CalendarIcon,
   TrendingUpIcon,
@@ -19,7 +17,6 @@ import {
   AlertCircle,
   CheckCircle,
   InfoIcon,
-  TestTube,
   Trash2,
   Shield,
   ArrowLeft,
@@ -45,22 +42,10 @@ interface YieldStats {
   total_distributed: number
 }
 
-interface TestResult {
-  date: string
-  yield_rate: number
-  margin_rate: number
-  user_rate: number
-  total_users: number
-  total_user_profit: number
-  total_company_profit: number
-  created_at: string
-}
-
 export default function AdminYieldPage() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
   const [yieldRate, setYieldRate] = useState("")
   const [marginRate, setMarginRate] = useState("30")
-  const [isTestMode, setIsTestMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
   const [history, setHistory] = useState<YieldHistory[]>([])
@@ -69,8 +54,6 @@ export default function AdminYieldPage() {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState("")
-  const [testResults, setTestResults] = useState<TestResult[]>([])
-  const [showTestResults, setShowTestResults] = useState(false)
   const router = useRouter()
 
   // ユーザー受取率を計算
@@ -868,32 +851,9 @@ export default function AdminYieldPage() {
             </h1>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant={isTestMode ? "secondary" : "destructive"} className="text-sm">
-              {isTestMode ? "テストモード" : "本番モード"}
-            </Badge>
             <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
           </div>
         </div>
-
-        {/* 本番モード固定 */}
-        <Card className="border-2 bg-gray-800 border-green-500">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-400">
-              <Shield className="h-5 w-5" />
-              本番モード（固定）
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-green-300 space-y-2">
-              <p className="font-medium">
-                ✅ 本番モード: ユーザーの実際の残高に影響します
-              </p>
-              <p className="text-sm">
-                設定すると即座にユーザーの利益に反映されます
-              </p>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* 統計情報 */}
         {stats && (
@@ -1054,9 +1014,9 @@ export default function AdminYieldPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full md:w-auto ${isTestMode ? "bg-blue-600 hover:bg-blue-700" : "bg-red-600 hover:bg-red-700"}`}
+                className="w-full md:w-auto bg-red-600 hover:bg-red-700"
               >
-                {isLoading ? "処理中..." : isTestMode ? "テスト実行" : "日利を設定"}
+                {isLoading ? "処理中..." : "日利を設定"}
               </Button>
             </form>
 
@@ -1155,55 +1115,9 @@ export default function AdminYieldPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {showTestResults ? (
-              // テスト結果表示
-              testResults.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-400 mb-4">テスト結果がありません</p>
-                  <p className="text-xs text-blue-400">安全テストモードで計算を実行してください</p>
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded">
-                    <p className="text-blue-300 text-sm">🔒 テスト環境の結果 - 本番データには影響していません</p>
-                  </div>
-                  <table className="w-full text-sm text-white">
-                    <thead>
-                      <tr className="border-b border-gray-600">
-                        <th className="text-left p-2">日付</th>
-                        <th className="text-left p-2">日利率</th>
-                        <th className="text-left p-2">ユーザー利率</th>
-                        <th className="text-left p-2">対象ユーザー</th>
-                        <th className="text-left p-2">ユーザー利益</th>
-                        <th className="text-left p-2">会社利益</th>
-                        <th className="text-left p-2">実行日時</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {testResults.map((item, index) => (
-                        <tr key={index} className="border-b border-gray-700">
-                          <td className="p-2">{new Date(item.date).toLocaleDateString("ja-JP")}</td>
-                          <td className={`p-2 font-medium ${item.yield_rate >= 0 ? "text-green-400" : "text-red-400"}`}>
-                            {(item.yield_rate * 100).toFixed(3)}%
-                          </td>
-                          <td className={`p-2 font-medium ${item.user_rate >= 0 ? "text-green-400" : "text-red-400"}`}>
-                            {(item.user_rate * 100).toFixed(3)}%
-                          </td>
-                          <td className="p-2">{item.total_users}名</td>
-                          <td className="p-2 text-green-400">${item.total_user_profit.toFixed(2)}</td>
-                          <td className="p-2 text-blue-400">${item.total_company_profit.toFixed(2)}</td>
-                          <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )
+            {history.length === 0 ? (
+              <p className="text-gray-400">履歴がありません</p>
             ) : (
-              // 本番履歴表示
-              history.length === 0 ? (
-                <p className="text-gray-400">履歴がありません</p>
-              ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm text-white">
                     <thead>
