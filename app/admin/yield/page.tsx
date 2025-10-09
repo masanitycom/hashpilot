@@ -283,12 +283,16 @@ export default function AdminYieldPage() {
         console.log('⏳ データ保存の検証を開始...')
         await new Promise(resolve => setTimeout(resolve, 2000)) // 2秒待機
 
-        const { data: verifyData, error: verifyError } = await supabase
+        const { count, error: verifyError } = await supabase
           .from('user_daily_profit')
-          .select('user_id', { count: 'exact', head: true })
+          .select('*', { count: 'exact', head: true })
           .eq('date', date)
 
-        const actualUserCount = verifyData?.length || 0
+        if (verifyError) {
+          console.error('検証エラー:', verifyError)
+        }
+
+        const actualUserCount = count || 0
         console.log(`検証結果: ${actualUserCount}件のデータが保存されています（期待値: ${totalUsers}件）`)
 
         if (actualUserCount === 0 && totalUsers > 0) {
