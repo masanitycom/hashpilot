@@ -1,0 +1,30 @@
+# ========== 正しい形式（バリュードメイン公式ドキュメント準拠） ==========
+# 既存のDNS設定の一番下に、以下を1行ずつコピー&ペーストしてください
+# ★ 引用符は不要、値はスペース区切り
+
+# MXレコード（sendサブドメイン用）
+mx feedback-smtp.ap-northeast-1.amazonses.com. 10 send.hashpilot.biz.
+
+# SPFレコード（sendサブドメイン用）
+txt send v=spf1 include:amazonses.com ~all
+
+# DKIMレコード（メール署名用）- 長い文字列
+txt resend._domainkey p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfltnBfI151L07vMTHx0tf0WFGBM7bFOAywS4BxzIUBsf39fyQeHVMyUJIdkaNx4pje+55SoMMUBhY/mI/WUkIzGc8PcAHvVDLB/NkaYmqk6SUjgggzASUmOUelWsofN8ZpT7qi1JjRQ5AKdjoouNHuWvZ+q9UaHPkaJdevDCWUwIDAQAB
+
+# DMARCレコード（推奨）
+txt _dmarc v=DMARC1; p=none;
+
+# ========== 1行ずつ追加する場合 ==========
+# エラーが出る場合は、1行ずつ追加して保存してください
+
+# STEP 1: MXレコードのみ
+mx feedback-smtp.ap-northeast-1.amazonses.com. 10 send.hashpilot.biz.
+
+# STEP 2: SPFレコードを追加
+txt send v=spf1 include:amazonses.com ~all
+
+# STEP 3: DKIMレコードを追加
+txt resend._domainkey p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfltnBfI151L07vMTHx0tf0WFGBM7bFOAywS4BxzIUBsf39fyQeHVMyUJIdkaNx4pje+55SoMMUBhY/mI/WUkIzGc8PcAHvVDLB/NkaYmqk6SUjgggzASUmOUelWsofN8ZpT7qi1JjRQ5AKdjoouNHuWvZ+q9UaHPkaJdevDCWUwIDAQAB
+
+# STEP 4: DMARCレコードを追加
+txt _dmarc v=DMARC1; p=none;

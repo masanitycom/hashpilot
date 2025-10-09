@@ -27,6 +27,7 @@ interface User {
   referrer_user_id: string | null
   created_at: string
   is_active: boolean
+  is_operation_only: boolean
   is_pegasus_exchange?: boolean
   pegasus_exchange_date?: string | null
   pegasus_withdrawal_unlock_date?: string | null
@@ -48,6 +49,7 @@ export default function AdminUsersPage() {
     coinw_uid: "",
     referrer_user_id: "",
     nft_receive_address: "",
+    is_operation_only: false,
     is_pegasus_exchange: false,
     pegasus_withdrawal_unlock_date: "",
   })
@@ -200,6 +202,7 @@ export default function AdminUsersPage() {
       coinw_uid: user.coinw_uid || "",
       referrer_user_id: user.referrer_user_id || "",
       nft_receive_address: user.nft_receive_address || "",
+      is_operation_only: user.is_operation_only || false,
       is_pegasus_exchange: user.is_pegasus_exchange || false,
       pegasus_withdrawal_unlock_date: user.pegasus_withdrawal_unlock_date || "",
     })
@@ -218,6 +221,7 @@ export default function AdminUsersPage() {
           coinw_uid: editForm.coinw_uid || null,
           referrer_user_id: editForm.referrer_user_id || null,
           nft_receive_address: editForm.nft_receive_address || null,
+          is_operation_only: editForm.is_operation_only,
           is_pegasus_exchange: editForm.is_pegasus_exchange,
           pegasus_withdrawal_unlock_date: editForm.pegasus_withdrawal_unlock_date || null,
           updated_at: new Date().toISOString(),
@@ -332,6 +336,14 @@ export default function AdminUsersPage() {
   const handleNftDistribution = async (userId: string, isDistributed: boolean) => {
     if (!currentUser) {
       setError("管理者情報が取得できません")
+      return
+    }
+
+    // 確認ダイアログを表示
+    const actionText = isDistributed ? "配布済みに設定" : "配布状況をリセット"
+    const confirmMessage = `NFT配布状況を「${actionText}」しますか？`
+
+    if (!confirm(confirmMessage)) {
       return
     }
 
@@ -655,6 +667,25 @@ export default function AdminUsersPage() {
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     管理者がNFTを送付する際に使用されます
+                  </p>
+                </div>
+
+                <div className="bg-blue-900/20 border border-blue-600/30 rounded-lg p-3">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="is_operation_only"
+                      checked={editForm.is_operation_only}
+                      onChange={(e) => setEditForm({ ...editForm, is_operation_only: e.target.checked })}
+                      className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-600"
+                    />
+                    <Label htmlFor="is_operation_only" className="text-gray-300 cursor-pointer">
+                      運用専用ユーザー
+                    </Label>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    チェックすると、ダッシュボードから紹介関連のUIを全て非表示にします<br />
+                    （紹介報酬の計算は通常通り行われます）
                   </p>
                 </div>
 

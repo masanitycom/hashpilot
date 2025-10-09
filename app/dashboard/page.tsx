@@ -34,6 +34,7 @@ interface UserData {
   referrer_user_id: string | null
   created_at: string
   operation_start_date: string | null
+  is_operation_only: boolean
 }
 
 interface UserStats {

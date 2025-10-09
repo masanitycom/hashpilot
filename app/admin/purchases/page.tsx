@@ -20,6 +20,7 @@ interface Purchase {
   email: string
   full_name: string | null
   coinw_uid: string | null
+  nft_receive_address: string | null
   referrer_user_id: string | null
   referrer_email: string | null
   referrer_full_name: string | null
@@ -852,6 +853,12 @@ export default function AdminPurchasesPage() {
                                       <Label className="text-gray-300">フルネーム</Label>
                                       <p className="bg-gray-700 p-2 rounded">
                                         {selectedPurchase.full_name || "未入力"}
+                                      </p>
+                                    </div>
+                                    <div className="col-span-2">
+                                      <Label className="text-gray-300">報酬受取アドレス</Label>
+                                      <p className="font-mono text-sm bg-gray-700 p-2 rounded break-all">
+                                        {selectedPurchase.nft_receive_address || "未入力"}
                                       </p>
                                     </div>
                                   </div>
