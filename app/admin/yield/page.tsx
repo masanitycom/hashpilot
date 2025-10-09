@@ -53,6 +53,7 @@ export default function AdminYieldPage() {
   const [userRate, setUserRate] = useState(0)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [authLoading, setAuthLoading] = useState(true)
   const [error, setError] = useState("")
   const router = useRouter()
 
@@ -90,6 +91,7 @@ export default function AdminYieldPage() {
       } = await supabase.auth.getUser()
 
       if (!user) {
+        setAuthLoading(false)
         router.push("/login")
         return
       }
@@ -99,6 +101,7 @@ export default function AdminYieldPage() {
       // 緊急対応: basarasystems@gmail.com と support@dshsupport.biz のアクセス許可
       if (user.email === "basarasystems@gmail.com" || user.email === "support@dshsupport.biz") {
         setIsAdmin(true)
+        setAuthLoading(false)
         fetchHistory()
         fetchStats()
         return
@@ -119,12 +122,14 @@ export default function AdminYieldPage() {
         
         if (!userError && userCheck?.is_admin) {
           setIsAdmin(true)
+          setAuthLoading(false)
           fetchHistory()
           fetchStats()
           return
         }
-        
+
         setError("管理者権限の確認でエラーが発生しました")
+        setAuthLoading(false)
         return
       }
 
@@ -138,12 +143,14 @@ export default function AdminYieldPage() {
         
         if (!userError && userCheck?.is_admin) {
           setIsAdmin(true)
+          setAuthLoading(false)
           fetchHistory()
           fetchStats()
           return
         }
-        
+
         alert("管理者権限がありません")
+        setAuthLoading(false)
         router.push("/dashboard")
         return
       }
@@ -154,6 +161,8 @@ export default function AdminYieldPage() {
     } catch (error) {
       console.error("Admin access check error:", error)
       setError("管理者権限の確認でエラーが発生しました")
+    } finally {
+      setAuthLoading(false)
     }
   }
 
@@ -804,6 +813,21 @@ export default function AdminYieldPage() {
       type: "success",
       text: "テスト結果をクリアしました",
     })
+  }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <Card className="w-full max-w-md bg-gray-800 border-gray-700">
+          <CardContent className="p-8">
+            <div className="flex flex-col items-center space-y-4">
+              <RefreshCw className="w-8 h-8 text-blue-400 animate-spin" />
+              <p className="text-white text-lg">認証を確認中...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (!isAdmin) {
