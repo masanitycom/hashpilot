@@ -24,6 +24,7 @@ import {
   Shield,
   ArrowLeft,
   RefreshCw,
+  Edit,
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
@@ -525,6 +526,21 @@ export default function AdminYieldPage() {
     } catch (error: any) {
       throw new Error(`テスト計算エラー: ${error.message}`)
     }
+  }
+
+  const handleEdit = (item: YieldHistory) => {
+    // フォームに既存データをセット
+    setDate(item.date)
+    setYieldRate((Number.parseFloat(item.yield_rate.toString()) * 100).toFixed(2))
+    setMarginRate((Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(2))
+
+    // ページ上部のフォームにスクロール
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    setMessage({
+      type: "warning",
+      text: `${item.date}の日利設定を修正モードで読み込みました。変更後、「日利を設定」ボタンで保存してください。`,
+    })
   }
 
   const handleCancel = async (cancelDate: string) => {
@@ -1223,13 +1239,13 @@ export default function AdminYieldPage() {
                           <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
                           <td className="p-2 space-x-1">
                             <Button
-                              variant="destructive"
+                              variant="outline"
                               size="sm"
-                              onClick={() => handleCancel(item.date)}
-                              className="h-8 px-2 bg-red-600 hover:bg-red-700"
+                              onClick={() => handleEdit(item)}
+                              className="h-8 px-2 bg-blue-600 hover:bg-blue-700 text-white border-blue-500"
                             >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              キャンセル
+                              <Edit className="h-3 w-3 mr-1" />
+                              修正
                             </Button>
                             {Number.parseFloat(item.margin_rate) * 100 > 100 && (
                               <Button
