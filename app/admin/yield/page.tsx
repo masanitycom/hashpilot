@@ -244,146 +244,44 @@ export default function AdminYieldPage() {
         throw new Error(`❌ 未来の日付（${date}）には設定できません。今日は ${today.toISOString().split('T')[0]} です。`)
       }
 
-      console.log('🚀 日利設定開始（直接DB書き込み方式）:', {
+      console.log('🚀 日利設定開始（RPC関数使用）:', {
         date,
         yield_rate: Number.parseFloat(yieldRate) / 100,
-        margin_rate: Number.parseFloat(marginRate) / 100
+        margin_rate: Number.parseFloat(marginRate)
       })
 
       const yieldValue = Number.parseFloat(yieldRate) / 100
-      const marginValue = Number.parseFloat(marginRate) / 100
+      const marginValue = Number.parseFloat(marginRate)
 
-      // ユーザー受取率を計算
-      let userRate: number
-      if (yieldValue > 0) {
-        userRate = yieldValue * (1 - marginValue) * 0.6
-      } else if (yieldValue < 0) {
-        userRate = yieldValue * (1 + marginValue) * 0.6
-      } else {
-        userRate = 0
-      }
-
-      console.log('📊 計算結果:', {
-        yield_rate: yieldValue,
-        margin_rate: marginValue,
-        user_rate: userRate
+      // process_daily_yield_with_cycles RPC関数を呼び出し
+      // 本番モード（p_is_test_mode = false）で実行
+      console.log('🔄 RPC関数を呼び出し中...')
+      const { data: rpcResult, error: rpcError } = await supabase.rpc('process_daily_yield_with_cycles', {
+        p_date: date,
+        p_yield_rate: yieldValue,
+        p_margin_rate: marginValue,
+        p_is_test_mode: false,
+        p_skip_validation: false
       })
 
-      // STEP 1: daily_yield_log に保存
-      console.log('💾 STEP 1: daily_yield_log に保存中...')
-      const { error: logError } = await supabase
-        .from('daily_yield_log')
-        .upsert({
-          date: date,
-          yield_rate: yieldValue,
-          margin_rate: marginValue,
-          user_rate: userRate,
-        }, {
-          onConflict: 'date'
-        })
-
-      if (logError) {
-        console.error('❌ daily_yield_log 保存エラー:', logError)
-        throw new Error(`日利ログの保存に失敗: ${logError.message}`)
-      }
-      console.log('✅ daily_yield_log 保存成功')
-
-      // STEP 2: 運用開始済みユーザーを取得
-      console.log('👥 STEP 2: 運用開始済みユーザー取得中...')
-      const { data: cycleData, error: cycleError } = await supabase
-        .from('affiliate_cycle')
-        .select('user_id, total_nft_count, phase')
-        .gt('total_nft_count', 0)
-
-      if (cycleError) {
-        console.error('❌ affiliate_cycle 取得エラー:', cycleError)
-        throw new Error(`サイクルデータ取得エラー: ${cycleError.message}`)
+      if (rpcError) {
+        console.error('❌ RPC関数エラー:', rpcError)
+        throw new Error(`日利処理エラー: ${rpcError.message}`)
       }
 
-      const { data: operationalUsers, error: opError } = await supabase
-        .from('users')
-        .select('user_id, operation_start_date')
-        .lte('operation_start_date', date)
-        .not('operation_start_date', 'is', null)
+      console.log('✅ RPC関数実行成功:', rpcResult)
 
-      if (opError) {
-        console.error('❌ 運用ユーザー取得エラー:', opError)
-        throw new Error(`運用ユーザー取得エラー: ${opError.message}`)
-      }
-
-      const operationalUserIds = new Set(operationalUsers?.map(u => u.user_id) || [])
-      console.log(`✅ 運用開始済みユーザー: ${operationalUserIds.size}名`)
-
-      // STEP 3: 既存データを削除（重複防止）
-      console.log('🗑️ STEP 3: 既存データ削除中...')
-      const { error: deleteError } = await supabase
-        .from('user_daily_profit')
-        .delete()
-        .eq('date', date)
-
-      if (deleteError) {
-        console.warn('⚠️ 既存データ削除でエラー（初回なら正常）:', deleteError.message)
-      } else {
-        console.log('✅ 既存データ削除完了')
-      }
-
-      // STEP 4: user_daily_profit に一括挿入
-      console.log('💾 STEP 4: user_daily_profit に一括挿入中...')
-      const insertData = cycleData
-        ?.filter(c => operationalUserIds.has(c.user_id))
-        .map(c => ({
-          user_id: c.user_id,
-          date: date,
-          daily_profit: c.total_nft_count * 1100 * userRate,
-          base_amount: c.total_nft_count * 1100,
-          yield_rate: yieldValue,
-          user_rate: userRate,
-          phase: c.phase
-        })) || []
-
-      console.log(`📦 挿入データ: ${insertData.length}件`)
-
-      if (insertData.length === 0) {
-        throw new Error('運用開始済みユーザーが見つかりません')
-      }
-
-      const { error: insertError } = await supabase
-        .from('user_daily_profit')
-        .insert(insertData)
-
-      if (insertError) {
-        console.error('❌ user_daily_profit 挿入エラー:', insertError)
-        throw new Error(`利益データ挿入エラー: ${insertError.message}`)
-      }
-
-      console.log('✅ user_daily_profit 挿入成功')
-
-      // STEP 5: 保存確認
-      console.log('🔍 STEP 5: 保存確認中...')
-      const { count, error: verifyError } = await supabase
-        .from('user_daily_profit')
-        .select('*', { count: 'exact', head: true })
-        .eq('date', date)
-
-      if (verifyError) {
-        console.error('⚠️ 保存確認エラー:', verifyError)
-      }
-
-      const totalProfit = insertData.reduce((sum, d) => sum + d.daily_profit, 0)
-
-      console.log('✅ 保存確認完了:', {
-        expected: insertData.length,
-        actual: count,
-        total_profit: totalProfit
-      })
-
-      if (count !== insertData.length) {
-        console.warn(`⚠️ データ不一致: 期待=${insertData.length}, 実際=${count}`)
-      }
+      const result = Array.isArray(rpcResult) ? rpcResult[0] : rpcResult
 
       setMessage({
         type: "success",
-        text: `✅ 日利設定完了！${count}名のユーザーに総額$${totalProfit.toFixed(2)}の利益を配布しました。`,
+        text: `✅ ${result.message || '日利設定完了'}
+
+処理詳細:
+- 日利配布: ${result.total_users || 0}名に総額$${(result.total_user_profit || 0).toFixed(2)}
+- 紹介報酬: ${result.referral_rewards_processed || 0}名に配布
+- NFT自動付与: ${result.auto_nft_purchases || 0}名に付与
+- サイクル更新: ${result.cycle_updates || 0}件`,
       })
 
       setYieldRate("")
