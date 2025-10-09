@@ -295,10 +295,150 @@ node comprehensive_referral_verification.js
 
 ---
 
+## 📋 日利処理システム（2025年10月9日更新）
+
+### RPC関数統合
+**背景:**
+- 2025年10月1日～9日: 管理画面から直接DB書き込みで日利設定（旧方式）
+- 問題: NFT自動付与と紹介報酬計算が実行されない
+
+**解決:**
+- `process_daily_yield_with_cycles` RPC関数を使用するように変更
+- 管理画面の日利設定が以下を自動実行:
+  1. 日次利益配布
+  2. 紹介報酬計算・配布（各レベル20%/10%/5%）
+  3. NFT自動付与（cum_usdt >= $2,200到達時）
+
+### 実装内容
+**フロントエンド (`app/admin/yield/page.tsx`):**
+```typescript
+// 旧方式（直接DB書き込み）
+await supabase.from('user_daily_profit').insert(...)
+
+// 新方式（RPC関数経由）
+await supabase.rpc('process_daily_yield_with_cycles', {
+  p_date: date,
+  p_yield_rate: yieldValue,
+  p_margin_rate: marginValue,
+  p_is_test_mode: false,
+  p_skip_validation: false
+})
+```
+
+**成功メッセージ:**
+```
+✅ 日利設定完了
+
+処理詳細:
+• 日利配布: XX名に総額$XXX.XX
+• 紹介報酬: XX名に配布
+• NFT自動付与: XX名に付与
+• サイクル更新: XX件
+```
+
+### データリセット手順
+旧方式で設定した日利データをリセットする場合:
+```sql
+-- scripts/reset-old-yield-data-1001-1009.sql
+-- 10/1～10/9の日利・紹介報酬・自動NFTを削除
+-- affiliate_cycleをリセット（手動NFTのみ残す）
+```
+
+### 重要な注意事項
+- **テストモード削除**: 管理画面からテストモードUI完全削除（本番運用のみ）
+- **未来日付チェック**: 今日より未来の日付には設定不可
+- **重複処理防止**: 同一日付の再設定時は既存データを上書き
+
+---
+
+## 👤 運用専用ユーザー機能（2025年10月9日実装）
+
+### 概要
+紹介機能を使わず、自分の運用のみを行うユーザー向けの機能
+
+### 仕様
+**データベース:**
+- `users.is_operation_only` (BOOLEAN, DEFAULT false)
+
+**表示される項目:**
+- ✅ 累積USDT
+- ✅ 確定USDT
+- ✅ 出金状況
+- ✅ グラフ
+- ✅ 自動NFT購入履歴
+- ✅ NFT買い取り申請
+
+**非表示項目（ダッシュボード）:**
+- ❌ 紹介報酬カード
+- ❌ 紹介ネットワーク（組織図）
+- ❌ Level3紹介報酬
+- ❌ レベル別投資額統計
+- ❌ Level4以降の総計
+
+**非表示項目（プロフィール）:**
+- ❌ 紹介リンク
+- ❌ QRコード
+
+### 重要な注意事項
+1. **紹介報酬の計算は通常通り実行される**
+   - 運用専用ユーザー自身に紹介者がいる場合、その紹介者には報酬が入る
+   - NFT自動付与も通常通り機能する
+   - UIのみ非表示（バックエンド計算は影響なし）
+
+2. **設定方法**
+   - `/admin/users` のユーザー編集画面
+   - 「運用専用ユーザー」チェックボックスにチェック
+
+3. **実装ファイル**
+   - `app/dashboard/page.tsx`: 紹介UIの条件分岐
+   - `app/profile/page.tsx`: 紹介リンクの条件分岐
+   - `app/admin/users/page.tsx`: 編集フォームのチェックボックス
+
+### SQL設定
+```sql
+-- scripts/add-is-operation-only-field.sql
+ALTER TABLE users ADD COLUMN is_operation_only BOOLEAN DEFAULT FALSE;
+```
+
+---
+
+## 🔧 管理画面の改善（2025年10月9日）
+
+### NFT配布ボタンの確認ダイアログ
+**場所:** `/admin/users`
+
+**動作:**
+```javascript
+// 配布済みに設定する場合
+confirm('NFT配布状況を「配布済みに設定」しますか？')
+
+// リセットする場合
+confirm('NFT配布状況を「配布状況をリセット」しますか？')
+```
+
+**目的:** 誤操作防止
+
+### 購入詳細モーダルに報酬受取アドレス追加
+**場所:** `/admin/purchases` - 詳細ボタン
+
+**追加項目:**
+- ラベル: 「報酬受取アドレス」
+- データ: `users.nft_receive_address`
+- 表示: フルネームの下に配置
+- フォーマット: モノスペースフォント、折り返しあり
+
+**SQL更新:**
+```sql
+-- scripts/add-nft-receive-address-to-admin-view.sql
+-- admin_purchases_viewにnft_receive_addressカラムを追加
+```
+
+---
+
 ## 🛠 開発環境
 
 - Next.js 14 + TypeScript
-- Supabase（データベース）
+- Supabase（データベース + RPC関数）
 - Tailwind CSS（スタイリング）
 - 段階的読み込み最適化（4ステージ）
 
