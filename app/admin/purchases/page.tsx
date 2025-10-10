@@ -856,7 +856,7 @@ export default function AdminPurchasesPage() {
                                       </p>
                                     </div>
                                     <div className="col-span-2">
-                                      <Label className="text-gray-300">報酬受取アドレス</Label>
+                                      <Label className="text-gray-300">NFT受取アドレス</Label>
                                       <p className="font-mono text-sm bg-gray-700 p-2 rounded break-all">
                                         {selectedPurchase.nft_receive_address || "未入力"}
                                       </p>
