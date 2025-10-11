@@ -25,6 +25,12 @@ interface EmailHistory {
   read_count: number
 }
 
+interface UserSearchResult {
+  user_id: string
+  email: string
+  full_name: string
+}
+
 export default function AdminEmailsPage() {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -41,6 +47,12 @@ export default function AdminEmailsPage() {
   const [individualSubject, setIndividualSubject] = useState("")
   const [individualBody, setIndividualBody] = useState("")
   const [targetUserIds, setTargetUserIds] = useState("")
+
+  // ユーザー検索機能
+  const [userSearchQuery, setUserSearchQuery] = useState("")
+  const [userSearchResults, setUserSearchResults] = useState<UserSearchResult[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<UserSearchResult[]>([])
+  const [showSearchResults, setShowSearchResults] = useState(false)
 
   // メール送信履歴
   const [emailHistory, setEmailHistory] = useState<EmailHistory[]>([])
@@ -154,18 +166,55 @@ export default function AdminEmailsPage() {
     }
   }
 
+  // ユーザー検索
+  const searchUsers = async (query: string) => {
+    if (!query || query.length < 2) {
+      setUserSearchResults([])
+      return
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("user_id, email, full_name")
+        .or(`user_id.ilike.%${query}%,email.ilike.%${query}%,full_name.ilike.%${query}%`)
+        .limit(10)
+
+      if (error) throw error
+      setUserSearchResults(data || [])
+      setShowSearchResults(true)
+    } catch (error: any) {
+      console.error("User search error:", error)
+    }
+  }
+
+  // ユーザー追加
+  const addSelectedUser = (user: UserSearchResult) => {
+    if (!selectedUsers.find(u => u.user_id === user.user_id)) {
+      setSelectedUsers([...selectedUsers, user])
+    }
+    setUserSearchQuery("")
+    setUserSearchResults([])
+    setShowSearchResults(false)
+  }
+
+  // ユーザー削除
+  const removeSelectedUser = (userId: string) => {
+    setSelectedUsers(selectedUsers.filter(u => u.user_id !== userId))
+  }
+
   const sendIndividualEmail = async () => {
-    if (!individualSubject.trim() || !individualBody.trim() || !targetUserIds.trim()) {
-      alert("件名、本文、ユーザーIDを入力してください")
+    if (!individualSubject.trim() || !individualBody.trim()) {
+      alert("件名、本文を入力してください")
       return
     }
 
-    const userIdArray = targetUserIds.split(",").map(id => id.trim()).filter(id => id.length > 0)
-
-    if (userIdArray.length === 0) {
-      alert("有効なユーザーIDを入力してください")
+    if (selectedUsers.length === 0) {
+      alert("送信先ユーザーを選択してください")
       return
     }
+
+    const userIdArray = selectedUsers.map(u => u.user_id)
 
     if (!confirm(`${userIdArray.length}名のユーザーにメールを送信しますか？`)) {
       return
@@ -198,7 +247,7 @@ export default function AdminEmailsPage() {
       // フォームクリア
       setIndividualSubject("")
       setIndividualBody("")
-      setTargetUserIds("")
+      setSelectedUsers([])
 
       // 履歴更新
       fetchEmailHistory(currentUser.email)
@@ -332,17 +381,58 @@ export default function AdminEmailsPage() {
               {/* 個別送信タブ */}
               <TabsContent value="individual" className="space-y-4 mt-4">
                 <div className="space-y-4">
-                  <div>
-                    <Label className="text-white">送信先ユーザーID（カンマ区切り）</Label>
+                  <div className="relative">
+                    <Label className="text-white">送信先ユーザー検索</Label>
                     <Input
-                      value={targetUserIds}
-                      onChange={(e) => setTargetUserIds(e.target.value)}
-                      placeholder="例: user123, user456, user789"
+                      value={userSearchQuery}
+                      onChange={(e) => {
+                        setUserSearchQuery(e.target.value)
+                        searchUsers(e.target.value)
+                      }}
+                      onFocus={() => userSearchResults.length > 0 && setShowSearchResults(true)}
+                      placeholder="ユーザーID、メールアドレス、名前で検索"
                       className="bg-gray-700 border-gray-600 text-white"
                     />
-                    <p className="text-sm text-gray-400 mt-1">
-                      複数のユーザーIDをカンマ区切りで入力してください
-                    </p>
+
+                    {/* 検索結果ドロップダウン */}
+                    {showSearchResults && userSearchResults.length > 0 && (
+                      <div className="absolute z-10 w-full mt-1 bg-gray-700 border border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        {userSearchResults.map((user) => (
+                          <div
+                            key={user.user_id}
+                            onClick={() => addSelectedUser(user)}
+                            className="p-3 hover:bg-gray-600 cursor-pointer border-b border-gray-600 last:border-b-0"
+                          >
+                            <div className="text-white font-medium">{user.full_name}</div>
+                            <div className="text-sm text-gray-400">{user.email}</div>
+                            <div className="text-xs text-gray-500">ID: {user.user_id}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* 選択済みユーザー一覧 */}
+                    {selectedUsers.length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        <Label className="text-white text-sm">選択済みユーザー（{selectedUsers.length}名）</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedUsers.map((user) => (
+                            <Badge
+                              key={user.user_id}
+                              className="bg-blue-600 text-white px-3 py-1 flex items-center gap-2"
+                            >
+                              <span>{user.full_name} ({user.user_id})</span>
+                              <button
+                                onClick={() => removeSelectedUser(user.user_id)}
+                                className="text-white hover:text-red-300"
+                              >
+                                ✕
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div>
