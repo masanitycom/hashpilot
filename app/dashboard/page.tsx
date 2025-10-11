@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X, Coins, Settings, AlertCircle } from "lucide-react"
+import { Loader2, LogOut, TrendingUp, DollarSign, Users, Gift, User, Menu, X, Coins, Settings, AlertCircle, Mail } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { UnifiedReferralCalculator } from "@/lib/unified-referral-calculator"
 import { ReferralTreeOptimized } from "@/components/referral-tree-optimized"
@@ -545,6 +545,17 @@ export default function OptimizedDashboardPage() {
                   出金状況
                 </Button>
               </Link>
+              <Link href="/inbox">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent justify-start"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  受信箱
+                </Button>
+              </Link>
               <Link href="/profile">
                 <Button
                   variant="outline"
@@ -644,7 +655,13 @@ export default function OptimizedDashboardPage() {
                 />
               </div>
             </div>
-            <div className="hidden md:block">
+            <div className="hidden md:flex md:space-x-2">
+              <Link href="/inbox">
+                <Button variant="outline" className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600">
+                  <Mail className="h-4 w-4 mr-2" />
+                  受信箱
+                </Button>
+              </Link>
               <Link href="/profile">
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   <User className="h-4 w-4 mr-2" />

@@ -22,6 +22,7 @@ import {
   BarChart3,
   Coins,
   Wallet,
+  Mail,
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
@@ -454,6 +455,12 @@ export default function AdminDashboard() {
               <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white p-4 h-auto flex flex-col items-center space-y-2">
                 <BarChart3 className="w-6 h-6" />
                 <span className="text-xs">分析</span>
+              </Button>
+            </Link>
+            <Link href="/admin/emails">
+              <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white p-4 h-auto flex flex-col items-center space-y-2">
+                <Mail className="w-6 h-6" />
+                <span className="text-xs">メール送信</span>
               </Button>
             </Link>
             <Button
