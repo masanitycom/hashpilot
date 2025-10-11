@@ -454,4 +454,75 @@ confirm('NFT配布状況を「配布状況をリセット」しますか？')
 
 ---
 
-最終更新: 2025年10月9日
+## 📧 システムメール機能（2025年10月11日実装）
+
+### 概要
+管理者からユーザーへのメール送信機能（一斉送信・個別送信）
+
+### 機能
+1. **一斉メール送信**
+   - 全ユーザー
+   - 承認済みユーザーのみ
+   - 未承認ユーザーのみ
+
+2. **個別メール送信**
+   - 特定のユーザーIDを指定して送信
+
+3. **メール送信履歴**
+   - 管理者の送信履歴表示
+   - 配信状況確認（送信成功/失敗/既読）
+
+4. **ユーザー受信箱**
+   - 受信メール一覧表示
+   - 未読/既読管理
+   - メール本文表示（HTML対応）
+
+### データベーステーブル
+- `system_emails`: メール本体
+- `email_recipients`: 送信先・配信状況
+- `email_templates`: メールテンプレート（将来拡張用）
+
+### RPC関数
+- `create_system_email()`: メール作成＆送信先登録
+- `get_user_emails()`: ユーザーのメール一覧取得
+- `mark_email_as_read()`: メールを既読にする
+- `get_email_history()`: 管理者用メール送信履歴
+- `get_email_delivery_details()`: メール配信詳細
+
+### Edge Function
+- `send-system-email`: Resend APIでメール送信処理
+
+### 画面
+- `/admin/emails`: 管理者メール送信画面（一斉・個別・履歴）
+- `/inbox`: ユーザー受信箱
+
+### メール送信フロー
+1. 管理者が件名・本文・送信先を指定
+2. `create_system_email()` でメール作成＆送信先登録
+3. `send-system-email` Edge Functionでメール送信
+4. 送信結果を `email_recipients` に記録
+
+### セットアップ手順
+1. SQLスクリプト実行:
+   ```bash
+   scripts/create-email-system-tables.sql
+   scripts/create-email-rpc-functions.sql
+   ```
+
+2. Edge Functionデプロイ:
+   ```bash
+   npx supabase functions deploy send-system-email
+   ```
+
+3. Supabase環境変数設定:
+   - `RESEND_API_KEY`: Resend APIキー
+
+### 重要な注意事項
+- メール送信にはResend APIを使用（`noreply@send.hashpilot.biz`）
+- HTML形式のメール本文に対応
+- 送信失敗時は `email_recipients.error_message` に記録
+- RLS（Row Level Security）で権限制御済み
+
+---
+
+最終更新: 2025年10月11日

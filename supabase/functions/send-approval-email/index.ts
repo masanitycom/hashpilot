@@ -119,7 +119,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'HASHPILOT <send@hashpilot.net>',
+        from: 'HASHPILOT <noreply@send.hashpilot.biz>',
         to: [to_email],
         subject: emailSubject,
         html: emailBody,
