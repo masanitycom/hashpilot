@@ -78,6 +78,36 @@ serve(async (req) => {
     // 各受信者にメール送信（バッチ処理）
     for (const recipient of recipients) {
       try {
+        // ユーザー情報を取得してテンプレート変数を準備
+        const { data: userData, error: userError } = await supabaseAdmin
+          .from('users')
+          .select('user_id, full_name, email')
+          .eq('user_id', recipient.user_id)
+          .single()
+
+        if (userError) {
+          console.error('Failed to fetch user data:', userError)
+        }
+
+        // テンプレート変数を置換
+        let emailBody = email.body
+        let emailSubject = email.subject
+
+        if (userData) {
+          const variables: Record<string, string> = {
+            '{{user_id}}': userData.user_id || '',
+            '{{full_name}}': userData.full_name || '',
+            '{{email}}': userData.email || '',
+          }
+
+          // 本文と件名の変数を置換
+          Object.entries(variables).forEach(([key, value]) => {
+            const regex = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
+            emailBody = emailBody.replace(regex, value)
+            emailSubject = emailSubject.replace(regex, value)
+          })
+        }
+
         // Resend APIでメール送信
         const emailResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -88,8 +118,8 @@ serve(async (req) => {
           body: JSON.stringify({
             from: `${email.from_name} <${email.from_email}>`,
             to: [recipient.to_email],
-            subject: email.subject,
-            html: email.body,
+            subject: emailSubject,
+            html: emailBody,
           }),
         })
 

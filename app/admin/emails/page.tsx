@@ -10,8 +10,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye } from "lucide-react"
+import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { AVAILABLE_TEMPLATE_VARIABLES } from "@/lib/email-template"
 
 interface EmailHistory {
   email_id: string
@@ -357,10 +358,41 @@ export default function AdminEmailsPage() {
 
                   <div>
                     <Label className="text-white">本文（HTML可）</Label>
+
+                    {/* テンプレート変数ヘルプ */}
+                    <div className="mb-3 p-3 bg-blue-900/30 border border-blue-600 rounded-lg">
+                      <div className="flex items-start space-x-2">
+                        <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                        <div className="text-sm">
+                          <p className="text-blue-300 font-semibold mb-1">利用可能な変数</p>
+                          <div className="text-blue-200 space-y-1">
+                            {AVAILABLE_TEMPLATE_VARIABLES.map((v) => (
+                              <div key={v.key} className="flex items-center space-x-2">
+                                <code className="bg-blue-800/50 px-2 py-0.5 rounded text-xs">{v.key}</code>
+                                <span className="text-xs">→ {v.description}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <p className="text-blue-300 text-xs mt-2">
+                            ※ 各ユーザーの情報が自動で置き換わります
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                     <Textarea
                       value={body}
                       onChange={(e) => setBody(e.target.value)}
-                      placeholder="メール本文を入力（HTMLタグ使用可）"
+                      placeholder={`例:
+{{full_name}}様
+
+いつもHASH PILOT NFTをご利用いただきありがとうございます。
+
+【ここに本文を入力】
+
+ご不明な点がございましたら、お気軽にお問い合わせください。
+
+※ {{user_id}}, {{full_name}}, {{email}} が自動で置換されます`}
                       className="bg-gray-700 border-gray-600 text-white min-h-[300px]"
                       rows={12}
                     />
@@ -447,10 +479,41 @@ export default function AdminEmailsPage() {
 
                   <div>
                     <Label className="text-white">本文（HTML可）</Label>
+
+                    {/* テンプレート変数ヘルプ */}
+                    <div className="mb-3 p-3 bg-blue-900/30 border border-blue-600 rounded-lg">
+                      <div className="flex items-start space-x-2">
+                        <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                        <div className="text-sm">
+                          <p className="text-blue-300 font-semibold mb-1">利用可能な変数</p>
+                          <div className="text-blue-200 space-y-1">
+                            {AVAILABLE_TEMPLATE_VARIABLES.map((v) => (
+                              <div key={v.key} className="flex items-center space-x-2">
+                                <code className="bg-blue-800/50 px-2 py-0.5 rounded text-xs">{v.key}</code>
+                                <span className="text-xs">→ {v.description}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <p className="text-blue-300 text-xs mt-2">
+                            ※ 各ユーザーの情報が自動で置き換わります
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                     <Textarea
                       value={individualBody}
                       onChange={(e) => setIndividualBody(e.target.value)}
-                      placeholder="メール本文を入力（HTMLタグ使用可）"
+                      placeholder={`例:
+{{full_name}}様
+
+いつもHASH PILOT NFTをご利用いただきありがとうございます。
+
+【ここに本文を入力】
+
+ご不明な点がございましたら、お気軽にお問い合わせください。
+
+※ {{user_id}}, {{full_name}}, {{email}} が自動で置換されます`}
                       className="bg-gray-700 border-gray-600 text-white min-h-[300px]"
                       rows={12}
                     />
