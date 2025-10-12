@@ -392,6 +392,24 @@ export default function AdminDashboard() {
             </Card>
           </Link>
 
+          {/* メール送信 */}
+          <Link href="/admin/emails">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-pink-600 rounded-lg group-hover:bg-pink-700 transition-colors">
+                    <Mail className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">メール送信</h3>
+                    <p className="text-gray-400 text-sm">一斉送信・個別送信</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
           {/* 報酬受取タスク管理 */}
           <Link href="/admin/tasks">
             <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
