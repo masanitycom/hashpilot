@@ -1,7 +1,6 @@
 // メールテンプレート生成関数
 
 export interface EmailTemplateData {
-  recipientName: string // ユーザーの名前
   recipientUserId: string // ユーザーID
   content: string // メール本文（HTML）
 }
@@ -37,7 +36,7 @@ export function generateEmailTemplate(data: EmailTemplateData): string {
           <tr>
             <td style="padding: 30px 40px 20px 40px;">
               <p style="margin: 0 0 10px 0; color: #333333; font-size: 16px;">
-                <strong>${data.recipientName}</strong> 様（ID: ${data.recipientUserId}）
+                ユーザーID: <strong>${data.recipientUserId}</strong>
               </p>
             </td>
           </tr>
@@ -125,6 +124,5 @@ export function replaceTemplateVariables(
  */
 export const AVAILABLE_TEMPLATE_VARIABLES = [
   { key: '{{user_id}}', description: 'ユーザーID' },
-  { key: '{{full_name}}', description: 'ユーザー名' },
   { key: '{{email}}', description: 'メールアドレス' },
 ] as const

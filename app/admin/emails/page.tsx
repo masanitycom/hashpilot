@@ -384,7 +384,7 @@ export default function AdminEmailsPage() {
                       value={body}
                       onChange={(e) => setBody(e.target.value)}
                       placeholder={`例:
-{{full_name}}様
+ユーザーID {{user_id}} 様
 
 いつもHASH PILOT NFTをご利用いただきありがとうございます。
 
@@ -392,7 +392,7 @@ export default function AdminEmailsPage() {
 
 ご不明な点がございましたら、お気軽にお問い合わせください。
 
-※ {{user_id}}, {{full_name}}, {{email}} が自動で置換されます`}
+※ {{user_id}}, {{email}} が自動で置換されます`}
                       className="bg-gray-700 border-gray-600 text-white min-h-[300px]"
                       rows={12}
                     />
@@ -505,7 +505,7 @@ export default function AdminEmailsPage() {
                       value={individualBody}
                       onChange={(e) => setIndividualBody(e.target.value)}
                       placeholder={`例:
-{{full_name}}様
+ユーザーID {{user_id}} 様
 
 いつもHASH PILOT NFTをご利用いただきありがとうございます。
 
@@ -513,7 +513,7 @@ export default function AdminEmailsPage() {
 
 ご不明な点がございましたら、お気軽にお問い合わせください。
 
-※ {{user_id}}, {{full_name}}, {{email}} が自動で置換されます`}
+※ {{user_id}}, {{email}} が自動で置換されます`}
                       className="bg-gray-700 border-gray-600 text-white min-h-[300px]"
                       rows={12}
                     />

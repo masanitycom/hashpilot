@@ -81,7 +81,7 @@ serve(async (req) => {
         // ユーザー情報を取得してテンプレート変数を準備
         const { data: userData, error: userError } = await supabaseAdmin
           .from('users')
-          .select('user_id, full_name, email')
+          .select('user_id, email')
           .eq('user_id', recipient.user_id)
           .single()
 
@@ -96,7 +96,6 @@ serve(async (req) => {
         if (userData) {
           const variables: Record<string, string> = {
             '{{user_id}}': userData.user_id || '',
-            '{{full_name}}': userData.full_name || '',
             '{{email}}': userData.email || '',
           }
 
