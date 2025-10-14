@@ -27,10 +27,17 @@ const HTML_CONTENT = `<!DOCTYPE html>
         h1 {
             text-align: center;
             color: #ffffff;
-            margin-bottom: 24px;
+            margin-bottom: 8px;
             font-size: 1.75rem;
             font-weight: 700;
             letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888888;
+            margin-bottom: 24px;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
         .loading {
             text-align: center;
@@ -140,6 +147,10 @@ const HTML_CONTENT = `<!DOCTYPE html>
             }
             h1 {
                 font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+            .subtitle {
+                font-size: 0.8rem;
                 margin-bottom: 20px;
             }
             .stats {
@@ -183,6 +194,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 <body>
     <div class="container">
         <h1>HASH PILOT 運用実績</h1>
+        <div class="subtitle">2025年10月15日 運用開始</div>
         <div class="stats" id="stats"></div>
         <div id="loading" class="loading">データを読み込み中...</div>
         <div id="error" class="error" style="display: none;">データの取得に失敗しました</div>
@@ -234,7 +246,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
             document.getElementById('error').style.display = 'block';
             document.getElementById('error').style.background = '#1a1a1a';
             document.getElementById('error').style.border = '1px solid #2a2a2a';
-            document.getElementById('error').textContent = 'まだ日利データがありません。日利設定後にデータが表示されます。';
+            document.getElementById('error').textContent = 'まだ日利データがありません。日利確定後にデータが表示されます。';
         }
 
         function displayStats(data) {
