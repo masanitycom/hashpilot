@@ -6,7 +6,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HASH PILOT - 日利履歴</title>
+    <title>HASH PILOT - 運用実績</title>
     <style>
         * {
             margin: 0;
@@ -182,7 +182,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 </head>
 <body>
     <div class="container">
-        <h1>📊 HASH PILOT 日利履歴</h1>
+        <h1>📊 HASH PILOT 運用実績</h1>
         <div class="stats" id="stats"></div>
         <div id="loading" class="loading">データを読み込み中...</div>
         <div id="error" class="error" style="display: none;">データの取得に失敗しました</div>
