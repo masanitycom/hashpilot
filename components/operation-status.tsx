@@ -65,10 +65,10 @@ export function OperationStatus({ approvalDate, operationStartDate, variant = "d
   const daysUntilStart = Math.ceil((operationStartDateOnly.getTime() - todayDateOnly.getTime()) / (1000 * 60 * 60 * 24))
   
   // システム準備中フラグ（実際の運用開始まで）
-  const isSystemPreparing = process.env.NEXT_PUBLIC_SYSTEM_PREPARING === 'true'
+  const isSystemPreparing = false // 運用開始：2025年10月14日
 
   // テスト注意書き表示フラグ（10/14まで表示）
-  const showTestNotice = process.env.NEXT_PUBLIC_SHOW_TEST_NOTICE === 'true'
+  const showTestNotice = false // 運用開始につき非表示
   
   const formatDate = (date: Date | string) => {
     const dateObj = typeof date === 'string' ? new Date(date) : date
