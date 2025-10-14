@@ -78,6 +78,10 @@ serve(async (req) => {
     // 各受信者にメール送信（バッチ処理）
     for (const recipient of recipients) {
       try {
+        // レート制限対策: 500ms待機（1秒間に2リクエストまで）
+        if (sentCount > 0) {
+          await new Promise(resolve => setTimeout(resolve, 500))
+        }
         // ユーザー情報を取得してテンプレート変数を準備
         const { data: userData, error: userError } = await supabaseAdmin
           .from('users')
