@@ -33,13 +33,17 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
         return
       }
 
-      // まずuser_daily_profitテーブルの存在を確認
+      // 昨日の日付を取得
+      const yesterday = new Date()
+      yesterday.setDate(yesterday.getDate() - 1)
+      const yesterdayStr = yesterday.toISOString().split('T')[0]
+
+      // 昨日のデータのみ取得（最新ではなく昨日）
       const { data: profitData, error: profitError } = await supabase
         .from('user_daily_profit')
         .select('daily_profit, base_amount, user_rate')
         .eq('user_id', userId)
-        .order('date', { ascending: false })
-        .limit(1)
+        .eq('date', yesterdayStr)
         .maybeSingle()
 
       if (profitError) {

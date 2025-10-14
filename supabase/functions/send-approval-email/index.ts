@@ -51,9 +51,8 @@ serve(async (req) => {
         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px 10px 0 0; }
         .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
         .info-box { background: #e8f5e8; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; }
-        .next-steps { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
         .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .btn { display: inline-block; background: #4caf50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 0; }
+        .btn { display: inline-block; background: #4caf50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 5px; }
     </style>
 </head>
 <body>
@@ -62,10 +61,8 @@ serve(async (req) => {
             <h1>🎉 NFT購入承認のお知らせ</h1>
             <p>おめでとうございます！あなたのNFT購入が正式に承認されました。</p>
         </div>
-        
+
         <div class="content">
-            <p>こんにちは、${user_name || 'ユーザー'}様</p>
-            
             <div class="info-box">
                 <h3>📋 承認されたNFT購入詳細</h3>
                 <ul>
@@ -76,35 +73,16 @@ serve(async (req) => {
                     <li><strong>承認日時:</strong> ${new Date().toLocaleString('ja-JP')}</li>
                 </ul>
             </div>
-            
-            <div class="next-steps">
-                <h3>🚀 次のステップ</h3>
-                <ol>
-                    <li><strong>日利受取開始:</strong> 承認日から15日後に日利の受取が開始されます</li>
-                    <li><strong>ダッシュボード確認:</strong> 投資状況や利益をリアルタイムで確認できます</li>
-                    <li><strong>アフィリエイト報酬:</strong> 紹介者がいる場合、報酬が自動計算されます</li>
-                    <li><strong>自動再投資:</strong> 利益が一定額に達すると自動でNFTが追加購入されます（15日後から開始）</li>
-                </ol>
-            </div>
-            
-            <div style="text-align: center;">
+
+            <div style="text-align: center; margin: 30px 0;">
                 <a href="https://hashpilot.net/dashboard" class="btn">ダッシュボードを確認</a>
+                <a href="https://lin.ee/GHcn4pN" class="btn" style="background: #06c755;">サポートLINE</a>
             </div>
-            
-            <p><strong>重要な注意事項:</strong></p>
-            <ul>
-                <li>日利は承認日から15日後に開始されます（承認から14日間は準備期間）</li>
-                <li>利益は自動的にアカウントに反映されます</li>
-                <li>出金申請は最小$100から可能です</li>
-                <li>自動NFT購入も同様に15日後から対象となります</li>
-                <li>質問がある場合は、サポートまでお気軽にお問い合わせください</li>
-            </ul>
         </div>
-        
+
         <div class="footer">
             <p>このメールは HASHPILOT システムから自動送信されています。</p>
             <p>© 2025 HASHPILOT. All rights reserved.</p>
-            <p>お問い合わせ: <a href="https://lin.ee/GHcn4pN">サポートLINE</a></p>
         </div>
     </div>
 </body>

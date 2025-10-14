@@ -16,26 +16,10 @@ import {
 import Image from "next/image"
 
 function PaymentSubmittedContent() {
-  const [countdown, setCountdown] = useState(10)
   const router = useRouter()
   const searchParams = useSearchParams()
   const amount = searchParams.get("amount")
   const nftCount = searchParams.get("nftCount")
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          router.push("/dashboard")
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [router])
 
   const goToDashboard = () => {
     router.push("/dashboard")
@@ -95,25 +79,26 @@ function PaymentSubmittedContent() {
                 </div>
               )}
 
-              {/* 自動遷移カウントダウン */}
-              <div className="bg-gray-700/50 rounded-lg p-4 mb-6">
-                <div className="flex items-center justify-center gap-2 text-gray-300">
-                  <Timer className="w-4 h-4" />
-                  <span className="text-sm">
-                    {countdown}秒後にダッシュボードに自動移動します
-                  </span>
-                </div>
-              </div>
+              {/* アクションボタン */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  onClick={goToDashboard}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                  size="lg"
+                >
+                  <ArrowRight className="w-5 h-5 mr-2" />
+                  ダッシュボードに戻る
+                </Button>
 
-              {/* ダッシュボードボタン */}
-              <Button
-                onClick={goToDashboard}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
-                size="lg"
-              >
-                <ArrowRight className="w-5 h-5 mr-2" />
-                ダッシュボードに戻る
-              </Button>
+                <Button
+                  onClick={() => window.open("https://line.me/ti/p/YOUR_LINE_ID", "_blank")}
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
+                  size="lg"
+                >
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  公式LINEに登録
+                </Button>
+              </div>
             </CardContent>
           </Card>
 

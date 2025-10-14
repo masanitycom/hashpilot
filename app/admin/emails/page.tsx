@@ -131,7 +131,7 @@ export default function AdminEmailsPage() {
 
     setActionLoading(true)
     try {
-      // メール作成
+      // メール作成（SQL関数内で自動的にHTMLに変換される）
       const { data: createResult, error: createError } = await supabase.rpc("create_system_email", {
         p_subject: subject,
         p_body: body,
@@ -223,7 +223,7 @@ export default function AdminEmailsPage() {
 
     setActionLoading(true)
     try {
-      // メール作成
+      // メール作成（SQL関数内で自動的にHTMLに変換される）
       const { data: createResult, error: createError } = await supabase.rpc("create_system_email", {
         p_subject: individualSubject,
         p_body: individualBody,
