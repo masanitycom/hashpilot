@@ -182,7 +182,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 </head>
 <body>
     <div class="container">
-        <h1>📊 HASH PILOT 運用実績</h1>
+        <h1>HASH PILOT 運用実績</h1>
         <div class="stats" id="stats"></div>
         <div id="loading" class="loading">データを読み込み中...</div>
         <div id="error" class="error" style="display: none;">データの取得に失敗しました</div>
@@ -234,7 +234,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
             document.getElementById('error').style.display = 'block';
             document.getElementById('error').style.background = '#1a1a1a';
             document.getElementById('error').style.border = '1px solid #2a2a2a';
-            document.getElementById('error').textContent = '📊 まだ日利データがありません。日利設定後にデータが表示されます。';
+            document.getElementById('error').textContent = 'まだ日利データがありません。日利設定後にデータが表示されます。';
         }
 
         function displayStats(data) {
