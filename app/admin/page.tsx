@@ -28,6 +28,7 @@ import { supabase } from "@/lib/supabase"
 
 interface AdminStats {
   totalRevenue: number
+  topReferrerRevenue: number
   totalUsers: number
   activeUsers: number
   nftApproved: number
@@ -42,6 +43,7 @@ interface AdminStats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({
     totalRevenue: 53900.0,
+    topReferrerRevenue: 0,
     totalUsers: 54,
     activeUsers: 54,
     nftApproved: 46,
@@ -122,6 +124,12 @@ export default function AdminDashboard() {
       const { data: revenueData } = await supabase.from("purchases").select("amount_usd").eq("admin_approved", true)
       const totalRevenue = revenueData?.reduce((sum, purchase) => sum + purchase.amount_usd, 0) || 53900.0
 
+      // 7A9637のツリー売上を取得
+      const { data: topReferrerData } = await supabase.rpc("get_referral_tree_revenue", {
+        p_user_id: "7A9637"
+      })
+      const topReferrerRevenue = topReferrerData || 0
+
       // ユーザー統計の取得（basarasystems@gmail.comを除外）
       const { data: usersData } = await supabase
         .from("users")
@@ -150,6 +158,7 @@ export default function AdminDashboard() {
 
       setStats({
         totalRevenue,
+        topReferrerRevenue,
         totalUsers,
         activeUsers,
         nftApproved,
@@ -240,6 +249,9 @@ export default function AdminDashboard() {
                 <div>
                   <p className="text-green-100 text-xs font-medium">総売上</p>
                   <p className="text-xl font-bold">${stats.totalRevenue.toFixed(0)}</p>
+                  {stats.topReferrerRevenue > 0 && (
+                    <p className="text-green-200 text-xs opacity-80">(${stats.topReferrerRevenue.toFixed(0)})</p>
+                  )}
                 </div>
               </div>
             </CardContent>
