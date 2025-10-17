@@ -32,6 +32,7 @@ interface User {
   pegasus_exchange_date?: string | null
   pegasus_withdrawal_unlock_date?: string | null
   first_purchase_date?: string | null
+  email_blacklisted?: boolean
 }
 
 export default function AdminUsersPage() {
@@ -52,6 +53,7 @@ export default function AdminUsersPage() {
     is_operation_only: false,
     is_pegasus_exchange: false,
     pegasus_withdrawal_unlock_date: "",
+    email_blacklisted: false,
   })
   const [saving, setSaving] = useState(false)
   const [updatingDistribution, setUpdatingDistribution] = useState<string | null>(null)
@@ -205,6 +207,7 @@ export default function AdminUsersPage() {
       is_operation_only: user.is_operation_only || false,
       is_pegasus_exchange: user.is_pegasus_exchange || false,
       pegasus_withdrawal_unlock_date: user.pegasus_withdrawal_unlock_date || "",
+      email_blacklisted: user.email_blacklisted || false,
     })
   }
 
@@ -224,6 +227,7 @@ export default function AdminUsersPage() {
           is_operation_only: editForm.is_operation_only,
           is_pegasus_exchange: editForm.is_pegasus_exchange,
           pegasus_withdrawal_unlock_date: editForm.pegasus_withdrawal_unlock_date || null,
+          email_blacklisted: editForm.email_blacklisted,
           updated_at: new Date().toISOString(),
         })
         .eq("id", editingUser.id)
@@ -765,6 +769,24 @@ export default function AdminUsersPage() {
                   </div>
                 </div>
 
+                <div className="bg-red-900/20 border border-red-600/30 rounded-lg p-3">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="email_blacklisted"
+                      checked={editForm.email_blacklisted}
+                      onChange={(e) => setEditForm({ ...editForm, email_blacklisted: e.target.checked })}
+                      className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-red-600 focus:ring-red-600"
+                    />
+                    <Label htmlFor="email_blacklisted" className="text-gray-300 cursor-pointer">
+                      メール送信除外
+                    </Label>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    チェックすると、一斉送信の対象外になります<br />
+                    （他の機能には一切影響しません）
+                  </p>
+                </div>
 
                 <div className="flex justify-end space-x-2 pt-4">
                   <Button
