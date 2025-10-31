@@ -272,6 +272,36 @@ export default function AdminPurchasesPage() {
     }
   }
 
+  const saveAdminNotes = async (purchaseId: string) => {
+    setActionLoading(true)
+    try {
+      const { error } = await supabase
+        .from("purchases")
+        .update({
+          admin_notes: adminNotes,
+        })
+        .eq("id", purchaseId)
+
+      if (error) throw error
+
+      alert("管理者メモを保存しました")
+      fetchPurchases()
+
+      // 選択された購入情報も更新
+      if (selectedPurchase && selectedPurchase.id === purchaseId) {
+        setSelectedPurchase({
+          ...selectedPurchase,
+          admin_notes: adminNotes,
+        })
+      }
+    } catch (error: any) {
+      console.error("Save notes error:", error)
+      alert(`メモ保存エラー: ${error.message}`)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
   const updateCoinwUid = async (purchaseId: string, userId: string) => {
     if (!newCoinwUid.trim()) {
       alert("CoinW UIDを入力してください")
@@ -1074,6 +1104,15 @@ export default function AdminPurchasesPage() {
                                       className="bg-gray-700 border-gray-600 text-white"
                                       rows={3}
                                     />
+                                    <Button
+                                      onClick={() => saveAdminNotes(selectedPurchase.id)}
+                                      disabled={actionLoading}
+                                      className="bg-blue-600 hover:bg-blue-700 mt-2"
+                                      size="sm"
+                                    >
+                                      <Edit className="w-4 h-4 mr-2" />
+                                      {actionLoading ? "保存中..." : "メモを保存"}
+                                    </Button>
                                   </div>
 
                                   {!selectedPurchase.admin_approved &&
