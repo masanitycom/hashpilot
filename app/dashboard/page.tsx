@@ -614,6 +614,23 @@ export default function OptimizedDashboardPage() {
           </Card>
         </div>
 
+        {/* 運用開始日のお知らせ */}
+        <div className="mb-6">
+          <Card className="bg-gradient-to-r from-blue-900/80 to-blue-800/80 border-blue-500">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-white mb-2">🚀 正式運用開始のお知らせ</h3>
+                <p className="text-white text-base sm:text-lg font-semibold">
+                  2025年11月1日より正式運用開始
+                </p>
+                <p className="text-blue-100 text-sm mt-2">
+                  ※日利の反映は11月2日から開始されます
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* エラーメッセージ */}
         {error && (
           <div className="mb-6">
