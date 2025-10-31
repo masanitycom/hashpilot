@@ -194,7 +194,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 <body>
     <div class="container">
         <h1>HASH PILOT 運用実績</h1>
-        <div class="subtitle">2025年10月15日 運用開始</div>
+        <div class="subtitle">2025年11月1日 正式運用開始</div>
         <div class="stats" id="stats"></div>
         <div id="loading" class="loading">データを読み込み中...</div>
         <div id="error" class="error" style="display: none;">データの取得に失敗しました</div>
