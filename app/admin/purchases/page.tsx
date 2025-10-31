@@ -801,9 +801,11 @@ export default function AdminPurchasesPage() {
                         />
                       </td>
                       <td className="p-2">
-                        <div className="text-sm">{new Date(purchase.created_at).toLocaleDateString('ja-JP')}</div>
+                        <div className="text-sm text-gray-400">購入: {new Date(purchase.created_at).toLocaleDateString('ja-JP')}</div>
                         {purchase.admin_approved_at && (
-                          <div className="text-sm text-green-400">承認済み</div>
+                          <div className="text-sm text-green-400">
+                            承認: {new Date(new Date(purchase.admin_approved_at).toLocaleString('en-US', { timeZone: 'Asia/Tokyo' })).toLocaleDateString('ja-JP')}
+                          </div>
                         )}
                       </td>
                       <td className="p-2 whitespace-nowrap min-w-[150px] w-[150px]">
