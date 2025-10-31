@@ -27,11 +27,14 @@ export function OperationStatus({ approvalDate, operationStartDate, variant = "d
     const approvalYear = approvalJST.getFullYear()
 
     if (approvalDay <= 5) {
+      // ① 5日までに購入：当月15日より運用開始
       operationStart = new Date(approvalYear, approvalMonth, 15)
     } else if (approvalDay <= 20) {
+      // ② 6日～20日に購入：翌月1日より運用開始
       operationStart = new Date(approvalYear, approvalMonth + 1, 1)
     } else {
-      operationStart = new Date(approvalYear, approvalMonth + 1, 1)
+      // ③ 21日～月末に購入：翌月15日より運用開始
+      operationStart = new Date(approvalYear, approvalMonth + 1, 15)
     }
   }
 
