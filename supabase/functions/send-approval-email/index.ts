@@ -70,7 +70,7 @@ serve(async (req) => {
                     <li><strong>購入ID:</strong> ${purchase_id}</li>
                     <li><strong>NFT数量:</strong> ${nft_quantity}個</li>
                     <li><strong>購入金額:</strong> $${amount_usd}</li>
-                    <li><strong>承認日時:</strong> ${new Date().toLocaleString('ja-JP')}</li>
+                    <li><strong>承認日時:</strong> ${new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}</li>
                 </ul>
             </div>
 
