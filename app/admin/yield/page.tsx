@@ -62,15 +62,11 @@ export default function AdminYieldPage() {
     const yield_rate = Number.parseFloat(yieldRate) || 0
     const margin_rate = Number.parseFloat(marginRate) || 0
     
-    // プラス/マイナスでマージンの適用方法を変更
+    // プラス/マイナス共通: マージンを引いてから0.6を掛ける
     let calculated_user_rate: number
-    if (yield_rate > 0) {
-      // プラスの場合: マージンを引いてから0.6を掛ける
+    if (yield_rate !== 0) {
+      // プラスもマイナスも同じ計算: (1 - マージン率) × 0.6
       const after_margin = yield_rate * (1 - margin_rate / 100)
-      calculated_user_rate = after_margin * 0.6
-    } else if (yield_rate < 0) {
-      // マイナスの場合: マージンを戻す（会社が30%補填）
-      const after_margin = yield_rate * (1 + margin_rate / 100)  // 1.3倍
       calculated_user_rate = after_margin * 0.6
     } else {
       // ゼロの場合
@@ -793,10 +789,8 @@ export default function AdminYieldPage() {
                   {userRate.toFixed(3)}%
                 </div>
                 <p className="text-sm text-gray-400">
-                  {Number.parseFloat(yieldRate) > 0 
+                  {Number.parseFloat(yieldRate) !== 0
                     ? `${yieldRate}% × (1 - ${marginRate}%/100) × 0.6 = ユーザー受取 ${userRate.toFixed(3)}%`
-                    : Number.parseFloat(yieldRate) < 0
-                    ? `${yieldRate}% × (1 + ${marginRate}%/100) × 0.6 = ユーザー受取 ${userRate.toFixed(3)}% (マイナス時は会社が${marginRate}%補填)`
                     : `0% = ユーザー受取 0%`
                   }
                 </p>
