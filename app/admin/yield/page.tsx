@@ -240,8 +240,8 @@ export default function AdminYieldPage() {
         throw new Error(`❌ 未来の日付（${date}）には設定できません。今日は ${today.toISOString().split('T')[0]} です。`)
       }
 
-      const yieldValue = Number.parseFloat(yieldRate) / 100
-      const marginValue = Number.parseFloat(marginRate) / 100
+      const yieldValue = Number.parseFloat(yieldRate)
+      const marginValue = Number.parseFloat(marginRate)
 
       console.log('🚀 日利設定開始（RPC関数方式）:', {
         date,
@@ -250,7 +250,7 @@ export default function AdminYieldPage() {
         is_test_mode: false
       })
 
-      // RPC関数を呼び出す
+      // RPC関数を呼び出す（パーセント値のまま送信）
       const { data: rpcResult, error: rpcError } = await supabase.rpc('process_daily_yield_with_cycles', {
         p_date: date,
         p_yield_rate: yieldValue,
