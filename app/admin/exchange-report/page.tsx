@@ -133,41 +133,44 @@ export default function ExchangeReportPage() {
     const periodEndStr = periodEnd.toISOString().split('T')[0]
     const operationStartStr = operationStart.toISOString().split('T')[0]
 
-    // 新規ユーザー: この期間に初めて承認されたユーザー
-    const { data: newUserPurchases } = await supabase
+    // 1. 全承認済み購入データを一度に取得
+    const { data: allPurchases } = await supabase
       .from('purchases')
-      .select('user_id, amount_usd')
+      .select('user_id, amount_usd, admin_approved_at')
       .eq('admin_approved', true)
-      .gte('admin_approved_at', periodStartStr)
-      .lte('admin_approved_at', periodEndStr + ' 23:59:59')
+      .order('admin_approved_at', { ascending: true })
 
-    // 新規ユーザーのuser_idリスト
-    const newUserIds = new Set<string>()
-    let newUserManualNFT = 0
+    // 2. ユーザーごとの初回承認日と購入額を計算
+    const userFirstApproval = new Map<string, string>()
+    const userTotalPurchases = new Map<string, number>()
 
-    if (newUserPurchases) {
-      for (const purchase of newUserPurchases) {
-        // この期間より前に承認された購入があるかチェック
-        const { data: previousPurchases } = await supabase
-          .from('purchases')
-          .select('id')
-          .eq('user_id', purchase.user_id)
-          .eq('admin_approved', true)
-          .lt('admin_approved_at', periodStartStr)
-          .limit(1)
-
-        if (!previousPurchases || previousPurchases.length === 0) {
-          // 新規ユーザー
-          newUserIds.add(purchase.user_id)
-          newUserManualNFT += purchase.amount_usd * (1000 / 1100)
+    if (allPurchases) {
+      for (const purchase of allPurchases) {
+        // 初回承認日を記録
+        if (!userFirstApproval.has(purchase.user_id)) {
+          userFirstApproval.set(purchase.user_id, purchase.admin_approved_at)
         }
+        // 購入額を累積
+        const current = userTotalPurchases.get(purchase.user_id) || 0
+        userTotalPurchases.set(purchase.user_id, current + purchase.amount_usd * (1000 / 1100))
       }
     }
 
-    // 継続ユーザー: 運用開始日時点で運用中の全ユーザー（新規ユーザーを除く）
+    // 3. 新規ユーザーを特定
+    const newUserIds = new Set<string>()
+    let newUserManualNFT = 0
+
+    for (const [userId, firstApprovalDate] of userFirstApproval.entries()) {
+      if (firstApprovalDate >= periodStartStr && firstApprovalDate <= periodEndStr + ' 23:59:59') {
+        newUserIds.add(userId)
+        newUserManualNFT += userTotalPurchases.get(userId) || 0
+      }
+    }
+
+    // 4. 継続ユーザーを取得
     const { data: continuingUsers } = await supabase
       .from('users')
-      .select('user_id, total_purchases')
+      .select('user_id')
       .eq('has_approved_nft', true)
       .lte('operation_start_date', operationStartStr)
 
@@ -178,26 +181,15 @@ export default function ExchangeReportPage() {
       for (const user of continuingUsers) {
         if (!newUserIds.has(user.user_id)) {
           continuingUserCount++
-
-          // 手動購入NFTの合計
-          const { data: manualPurchases } = await supabase
-            .from('purchases')
-            .select('amount_usd')
-            .eq('user_id', user.user_id)
-            .eq('admin_approved', true)
-
-          if (manualPurchases) {
-            continuingManualNFT += manualPurchases.reduce((sum, p) =>
-              sum + (p.amount_usd * (1000 / 1100)), 0)
-          }
+          continuingManualNFT += userTotalPurchases.get(user.user_id) || 0
         }
       }
     }
 
-    // 自動付与NFTの合計（全ユーザー）
+    // 5. 自動付与NFTの合計
     const { data: autoNFTData } = await supabase
       .from('affiliate_cycle')
-      .select('user_id, auto_nft_count')
+      .select('auto_nft_count')
       .gt('auto_nft_count', 0)
 
     let totalAutoNFT = 0
