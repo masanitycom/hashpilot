@@ -216,7 +216,7 @@ export default function AdminYieldPage() {
       setStats({
         total_users: usersData?.length || 0,
         total_investment: totalInvestment,
-        avg_yield_rate: avgYieldRate * 100,
+        avg_yield_rate: avgYieldRate,  // 既にパーセント値なので100倍不要
         total_distributed: totalDistributed,
       })
     } catch (error) {
