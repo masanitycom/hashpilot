@@ -130,23 +130,8 @@ BEGIN
         v_user_profit := v_base_amount * v_user_rate;
 
         IF NOT p_is_test_mode THEN
-            -- user_daily_profitテーブルに集計を記録
-            INSERT INTO user_daily_profit (
-                user_id, date, daily_profit, yield_rate, user_rate, base_amount, phase, created_at
-            )
-            VALUES (
-                v_user_record.user_id, p_date, v_user_profit, p_yield_rate, v_user_rate,
-                v_base_amount, v_user_record.phase, NOW()
-            )
-            ON CONFLICT (user_id, date) DO UPDATE SET
-                daily_profit = EXCLUDED.daily_profit,
-                yield_rate = EXCLUDED.yield_rate,
-                user_rate = EXCLUDED.user_rate,
-                base_amount = EXCLUDED.base_amount,
-                phase = EXCLUDED.phase,
-                created_at = NOW();
-
             -- available_usdtに加算（個人利益）
+            -- 注意: user_daily_profitはビューなので、nft_daily_profitから自動集計される
             INSERT INTO affiliate_cycle (user_id, cum_usdt, available_usdt, phase, auto_nft_count, manual_nft_count, created_at, updated_at)
             VALUES (v_user_record.user_id, 0, v_user_profit, 'USDT', 0, 0, NOW(), NOW())
             ON CONFLICT (user_id) DO UPDATE SET
