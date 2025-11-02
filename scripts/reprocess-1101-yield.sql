@@ -11,25 +11,17 @@
 
 -- 注意: daily_yield_logテーブルを使用（daily_yieldsではない）
 
--- === STEP 1: 現在のデータをバックアップ（確認用） ===
-CREATE TEMP TABLE backup_daily_yield_log AS
+-- === STEP 1: 現在のデータを確認（バックアップ） ===
+SELECT '=== BACKUP: daily_yield_log ===' as info;
 SELECT * FROM daily_yield_log WHERE date = '2025-11-01';
 
-CREATE TEMP TABLE backup_user_daily_profit AS
-SELECT * FROM user_daily_profit WHERE date = '2025-11-01';
-
-CREATE TEMP TABLE backup_user_referral_profit AS
-SELECT * FROM user_referral_profit WHERE date = '2025-11-01';
-
--- バックアップ確認
-SELECT '=== BACKUP: daily_yield_log ===' as info;
-SELECT * FROM backup_daily_yield_log;
-
 SELECT '=== BACKUP: user_daily_profit (合計) ===' as info;
-SELECT COUNT(*) as count, SUM(profit_amount) as total FROM backup_user_daily_profit;
+SELECT COUNT(*) as count, SUM(profit_amount) as total
+FROM user_daily_profit WHERE date = '2025-11-01';
 
 SELECT '=== BACKUP: user_referral_profit (合計) ===' as info;
-SELECT COUNT(*) as count, SUM(reward_amount) as total FROM backup_user_referral_profit;
+SELECT COUNT(*) as count, SUM(reward_amount) as total
+FROM user_referral_profit WHERE date = '2025-11-01';
 
 -- === STEP 2: 11/1のデータを削除 ===
 DELETE FROM user_referral_profit WHERE date = '2025-11-01';
@@ -70,12 +62,8 @@ SELECT
 FROM user_referral_profit
 WHERE date = '2025-11-01';
 
--- === STEP 5: 差分を確認 ===
-SELECT '=== 差分確認 ===' as info;
-SELECT
-    'user_daily_profit' as table_name,
-    (SELECT SUM(profit_amount) FROM user_daily_profit WHERE date = '2025-11-01') -
-    (SELECT SUM(profit_amount) FROM backup_user_daily_profit) as difference;
+-- === STEP 5: 完了 ===
+SELECT '=== 11/1の日利データ再計算完了 ===' as info;
 
 -- === 注意事項 ===
 -- ✅ このスクリプトは11/1のデータのみを再計算します
