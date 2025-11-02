@@ -175,22 +175,14 @@ export default function ExchangeReportPage() {
       }
     }
 
-    // 4. 継続ユーザーを取得
-    const { data: continuingUsers } = await supabase
-      .from('users')
-      .select('user_id')
-      .eq('has_approved_nft', true)
-      .lte('operation_start_date', operationStartStr)
-
+    // 4. 継続ユーザー: 新規ユーザー以外の全承認済みユーザー
     let continuingUserCount = 0
     let continuingManualNFT = 0
 
-    if (continuingUsers) {
-      for (const user of continuingUsers) {
-        if (!newUserIds.has(user.user_id)) {
-          continuingUserCount++
-          continuingManualNFT += userTotalPurchases.get(user.user_id) || 0
-        }
+    for (const [userId, totalPurchase] of userTotalPurchases.entries()) {
+      if (!newUserIds.has(userId)) {
+        continuingUserCount++
+        continuingManualNFT += totalPurchase
       }
     }
 
