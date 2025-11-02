@@ -28,7 +28,7 @@ DO $$
 DECLARE
     v_nft_record RECORD;
     v_user_rate NUMERIC := -0.020 * (1 - 30.0/100) * 0.6; -- -0.0084
-    v_profit_amount NUMERIC;
+    v_daily_profit NUMERIC;
 BEGIN
     -- 11/1の全NFTの利益を再計算
     FOR v_nft_record IN
@@ -45,16 +45,16 @@ BEGIN
         AND (u.operation_start_date IS NULL OR u.operation_start_date <= '2025-11-01')
     LOOP
         -- 正しい利益額を計算
-        v_profit_amount := v_nft_record.nft_value * v_user_rate / 100;
+        v_daily_profit := v_nft_record.nft_value * v_user_rate / 100;
         
         -- user_daily_profitを更新
         UPDATE user_daily_profit
-        SET profit_amount = v_profit_amount
+        SET daily_profit = v_daily_profit
         WHERE user_id = v_nft_record.user_id
         AND date = '2025-11-01';
         
-        RAISE NOTICE '更新: user_id=%, nft_value=%, profit_amount=%', 
-            v_nft_record.user_id, v_nft_record.nft_value, v_profit_amount;
+        RAISE NOTICE '更新: user_id=%, nft_value=%, daily_profit=%', 
+            v_nft_record.user_id, v_nft_record.nft_value, v_daily_profit;
     END LOOP;
 END $$;
 
@@ -76,7 +76,7 @@ WHERE date = '2025-11-01';
 SELECT 
     date,
     COUNT(*) as user_count,
-    SUM(profit_amount) as total_profit
+    SUM(daily_profit) as total_profit
 FROM user_daily_profit
 WHERE date = '2025-11-01'
 GROUP BY date;

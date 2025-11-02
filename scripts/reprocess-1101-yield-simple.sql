@@ -7,7 +7,7 @@ SELECT date, yield_rate, margin_rate, user_rate
 FROM daily_yield_log WHERE date = '2025-11-01';
 
 SELECT '現在の個人利益（合計）' as step;
-SELECT COUNT(*) as users, SUM(profit_amount) as total
+SELECT COUNT(*) as users, SUM(daily_profit) as total
 FROM user_daily_profit WHERE date = '2025-11-01';
 
 SELECT '現在の紹介報酬（合計）' as step;
@@ -34,7 +34,7 @@ SELECT date, yield_rate, margin_rate, user_rate
 FROM daily_yield_log WHERE date = '2025-11-01';
 
 SELECT '修正後の個人利益（合計）' as step;
-SELECT COUNT(*) as users, SUM(profit_amount) as total
+SELECT COUNT(*) as users, SUM(daily_profit) as total
 FROM user_daily_profit WHERE date = '2025-11-01';
 
 SELECT '修正後の紹介報酬（合計）' as step;

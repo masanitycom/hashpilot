@@ -23,9 +23,9 @@ current_rate AS (
 )
 SELECT
     udp.user_id,
-    udp.profit_amount as "現在の利益",
+    udp.daily_profit as "現在の利益",
     nm.nft_value * (SELECT v_user_rate FROM correct_rate) / 100 as "正しい利益",
-    (nm.nft_value * (SELECT v_user_rate FROM correct_rate) / 100) - udp.profit_amount as "調整額"
+    (nm.nft_value * (SELECT v_user_rate FROM correct_rate) / 100) - udp.daily_profit as "調整額"
 FROM user_daily_profit udp
 INNER JOIN (
     SELECT user_id, SUM(nft_value) as nft_value
@@ -64,7 +64,7 @@ WHERE date = '2025-11-01';
 
 -- 2. user_daily_profitを修正
 UPDATE user_daily_profit udp
-SET profit_amount = nm.nft_value * (-0.020 * (1 - 30.0/100) * 0.6) / 100
+SET daily_profit = nm.nft_value * (-0.020 * (1 - 30.0/100) * 0.6) / 100
 FROM (
     SELECT user_id, SUM(nft_value) as nft_value
     FROM nft_master
@@ -85,7 +85,7 @@ WHERE date = '2025-11-01';
 
 SELECT
     COUNT(*) as user_count,
-    SUM(profit_amount) as total_profit
+    SUM(daily_profit) as total_profit
 FROM user_daily_profit
 WHERE date = '2025-11-01';
 */
