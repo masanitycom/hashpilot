@@ -2,8 +2,17 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function HomePage() {
+  const isStaging = process.env.NEXT_PUBLIC_ENV === 'staging'
+
   return (
     <div className="min-h-screen relative text-white flex flex-col">
+      {/* Staging環境バッジ */}
+      {isStaging && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-yellow-500 text-black text-center py-2 font-bold">
+          🚧 テスト環境（Staging） - 本番環境ではありません 🚧
+        </div>
+      )}
+
       {/* 背景画像 */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -16,7 +25,7 @@ export default function HomePage() {
       </div>
 
       {/* コンテンツ */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-screen" style={{ marginTop: isStaging ? '48px' : '0' }}>
         <header className="container mx-auto px-4 py-6">
           <nav className="flex items-center justify-between">
             <div className="flex items-center space-x-2">

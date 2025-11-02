@@ -19,6 +19,7 @@ import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
 import { PersonalProfitCard } from "@/components/personal-profit-card"
 import { ReferralProfitCard } from "@/components/referral-profit-card"
 import { TotalProfitCard } from "@/components/total-profit-card"
+import { MonthlyCumulativeProfitCard } from "@/components/monthly-cumulative-profit-card"
 import { OperationStatus } from "@/components/operation-status"
 import Link from "next/link"
 import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
@@ -690,11 +691,15 @@ export default function OptimizedDashboardPage() {
         </div>
 
         {/* 最重要カード（即座に表示） */}
-        <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
           <TotalProfitCard userId={userData?.user_id || ""} />
           <MonthlyProfitCard userId={userData?.user_id || ""} />
           <DailyProfitCard userId={userData?.user_id || ""} />
-          <PendingWithdrawalCard userId={userData?.user_id || ""} />
+        </div>
+
+        {/* 今月の累積利益セクション */}
+        <div className="mb-6">
+          <MonthlyCumulativeProfitCard userId={userData?.user_id || ""} />
         </div>
 
         {/* 遅延読み込みコンテンツ */}

@@ -180,72 +180,25 @@ export function TotalProfitCard({
           合計利益
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="text-xs text-gray-400 mb-3 space-y-1">
-          <div>個人投資: ${(totalInvestment || 0).toLocaleString()}</div>
-          <div>紹介投資: ${(totalReferralInvestment || 0).toLocaleString()}</div>
-        </div>
-        
-        {/* 昨日の合計利益 */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400">昨日の合計</span>
-            <div className="flex items-center space-x-1">
-              <TrendingUp className="h-3 w-3 text-yellow-400" />
-              <span className={`text-sm font-semibold ${
-                (profitData?.yesterdayTotal || 0) >= 0 ? "text-yellow-400" : "text-red-400"
-              }`}>
-                ${(profitData?.yesterdayTotal || 0).toFixed(3)}
-              </span>
-            </div>
-          </div>
-          
-          {/* 内訳（昨日） */}
-          {profitData && (
-            <div className="text-xs space-y-1 ml-4 opacity-75">
-              <div className="flex justify-between">
-                <span className="text-green-400 flex items-center gap-1">
-                  <DollarSign className="h-3 w-3" />個人:
-                </span>
-                <span className="text-green-400">${profitData.breakdown.personalYesterday.toFixed(3)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-purple-400 flex items-center gap-1">
-                  <Users className="h-3 w-3" />紹介:
-                </span>
-                <span className="text-purple-400">${profitData.breakdown.referralYesterday.toFixed(3)}</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* 今月の累計合計利益 */}
-        <div className="space-y-2 border-t border-gray-600 pt-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400">今月累計</span>
-            <div className="flex items-center space-x-1">
-              <TrendingUp className="h-3 w-3 text-amber-400" />
-              <span className={`text-lg font-bold ${
-                (profitData?.monthlyTotal || 0) >= 0 ? "text-amber-400" : "text-red-400"
-              }`}>
-                ${(profitData?.monthlyTotal || 0).toFixed(3)}
-              </span>
-            </div>
+      <CardContent className="space-y-3">
+        {/* 今月累計 */}
+        <div className="text-center">
+          <div className="text-xs text-gray-400 mb-2">今月累計</div>
+          <div className={`text-2xl font-bold mb-3 ${
+            (profitData?.monthlyTotal || 0) >= 0 ? "text-amber-400" : "text-red-400"
+          }`}>
+            ${(profitData?.monthlyTotal || 0).toFixed(3)}
           </div>
 
-          {/* 内訳（今月） */}
+          {/* 内訳 */}
           {profitData && (
-            <div className="text-xs space-y-1 ml-4 opacity-75">
+            <div className="text-xs space-y-1">
               <div className="flex justify-between">
-                <span className="text-green-400 flex items-center gap-1">
-                  <DollarSign className="h-3 w-3" />個人:
-                </span>
+                <span className="text-green-400">個人:</span>
                 <span className="text-green-400">${profitData.breakdown.personalMonthly.toFixed(3)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-purple-400 flex items-center gap-1">
-                  <Users className="h-3 w-3" />紹介:
-                </span>
+                <span className="text-purple-400">紹介:</span>
                 <span className="text-purple-400">${profitData.breakdown.referralMonthly.toFixed(3)}</span>
               </div>
             </div>
