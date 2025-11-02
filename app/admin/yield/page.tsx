@@ -38,6 +38,7 @@ interface YieldHistory {
 interface YieldStats {
   total_users: number
   total_investment: number
+  total_investment_pending: number
   avg_yield_rate: number
   total_distributed: number
 }
@@ -187,12 +188,15 @@ export default function AdminYieldPage() {
 
       if (usersError) throw usersError
 
+      // 全承認済み購入とユーザー情報を取得
       const { data: purchasesData, error: purchasesError } = await supabase
         .from("purchases")
-        .select("amount_usd")
+        .select("amount_usd, user_id, users!inner(operation_start_date)")
         .eq("admin_approved", true)
 
       if (purchasesError) throw purchasesError
+
+      const today = new Date().toISOString().split('T')[0]
 
       const { data: avgYieldData, error: avgYieldError } = await supabase.from("daily_yield_log").select("yield_rate")
 
@@ -206,10 +210,24 @@ export default function AdminYieldPage() {
         console.warn("user_daily_profit取得エラー:", totalProfitError)
       }
 
-      // 手数料を除いた実際の投資額（purchases.amount_usd × 1000/1100）
-      const totalInvestment = purchasesData?.reduce((sum, p) => {
-        return sum + (p.amount_usd * (1000 / 1100))
+      // 運用中と運用開始前に分けて集計
+      const totalInvestmentActive = purchasesData?.reduce((sum, p: any) => {
+        const opStartDate = p.users?.operation_start_date
+        if (opStartDate && opStartDate <= today) {
+          return sum + (p.amount_usd * (1000 / 1100))
+        }
+        return sum
       }, 0) || 0
+
+      const totalInvestmentPending = purchasesData?.reduce((sum, p: any) => {
+        const opStartDate = p.users?.operation_start_date
+        if (opStartDate && opStartDate > today) {
+          return sum + (p.amount_usd * (1000 / 1100))
+        }
+        return sum
+      }, 0) || 0
+
+      const totalInvestment = totalInvestmentActive
       const avgYieldRate =
         avgYieldData?.reduce((sum, y) => sum + Number.parseFloat(y.yield_rate || "0"), 0) /
           (avgYieldData?.length || 1) || 0
@@ -219,6 +237,7 @@ export default function AdminYieldPage() {
       setStats({
         total_users: usersData?.length || 0,
         total_investment: totalInvestment,
+        total_investment_pending: totalInvestmentPending,
         avg_yield_rate: avgYieldRate,  // 既にパーセント値なので100倍不要
         total_distributed: totalDistributed,
       })
@@ -680,7 +699,13 @@ export default function AdminYieldPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-white">${stats.total_investment.toLocaleString()}</div>
-                <p className="text-xs text-blue-200">承認済み購入</p>
+                <p className="text-xs text-blue-200">運用中</p>
+                {stats.total_investment_pending > 0 && (
+                  <div className="mt-2 pt-2 border-t border-blue-600">
+                    <div className="text-lg font-semibold text-yellow-300">${stats.total_investment_pending.toLocaleString()}</div>
+                    <p className="text-xs text-yellow-200">運用開始前</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
