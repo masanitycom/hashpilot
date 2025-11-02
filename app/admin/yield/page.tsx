@@ -740,12 +740,12 @@ export default function AdminYieldPage() {
                   <Input
                     id="yieldRate"
                     type="number"
-                    step="0.01"
+                    step="0.001"
                     min="-10"
                     max="100"
                     value={yieldRate}
                     onChange={(e) => setYieldRate(e.target.value)}
-                    placeholder="例: 1.5 (マイナス可)"
+                    placeholder="例: 1.500 (マイナス可)"
                     required
                     className="bg-gray-700 border-gray-600 text-white"
                   />
