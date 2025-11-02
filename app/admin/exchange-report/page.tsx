@@ -123,15 +123,23 @@ export default function ExchangeReportPage() {
     }
   }
 
+  // 日本時間で日付文字列を取得（YYYY-MM-DD形式）
+  const toJSTDateString = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   const calculatePeriodReport = async (
     periodStart: Date,
     periodEnd: Date,
     operationStart: Date,
     periodName: string
   ): Promise<PeriodReport> => {
-    const periodStartStr = periodStart.toISOString().split('T')[0]
-    const periodEndStr = periodEnd.toISOString().split('T')[0]
-    const operationStartStr = operationStart.toISOString().split('T')[0]
+    const periodStartStr = toJSTDateString(periodStart)
+    const periodEndStr = toJSTDateString(periodEnd)
+    const operationStartStr = toJSTDateString(operationStart)
 
     // 1. 全承認済み購入データを一度に取得
     const { data: allPurchases } = await supabase
