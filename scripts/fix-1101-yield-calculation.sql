@@ -2,22 +2,22 @@
 -- 問題: 二重割り算により -0.02% が -0.012% として保存されている
 
 -- 1. 現在の11/1のデータを確認
-SELECT 
+SELECT
     date,
     yield_rate,
     margin_rate,
     user_rate,
     '現在の値' as note
-FROM daily_yields
+FROM daily_yield_log
 WHERE date = '2025-11-01';
 
 -- 2. 正しい値を計算
 -- yield_rate: -0.020% (パーセント表示)
 -- 正しいuser_rate = -0.020 × (1 - 30/100) × 0.6 = -0.0084
 
--- 3. daily_yieldsテーブルを修正
-UPDATE daily_yields
-SET 
+-- 3. daily_yield_logテーブルを修正
+UPDATE daily_yield_log
+SET
     yield_rate = -0.020,
     user_rate = -0.020 * (1 - 30.0/100) * 0.6
 WHERE date = '2025-11-01';
@@ -63,13 +63,13 @@ END $$;
 -- ※ 紹介報酬は累積額なので、差分を調整する必要がある
 
 -- 6. 修正後のデータを確認
-SELECT 
+SELECT
     date,
     yield_rate,
     margin_rate,
     user_rate,
     '修正後の値' as note
-FROM daily_yields
+FROM daily_yield_log
 WHERE date = '2025-11-01';
 
 -- 7. ユーザー利益の合計を確認

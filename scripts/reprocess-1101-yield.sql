@@ -9,9 +9,11 @@
 -- 5. 自動NFT付与（該当する場合）
 -- 6. 月次出金処理（該当する場合）
 
+-- 注意: daily_yield_logテーブルを使用（daily_yieldsではない）
+
 -- === STEP 1: 現在のデータをバックアップ（確認用） ===
-CREATE TEMP TABLE backup_daily_yields AS
-SELECT * FROM daily_yields WHERE date = '2025-11-01';
+CREATE TEMP TABLE backup_daily_yield_log AS
+SELECT * FROM daily_yield_log WHERE date = '2025-11-01';
 
 CREATE TEMP TABLE backup_user_daily_profit AS
 SELECT * FROM user_daily_profit WHERE date = '2025-11-01';
@@ -20,8 +22,8 @@ CREATE TEMP TABLE backup_user_referral_profit AS
 SELECT * FROM user_referral_profit WHERE date = '2025-11-01';
 
 -- バックアップ確認
-SELECT '=== BACKUP: daily_yields ===' as info;
-SELECT * FROM backup_daily_yields;
+SELECT '=== BACKUP: daily_yield_log ===' as info;
+SELECT * FROM backup_daily_yield_log;
 
 SELECT '=== BACKUP: user_daily_profit (合計) ===' as info;
 SELECT COUNT(*) as count, SUM(profit_amount) as total FROM backup_user_daily_profit;
@@ -32,7 +34,7 @@ SELECT COUNT(*) as count, SUM(reward_amount) as total FROM backup_user_referral_
 -- === STEP 2: 11/1のデータを削除 ===
 DELETE FROM user_referral_profit WHERE date = '2025-11-01';
 DELETE FROM user_daily_profit WHERE date = '2025-11-01';
-DELETE FROM daily_yields WHERE date = '2025-11-01';
+DELETE FROM daily_yield_log WHERE date = '2025-11-01';
 
 -- === STEP 3: RPC関数で再計算 ===
 -- 正しい値: -0.02% (パーセント値のまま)
@@ -45,13 +47,13 @@ SELECT * FROM process_daily_yield_with_cycles(
 );
 
 -- === STEP 4: 修正後のデータを確認 ===
-SELECT '=== AFTER FIX: daily_yields ===' as info;
+SELECT '=== AFTER FIX: daily_yield_log ===' as info;
 SELECT
     date,
     yield_rate,
     margin_rate,
     user_rate
-FROM daily_yields
+FROM daily_yield_log
 WHERE date = '2025-11-01';
 
 SELECT '=== AFTER FIX: user_daily_profit (合計) ===' as info;

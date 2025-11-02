@@ -10,7 +10,7 @@ SELECT
     -0.020 as "正しいyield_rate",
     -0.020 * (1 - 30.0/100) * 0.6 as "正しいuser_rate",
     user_rate - (-0.020 * (1 - 30.0/100) * 0.6) as "差分"
-FROM daily_yields
+FROM daily_yield_log
 WHERE date = '2025-11-01';
 
 -- === 各ユーザーの差分を計算 ===
@@ -19,7 +19,7 @@ WITH correct_rate AS (
     SELECT -0.020 * (1 - 30.0/100) * 0.6 as v_user_rate
 ),
 current_rate AS (
-    SELECT user_rate FROM daily_yields WHERE date = '2025-11-01'
+    SELECT user_rate FROM daily_yield_log WHERE date = '2025-11-01'
 )
 SELECT
     udp.user_id,
@@ -40,7 +40,7 @@ LIMIT 10;
 -- === 実行前の最終確認 ===
 SELECT '⚠️ 以下の処理を実行しますか？' as warning;
 SELECT
-    '1. daily_yieldsの修正' as step,
+    '1. daily_yield_logの修正' as step,
     '-0.012% → -0.008%' as change;
 
 SELECT
@@ -55,8 +55,8 @@ SELECT
 -- コメントアウトを外して実行してください
 
 /*
--- 1. daily_yieldsを修正
-UPDATE daily_yields
+-- 1. daily_yield_logを修正
+UPDATE daily_yield_log
 SET
     yield_rate = -0.020,
     user_rate = -0.020 * (1 - 30.0/100) * 0.6
@@ -80,7 +80,7 @@ SELECT
     date,
     yield_rate,
     user_rate
-FROM daily_yields
+FROM daily_yield_log
 WHERE date = '2025-11-01';
 
 SELECT
