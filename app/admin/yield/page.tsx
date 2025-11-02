@@ -181,7 +181,7 @@ export default function AdminYieldPage() {
     try {
       const { data: usersData, error: usersError } = await supabase
         .from("users")
-        .select("id, total_purchases")
+        .select("id")
         .eq("is_active", true)
         .eq("has_approved_nft", true)
 
@@ -189,7 +189,7 @@ export default function AdminYieldPage() {
 
       const { data: purchasesData, error: purchasesError } = await supabase
         .from("purchases")
-        .select("id")
+        .select("amount_usd")
         .eq("admin_approved", true)
 
       if (purchasesError) throw purchasesError
@@ -206,8 +206,10 @@ export default function AdminYieldPage() {
         console.warn("user_daily_profit取得エラー:", totalProfitError)
       }
 
-      // 手数料を除いた実際の投資額（users.total_purchases）を使用
-      const totalInvestment = usersData?.reduce((sum, u) => sum + (u.total_purchases || 0), 0) || 0
+      // 手数料を除いた実際の投資額（purchases.amount_usd × 1000/1100）
+      const totalInvestment = purchasesData?.reduce((sum, p) => {
+        return sum + (p.amount_usd * (1000 / 1100))
+      }, 0) || 0
       const avgYieldRate =
         avgYieldData?.reduce((sum, y) => sum + Number.parseFloat(y.yield_rate || "0"), 0) /
           (avgYieldData?.length || 1) || 0
