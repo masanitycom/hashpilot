@@ -150,7 +150,7 @@ export default function AdminUsersPage() {
         throw usersError
       }
 
-      // 購入日を取得（ペガサス交換ユーザー用）
+      // 購入日を取得（特別ユーザー用）
       const { data: purchasesData } = await supabase
         .from("purchases")
         .select("user_id, admin_approved_at")
@@ -557,8 +557,7 @@ export default function AdminUsersPage() {
                         {user.is_pegasus_exchange === true && (
                           <div className="col-span-full mt-2">
                             <div className="flex items-center space-x-2">
-                              <span className="text-gray-400">ペガサス交換: </span>
-                              <Badge className="bg-yellow-600 text-white">🐴 ペガサスNFT交換</Badge>
+                              <Badge className="bg-yellow-600 text-white">✓</Badge>
                               {user.first_purchase_date && (
                                 <span className="text-xs text-gray-500">
                                   交換日（購入日）: {new Date(user.first_purchase_date).toLocaleDateString('ja-JP')}
@@ -724,10 +723,7 @@ export default function AdminUsersPage() {
                 </div>
 
                 <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3">
-                  <Label className="text-yellow-400 text-sm font-medium flex items-center">
-                    🐴 ペガサスNFT交換設定
-                  </Label>
-                  <div className="mt-3 space-y-3">
+                  <div className="space-y-3">
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
@@ -736,9 +732,6 @@ export default function AdminUsersPage() {
                         onChange={(e) => setEditForm({ ...editForm, is_pegasus_exchange: e.target.checked })}
                         className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-yellow-600 focus:ring-yellow-600"
                       />
-                      <Label htmlFor="is_pegasus_exchange" className="text-gray-300 cursor-pointer">
-                        ペガサスNFT交換ユーザー
-                      </Label>
                     </div>
 
                     {editForm.is_pegasus_exchange && (

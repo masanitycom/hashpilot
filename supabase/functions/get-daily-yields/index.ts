@@ -16,15 +16,10 @@ serve(async (req) => {
   }
 
   try {
-    // Supabase クライアントを作成
+    // Supabase クライアントを作成（認証不要の公開エンドポイント）
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
-        },
-      }
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
     )
 
     // URLパラメータを取得（オプション）
