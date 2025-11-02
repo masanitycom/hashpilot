@@ -528,4 +528,63 @@ confirm('NFT配布状況を「配布状況をリセット」しますか？')
 
 ---
 
-最終更新: 2025年10月11日
+## 🔧 Staging環境（テスト環境）
+
+### 概要
+本番環境に影響を与えずにテストできる環境を提供します。
+
+### 環境構成
+- **本番環境**: https://hashpilot.net (mainブランチ)
+- **テスト環境**: https://hashpilot-staging.vercel.app (stagingブランチ)
+
+### ブランチ戦略
+```
+main ブランチ        → 本番環境
+staging ブランチ     → テスト環境（ベーシック認証あり）
+```
+
+### 開発フロー
+
+**1. テスト環境で開発・テスト**
+```bash
+git checkout staging
+# コード修正...
+git add .
+git commit -m "新機能追加"
+git push origin staging  # テスト環境に自動デプロイ
+```
+
+**2. テストOK → 本番環境に反映**
+```bash
+git checkout main
+git merge staging
+git push origin main     # 本番環境に自動デプロイ
+```
+
+### ベーシック認証
+- **テスト環境のみ有効**
+- ユーザー名: `admin` (環境変数 `BASIC_AUTH_USER`)
+- パスワード: 環境変数 `BASIC_AUTH_PASSWORD` で設定
+
+### Vercel環境変数設定
+
+**Production（本番）:**
+```env
+NEXT_PUBLIC_ENV=production
+NEXT_PUBLIC_SITE_URL=https://hashpilot.net
+```
+
+**Preview（テスト）:**
+```env
+NEXT_PUBLIC_ENV=staging
+BASIC_AUTH_USER=admin
+BASIC_AUTH_PASSWORD=(強力なパスワード)
+NEXT_PUBLIC_SITE_URL=https://hashpilot-staging.vercel.app
+```
+
+### 詳細ドキュメント
+完全なセットアップ手順は `STAGING_SETUP.md` を参照してください。
+
+---
+
+最終更新: 2025年11月2日
