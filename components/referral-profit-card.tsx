@@ -74,26 +74,26 @@ export function ReferralProfitCard({
       console.log('Level 2 referrals:', level2UserIds)
       console.log('Level 3 referrals:', level3UserIds)
 
-      // 各レベルの紹介者の個人利益を取得し、報酬率を適用
-      const level1Profits = await getReferralProfits(level1UserIds, monthStart, monthEnd, yesterdayStr)
-      const level2Profits = await getReferralProfits(level2UserIds, monthStart, monthEnd, yesterdayStr)
-      const level3Profits = await getReferralProfits(level3UserIds, monthStart, monthEnd, yesterdayStr)
+          // 実際の紹介報酬データをuser_referral_profitテーブルから取得
+      const level1Profits = await getActualReferralProfits(userId, 1, monthStart, monthEnd, yesterdayStr)
+      const level2Profits = await getActualReferralProfits(userId, 2, monthStart, monthEnd, yesterdayStr)
+      const level3Profits = await getActualReferralProfits(userId, 3, monthStart, monthEnd, yesterdayStr)
 
-      console.log('Level 1 profits:', level1Profits)
-      console.log('Level 2 profits:', level2Profits)
-      console.log('Level 3 profits:', level3Profits)
+      console.log('Level 1 referral profits:', level1Profits)
+      console.log('Level 2 referral profits:', level2Profits)
+      console.log('Level 3 referral profits:', level3Profits)
 
-      // 正しい紹介報酬計算: 各レベルの個人利益 × 報酬率
-      const level1Yesterday = level1Profits.yesterday * level1Rate
-      const level1Monthly = level1Profits.monthly * level1Rate
-      
-      const level2Yesterday = level2Profits.yesterday * level2Rate
-      const level2Monthly = level2Profits.monthly * level2Rate
-      
-      const level3Yesterday = level3Profits.yesterday * level3Rate
-      const level3Monthly = level3Profits.monthly * level3Rate
+      // 実際に記録された紹介報酬をそのまま使用（計算不要）
+      const level1Yesterday = level1Profits.yesterday
+      const level1Monthly = level1Profits.monthly
 
-      console.log('Calculated referral profits:')
+      const level2Yesterday = level2Profits.yesterday
+      const level2Monthly = level2Profits.monthly
+
+      const level3Yesterday = level3Profits.yesterday
+      const level3Monthly = level3Profits.monthly
+
+      console.log('Actual referral profits from DB:')
       console.log('L1 Yesterday:', level1Yesterday, 'L1 Monthly:', level1Monthly)
       console.log('L2 Yesterday:', level2Yesterday, 'L2 Monthly:', level2Monthly)
       console.log('L3 Yesterday:', level3Yesterday, 'L3 Monthly:', level3Monthly)
@@ -122,82 +122,41 @@ export function ReferralProfitCard({
     }
   }
 
-  // 指定されたユーザーIDリストの利益を取得（運用開始日チェック付き）
-  const getReferralProfits = async (userIds: string[], monthStart: string, monthEnd: string, yesterdayStr: string) => {
-    if (userIds.length === 0) {
-      return { yesterday: 0, monthly: 0 }
-    }
+  // user_referral_profitテーブルから実際の紹介報酬を取得
+  const getActualReferralProfits = async (userId: string, level: number, monthStart: string, monthEnd: string, yesterdayStr: string) => {
+    console.log(`📊 Fetching actual referral profits for level ${level}...`)
 
-    // NFT承認済みかつ実際に運用開始しているユーザーのみフィルター
-    console.log('🔍 Checking operational status for users:', userIds)
-
-    // 今日の日付を取得（運用開始日との比較用）
-    const today = new Date().toISOString().split('T')[0]
-
-    const { data: usersData, error: usersError } = await supabase
-      .from('users')
-      .select(`
-        user_id,
-        has_approved_nft,
-        operation_start_date,
-        affiliate_cycle!inner(total_nft_count)
-      `)
-      .in('user_id', userIds)
-      .eq('has_approved_nft', true)
-      .gt('affiliate_cycle.total_nft_count', 0)
-      .not('operation_start_date', 'is', null)
-      .lte('operation_start_date', today)
-
-    if (usersError) {
-      console.error('❌ Error fetching user approval status:', usersError)
-      return { yesterday: 0, monthly: 0 }
-    }
-
-    console.log('✅ NFT approved users found:', usersData)
-    console.log('✅ Operation start date check applied (must be <= today)')
-
-    // NFT承認済みかつ運用開始済みユーザーIDを取得
-    const eligibleUserIds = usersData.map(user => user.user_id)
-
-    console.log('✅ Eligible users for profit calculation (operation started):', eligibleUserIds)
-
-    if (eligibleUserIds.length === 0) {
-      console.log('⚠️ No eligible users found')
-      return { yesterday: 0, monthly: 0 }
-    }
-
-    console.log('📊 Fetching profit data for users:', eligibleUserIds)
-    console.log('📊 Date range:', monthStart, 'to', monthEnd)
-    
     const { data, error } = await supabase
-      .from('user_daily_profit')
-      .select('date, daily_profit, user_id')
-      .in('user_id', eligibleUserIds)
+      .from('user_referral_profit')
+      .select('date, profit_amount')
+      .eq('user_id', userId)
+      .eq('referral_level', level)
       .gte('date', monthStart)
       .lte('date', monthEnd)
 
     if (error) {
-      console.error('❌ Error fetching referral profits:', error)
+      console.error(`❌ Error fetching level ${level} referral profits:`, error)
       return { yesterday: 0, monthly: 0 }
     }
 
-    console.log('✅ Raw profit data for eligible users:', data)
-    console.log('📊 Data count:', data?.length || 0)
+    console.log(`✅ Level ${level} referral profit records:`, data)
 
     let yesterday = 0
     let monthly = 0
 
-    data.forEach(row => {
-      const profit = parseFloat(row.daily_profit) || 0
-      
-      // 昨日の利益
-      if (row.date === yesterdayStr) {
-        yesterday += profit
-      }
-      
-      // 月間累計利益
-      monthly += profit
-    })
+    if (data && data.length > 0) {
+      data.forEach(row => {
+        const profit = parseFloat(row.profit_amount) || 0
+
+        // 昨日の利益
+        if (row.date === yesterdayStr) {
+          yesterday += profit
+        }
+
+        // 月間累計利益
+        monthly += profit
+      })
+    }
 
     return { yesterday, monthly }
   }
