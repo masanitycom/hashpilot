@@ -922,11 +922,11 @@ export default function AdminYieldPage() {
                           <td
                             className={`p-2 font-medium ${Number.parseFloat(item.yield_rate) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(Number.parseFloat(item.yield_rate) * 100).toFixed(3)}%
+                            {Number.parseFloat(item.yield_rate).toFixed(3)}%
                           </td>
-                          <td className={`p-2 ${Number.parseFloat(item.margin_rate) * 100 > 100 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
-                            {(Number.parseFloat(item.margin_rate) * 100).toFixed(0)}%
-                            {Number.parseFloat(item.margin_rate) * 100 > 100 && (
+                          <td className={`p-2 ${Number.parseFloat(item.margin_rate) > 100 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
+                            {Number.parseFloat(item.margin_rate).toFixed(0)}%
+                            {Number.parseFloat(item.margin_rate) > 100 && (
                               <span className="ml-1 text-xs">⚠️異常値</span>
                             )}
                           </td>
