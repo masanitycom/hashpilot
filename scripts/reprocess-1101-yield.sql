@@ -20,7 +20,7 @@ SELECT COUNT(*) as count, SUM(daily_profit) as total
 FROM user_daily_profit WHERE date = '2025-11-01';
 
 SELECT '=== BACKUP: user_referral_profit (合計) ===' as info;
-SELECT COUNT(*) as count, SUM(reward_amount) as total
+SELECT COUNT(*) as count, SUM(profit_amount) as total
 FROM user_referral_profit WHERE date = '2025-11-01';
 
 -- === STEP 2: 11/1のデータを削除 ===
@@ -58,7 +58,7 @@ WHERE date = '2025-11-01';
 SELECT '=== AFTER FIX: user_referral_profit (合計) ===' as info;
 SELECT
     COUNT(*) as reward_count,
-    SUM(reward_amount) as total_rewards
+    SUM(profit_amount) as total_rewards
 FROM user_referral_profit
 WHERE date = '2025-11-01';
 

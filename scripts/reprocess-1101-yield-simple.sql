@@ -11,7 +11,7 @@ SELECT COUNT(*) as users, SUM(daily_profit) as total
 FROM user_daily_profit WHERE date = '2025-11-01';
 
 SELECT '現在の紹介報酬（合計）' as step;
-SELECT COUNT(*) as rewards, SUM(reward_amount) as total
+SELECT COUNT(*) as rewards, SUM(profit_amount) as total
 FROM user_referral_profit WHERE date = '2025-11-01';
 
 -- ===== STEP 2: 古いデータを削除 =====
@@ -38,7 +38,7 @@ SELECT COUNT(*) as users, SUM(daily_profit) as total
 FROM user_daily_profit WHERE date = '2025-11-01';
 
 SELECT '修正後の紹介報酬（合計）' as step;
-SELECT COUNT(*) as rewards, SUM(reward_amount) as total
+SELECT COUNT(*) as rewards, SUM(profit_amount) as total
 FROM user_referral_profit WHERE date = '2025-11-01';
 
 SELECT '✅ 完了' as status;
