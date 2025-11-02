@@ -89,17 +89,17 @@ export default function ExchangeReportPage() {
       setLoading(true)
       const today = new Date()
       const year = today.getFullYear()
-      const month = today.getMonth() + 1
+      const month = today.getMonth() // 0始まり（0=1月、10=11月）
 
       // 期間1: 前月21日～今月5日（今月15日運用開始）
-      const period1Start = new Date(year, month - 2, 21) // 前月21日
-      const period1End = new Date(year, month - 1, 5) // 今月5日
-      const period1OperationStart = new Date(year, month - 1, 15) // 今月15日
+      const period1Start = new Date(year, month - 1, 21) // 前月21日
+      const period1End = new Date(year, month, 5) // 今月5日
+      const period1OperationStart = new Date(year, month, 15) // 今月15日
 
       // 期間2: 今月6日～今月20日（翌月1日運用開始）
-      const period2Start = new Date(year, month - 1, 6) // 今月6日
-      const period2End = new Date(year, month - 1, 20) // 今月20日
-      const period2OperationStart = new Date(year, month, 1) // 翌月1日
+      const period2Start = new Date(year, month, 6) // 今月6日
+      const period2End = new Date(year, month, 20) // 今月20日
+      const period2OperationStart = new Date(year, month + 1, 1) // 翌月1日
 
       const report1 = await calculatePeriodReport(
         period1Start,
