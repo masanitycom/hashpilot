@@ -1,0 +1,127 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Calendar, Loader2 } from "lucide-react"
+import { supabase } from "@/lib/supabase"
+
+interface MonthlyCumulativeProfitCardProps {
+  userId: string
+}
+
+export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitCardProps) {
+  const [monthlyProfit, setMonthlyProfit] = useState<number>(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+  const [currentMonth, setCurrentMonth] = useState("")
+
+  useEffect(() => {
+    if (userId) {
+      fetchMonthlyProfit()
+    }
+  }, [userId])
+
+  const fetchMonthlyProfit = async () => {
+    try {
+      setLoading(true)
+      setError("")
+
+      // 今月の開始日と終了日を取得
+      const now = new Date()
+      const year = now.getFullYear()
+      const month = now.getMonth() + 1
+      const monthStart = new Date(year, now.getMonth(), 1).toISOString().split('T')[0]
+      const monthEnd = new Date(year, now.getMonth() + 1, 0).toISOString().split('T')[0]
+
+      // 月の表示用（例: 2025年11月）
+      setCurrentMonth(`${year}年${month}月`)
+
+      // 個人利益（user_daily_profit）
+      const { data: dailyProfitData, error: dailyError } = await supabase
+        .from('user_daily_profit')
+        .select('daily_profit')
+        .eq('user_id', userId)
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+
+      if (dailyError && dailyError.code !== 'PGRST116') {
+        throw dailyError
+      }
+
+      // 紹介報酬（user_referral_profit）
+      const { data: referralProfitData, error: referralError } = await supabase
+        .from('user_referral_profit')
+        .select('profit_amount')
+        .eq('user_id', userId)
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+
+      if (referralError && referralError.code !== 'PGRST116') {
+        throw referralError
+      }
+
+      // 個人利益の合計
+      const personalTotal = dailyProfitData
+        ? dailyProfitData.reduce((sum, record) => sum + record.daily_profit, 0)
+        : 0
+
+      // 紹介報酬の合計
+      const referralTotal = referralProfitData
+        ? referralProfitData.reduce((sum, record) => sum + parseFloat(record.profit_amount), 0)
+        : 0
+
+      // 合計
+      const total = personalTotal + referralTotal
+      setMonthlyProfit(total)
+
+    } catch (err: any) {
+      console.error("Monthly cumulative profit fetch error:", err)
+      setError("データの取得に失敗しました")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <Card className="bg-gray-800 border-gray-700">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-gray-300 text-sm font-medium">今月の累積利益</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center space-x-2">
+            <Loader2 className="h-5 w-5 text-blue-400 animate-spin" />
+            <span className="text-sm text-gray-400">読み込み中...</span>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+    <Card className="bg-gray-800 border-gray-700">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-gray-300 text-sm font-medium flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-blue-400" />
+          今月の累積利益
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-center">
+          <div className={`text-3xl font-bold ${
+            monthlyProfit >= 0 ? "text-blue-400" : "text-red-400"
+          }`}>
+            ${monthlyProfit.toFixed(3)}
+          </div>
+          <div className="text-xs text-gray-400 mt-2">
+            {currentMonth}の累積利益
+          </div>
+        </div>
+
+        {error && (
+          <p className="text-xs text-red-400 mt-2">{error}</p>
+        )}
+      </CardContent>
+    </Card>
+  )
+}

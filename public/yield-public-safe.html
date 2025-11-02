@@ -185,7 +185,7 @@
             const totalRecords = data.length;
             const positiveCount = data.filter(d => d.user_rate > 0).length;
             const negativeCount = data.filter(d => d.user_rate < 0).length;
-            const avgUserRate = (data.reduce((sum, d) => sum + d.user_rate, 0) / totalRecords * 100).toFixed(3);
+            const totalUserRate = (data.reduce((sum, d) => sum + d.user_rate, 0) * 100).toFixed(3);
 
             statsDiv.innerHTML = `
                 <div class="stat-card">
@@ -201,8 +201,8 @@
                     <div class="value negative">${negativeCount}日</div>
                 </div>
                 <div class="stat-card">
-                    <h3>平均ユーザー受取率</h3>
-                    <div class="value ${avgUserRate > 0 ? 'positive' : 'negative'}">${avgUserRate}%</div>
+                    <h3>TOTAL (11/1~)</h3>
+                    <div class="value ${totalUserRate > 0 ? 'positive' : 'negative'}">${totalUserRate > 0 ? '+' : ''}${totalUserRate}%</div>
                 </div>
             `;
         }
