@@ -749,7 +749,6 @@ export default function AdminUsersPage() {
                           💡 チェックOFFで通常運用に戻ります
                         </p>
                       </div>
-                      </>
                     )}
                   </div>
                 </div>
