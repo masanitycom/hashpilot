@@ -52,7 +52,6 @@ export default function AdminUsersPage() {
     nft_receive_address: "",
     is_operation_only: false,
     is_pegasus_exchange: false,
-    pegasus_withdrawal_unlock_date: "",
     email_blacklisted: false,
   })
   const [saving, setSaving] = useState(false)
@@ -206,7 +205,6 @@ export default function AdminUsersPage() {
       nft_receive_address: user.nft_receive_address || "",
       is_operation_only: user.is_operation_only || false,
       is_pegasus_exchange: user.is_pegasus_exchange || false,
-      pegasus_withdrawal_unlock_date: user.pegasus_withdrawal_unlock_date || "",
       email_blacklisted: user.email_blacklisted || false,
     })
   }
@@ -226,7 +224,7 @@ export default function AdminUsersPage() {
           nft_receive_address: editForm.nft_receive_address || null,
           is_operation_only: editForm.is_operation_only,
           is_pegasus_exchange: editForm.is_pegasus_exchange,
-          pegasus_withdrawal_unlock_date: editForm.pegasus_withdrawal_unlock_date || null,
+          pegasus_withdrawal_unlock_date: null,  // 常にnull（出金解禁日は使わない）
           email_blacklisted: editForm.email_blacklisted,
           updated_at: new Date().toISOString(),
         })
@@ -732,31 +730,25 @@ export default function AdminUsersPage() {
                         onChange={(e) => setEditForm({ ...editForm, is_pegasus_exchange: e.target.checked })}
                         className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-yellow-600 focus:ring-yellow-600"
                       />
+                      <Label htmlFor="is_pegasus_exchange" className="text-yellow-300 font-medium cursor-pointer">
+                        ペガサス交換ユーザー
+                      </Label>
                     </div>
 
                     {editForm.is_pegasus_exchange && (
-                      <>
-                        {editingUser?.first_purchase_date && (
-                          <div className="bg-gray-700/50 rounded p-2">
-                            <span className="text-xs text-gray-400">交換日（購入日）: </span>
-                            <span className="text-sm text-white">
-                              {new Date(editingUser.first_purchase_date).toLocaleDateString('ja-JP')}
-                            </span>
-                          </div>
-                        )}
-
-                        <div>
-                          <Label className="text-gray-300 text-sm">出金解禁日</Label>
-                          <Input
-                            type="date"
-                            value={editForm.pegasus_withdrawal_unlock_date}
-                            onChange={(e) => setEditForm({ ...editForm, pegasus_withdrawal_unlock_date: e.target.value })}
-                            className="bg-gray-700 border-gray-600 text-white mt-1"
-                          />
-                          <p className="text-xs text-orange-400 mt-1">
-                            ⚠️ この日付まで出金制限されます
-                          </p>
-                        </div>
+                      <div className="bg-orange-900/20 border border-orange-600/30 rounded p-3 space-y-2">
+                        <p className="text-xs text-orange-200">
+                          ⚠️ チェックON中の制限:
+                        </p>
+                        <ul className="text-xs text-gray-300 space-y-1 ml-4 list-disc">
+                          <li>個人運用（日利）: 停止</li>
+                          <li>出金: 不可</li>
+                          <li>紹介報酬: 通常通り加算</li>
+                        </ul>
+                        <p className="text-xs text-yellow-300 mt-2">
+                          💡 チェックOFFで通常運用に戻ります
+                        </p>
+                      </div>
                       </>
                     )}
                   </div>
