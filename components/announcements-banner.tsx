@@ -39,7 +39,13 @@ export function AnnouncementsBanner() {
         .limit(5)
 
       if (error) throw error
-      setAnnouncements(data || [])
+
+      // 「正式運用開始のお知らせ」を除外
+      const filteredData = (data || []).filter(
+        announcement => !announcement.title.includes('正式運用開始')
+      )
+
+      setAnnouncements(filteredData)
     } catch (error) {
       console.error('お知らせ取得エラー:', error)
     } finally {
