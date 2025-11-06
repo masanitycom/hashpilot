@@ -39,6 +39,7 @@ interface YieldStats {
   total_users: number
   total_investment: number
   total_investment_pending: number
+  pegasus_investment: number
   avg_yield_rate: number
   total_distributed: number
 }
@@ -188,10 +189,10 @@ export default function AdminYieldPage() {
 
       if (usersError) throw usersError
 
-      // 全承認済み購入とユーザー情報を取得
+      // 全承認済み購入とユーザー情報を取得（ペガサスフラグも含む）
       const { data: purchasesData, error: purchasesError } = await supabase
         .from("purchases")
-        .select("amount_usd, user_id, users!inner(operation_start_date)")
+        .select("amount_usd, user_id, users!inner(operation_start_date, is_pegasus_exchange)")
         .eq("admin_approved", true)
 
       if (purchasesError) throw purchasesError
@@ -210,10 +211,11 @@ export default function AdminYieldPage() {
         console.warn("user_daily_profit取得エラー:", totalProfitError)
       }
 
-      // 運用中と運用開始前に分けて集計
+      // 運用中と運用開始前に分けて集計（ペガサスユーザーは除外）
       const totalInvestmentActive = purchasesData?.reduce((sum, p: any) => {
         const opStartDate = p.users?.operation_start_date
-        if (opStartDate && opStartDate <= today) {
+        const isPegasus = p.users?.is_pegasus_exchange
+        if (!isPegasus && opStartDate && opStartDate <= today) {
           return sum + (p.amount_usd * (1000 / 1100))
         }
         return sum
@@ -221,7 +223,17 @@ export default function AdminYieldPage() {
 
       const totalInvestmentPending = purchasesData?.reduce((sum, p: any) => {
         const opStartDate = p.users?.operation_start_date
-        if (opStartDate && opStartDate > today) {
+        const isPegasus = p.users?.is_pegasus_exchange
+        if (!isPegasus && opStartDate && opStartDate > today) {
+          return sum + (p.amount_usd * (1000 / 1100))
+        }
+        return sum
+      }, 0) || 0
+
+      // ペガサスユーザーの投資額を別途集計
+      const pegasusInvestment = purchasesData?.reduce((sum, p: any) => {
+        const isPegasus = p.users?.is_pegasus_exchange
+        if (isPegasus) {
           return sum + (p.amount_usd * (1000 / 1100))
         }
         return sum
@@ -238,6 +250,7 @@ export default function AdminYieldPage() {
         total_users: usersData?.length || 0,
         total_investment: totalInvestment,
         total_investment_pending: totalInvestmentPending,
+        pegasus_investment: pegasusInvestment,
         avg_yield_rate: avgYieldRate,  // 既にパーセント値なので100倍不要
         total_distributed: totalDistributed,
       })
@@ -698,8 +711,15 @@ export default function AdminYieldPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-white">${stats.total_investment.toLocaleString()}</div>
-                <p className="text-xs text-blue-200">運用中</p>
+                <div className="text-2xl font-bold text-white">
+                  ${stats.total_investment.toLocaleString()}
+                  {stats.pegasus_investment > 0 && (
+                    <span className="text-sm text-gray-400 ml-2">
+                      (ペガサス: ${stats.pegasus_investment.toLocaleString()})
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-blue-200">運用中（ペガサス除く）</p>
                 {stats.total_investment_pending > 0 && (
                   <div className="mt-2 pt-2 border-t border-blue-600">
                     <div className="text-lg font-semibold text-yellow-300">${stats.total_investment_pending.toLocaleString()}</div>

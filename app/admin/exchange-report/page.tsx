@@ -141,19 +141,23 @@ export default function ExchangeReportPage() {
     const periodEndStr = toJSTDateString(periodEnd)
     const operationStartStr = toJSTDateString(operationStart)
 
-    // 1. 全承認済み購入データを一度に取得
+    // 1. 全承認済み購入データを一度に取得（ペガサスフラグも含む）
     const { data: allPurchases } = await supabase
       .from('purchases')
-      .select('user_id, amount_usd, admin_approved_at')
+      .select('user_id, amount_usd, admin_approved_at, users!inner(is_pegasus_exchange)')
       .eq('admin_approved', true)
       .order('admin_approved_at', { ascending: true })
 
-    // 2. ユーザーごとの初回承認日と購入額を計算
+    // 2. ユーザーごとの初回承認日と購入額を計算（ペガサスユーザーは除外）
     const userFirstApproval = new Map<string, string>()
     const userTotalPurchases = new Map<string, number>()
 
     if (allPurchases) {
       for (const purchase of allPurchases) {
+        // ペガサスユーザーをスキップ
+        if ((purchase as any).users?.is_pegasus_exchange) {
+          continue
+        }
         // 初回承認日を記録
         if (!userFirstApproval.has(purchase.user_id)) {
           userFirstApproval.set(purchase.user_id, purchase.admin_approved_at)

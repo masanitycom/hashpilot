@@ -29,6 +29,7 @@ import { supabase } from "@/lib/supabase"
 interface AdminStats {
   totalRevenue: number
   totalRevenueExcludingFee: number
+  pegasusRevenue: number
   topReferrerRevenue: number
   totalUsers: number
   activeUsers: number
@@ -45,6 +46,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({
     totalRevenue: 53900.0,
     totalRevenueExcludingFee: 49000.0,
+    pegasusRevenue: 0,
     topReferrerRevenue: 0,
     totalUsers: 54,
     activeUsers: 54,
@@ -122,14 +124,35 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      // 総売上の取得（手数料込み）
-      const { data: revenueData } = await supabase.from("purchases").select("amount_usd").eq("admin_approved", true)
-      const totalRevenue = revenueData?.reduce((sum, purchase) => sum + purchase.amount_usd, 0) || 53900.0
+      // 総売上の取得（手数料込み、ユーザー情報も取得）
+      const { data: revenueData } = await supabase
+        .from("purchases")
+        .select("amount_usd, users!inner(is_pegasus_exchange)")
+        .eq("admin_approved", true)
 
-      // 総売上（手数料除く: amount_usd × 1000/1100）
-      const totalRevenueExcludingFee = revenueData?.reduce((sum, purchase) => {
-        return sum + (purchase.amount_usd * (1000 / 1100))
+      // ペガサスユーザーを除外した総売上（手数料込み）
+      const totalRevenue = revenueData?.reduce((sum, purchase: any) => {
+        if (!purchase.users?.is_pegasus_exchange) {
+          return sum + purchase.amount_usd
+        }
+        return sum
+      }, 0) || 53900.0
+
+      // ペガサスユーザーを除外した総売上（手数料除く: amount_usd × 1000/1100）
+      const totalRevenueExcludingFee = revenueData?.reduce((sum, purchase: any) => {
+        if (!purchase.users?.is_pegasus_exchange) {
+          return sum + (purchase.amount_usd * (1000 / 1100))
+        }
+        return sum
       }, 0) || 49000.0
+
+      // ペガサスユーザーの売上（手数料除く）
+      const pegasusRevenue = revenueData?.reduce((sum, purchase: any) => {
+        if (purchase.users?.is_pegasus_exchange) {
+          return sum + (purchase.amount_usd * (1000 / 1100))
+        }
+        return sum
+      }, 0) || 0
 
       // 7A9637のツリー売上を取得
       const { data: topReferrerData } = await supabase.rpc("get_referral_tree_revenue", {
@@ -166,6 +189,7 @@ export default function AdminDashboard() {
       setStats({
         totalRevenue,
         totalRevenueExcludingFee,
+        pegasusRevenue,
         topReferrerRevenue,
         totalUsers,
         activeUsers,
@@ -256,8 +280,15 @@ export default function AdminDashboard() {
                 <DollarSign className="w-10 h-10 text-white opacity-80" />
                 <div>
                   <p className="text-green-100 text-xs font-medium">総売上</p>
-                  <p className="text-xl font-bold">${stats.totalRevenue.toLocaleString()}</p>
-                  <p className="text-green-200 text-xs">(${stats.totalRevenueExcludingFee.toLocaleString()})</p>
+                  <p className="text-xl font-bold">
+                    ${stats.totalRevenue.toLocaleString()}
+                    {stats.pegasusRevenue > 0 && (
+                      <span className="text-sm text-gray-300 ml-2">
+                        (ペガサス: ${stats.pegasusRevenue.toLocaleString()})
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-green-200 text-xs">(手数料除く: ${stats.totalRevenueExcludingFee.toLocaleString()})</p>
                 </div>
               </div>
             </CardContent>
