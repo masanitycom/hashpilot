@@ -256,26 +256,26 @@ export default function AnnouncementsAdminPage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="title">タイトル</Label>
+                  <Label htmlFor="title" className="text-gray-300">タイトル</Label>
                   <Input
                     id="title"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
-                    className="bg-gray-700 border-gray-600"
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                     placeholder="お知らせのタイトルを入力"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="content">内容</Label>
+                  <Label htmlFor="content" className="text-gray-300">内容</Label>
                   <Textarea
                     id="content"
                     value={formData.content}
                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                     required
                     rows={6}
-                    className="bg-gray-700 border-gray-600"
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                     placeholder="お知らせの内容を入力&#10;Enterキーで改行できます&#10;URLは自動的にリンクになります"
                   />
                   <p className="text-xs text-gray-400 mt-1">
@@ -284,13 +284,13 @@ export default function AnnouncementsAdminPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="priority">優先度（数字が大きいほど上に表示）</Label>
+                  <Label htmlFor="priority" className="text-gray-300">優先度（数字が大きいほど上に表示）</Label>
                   <Input
                     id="priority"
                     type="number"
                     value={formData.priority}
                     onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })}
-                    className="bg-gray-700 border-gray-600"
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                   />
                 </div>
 
