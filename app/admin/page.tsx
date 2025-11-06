@@ -23,6 +23,7 @@ import {
   Coins,
   Wallet,
   Mail,
+  Megaphone,
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
@@ -470,6 +471,24 @@ export default function AdminDashboard() {
                   <div className="flex-1">
                     <h3 className="text-white font-semibold">メール送信</h3>
                     <p className="text-gray-400 text-sm">一斉送信・個別送信</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          {/* お知らせ管理 */}
+          <Link href="/admin/announcements">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-cyan-600 rounded-lg group-hover:bg-cyan-700 transition-colors">
+                    <Megaphone className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">お知らせ管理</h3>
+                    <p className="text-gray-400 text-sm">ダッシュボード告知</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>

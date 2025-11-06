@@ -20,6 +20,7 @@ import { ReferralProfitCard } from "@/components/referral-profit-card"
 import { TotalProfitCard } from "@/components/total-profit-card"
 import { MonthlyCumulativeProfitCard } from "@/components/monthly-cumulative-profit-card"
 import { OperationStatus } from "@/components/operation-status"
+import { AnnouncementsBanner } from "@/components/announcements-banner"
 import Link from "next/link"
 import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
 
@@ -688,6 +689,9 @@ export default function OptimizedDashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* お知らせバナー */}
+        <AnnouncementsBanner />
 
         {/* 最重要カード（即座に表示） */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
