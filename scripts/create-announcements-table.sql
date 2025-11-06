@@ -25,14 +25,45 @@ CREATE POLICY "Anyone can view active announcements"
   FOR SELECT
   USING (is_active = true);
 
+-- 管理者のみが全てのお知らせを閲覧可能
+CREATE POLICY "Admins can view all announcements"
+  ON announcements
+  FOR SELECT
+  USING (
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
+    )
+  );
+
 -- 管理者のみが作成・更新・削除可能
 CREATE POLICY "Admins can manage announcements"
   ON announcements
-  FOR ALL
+  FOR INSERT
+  WITH CHECK (
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
+    )
+  );
+
+CREATE POLICY "Admins can update announcements"
+  ON announcements
+  FOR UPDATE
   USING (
-    EXISTS (
-      SELECT 1 FROM admins
-      WHERE admins.email = (SELECT email FROM auth.users WHERE id = auth.uid())
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
+    )
+  );
+
+CREATE POLICY "Admins can delete announcements"
+  ON announcements
+  FOR DELETE
+  USING (
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
     )
   );
 
