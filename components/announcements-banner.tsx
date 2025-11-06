@@ -65,7 +65,7 @@ export function AnnouncementsBanner() {
             href={part}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-400 hover:text-blue-300 underline"
+            className="text-cyan-300 hover:text-cyan-200 underline font-bold"
           >
             {part}
           </a>
@@ -96,28 +96,28 @@ export function AnnouncementsBanner() {
       {visibleAnnouncements.map((announcement) => (
         <Card
           key={announcement.id}
-          className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border-blue-500/30"
+          className="bg-gradient-to-r from-blue-900 to-purple-900 border-blue-500"
         >
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <Megaphone className="h-5 w-5 text-blue-400 flex-shrink-0 mt-1" />
+              <Megaphone className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-1" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="text-white font-semibold text-base">
+                  <h3 className="text-white font-bold text-lg">
                     {announcement.title}
                   </h3>
                   <button
                     onClick={() => dismissAnnouncement(announcement.id)}
-                    className="text-gray-400 hover:text-white transition-colors flex-shrink-0"
+                    className="text-gray-300 hover:text-white transition-colors flex-shrink-0"
                     aria-label="閉じる"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-5 w-5" />
                   </button>
                 </div>
-                <div className="text-gray-300 text-sm whitespace-pre-wrap break-words">
+                <div className="text-white text-base font-medium whitespace-pre-wrap break-words">
                   {formatContent(announcement.content)}
                 </div>
-                <div className="text-xs text-gray-500 mt-2">
+                <div className="text-xs text-gray-300 mt-3">
                   {new Date(announcement.created_at).toLocaleDateString('ja-JP', {
                     year: 'numeric',
                     month: 'long',
