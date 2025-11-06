@@ -12,6 +12,8 @@
 
 ### ステップ2: SQLスクリプトを実行
 
+#### 新規作成の場合
+
 以下のSQLスクリプトをコピーして実行します：
 
 ```sql
@@ -91,6 +93,67 @@ COMMENT ON COLUMN announcements.content IS 'お知らせ本文（プレーンテ
 COMMENT ON COLUMN announcements.is_active IS '表示/非表示フラグ';
 COMMENT ON COLUMN announcements.priority IS '表示優先度（数字が大きいほど上）';
 ```
+
+#### 既にテーブルが存在する場合（ポリシーのみ更新）
+
+テーブルが既に存在し、ポリシーエラーが出る場合は以下のスクリプトを実行：
+
+```sql
+-- 既存のポリシーを削除してから新しいポリシーを作成
+DROP POLICY IF EXISTS "Anyone can view active announcements" ON announcements;
+DROP POLICY IF EXISTS "Admins can manage announcements" ON announcements;
+DROP POLICY IF EXISTS "Admins can view all announcements" ON announcements;
+DROP POLICY IF EXISTS "Admins can update announcements" ON announcements;
+DROP POLICY IF EXISTS "Admins can delete announcements" ON announcements;
+
+-- 新しいポリシーを作成
+CREATE POLICY "Anyone can view active announcements"
+  ON announcements
+  FOR SELECT
+  USING (is_active = true);
+
+CREATE POLICY "Admins can view all announcements"
+  ON announcements
+  FOR SELECT
+  USING (
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
+    )
+  );
+
+CREATE POLICY "Admins can manage announcements"
+  ON announcements
+  FOR INSERT
+  WITH CHECK (
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
+    )
+  );
+
+CREATE POLICY "Admins can update announcements"
+  ON announcements
+  FOR UPDATE
+  USING (
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
+    )
+  );
+
+CREATE POLICY "Admins can delete announcements"
+  ON announcements
+  FOR DELETE
+  USING (
+    (SELECT email FROM auth.users WHERE id = auth.uid()) IN (
+      'basarasystems@gmail.com',
+      'support@dshsupport.biz'
+    )
+  );
+```
+
+または、`scripts/update-announcements-rls.sql` ファイルの内容を実行してください。
 
 ### ステップ3: 実行確認
 
