@@ -186,8 +186,10 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       const autoNfts = cycleInfo?.auto_nft_count || 0
 
       // 1100ドルサイクル計算
-      const cyclesCompleted = Math.floor(totalProfit / 1100)
-      const remainingProfit = totalProfit % 1100
+      // マイナス利益の場合は0として扱う（フェーズ変更を防ぐ）
+      const effectiveProfit = Math.max(0, totalProfit)
+      const cyclesCompleted = Math.floor(effectiveProfit / 1100)
+      const remainingProfit = effectiveProfit % 1100
       const nextAction = cyclesCompleted % 2 === 0 ? 'usdt' : 'nft'
 
       setCycleData({
@@ -232,7 +234,9 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
   }
 
   const getNextMilestone = (currentProfit: number, nextAction: string) => {
-    const remaining = 1100 - currentProfit
+    // マイナス利益の場合は0として扱う
+    const effectiveProfit = Math.max(0, currentProfit)
+    const remaining = 1100 - effectiveProfit
     if (remaining <= 0) {
       return {
         target: 1100,
