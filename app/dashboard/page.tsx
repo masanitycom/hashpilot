@@ -12,7 +12,6 @@ import { ReferralTreeOptimized } from "@/components/referral-tree-optimized"
 import { DailyProfitChart } from "@/components/daily-profit-chart"
 import { DailyProfitCard } from "@/components/daily-profit-card"
 import { LatestProfitCard } from "@/components/latest-profit-card"
-import { MonthlyProfitCard } from "@/components/monthly-profit-card"
 import { CycleStatusCard } from "@/components/cycle-status-card"
 import { AutoPurchaseHistory } from "@/components/auto-purchase-history"
 import { PendingWithdrawalCard } from "@/components/pending-withdrawal-card"
@@ -693,13 +692,8 @@ export default function OptimizedDashboardPage() {
         {/* 最重要カード（即座に表示） */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
           <TotalProfitCard userId={userData?.user_id || ""} />
-          <MonthlyProfitCard userId={userData?.user_id || ""} />
-          <DailyProfitCard userId={userData?.user_id || ""} />
-        </div>
-
-        {/* 今月の累積利益セクション */}
-        <div className="mb-6">
           <MonthlyCumulativeProfitCard userId={userData?.user_id || ""} />
+          <DailyProfitCard userId={userData?.user_id || ""} />
         </div>
 
         {/* 遅延読み込みコンテンツ */}

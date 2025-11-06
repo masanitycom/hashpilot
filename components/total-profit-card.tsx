@@ -181,13 +181,13 @@ export function TotalProfitCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {/* 今月累計 */}
+        {/* 昨日の合計利益 */}
         <div className="text-center">
-          <div className="text-xs text-gray-400 mb-2">今月累計</div>
+          <div className="text-xs text-gray-400 mb-2">昨日の利益</div>
           <div className={`text-2xl font-bold mb-3 ${
-            (profitData?.monthlyTotal || 0) >= 0 ? "text-amber-400" : "text-red-400"
+            (profitData?.yesterdayTotal || 0) >= 0 ? "text-amber-400" : "text-red-400"
           }`}>
-            ${(profitData?.monthlyTotal || 0).toFixed(3)}
+            ${(profitData?.yesterdayTotal || 0).toFixed(3)}
           </div>
 
           {/* 内訳 */}
@@ -195,11 +195,11 @@ export function TotalProfitCard({
             <div className="text-xs space-y-1">
               <div className="flex justify-between">
                 <span className="text-green-400">個人:</span>
-                <span className="text-green-400">${profitData.breakdown.personalMonthly.toFixed(3)}</span>
+                <span className="text-green-400">${profitData.breakdown.personalYesterday.toFixed(3)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-purple-400">紹介:</span>
-                <span className="text-purple-400">${profitData.breakdown.referralMonthly.toFixed(3)}</span>
+                <span className="text-purple-400">${profitData.breakdown.referralYesterday.toFixed(3)}</span>
               </div>
             </div>
           )}
