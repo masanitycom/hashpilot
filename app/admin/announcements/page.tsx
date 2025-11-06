@@ -215,7 +215,7 @@ export default function AnnouncementsAdminPage() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Link href="/admin">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="bg-gray-800 text-white border-gray-600 hover:bg-gray-700">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 管理画面に戻る
               </Button>
