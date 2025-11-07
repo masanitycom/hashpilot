@@ -490,7 +490,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
           </div>
 
           <div>
-            <Label className="text-white mb-2 block">NFT返却先アドレス</Label>
+            <Label className="text-white mb-2 block">NFT返却先アドレス (BEP20)</Label>
             <div className="flex items-center gap-2">
               <Input
                 type="text"
