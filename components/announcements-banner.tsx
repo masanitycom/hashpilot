@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Megaphone, X } from "lucide-react"
+import { Megaphone } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
 interface Announcement {
@@ -16,16 +16,10 @@ interface Announcement {
 
 export function AnnouncementsBanner() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
-  const [dismissedIds, setDismissedIds] = useState<Set<number>>(new Set())
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchAnnouncements()
-    // ローカルストレージから非表示リストを読み込み
-    const dismissed = localStorage.getItem('dismissed_announcements')
-    if (dismissed) {
-      setDismissedIds(new Set(JSON.parse(dismissed)))
-    }
   }, [])
 
   const fetchAnnouncements = async () => {
@@ -48,12 +42,6 @@ export function AnnouncementsBanner() {
     }
   }
 
-  const dismissAnnouncement = (id: number) => {
-    const newDismissed = new Set(dismissedIds)
-    newDismissed.add(id)
-    setDismissedIds(newDismissed)
-    localStorage.setItem('dismissed_announcements', JSON.stringify([...newDismissed]))
-  }
 
   // URLをリンクに変換する関数
   const linkifyText = (text: string) => {
@@ -86,15 +74,13 @@ export function AnnouncementsBanner() {
     ))
   }
 
-  const visibleAnnouncements = announcements.filter(a => !dismissedIds.has(a.id))
-
-  if (loading || visibleAnnouncements.length === 0) {
+  if (loading || announcements.length === 0) {
     return null
   }
 
   return (
     <div className="space-y-3 mb-6">
-      {visibleAnnouncements.map((announcement) => (
+      {announcements.map((announcement) => (
         <Card
           key={announcement.id}
           className="bg-gradient-to-r from-blue-900 to-purple-900 border-blue-500"
@@ -103,18 +89,9 @@ export function AnnouncementsBanner() {
             <div className="flex items-start gap-3">
               <Megaphone className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-1" />
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="text-white font-bold text-lg">
-                    {announcement.title}
-                  </h3>
-                  <button
-                    onClick={() => dismissAnnouncement(announcement.id)}
-                    className="text-gray-300 hover:text-white transition-colors flex-shrink-0"
-                    aria-label="閉じる"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
+                <h3 className="text-white font-bold text-lg mb-2">
+                  {announcement.title}
+                </h3>
                 <div className="text-white text-base font-medium whitespace-pre-wrap break-words">
                   {formatContent(announcement.content)}
                 </div>
