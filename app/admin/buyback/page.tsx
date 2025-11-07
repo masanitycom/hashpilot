@@ -39,6 +39,7 @@ interface BuybackRequest {
   processed_by: string | null
   processed_at: string | null
   transaction_hash: string | null
+  transaction_id: string | null
   is_pegasus_exchange?: boolean
   pegasus_exchange_date?: string | null
   pegasus_withdrawal_unlock_date?: string | null
@@ -359,6 +360,7 @@ export default function AdminBuybackPage() {
                       <th className="text-center p-3 text-gray-400">手動NFT</th>
                       <th className="text-center p-3 text-gray-400">自動NFT</th>
                       <th className="text-left p-3 text-gray-400">送金先</th>
+                      <th className="text-left p-3 text-gray-400">NFT返却TxID</th>
                       <th className="text-right p-3 text-gray-400">買い取り額</th>
                       <th className="text-center p-3 text-gray-400">ステータス</th>
                       <th className="text-center p-3 text-gray-400">アクション</th>
@@ -427,6 +429,24 @@ export default function AdminBuybackPage() {
                               </div>
                             )}
                           </div>
+                        </td>
+                        <td className="p-3 text-left">
+                          {request.transaction_id ? (
+                            <button
+                              onClick={() => copyToClipboard(request.transaction_id!)}
+                              className="text-white hover:text-blue-400 transition-colors cursor-pointer text-left p-1 -ml-1 rounded hover:bg-gray-800"
+                              title="クリックでコピー"
+                            >
+                              <div className="flex items-center space-x-1">
+                                <span className="text-xs font-mono break-all">
+                                  {request.transaction_id.substring(0, 10)}...
+                                </span>
+                                <Copy className="h-3 w-3 flex-shrink-0" />
+                              </div>
+                            </button>
+                          ) : (
+                            <span className="text-gray-500 text-xs">未入力</span>
+                          )}
                         </td>
                         <td className="p-3 text-right">
                           <div className="text-yellow-400 font-bold">
@@ -514,8 +534,30 @@ export default function AdminBuybackPage() {
                   </div>
                 </div>
 
+                {selectedRequest.transaction_id && (
+                  <div>
+                    <div className="text-sm text-gray-400 mb-1">NFT返却トランザクションID</div>
+                    <div className="flex items-center space-x-2">
+                      <code className="bg-blue-900/20 border border-blue-700 p-2 rounded text-xs text-blue-300 flex-1 overflow-x-auto">
+                        {selectedRequest.transaction_id}
+                      </code>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => copyToClipboard(selectedRequest.transaction_id!)}
+                        className="text-gray-400 hover:text-white"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="text-xs text-blue-400 mt-1">
+                      ✓ ユーザーがNFTを返却したトランザクション
+                    </div>
+                  </div>
+                )}
+
                 <div>
-                  <Label htmlFor="txHash" className="text-white">トランザクションハッシュ</Label>
+                  <Label htmlFor="txHash" className="text-white">送金トランザクションハッシュ</Label>
                   <Input
                     id="txHash"
                     value={transactionHash}
