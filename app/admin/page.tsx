@@ -131,23 +131,19 @@ export default function AdminDashboard() {
         .select("amount_usd, users!inner(is_pegasus_exchange)")
         .eq("admin_approved", true)
 
-      // ペガサスユーザーを除外した総売上（手数料込み）
+      // 全ユーザーの総売上（手数料込み、ペガサス含む）
       const totalRevenue = revenueData?.reduce((sum, purchase: any) => {
-        if (!purchase.users?.is_pegasus_exchange) {
-          return sum + purchase.amount_usd
-        }
-        return sum
+        return sum + purchase.amount_usd
       }, 0) || 53900.0
 
-      // ペガサスユーザーを除外した総売上（手数料除く: amount_usd × 1000/1100）
+      // 全ユーザーの総売上（手数料除く = 日利計算の元本）
       const totalRevenueExcludingFee = revenueData?.reduce((sum, purchase: any) => {
-        if (!purchase.users?.is_pegasus_exchange) {
-          return sum + (purchase.amount_usd * (1000 / 1100))
-        }
-        return sum
+        // ペガサスも通常ユーザーも同じ計算: amount_usd × (1000/1100)
+        // これで1NFT = $1,000ベース（日利計算の元本）になる
+        return sum + (purchase.amount_usd * (1000 / 1100))
       }, 0) || 49000.0
 
-      // ペガサスユーザーの売上（1:1交換なのでそのまま）
+      // ペガサスユーザーの売上（内訳として表示）
       const pegasusRevenue = revenueData?.reduce((sum, purchase: any) => {
         if (purchase.users?.is_pegasus_exchange) {
           return sum + purchase.amount_usd
