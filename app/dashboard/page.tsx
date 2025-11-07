@@ -819,7 +819,12 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
         <CycleStatusCard userId={userData?.user_id || ""} />
         <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={currentInvestment} />
         {!userData?.is_operation_only && (
-          <ReferralProfitCard userId={userData?.user_id || ""} />
+          <ReferralProfitCard
+            userId={userData?.user_id || ""}
+            level1Investment={userStats?.level1_investment || 0}
+            level2Investment={userStats?.level2_investment || 0}
+            level3Investment={userStats?.level3_investment || 0}
+          />
         )}
       </div>
 
