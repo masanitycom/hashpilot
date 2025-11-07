@@ -467,24 +467,6 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                 </AlertDescription>
               </Alert>
             )}
-
-            {/* 買い取り申請ボタン（全て入力後のみ表示） */}
-            {transactionId && walletAddress && (manualCount > 0 || autoCount > 0) && (
-              <Button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    処理中...
-                  </>
-                ) : (
-                  "買い取り申請"
-                )}
-              </Button>
-            )}
           </div>
         </CardContent>
       </Card>
@@ -561,6 +543,24 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
               NFTを返却した際のトランザクションIDを入力してください
             </div>
           </div>
+
+          {/* 買い取り申請ボタン（全て入力後のみ表示） */}
+          {transactionId && walletAddress && (manualCount > 0 || autoCount > 0) && (
+            <Button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  処理中...
+                </>
+              ) : (
+                "買い取り申請"
+              )}
+            </Button>
+          )}
         </CardContent>
       </Card>
 
