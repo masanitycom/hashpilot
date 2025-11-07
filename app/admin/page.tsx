@@ -147,10 +147,10 @@ export default function AdminDashboard() {
         return sum
       }, 0) || 49000.0
 
-      // ペガサスユーザーの売上（手数料除く）
+      // ペガサスユーザーの売上（1:1交換なのでそのまま）
       const pegasusRevenue = revenueData?.reduce((sum, purchase: any) => {
         if (purchase.users?.is_pegasus_exchange) {
-          return sum + (purchase.amount_usd * (1000 / 1100))
+          return sum + purchase.amount_usd
         }
         return sum
       }, 0) || 0
