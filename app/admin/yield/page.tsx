@@ -332,8 +332,9 @@ export default function AdminYieldPage() {
   const handleEdit = (item: YieldHistory) => {
     // フォームに既存データをセット
     setDate(item.date)
-    setYieldRate((Number.parseFloat(item.yield_rate.toString()) * 100).toFixed(2))
-    setMarginRate((Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(2))
+    // データベースには既に%として保存されているので100倍しない
+    setYieldRate(Number.parseFloat(item.yield_rate.toString()).toFixed(2))
+    setMarginRate(Number.parseFloat(item.margin_rate.toString()).toFixed(2))
 
     // ページ上部のフォームにスクロール
     window.scrollTo({ top: 0, behavior: 'smooth' })
