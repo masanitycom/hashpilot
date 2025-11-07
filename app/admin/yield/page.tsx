@@ -994,17 +994,15 @@ export default function AdminYieldPage() {
                               <Edit className="h-3 w-3 mr-1" />
                               修正
                             </Button>
-                            {Number.parseFloat(item.margin_rate) * 100 > 100 && (
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleForceDelete(item.id, item.date)}
-                                className="h-8 px-2 bg-orange-600 hover:bg-orange-700"
-                              >
-                                <Trash2 className="h-3 w-3 mr-1" />
-                                修正
-                              </Button>
-                            )}
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleForceDelete(item.id, item.date)}
+                              className="h-8 px-2 bg-red-600 hover:bg-red-700 text-white"
+                            >
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              削除
+                            </Button>
                           </td>
                         </tr>
                       ))}
