@@ -505,6 +505,7 @@ export default function AdminUsersPage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-4 mb-2">
                         <Badge className="bg-blue-600">{user.user_id}</Badge>
+                        {user.is_pegasus_exchange && <Badge className="bg-yellow-600 text-white font-semibold">ペガサス</Badge>}
                         {user.coinw_uid && <Badge className="bg-green-600">CoinW: {user.coinw_uid}</Badge>}
                         {!user.is_active && <Badge variant="destructive">非アクティブ</Badge>}
                       </div>
@@ -555,7 +556,7 @@ export default function AdminUsersPage() {
                         {user.is_pegasus_exchange === true && (
                           <div className="col-span-full mt-2">
                             <div className="flex items-center space-x-2">
-                              <Badge className="bg-yellow-600 text-white">✓</Badge>
+                              <Badge className="bg-yellow-600 text-white">ペガサス交換ユーザー</Badge>
                               {user.first_purchase_date && (
                                 <span className="text-xs text-gray-500">
                                   交換日（購入日）: {new Date(user.first_purchase_date).toLocaleDateString('ja-JP')}
