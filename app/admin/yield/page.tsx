@@ -25,58 +25,45 @@ import {
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
-interface YieldHistory {
+interface YieldHistoryV2 {
   id: string
   date: string
-  yield_rate: number
-  margin_rate: number
-  user_rate: number
-  total_users: number
+  total_profit_amount: number
+  total_nft_count: number
+  profit_per_nft: number
+  cumulative_gross_profit: number
+  cumulative_fee: number
+  cumulative_net_profit: number
+  daily_pnl: number
+  distribution_dividend: number
+  distribution_affiliate: number
+  distribution_stock: number
+  is_month_end: boolean
   created_at: string
 }
 
 interface YieldStats {
   total_users: number
+  total_nft_count: number
   total_investment: number
   total_investment_pending: number
   pegasus_investment: number
-  avg_yield_rate: number
   total_distributed: number
+  latest_cumulative_net: number
 }
 
 export default function AdminYieldPage() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0])
-  const [yieldRate, setYieldRate] = useState("")
-  const [marginRate, setMarginRate] = useState("30")
+  const [totalProfitAmount, setTotalProfitAmount] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
-  const [history, setHistory] = useState<YieldHistory[]>([])
+  const [history, setHistory] = useState<YieldHistoryV2[]>([])
   const [stats, setStats] = useState<YieldStats | null>(null)
-  const [userRate, setUserRate] = useState(0)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [authLoading, setAuthLoading] = useState(true)
   const [error, setError] = useState("")
   const router = useRouter()
-
-  // ユーザー受取率を計算
-  useEffect(() => {
-    const yield_rate = Number.parseFloat(yieldRate) || 0
-    const margin_rate = Number.parseFloat(marginRate) || 0
-    
-    // プラス/マイナス共通: マージンを引いてから0.6を掛ける
-    let calculated_user_rate: number
-    if (yield_rate !== 0) {
-      // プラスもマイナスも同じ計算: (1 - マージン率) × 0.6
-      const after_margin = yield_rate * (1 - margin_rate / 100)
-      calculated_user_rate = after_margin * 0.6
-    } else {
-      // ゼロの場合
-      calculated_user_rate = 0
-    }
-    
-    setUserRate(calculated_user_rate)
-  }, [yieldRate, marginRate])
 
   useEffect(() => {
     checkAdminAccess()
@@ -167,7 +154,7 @@ export default function AdminYieldPage() {
   const fetchHistory = async () => {
     try {
       const { data, error } = await supabase
-        .from("daily_yield_log")
+        .from("daily_yield_log_v2")
         .select("*")
         .order("date", { ascending: false })
         .limit(10)
@@ -189,6 +176,21 @@ export default function AdminYieldPage() {
 
       if (usersError) throw usersError
 
+      // 運用中のNFT数を取得（ペガサス除く）
+      const today = new Date().toISOString().split('T')[0]
+      const { data: nftCountData, error: nftCountError } = await supabase
+        .from("nft_master")
+        .select("id, user_id, users!inner(operation_start_date, is_pegasus_exchange)")
+        .is("buyback_date", null)
+
+      if (nftCountError) throw nftCountError
+
+      const totalNftCount = nftCountData?.filter((nft: any) => {
+        const opStartDate = nft.users?.operation_start_date
+        const isPegasus = nft.users?.is_pegasus_exchange
+        return !isPegasus && opStartDate && opStartDate <= today
+      }).length || 0
+
       // 全承認済み購入とユーザー情報を取得（ペガサスフラグも含む）
       const { data: purchasesData, error: purchasesError } = await supabase
         .from("purchases")
@@ -196,20 +198,6 @@ export default function AdminYieldPage() {
         .eq("admin_approved", true)
 
       if (purchasesError) throw purchasesError
-
-      const today = new Date().toISOString().split('T')[0]
-
-      const { data: avgYieldData, error: avgYieldError } = await supabase.from("daily_yield_log").select("yield_rate")
-
-      if (avgYieldError) throw avgYieldError
-
-      const { data: totalProfitData, error: totalProfitError } = await supabase
-        .from("user_daily_profit")
-        .select("daily_profit")
-
-      if (totalProfitError) {
-        console.warn("user_daily_profit取得エラー:", totalProfitError)
-      }
 
       // 運用中と運用開始前に分けて集計（ペガサスユーザーは除外）
       const totalInvestmentActive = purchasesData?.reduce((sum, p: any) => {
@@ -239,20 +227,28 @@ export default function AdminYieldPage() {
         return sum
       }, 0) || 0
 
+      // 累積配布額（最新のN_d）
+      const { data: latestYield, error: latestYieldError } = await supabase
+        .from("daily_yield_log_v2")
+        .select("cumulative_net_profit")
+        .order("date", { ascending: false })
+        .limit(1)
+        .single()
+
+      if (latestYieldError && latestYieldError.code !== 'PGRST116') {
+        console.warn("latest yield取得エラー:", latestYieldError)
+      }
+
       const totalInvestment = totalInvestmentActive
-      const avgYieldRate =
-        avgYieldData?.reduce((sum, y) => sum + Number.parseFloat(y.yield_rate || "0"), 0) /
-          (avgYieldData?.length || 1) || 0
-      const totalDistributed =
-        totalProfitData?.reduce((sum, p) => sum + Number.parseFloat(p.daily_profit || "0"), 0) || 0
 
       setStats({
         total_users: usersData?.length || 0,
+        total_nft_count: totalNftCount,
         total_investment: totalInvestment,
         total_investment_pending: totalInvestmentPending,
         pegasus_investment: pegasusInvestment,
-        avg_yield_rate: avgYieldRate,  // 既にパーセント値なので100倍不要
-        total_distributed: totalDistributed,
+        total_distributed: latestYield?.cumulative_net_profit || 0,
+        latest_cumulative_net: latestYield?.cumulative_net_profit || 0,
       })
     } catch (error) {
       console.error("統計取得エラー:", error)
@@ -275,23 +271,23 @@ export default function AdminYieldPage() {
         throw new Error(`❌ 未来の日付（${date}）には設定できません。今日は ${today.toISOString().split('T')[0]} です。`)
       }
 
-      const yieldValue = Number.parseFloat(yieldRate)
-      const marginValue = Number.parseFloat(marginRate)
+      const profitAmount = Number.parseFloat(totalProfitAmount)
 
-      console.log('🚀 日利設定開始（RPC関数方式）:', {
+      if (isNaN(profitAmount)) {
+        throw new Error("有効な金額を入力してください")
+      }
+
+      console.log('🚀 日利設定開始（v2システム）:', {
         date,
-        yield_rate: yieldValue,
-        margin_rate: marginValue,
+        total_profit_amount: profitAmount,
         is_test_mode: false
       })
 
-      // RPC関数を呼び出す（パーセント値のまま送信）
-      const { data: rpcResult, error: rpcError } = await supabase.rpc('process_daily_yield_with_cycles', {
+      // RPC関数を呼び出す（v2システム）
+      const { data: rpcResult, error: rpcError } = await supabase.rpc('process_daily_yield_v2', {
         p_date: date,
-        p_yield_rate: yieldValue,
-        p_margin_rate: marginValue,
-        p_is_test_mode: false,
-        p_skip_validation: false
+        p_total_profit_amount: profitAmount,
+        p_is_test_mode: false
       })
 
       if (rpcError) {
@@ -303,18 +299,33 @@ export default function AdminYieldPage() {
 
       console.log('✅ RPC関数実行成功:', result)
 
+      if (result.status !== 'SUCCESS') {
+        throw new Error(result.message || '日利処理に失敗しました')
+      }
+
+      const details = result.details
+
       setMessage({
         type: "success",
         text: `✅ ${result.message || '日利設定完了'}
 
 処理詳細:
-• 日利配布: ${result.total_users || 0}名に総額$${(result.total_user_profit || 0).toFixed(2)}
-• 紹介報酬: ${result.referral_rewards_processed || 0}名に配布
-• NFT自動付与: ${result.auto_nft_purchases || 0}名に付与
-• サイクル更新: ${result.cycle_updates || 0}件`,
+• 入力: 全体利益 $${details.input.total_profit_amount.toFixed(2)}
+• NFT数: ${details.input.total_nft_count}個 → 1NFTあたり $${details.input.profit_per_nft.toFixed(4)}
+
+累積計算:
+• G_d (手数料前累積): $${details.cumulative.G_d.toFixed(2)}
+• F_d (手数料累積): $${details.cumulative.F_d.toFixed(2)}
+• N_d (顧客累積利益): $${details.cumulative.N_d.toFixed(2)}
+• ΔN_d (当日確定PNL): $${details.cumulative['ΔN_d'].toFixed(2)}
+
+分配:
+• 配当 (60%): $${details.distribution.dividend.toFixed(2)}
+• アフィリ (30%): $${details.distribution.affiliate.toFixed(2)}
+• ストック (10%): $${details.distribution.stock.toFixed(2)}`,
       })
 
-      setYieldRate("")
+      setTotalProfitAmount("")
       setDate(new Date().toISOString().split("T")[0])
       fetchHistory()
       fetchStats()
@@ -329,12 +340,10 @@ export default function AdminYieldPage() {
     }
   }
 
-  const handleEdit = (item: YieldHistory) => {
+  const handleEdit = (item: YieldHistoryV2) => {
     // フォームに既存データをセット
     setDate(item.date)
-    // データベースには既に%として保存されているので100倍しない
-    setYieldRate(Number.parseFloat(item.yield_rate.toString()).toFixed(2))
-    setMarginRate(Number.parseFloat(item.margin_rate.toString()).toFixed(2))
+    setTotalProfitAmount(item.total_profit_amount.toFixed(2))
 
     // ページ上部のフォームにスクロール
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -351,48 +360,20 @@ export default function AdminYieldPage() {
     }
 
     try {
-      // まず管理者用RPC関数を試す
-      try {
-        const { data: rpcResult, error: rpcError } = await supabase.rpc("admin_cancel_yield_posting", {
-          p_date: cancelDate
-        })
-
-        if (!rpcError && rpcResult && rpcResult.length > 0) {
-          const result = rpcResult[0]
-          if (result.success) {
-            setMessage({
-              type: "success",
-              text: result.message,
-            })
-
-            setTimeout(() => {
-              fetchHistory()
-              fetchStats()
-            }, 500)
-            return
-          }
-        }
-        
-        console.warn("RPC関数エラー、直接削除に切り替え:", rpcError)
-      } catch (rpcFallbackError) {
-        console.warn("RPC関数使用不可、直接削除に切り替え:", rpcFallbackError)
-      }
-
-      // RPC関数が失敗した場合の直接削除
       const { data: { user } } = await supabase.auth.getUser()
-      
+
       if (!user) {
         throw new Error("ユーザー認証が必要です")
       }
 
       // まず削除対象データの存在確認
       const { data: existingData, error: checkExistError } = await supabase
-        .from("daily_yield_log")
+        .from("daily_yield_log_v2")
         .select("*")
         .eq("date", cancelDate)
 
       console.log("削除対象データ:", existingData)
-      
+
       if (checkExistError) {
         throw new Error(`データ確認エラー: ${checkExistError.message}`)
       }
@@ -405,73 +386,50 @@ export default function AdminYieldPage() {
       const targetId = existingData[0].id
       console.log("削除対象ID:", targetId)
 
-      // IDで削除を試みる
-      const { data: deleteByIdData, error: deleteByIdError } = await supabase
-        .from("daily_yield_log")
+      // 関連データを削除
+      const { error: deleteYieldError } = await supabase
+        .from("daily_yield_log_v2")
         .delete()
         .eq("id", targetId)
-        .select()
 
-      if (deleteByIdError) {
-        console.error("ID削除エラー:", deleteByIdError)
-        
-        // 日付で削除を試みる
-        const { data: yieldData, error: deleteYieldError } = await supabase
-          .from("daily_yield_log")
-          .delete()
-          .eq("date", cancelDate)
-          .select()
-
-        if (deleteYieldError) {
-          console.error("daily_yield_log削除エラー:", deleteYieldError)
-          throw new Error(`日利設定の削除に失敗: ${deleteYieldError.message}`)
-        }
-        console.log("日付削除結果:", yieldData)
-      } else {
-        console.log("ID削除成功:", deleteByIdData)
+      if (deleteYieldError) {
+        console.error("daily_yield_log_v2削除エラー:", deleteYieldError)
+        throw new Error(`日利設定の削除に失敗: ${deleteYieldError.message}`)
       }
 
-      // user_daily_profitから削除
-      const { data: profitExisting, error: profitCheckError } = await supabase
-        .from("user_daily_profit")
-        .select("count")
-        .eq("date", cancelDate)
-
-      console.log("削除対象profit数:", profitExisting)
-
-      const { data: profitData, error: deleteProfitError } = await supabase
-        .from("user_daily_profit")
+      // nft_daily_profitから削除
+      const { error: deleteProfitError } = await supabase
+        .from("nft_daily_profit")
         .delete()
         .eq("date", cancelDate)
-        .select()
 
       if (deleteProfitError) {
-        console.warn("user_daily_profit削除エラー:", deleteProfitError)
-      } else {
-        console.log("削除されたprofit:", profitData?.length || 0)
+        console.warn("nft_daily_profit削除エラー:", deleteProfitError)
       }
 
-      // 削除後の再確認
-      const { data: remainingData, error: finalCheckError } = await supabase
-        .from("daily_yield_log")
-        .select("*")
+      // user_referral_profitから削除
+      const { error: deleteReferralError } = await supabase
+        .from("user_referral_profit")
+        .delete()
         .eq("date", cancelDate)
 
-      console.log("削除後の残存データ:", remainingData)
-
-      if (!finalCheckError && remainingData && remainingData.length > 0) {
-        // 3000%の異常値の場合は特別な処理
-        if (remainingData[0].margin_rate && parseFloat(remainingData[0].margin_rate) > 1) {
-          console.error("異常値データの削除に失敗。管理者に連絡してください。")
-          throw new Error("3000%の異常値データは手動削除が必要です。Supabaseダッシュボードから削除してください。")
-        }
-        throw new Error("データの削除に失敗しました。権限を確認してください。")
+      if (deleteReferralError) {
+        console.warn("user_referral_profit削除エラー:", deleteReferralError)
       }
 
-      const deletedCount = (deleteByIdData?.length || 0) + (profitData?.length || 0)
+      // stock_fundから削除
+      const { error: deleteStockError } = await supabase
+        .from("stock_fund")
+        .delete()
+        .eq("date", cancelDate)
+
+      if (deleteStockError) {
+        console.warn("stock_fund削除エラー:", deleteStockError)
+      }
+
       setMessage({
         type: "success",
-        text: `${cancelDate}の日利設定をキャンセルしました（${deletedCount}件削除）`,
+        text: `${cancelDate}の日利設定をキャンセルしました`,
       })
 
       // 少し待ってから再取得
@@ -479,139 +437,12 @@ export default function AdminYieldPage() {
         fetchHistory()
         fetchStats()
       }, 500)
-      
+
     } catch (error: any) {
       console.error("キャンセルエラー:", error)
       setMessage({
         type: "error",
         text: error.message || "キャンセルに失敗しました",
-      })
-    }
-  }
-
-  const handleForceDelete = async (recordId: string, targetDate: string) => {
-    const options = [
-      "削除（推奨）",
-      "正常値に修正（30%に変更）",
-      "キャンセル"
-    ]
-    
-    const choice = confirm(`ID:${recordId} (${targetDate}) の3000%異常値データをどうしますか？\n\n1. 削除を試行（推奨）\n2. 正常値（30%）に修正\n\nOK = 削除、キャンセル = 修正`)
-
-    try {
-      if (choice) {
-        // 削除を試行
-        setMessage({ type: "warning", text: "削除試行中..." })
-
-        console.log("削除開始 - ID:", recordId, "Date:", targetDate)
-
-        // すべての削除方法を同時に実行
-        const [deleteById, deleteByCondition, deleteProfits] = await Promise.all([
-          supabase.from("daily_yield_log").delete().eq("id", recordId),
-          supabase.from("daily_yield_log").delete().eq("date", targetDate).gt("margin_rate", 1),
-          supabase.from("user_daily_profit").delete().eq("date", targetDate)
-        ])
-
-        console.log("削除結果:", { deleteById, deleteByCondition, deleteProfits })
-
-        // 削除確認
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        const { data: checkData } = await supabase
-          .from("daily_yield_log")
-          .select("*")
-          .eq("date", targetDate)
-
-        console.log("削除後確認:", checkData)
-
-        if (checkData && checkData.length === 0) {
-          setMessage({
-            type: "success",
-            text: `${targetDate}の異常値データを削除しました`,
-          })
-        } else {
-          // 削除失敗時は自動的に修正を提案
-          if (confirm("削除に失敗しました。マージン率を30%に修正しますか？")) {
-            await handleFixAnomaly(recordId, targetDate)
-            return
-          } else {
-            setMessage({
-              type: "error",
-              text: "RLSポリシーにより削除が制限されています。Supabaseダッシュボードから手動削除してください。",
-            })
-          }
-        }
-      } else {
-        // 修正を選択
-        await handleFixAnomaly(recordId, targetDate)
-      }
-
-      // 履歴を再取得
-      setTimeout(() => {
-        fetchHistory()
-        fetchStats()
-      }, 1500)
-
-    } catch (error: any) {
-      console.error("処理エラー:", error)
-      setMessage({
-        type: "error",
-        text: `処理に失敗: ${error.message}`,
-      })
-    }
-  }
-
-  const handleFixAnomaly = async (recordId: string, targetDate: string) => {
-    try {
-      setMessage({ type: "warning", text: "異常値を修正中..." })
-
-      // 現在のデータを取得
-      const { data: currentData, error: fetchError } = await supabase
-        .from("daily_yield_log")
-        .select("*")
-        .eq("id", recordId)
-        .single()
-
-      if (fetchError || !currentData) {
-        throw new Error("データ取得に失敗しました")
-      }
-
-      // 正常なマージン率（30%）に修正
-      const fixedMarginRate = 0.30 // 30%
-      const fixedUserRate = currentData.yield_rate * (1 - fixedMarginRate) * 0.6
-
-      const { data: updateData, error: updateError } = await supabase
-        .from("daily_yield_log")
-        .update({
-          margin_rate: fixedMarginRate,
-          user_rate: fixedUserRate
-        })
-        .eq("id", recordId)
-        .select()
-
-      console.log("修正結果:", { updateData, updateError })
-
-      if (updateError) {
-        throw updateError
-      }
-
-      // user_daily_profitも再計算が必要な場合
-      const { error: recalcError } = await supabase.rpc("recalculate_daily_profit", {
-        p_date: targetDate
-      }).catch(() => {
-        console.log("再計算RPC関数が存在しない場合は手動で修正が必要")
-      })
-
-      setMessage({
-        type: "success",
-        text: `${targetDate}の異常値を修正しました（マージン率: 3000% → 30%）`,
-      })
-
-    } catch (error: any) {
-      console.error("修正エラー:", error)
-      setMessage({
-        type: "error",
-        text: `修正に失敗: ${error.message}`,
       })
     }
   }
@@ -657,7 +488,7 @@ export default function AdminYieldPage() {
             </Button>
             <h1 className="text-3xl font-bold text-white flex items-center">
               <Shield className="w-8 h-8 mr-3 text-blue-400" />
-              日利設定
+              日利設定（v2システム）
             </h1>
           </div>
           <div className="flex items-center gap-4">
@@ -668,22 +499,25 @@ export default function AdminYieldPage() {
           </div>
         </div>
 
-        {/* 本番モード固定 */}
-        <Card className="border-2 bg-gray-800 border-green-500">
+        {/* システム説明 */}
+        <Card className="border-2 bg-gray-800 border-blue-500">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-400">
-              <Shield className="h-5 w-5" />
-              本番モード（固定）
+            <CardTitle className="flex items-center gap-2 text-blue-400">
+              <InfoIcon className="h-5 w-5" />
+              新システムの仕様
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-green-300 space-y-2">
+            <div className="text-blue-300 space-y-2">
               <p className="font-medium">
-                ✅ 本番モード: ユーザーの実際の残高に影響します
+                ✅ 累積ベースの日利計算（金額入力方式）
               </p>
-              <p className="text-sm">
-                設定すると即座にユーザーの利益に反映されます
-              </p>
+              <ul className="text-sm space-y-1 ml-4">
+                <li>• 入力: 全体運用利益（金額）を入力</li>
+                <li>• 計算: 全NFTで均等割り → 30%手数料 → 60/30/10分配</li>
+                <li>• 累積: G_d（手数料前）, F_d（手数料）, N_d（顧客利益）, ΔN_d（日次PNL）</li>
+                <li>• ユーザーにはΔN_dのみ表示（手数料構造は非表示）</li>
+              </ul>
             </div>
           </CardContent>
         </Card>
@@ -701,6 +535,19 @@ export default function AdminYieldPage() {
               <CardContent>
                 <div className="text-2xl font-bold text-white">{stats.total_users}</div>
                 <p className="text-xs text-green-200">NFT承認済み</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-purple-900 to-purple-800 border-purple-700">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2 text-purple-100">
+                  <TrendingUpIcon className="h-4 w-4" />
+                  運用中NFT数
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-white">{stats.total_nft_count}個</div>
+                <p className="text-xs text-purple-200">ペガサス除く</p>
               </CardContent>
             </Card>
 
@@ -730,29 +577,16 @@ export default function AdminYieldPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-900 to-purple-800 border-purple-700">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2 text-purple-100">
-                  <TrendingUpIcon className="h-4 w-4" />
-                  平均日利率
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-white">{stats.avg_yield_rate.toFixed(2)}%</div>
-                <p className="text-xs text-purple-200">過去の平均</p>
-              </CardContent>
-            </Card>
-
             <Card className="bg-gradient-to-br from-yellow-900 to-yellow-800 border-yellow-700">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium flex items-center gap-2 text-yellow-100">
                   <DollarSignIcon className="h-4 w-4" />
-                  総配布利益
+                  顧客累積利益（N_d）
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-white">${stats.total_distributed.toLocaleString()}</div>
-                <p className="text-xs text-yellow-200">累積配布額</p>
+                <p className="text-xs text-yellow-200">最新の累積額</p>
               </CardContent>
             </Card>
           </div>
@@ -768,7 +602,7 @@ export default function AdminYieldPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="date" className="text-white">
                     日付
@@ -783,77 +617,72 @@ export default function AdminYieldPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="yieldRate" className="text-white">
-                    日利率 (%)
+                  <Label htmlFor="totalProfitAmount" className="text-white">
+                    全体運用利益 ($)
                   </Label>
                   <Input
-                    id="yieldRate"
+                    id="totalProfitAmount"
                     type="number"
-                    step="0.001"
-                    min="-10"
-                    max="100"
-                    value={yieldRate}
-                    onChange={(e) => setYieldRate(e.target.value)}
-                    placeholder="例: 1.500 (マイナス可)"
-                    required
-                    className="bg-gray-700 border-gray-600 text-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="marginRate" className="text-white">
-                    マージン率 (%)
-                  </Label>
-                  <Input
-                    id="marginRate"
-                    type="number"
-                    step="1"
-                    min="0"
-                    max="100"
-                    value={marginRate}
-                    onChange={(e) => {
-                      const value = Number.parseFloat(e.target.value) || 0
-                      if (value <= 100) {
-                        setMarginRate(e.target.value)
-                      } else {
-                        setMarginRate("100")
-                        setMessage({
-                          type: "warning",
-                          text: "マージン率は100%以下に設定してください"
-                        })
-                      }
-                    }}
-                    placeholder="例: 30"
+                    step="0.01"
+                    value={totalProfitAmount}
+                    onChange={(e) => setTotalProfitAmount(e.target.value)}
+                    placeholder="例: 500.00 (マイナス可: -100.00)"
                     required
                     className="bg-gray-700 border-gray-600 text-white"
                   />
                   <p className="text-xs text-gray-400">
-                    ⚠️ 通常は30%程度。100%を超える値は設定できません
+                    💡 全NFT合計の運用利益を入力（プラス/マイナス可）
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-white">ユーザー受取率</Label>
-                <div className={`text-2xl font-bold ${userRate >= 0 ? "text-green-400" : "text-red-400"}`}>
-                  {userRate.toFixed(3)}%
-                </div>
-                <p className="text-sm text-gray-400">
-                  {Number.parseFloat(yieldRate) !== 0
-                    ? `${yieldRate}% × (1 - ${marginRate}%/100) × 0.6 = ユーザー受取 ${userRate.toFixed(3)}%`
-                    : `0% = ユーザー受取 0%`
-                  }
-                </p>
-                {stats && yieldRate && (
-                  <div className="mt-2 p-3 bg-gray-700 rounded-lg">
-                    <p className="text-sm font-medium text-white">予想配布額:</p>
-                    <p className={`text-lg font-bold ${userRate >= 0 ? "text-green-400" : "text-red-400"}`}>
-                      ${((stats.total_investment * userRate) / 100).toLocaleString()}
-                    </p>
-                    <p className="text-xs text-gray-400">{stats.total_users}名のユーザーに配布予定</p>
-                  </div>
-                )}
-              </div>
+              {stats && totalProfitAmount && (
+                <div className="space-y-3 p-4 bg-gray-700 rounded-lg">
+                  <h3 className="text-sm font-medium text-white">計算プレビュー:</h3>
 
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs text-gray-400">1 NFTあたり利益</p>
+                      <p className="text-lg font-bold text-blue-400">
+                        ${(Number.parseFloat(totalProfitAmount) / stats.total_nft_count).toFixed(4)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400">対象NFT数</p>
+                      <p className="text-lg font-bold text-blue-400">
+                        {stats.total_nft_count}個
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-600 pt-3">
+                    <p className="text-xs text-gray-400 mb-2">分配予定（ΔN_d > 0の場合）:</p>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      <div className="bg-gray-800 p-2 rounded">
+                        <p className="text-gray-400">配当 (60%)</p>
+                        <p className="font-bold text-green-400">
+                          ${(Math.max(0, Number.parseFloat(totalProfitAmount)) * 0.6).toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="bg-gray-800 p-2 rounded">
+                        <p className="text-gray-400">アフィリ (30%)</p>
+                        <p className="font-bold text-yellow-400">
+                          ${(Math.max(0, Number.parseFloat(totalProfitAmount)) * 0.3).toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="bg-gray-800 p-2 rounded">
+                        <p className="text-gray-400">ストック (10%)</p>
+                        <p className="font-bold text-purple-400">
+                          ${(Math.max(0, Number.parseFloat(totalProfitAmount)) * 0.1).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                      ※ マイナスの場合は分配なし（$0）
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <Button
                 type="submit"
@@ -889,6 +718,7 @@ export default function AdminYieldPage() {
                         ? "text-yellow-300"
                         : "text-green-300"
                   }
+                  style={{ whiteSpace: 'pre-line' }}
                 >
                   {message.text}
                 </AlertDescription>
@@ -897,55 +727,21 @@ export default function AdminYieldPage() {
           </CardContent>
         </Card>
 
-        {/* 履歴・テスト結果 */}
+        {/* 履歴 */}
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-white">
-                設定履歴
+                設定履歴（v2システム）
               </CardTitle>
-              <div className="flex gap-2">
-                <Button 
-                  onClick={async () => {
-                    try {
-                      const { data, error } = await supabase
-                        .from("daily_yield_log")
-                        .select("*")
-                        .order("date", { ascending: false })
-                      
-                      console.log("全履歴データ:", data)
-                      if (error) console.error("履歴取得エラー:", error)
-                      
-                      const { count, error: countError } = await supabase
-                        .from("daily_yield_log")
-                        .select("*", { count: "exact", head: true })
-                      
-                      console.log("総レコード数:", count)
-                      if (countError) console.error("カウントエラー:", countError)
-                      
-                      setMessage({
-                        type: "success",
-                        text: `デバッグ情報をコンソールに出力しました（${count}件）`
-                      })
-                    } catch (err) {
-                      console.error("デバッグエラー:", err)
-                    }
-                  }}
-                  size="sm" 
-                  variant="outline"
-                  className="border-yellow-600 text-yellow-300"
-                >
-                  🔍 DB確認
-                </Button>
-                <Button
-                  onClick={fetchHistory}
-                  size="sm"
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  更新
-                </Button>
-              </div>
+              <Button
+                onClick={fetchHistory}
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                更新
+              </Button>
             </div>
           </CardHeader>
           <CardContent>
@@ -957,9 +753,12 @@ export default function AdminYieldPage() {
                     <thead>
                       <tr className="border-b border-gray-600">
                         <th className="text-left p-2">日付</th>
-                        <th className="text-left p-2">日利率</th>
-                        <th className="text-left p-2">マージン率</th>
-                        <th className="text-left p-2">ユーザー利率</th>
+                        <th className="text-left p-2">運用利益</th>
+                        <th className="text-left p-2">NFT数</th>
+                        <th className="text-left p-2">G_d</th>
+                        <th className="text-left p-2">F_d</th>
+                        <th className="text-left p-2">N_d</th>
+                        <th className="text-left p-2">ΔN_d</th>
                         <th className="text-left p-2">設定日時</th>
                         <th className="text-left p-2">操作</th>
                       </tr>
@@ -969,20 +768,18 @@ export default function AdminYieldPage() {
                         <tr key={item.id} className="border-b border-gray-700">
                           <td className="p-2">{new Date(item.date).toLocaleDateString("ja-JP")}</td>
                           <td
-                            className={`p-2 font-medium ${Number.parseFloat(item.yield_rate) >= 0 ? "text-green-400" : "text-red-400"}`}
+                            className={`p-2 font-medium ${item.total_profit_amount >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {Number.parseFloat(item.yield_rate).toFixed(3)}%
+                            ${item.total_profit_amount.toFixed(2)}
                           </td>
-                          <td className={`p-2 ${Number.parseFloat(item.margin_rate) > 100 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
-                            {Number.parseFloat(item.margin_rate).toFixed(0)}%
-                            {Number.parseFloat(item.margin_rate) > 100 && (
-                              <span className="ml-1 text-xs">⚠️異常値</span>
-                            )}
-                          </td>
+                          <td className="p-2">{item.total_nft_count}個</td>
+                          <td className="p-2 text-blue-400">${item.cumulative_gross_profit.toFixed(2)}</td>
+                          <td className="p-2 text-yellow-400">${item.cumulative_fee.toFixed(2)}</td>
+                          <td className="p-2 text-purple-400">${item.cumulative_net_profit.toFixed(2)}</td>
                           <td
-                            className={`p-2 font-medium ${Number.parseFloat(item.user_rate) >= 0 ? "text-green-400" : "text-red-400"}`}
+                            className={`p-2 font-bold ${item.daily_pnl >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(Number.parseFloat(item.user_rate) * 100).toFixed(3)}%
+                            ${item.daily_pnl.toFixed(2)}
                           </td>
                           <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
                           <td className="p-2 space-x-1">
@@ -998,7 +795,7 @@ export default function AdminYieldPage() {
                             <Button
                               variant="destructive"
                               size="sm"
-                              onClick={() => handleForceDelete(item.id, item.date)}
+                              onClick={() => handleCancel(item.date)}
                               className="h-8 px-2 bg-red-600 hover:bg-red-700 text-white"
                             >
                               <Trash2 className="h-3 w-3 mr-1" />
