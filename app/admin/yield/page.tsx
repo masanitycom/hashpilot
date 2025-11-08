@@ -314,10 +314,10 @@ export default function AdminYieldPage() {
 • NFT数: ${details.input.total_nft_count}個 → 1NFTあたり $${details.input.profit_per_nft.toFixed(4)}
 
 累積計算:
-• G_d (手数料前累積): $${details.cumulative.G_d.toFixed(2)}
-• F_d (手数料累積): $${details.cumulative.F_d.toFixed(2)}
-• N_d (顧客累積利益): $${details.cumulative.N_d.toFixed(2)}
-• ΔN_d (当日確定PNL): $${details.cumulative['ΔN_d'].toFixed(2)}
+• 累積利益（手数料前）: $${details.cumulative.G_d.toFixed(2)}
+• 累積手数料: $${details.cumulative.F_d.toFixed(2)}
+• 顧客累積利益: $${details.cumulative.N_d.toFixed(2)}
+• 当日利益: $${details.cumulative['ΔN_d'].toFixed(2)}
 
 分配:
 • 配当 (60%): $${details.distribution.dividend.toFixed(2)}
@@ -515,8 +515,8 @@ export default function AdminYieldPage() {
               <ul className="text-sm space-y-1 ml-4">
                 <li>• 入力: 全体運用利益（金額）を入力</li>
                 <li>• 計算: 全NFTで均等割り → 30%手数料 → 60/30/10分配</li>
-                <li>• 累積: G_d（手数料前）, F_d（手数料）, N_d（顧客利益）, ΔN_d（日次PNL）</li>
-                <li>• ユーザーにはΔN_dのみ表示（手数料構造は非表示）</li>
+                <li>• 累積管理: 累積利益（手数料前）、累積手数料、顧客累積利益、当日利益を記録</li>
+                <li>• ユーザーには当日利益のみ表示（手数料構造は非表示）</li>
               </ul>
             </div>
           </CardContent>
@@ -581,12 +581,12 @@ export default function AdminYieldPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium flex items-center gap-2 text-yellow-100">
                   <DollarSignIcon className="h-4 w-4" />
-                  顧客累積利益（N_d）
+                  顧客累積利益
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-white">${stats.total_distributed.toLocaleString()}</div>
-                <p className="text-xs text-yellow-200">最新の累積額</p>
+                <p className="text-xs text-yellow-200">最新の累積額（手数料引き後）</p>
               </CardContent>
             </Card>
           </div>
@@ -755,10 +755,10 @@ export default function AdminYieldPage() {
                         <th className="text-left p-2">日付</th>
                         <th className="text-left p-2">運用利益</th>
                         <th className="text-left p-2">NFT数</th>
-                        <th className="text-left p-2">G_d</th>
-                        <th className="text-left p-2">F_d</th>
-                        <th className="text-left p-2">N_d</th>
-                        <th className="text-left p-2">ΔN_d</th>
+                        <th className="text-left p-2">累積利益<br/><span className="text-xs text-gray-400">(手数料前)</span></th>
+                        <th className="text-left p-2">累積手数料</th>
+                        <th className="text-left p-2">顧客累積利益</th>
+                        <th className="text-left p-2">当日利益</th>
                         <th className="text-left p-2">設定日時</th>
                         <th className="text-left p-2">操作</th>
                       </tr>
