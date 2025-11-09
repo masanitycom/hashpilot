@@ -265,15 +265,22 @@ export default function AdminYieldPage() {
       }, 0) || 0
 
       // 累積配布額（最新のN_d）
-      const { data: latestYield, error: latestYieldError } = await supabase
-        .from("daily_yield_log_v2")
-        .select("cumulative_net_profit")
-        .order("date", { ascending: false })
-        .limit(1)
-        .single()
+      let latestCumulativeNet = 0
+      try {
+        const { data: latestYield, error: latestYieldError } = await supabase
+          .from("daily_yield_log_v2")
+          .select("cumulative_net_profit")
+          .order("date", { ascending: false })
+          .limit(1)
+          .single()
 
-      if (latestYieldError && latestYieldError.code !== 'PGRST116') {
-        console.warn("latest yield取得エラー:", latestYieldError)
+        if (latestYieldError && latestYieldError.code !== 'PGRST116') {
+          console.warn("latest yield取得エラー:", latestYieldError)
+        } else if (latestYield) {
+          latestCumulativeNet = latestYield.cumulative_net_profit || 0
+        }
+      } catch (error) {
+        console.warn("daily_yield_log_v2テーブル未作成、またはデータなし:", error)
       }
 
       const totalInvestment = totalInvestmentActive
@@ -285,8 +292,8 @@ export default function AdminYieldPage() {
         total_investment: totalInvestment,
         total_investment_pending: totalInvestmentPending,
         pegasus_investment: pegasusInvestment,
-        total_distributed: latestYield?.cumulative_net_profit || 0,
-        latest_cumulative_net: latestYield?.cumulative_net_profit || 0,
+        total_distributed: latestCumulativeNet,
+        latest_cumulative_net: latestCumulativeNet,
       })
     } catch (error) {
       console.error("統計取得エラー:", error)
@@ -674,7 +681,7 @@ export default function AdminYieldPage() {
                 </div>
               </div>
 
-              {stats && totalProfitAmount && (
+              {stats && totalProfitAmount && stats.total_nft_count > 0 && (
                 <div className="space-y-3 p-4 bg-gray-700 rounded-lg">
                   <h3 className="text-sm font-medium text-white">計算プレビュー:</h3>
 
@@ -710,7 +717,7 @@ export default function AdminYieldPage() {
                       <div>
                         <p className="text-xs text-gray-400">平均（1ユーザーあたり）</p>
                         <p className="text-lg font-bold text-green-400">
-                          ${(Number.parseFloat(totalProfitAmount) / stats.active_users_count).toFixed(2)}
+                          ${stats.active_users_count > 0 ? (Number.parseFloat(totalProfitAmount) / stats.active_users_count).toFixed(2) : '0.00'}
                         </p>
                       </div>
                     </div>
