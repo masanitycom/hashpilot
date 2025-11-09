@@ -191,20 +191,18 @@ export default function AdminYieldPage() {
         throw nftError
       }
 
-      // ユーザー情報を取得
-      const userIds = [...new Set(nftData?.map((nft: any) => nft.user_id) || [])]
-      const { data: usersInfo, error: usersInfoError } = await supabase
+      // 全ユーザー情報を取得（.in()でのUUIDエラーを回避）
+      const { data: allUsersInfo, error: allUsersInfoError } = await supabase
         .from("users")
         .select("id, operation_start_date, is_pegasus_exchange")
-        .in("id", userIds)
 
-      if (usersInfoError) {
-        console.error("ユーザー情報取得エラー:", usersInfoError)
-        throw usersInfoError
+      if (allUsersInfoError) {
+        console.error("全ユーザー情報取得エラー:", allUsersInfoError)
+        throw allUsersInfoError
       }
 
       // ユーザー情報をマップに変換
-      const userMap = new Map(usersInfo?.map((u: any) => [u.id, u]) || [])
+      const userMap = new Map(allUsersInfo?.map((u: any) => [u.id, u]) || [])
 
       // 運用中のNFTをフィルタリング
       const activeNfts = nftData?.filter((nft: any) => {
