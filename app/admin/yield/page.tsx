@@ -44,6 +44,7 @@ interface YieldHistoryV2 {
 
 interface YieldStats {
   total_users: number
+  active_users_count: number
   total_nft_count: number
   total_investment: number
   total_investment_pending: number
@@ -185,11 +186,17 @@ export default function AdminYieldPage() {
 
       if (nftCountError) throw nftCountError
 
-      const totalNftCount = nftCountData?.filter((nft: any) => {
+      const activeNfts = nftCountData?.filter((nft: any) => {
         const opStartDate = nft.users?.operation_start_date
         const isPegasus = nft.users?.is_pegasus_exchange
         return !isPegasus && opStartDate && opStartDate <= today
-      }).length || 0
+      }) || []
+
+      const totalNftCount = activeNfts.length
+
+      // 運用中NFTを持つユニークユーザー数を取得
+      const activeUserIds = new Set(activeNfts.map((nft: any) => nft.user_id))
+      const activeUsersCount = activeUserIds.size
 
       // 全承認済み購入とユーザー情報を取得（ペガサスフラグも含む）
       const { data: purchasesData, error: purchasesError } = await supabase
@@ -243,6 +250,7 @@ export default function AdminYieldPage() {
 
       setStats({
         total_users: usersData?.length || 0,
+        active_users_count: activeUsersCount,
         total_nft_count: totalNftCount,
         total_investment: totalInvestment,
         total_investment_pending: totalInvestmentPending,
@@ -640,11 +648,11 @@ export default function AdminYieldPage() {
                 <div className="space-y-3 p-4 bg-gray-700 rounded-lg">
                   <h3 className="text-sm font-medium text-white">計算プレビュー:</h3>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <p className="text-xs text-gray-400">1 NFTあたり利益</p>
-                      <p className="text-lg font-bold text-blue-400">
-                        ${(Number.parseFloat(totalProfitAmount) / stats.total_nft_count).toFixed(4)}
+                      <p className="text-xs text-gray-400">全体運用利益</p>
+                      <p className="text-lg font-bold text-white">
+                        ${Number.parseFloat(totalProfitAmount).toFixed(2)}
                       </p>
                     </div>
                     <div>
@@ -652,6 +660,29 @@ export default function AdminYieldPage() {
                       <p className="text-lg font-bold text-blue-400">
                         {stats.total_nft_count}個
                       </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400">配布対象ユーザー数</p>
+                      <p className="text-lg font-bold text-green-400">
+                        {stats.active_users_count}名
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-600 pt-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-gray-400">1 NFTあたり利益</p>
+                        <p className="text-lg font-bold text-blue-400">
+                          ${(Number.parseFloat(totalProfitAmount) / stats.total_nft_count).toFixed(4)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">平均（1ユーザーあたり）</p>
+                        <p className="text-lg font-bold text-green-400">
+                          ${(Number.parseFloat(totalProfitAmount) / stats.active_users_count).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
