@@ -180,49 +180,10 @@ export default function AdminYieldPage() {
       // 運用中のNFT数を取得（ペガサス除く）
       const today = new Date().toISOString().split('T')[0]
 
-      // NFTマスターデータを取得
-      const { data: nftData, error: nftError } = await supabase
-        .from("nft_master")
-        .select("id, user_id")
-        .is("buyback_date", null)
-
-      if (nftError) {
-        console.error("NFTデータ取得エラー:", nftError)
-        throw nftError
-      }
-
-      // 全ユーザー情報を取得（.in()でのUUIDエラーを回避）
-      const { data: allUsersInfo, error: allUsersInfoError } = await supabase
-        .from("users")
-        .select("id, operation_start_date, is_pegasus_exchange")
-
-      if (allUsersInfoError) {
-        console.error("全ユーザー情報取得エラー:", allUsersInfoError)
-        throw allUsersInfoError
-      }
-
-      // ユーザー情報をマップに変換
-      const userMap = new Map(allUsersInfo?.map((u: any) => [u.id, u]) || [])
-
-      // 運用中のNFTをフィルタリング
-      const activeNfts = nftData?.filter((nft: any) => {
-        const user = userMap.get(nft.user_id)
-        if (!user) return false
-        const opStartDate = user.operation_start_date
-        const isPegasus = user.is_pegasus_exchange
-        return !isPegasus && opStartDate && opStartDate <= today
-      }) || []
-
-      const totalNftCount = activeNfts.length
-
-      // 運用中NFTを持つユニークユーザー数を取得
-      const activeUserIds = new Set(activeNfts.map((nft: any) => nft.user_id))
-      const activeUsersCount = activeUserIds.size
-
-      // 全承認済み購入を取得
+      // 全承認済み購入とユーザー情報を取得（以前の動作していた方法）
       const { data: purchasesData, error: purchasesError } = await supabase
         .from("purchases")
-        .select("amount_usd, user_id")
+        .select("amount_usd, user_id, users!inner(operation_start_date, is_pegasus_exchange)")
         .eq("admin_approved", true)
 
       if (purchasesError) {
@@ -230,23 +191,28 @@ export default function AdminYieldPage() {
         throw purchasesError
       }
 
+      // 運用中のNFT数とユーザー数を計算
+      let totalNftCount = 0
+      const activeUserIdsSet = new Set()
+
       // 運用中と運用開始前に分けて集計（ペガサスユーザーは除外）
       const totalInvestmentActive = purchasesData?.reduce((sum, p: any) => {
-        const user = userMap.get(p.user_id)
-        if (!user) return sum
-        const opStartDate = user.operation_start_date
-        const isPegasus = user.is_pegasus_exchange
+        const opStartDate = p.users?.operation_start_date
+        const isPegasus = p.users?.is_pegasus_exchange
         if (!isPegasus && opStartDate && opStartDate <= today) {
+          const nftCount = Math.floor(p.amount_usd / 1100)
+          totalNftCount += nftCount
+          activeUserIdsSet.add(p.user_id)
           return sum + (p.amount_usd * (1000 / 1100))
         }
         return sum
       }, 0) || 0
 
+      const activeUsersCount = activeUserIdsSet.size
+
       const totalInvestmentPending = purchasesData?.reduce((sum, p: any) => {
-        const user = userMap.get(p.user_id)
-        if (!user) return sum
-        const opStartDate = user.operation_start_date
-        const isPegasus = user.is_pegasus_exchange
+        const opStartDate = p.users?.operation_start_date
+        const isPegasus = p.users?.is_pegasus_exchange
         if (!isPegasus && opStartDate && opStartDate > today) {
           return sum + (p.amount_usd * (1000 / 1100))
         }
@@ -255,9 +221,7 @@ export default function AdminYieldPage() {
 
       // ペガサスユーザーの投資額を別途集計
       const pegasusInvestment = purchasesData?.reduce((sum, p: any) => {
-        const user = userMap.get(p.user_id)
-        if (!user) return sum
-        const isPegasus = user.is_pegasus_exchange
+        const isPegasus = p.users?.is_pegasus_exchange
         if (isPegasus) {
           return sum + (p.amount_usd * (1000 / 1100))
         }
