@@ -756,4 +756,62 @@ GROUP BY u.user_id, u.email, u.has_approved_nft, u.operation_start_date;
 
 ---
 
+### V2日利システム完成（2025年11月13日）
+
+**背景:**
+- 旧システム: 利率％で入力 → `process_daily_yield_with_cycles`
+- V2システム: 金額＄で入力 → `process_daily_yield_v2`
+- **機能は全く同じ。入力方法だけ変更。**
+
+**実装内容:**
+1. ✅ **日利配布（個人利益）** - 60%を配当として配布
+   - マイナス日利も配布する
+   - `affiliate_cycle.available_usdt`に加算
+
+2. ✅ **紹介報酬計算・配布** - 30%を紹介報酬として配布
+   - Level 1（直接紹介）: 紹介者の日利 × 20%
+   - Level 2（間接紹介）: 紹介者の日利 × 10%
+   - Level 3（間接紹介）: 紹介者の日利 × 5%
+   - **プラスの時のみ計算**（マイナス時は紹介報酬なし）
+   - `user_referral_profit`テーブルに記録
+   - `affiliate_cycle.cum_usdt`と`available_usdt`に加算
+
+3. ✅ **NFT自動付与（サイクル機能）** - 10%をストック資金
+   - `cum_usdt >= $2,200`で自動的に1 NFT付与
+   - `nft_master`にレコード作成（`nft_type = 'auto'`）
+   - `purchases`にレコード作成
+   - `cum_usdt -= 1100`, `available_usdt += 1100`
+   - フェーズ更新（USDT / HOLD）
+
+**テスト結果（2025-11-11、+$1580.32）:**
+- 個人利益: 255ユーザーに$948.040配布
+- 紹介報酬: 135ユーザーに$296.345配布（649件の紹介関係）
+  - Level 1: 132ユーザー、$185.224（20%）
+  - Level 2: 90ユーザー、$89.735（10%）
+  - Level 3: 73ユーザー、$21.386（5%）
+- ストック資金: 255ユーザーに$158.450配布
+- NFT自動付与: 0件（cum_usdt >= $2,200のユーザーなし）
+
+**具体例（ユーザー7A9637）:**
+- 個人利益: $1.370（1 NFT所有）
+- 紹介報酬:
+  - Level 1: 2人から$0.548（各$0.274 = $1.370 × 20%）
+  - Level 2: 3人から$0.548
+  - Level 3: 2人から$0.138
+  - 合計: $1.234
+- affiliate_cycle更新:
+  - `cum_usdt`: $1.23（紹介報酬のみ）
+  - `available_usdt`: $2.60（個人利益 + 紹介報酬）
+
+**関連スクリプト:**
+- `scripts/FIX-process-daily-yield-v2-complete-clean.sql` - 完成版RPC関数
+- `scripts/TEST-process-daily-yield-v2-positive.sql` - テストスクリプト
+
+**管理画面での使用:**
+- `app/admin/yield/page.tsx`で既に`process_daily_yield_v2`を使用中
+- 入力: 日付、金額（＄）
+- 出力: 日利配布、紹介報酬、NFT自動付与の詳細
+
+---
+
 最終更新: 2025年11月13日
