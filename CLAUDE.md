@@ -587,4 +587,173 @@ NEXT_PUBLIC_SITE_URL=https://hashpilot-staging.vercel.app
 
 ---
 
-最終更新: 2025年11月2日
+## 🐛 重要なバグ修正履歴
+
+### 運用開始日未設定ユーザーへの誤配布（2025年11月13日修正）
+
+**問題:**
+- `process_daily_yield_with_cycles`関数で、`operation_start_date IS NULL`（運用開始日未設定）のユーザーも日利と紹介報酬の対象になっていた
+- 38名のユーザーが合計$340.902の日利を誤って受け取っていた（2025-11-05 ～ 2025-11-11）
+
+**原因:**
+```sql
+-- 修正前の条件（STEP 2とSTEP 3）
+WHERE u.has_approved_nft = true
+AND (u.operation_start_date IS NULL OR u.operation_start_date <= p_date)
+```
+
+**修正内容:**
+```sql
+-- 修正後の条件（STEP 2とSTEP 3）
+WHERE u.has_approved_nft = true
+AND u.operation_start_date IS NOT NULL
+AND u.operation_start_date <= p_date
+```
+
+**修正箇所:**
+- STEP 2: 個人利益計算（ユーザーごとに集計）
+- STEP 3: 紹介報酬計算（レベル1/2/3すべて）
+
+**関連スクリプト:**
+- `scripts/FIX-operation-start-date-null-users.sql` - 関数修正
+- `scripts/CHECK-incorrect-daily-profit-details.sql` - 誤配布データ確認
+- `scripts/DELETE-incorrect-daily-profit-CAREFUL.sql` - 誤配布データ削除（要慎重）
+
+**運用ルールの再確認:**
+> 運用開始日が設定されていて（IS NOT NULL）、かつその日付が経過している（<= 今日）ユーザーのみが日利と紹介報酬の対象
+
+---
+
+### マイナス日利が配布されない問題（2025年11月13日修正）
+
+**問題:**
+- `process_daily_yield_v2`関数がマイナス日利の時に配当を0にしていた
+- ユーザーダッシュボードにマイナス日利が表示されない
+- 透明性の問題（マイナスが隠されていた）
+
+**原因:**
+```sql
+-- 修正前のStep 9（行142-150）
+IF v_daily_pnl > 0 THEN
+  v_distribution_dividend := v_daily_pnl * 0.60;
+  v_distribution_affiliate := v_daily_pnl * 0.30;
+  v_distribution_stock := v_daily_pnl * 0.10;
+ELSE
+  v_distribution_dividend := 0;  -- ❌ マイナス時は0
+  v_distribution_affiliate := 0;
+  v_distribution_stock := 0;
+END IF;
+
+-- 修正前のStep 11-13
+IF v_distribution_dividend > 0 THEN  -- ❌ プラスのみ処理
+```
+
+**修正内容:**
+```sql
+-- 修正後のStep 9（マイナスでも計算）
+v_distribution_dividend := v_daily_pnl * 0.60;   -- ✅ 常に計算
+v_distribution_affiliate := v_daily_pnl * 0.30;
+v_distribution_stock := v_daily_pnl * 0.10;
+
+-- 修正後のStep 11-13
+IF v_distribution_dividend != 0 THEN  -- ✅ マイナスでも処理
+```
+
+**追加修正:**
+- `nm.status = 'active'` → `nm.buyback_date IS NULL`（テスト環境のテーブル構造に対応）
+
+**関連スクリプト:**
+- `scripts/FIX-process-daily-yield-v2-final.sql` - 関数修正（最終版）
+- `scripts/FIX-process-daily-yield-v2-minimal.sql` - 最小限版
+- `scripts/FIX-process-daily-yield-v2-negative.sql` - 詳細コメント版
+
+**テスト結果:**
+- ユーザー7A9637の11/12に-$0.912が正しく配布・表示された
+- ダッシュボードで「昨日の利益: $-0.912」と表示
+- 今月累計は$12.493で正しく計算
+
+**CLAUDE.md仕様の確認:**
+> **マイナス利益時**: マージン30%を引く（会社が負担する）
+>
+> ユーザー受取率 = 日利率 × (1 - 0.30) × 0.6
+> 例：-0.2% → -0.2% × 0.7 × 0.6 = -0.084%
+
+---
+
+### NFT承認フラグ未更新問題（2025年11月13日修正）
+
+**問題:**
+- 管理者がNFT購入を承認したが、`users.has_approved_nft`が`false`のまま
+- `users.operation_start_date`が`null`のまま
+- **81名のユーザーが日利を受け取れていなかった**
+
+**原因:**
+- NFT承認時に`nft_master`テーブルにはNFTが作成される
+- しかし`users`テーブルの以下のフラグが更新されていなかった：
+  - `has_approved_nft` → `false`のまま
+  - `operation_start_date` → `null`のまま
+- このため、NFTは存在するが日利が配布されない状態だった
+
+**影響:**
+- 81名のユーザー（合計89個のNFT）が日利を受け取れていなかった
+- `nft_master`にはNFTが存在するため、NFT数はカウントされる
+- でも`operation_start_date`が未設定のため、日利は0円
+
+**修正内容:**
+```sql
+-- has_approved_nftを一括更新（361件）
+UPDATE users
+SET has_approved_nft = true
+WHERE user_id IN (
+    SELECT DISTINCT u.user_id
+    FROM users u
+    INNER JOIN nft_master nm ON u.user_id = nm.user_id
+    INNER JOIN purchases p ON u.user_id = p.user_id
+    WHERE u.has_approved_nft = false
+        AND p.admin_approved = true
+        AND nm.buyback_date IS NULL
+);
+
+-- operation_start_dateを一括計算・更新（363件）
+UPDATE users u
+SET operation_start_date = calculate_operation_start_date(nm.acquired_date)
+FROM (
+    SELECT DISTINCT ON (user_id)
+        user_id,
+        acquired_date
+    FROM nft_master
+    WHERE buyback_date IS NULL
+    ORDER BY user_id, acquired_date ASC
+) nm
+WHERE u.user_id = nm.user_id
+    AND u.operation_start_date IS NULL;
+```
+
+**関連スクリプト:**
+- `scripts/FIX-has-approved-nft-bulk-update.sql` - 一括修正スクリプト
+
+**確認方法:**
+```sql
+-- 同じ問題がないか確認
+SELECT
+    u.user_id,
+    u.email,
+    u.has_approved_nft,
+    u.operation_start_date,
+    COUNT(nm.id) as nft_count
+FROM users u
+INNER JOIN nft_master nm ON u.user_id = nm.user_id
+INNER JOIN purchases p ON u.user_id = p.user_id
+WHERE u.has_approved_nft = false
+    AND p.admin_approved = true
+    AND nm.buyback_date IS NULL
+GROUP BY u.user_id, u.email, u.has_approved_nft, u.operation_start_date;
+```
+
+**今後の対策:**
+- NFT承認時に`has_approved_nft`と`operation_start_date`を自動更新する仕組みが必要
+- または管理画面のNFT承認処理を修正
+
+---
+
+最終更新: 2025年11月13日
