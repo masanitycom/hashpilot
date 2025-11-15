@@ -88,7 +88,7 @@ export function LatestProfitCard({ userId }: LatestProfitCardProps) {
     return (
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader className="pb-3">
-          <CardTitle className="text-gray-300 text-sm font-medium">最新の確定利益</CardTitle>
+          <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定運用報酬</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-2">
@@ -103,7 +103,7 @@ export function LatestProfitCard({ userId }: LatestProfitCardProps) {
   return (
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader className="pb-3">
-        <CardTitle className="text-gray-300 text-sm font-medium">最新の確定利益</CardTitle>
+        <CardTitle className="text-gray-300 text-sm font-medium">昨日の確定運用報酬</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-2">
