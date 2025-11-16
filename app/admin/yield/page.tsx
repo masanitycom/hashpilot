@@ -285,11 +285,11 @@ export default function AdminYieldPage() {
         is_test_mode: false
       })
 
-      // RPC関数を呼び出す（パーセント → 小数に変換）
+      // RPC関数を呼び出す（パーセント値のまま送信）
       const { data: rpcResult, error: rpcError } = await supabase.rpc('process_daily_yield_with_cycles', {
         p_date: date,
-        p_yield_rate: yieldValue / 100,  // 0.535% → 0.00535
-        p_margin_rate: marginValue / 100,  // 30% → 0.30
+        p_yield_rate: yieldValue,
+        p_margin_rate: marginValue,
         p_is_test_mode: false,
         p_skip_validation: false
       })
