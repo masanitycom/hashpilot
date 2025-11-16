@@ -276,7 +276,7 @@ export default function AdminYieldPage() {
       }
 
       const yieldValue = Number.parseFloat(yieldRate)
-      const marginValue = Number.parseFloat(marginRate)
+      const marginValue = Number.parseFloat(marginRate) / 100  // 30% → 0.30
 
       console.log('🚀 日利設定開始（RPC関数方式）:', {
         date,
@@ -285,7 +285,9 @@ export default function AdminYieldPage() {
         is_test_mode: false
       })
 
-      // RPC関数を呼び出す（パーセント値のまま送信）
+      // RPC関数を呼び出す
+      // yield_rate: パーセント値そのまま（0.535）
+      // margin_rate: 小数（0.30）
       const { data: rpcResult, error: rpcError } = await supabase.rpc('process_daily_yield_with_cycles', {
         p_date: date,
         p_yield_rate: yieldValue,
