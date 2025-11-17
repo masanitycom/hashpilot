@@ -32,153 +32,22 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
     }
   }, [userId])
 
-  // 月間紹介報酬を計算する関数
-  const calculateMonthlyReferralProfit = async (userId: string, monthStart: string, monthEnd: string): Promise<number> => {
-    try {
-      // 紹介報酬率の定義
-      const level1Rate = 0.20 // 20%
-      const level2Rate = 0.10 // 10%  
-      const level3Rate = 0.05 // 5%
-
-      // 各レベルの紹介者IDを取得
-      const level1UserIds = await getDirectReferrals(userId)
-      const level2UserIds = await getLevel2Referrals(userId)
-      const level3UserIds = await getLevel3Referrals(userId)
-
-      // 各レベルの紹介者の利益を取得
-      const level1Profits = await getReferralProfits(level1UserIds, monthStart, monthEnd)
-      const level2Profits = await getReferralProfits(level2UserIds, monthStart, monthEnd)
-      const level3Profits = await getReferralProfits(level3UserIds, monthStart, monthEnd)
-
-      // 紹介報酬計算
-      const level1Reward = level1Profits * level1Rate
-      const level2Reward = level2Profits * level2Rate
-      const level3Reward = level3Profits * level3Rate
-
-      return level1Reward + level2Reward + level3Reward
-    } catch (error) {
-      console.error('紹介報酬計算エラー:', error)
-      return 0
-    }
-  }
-
-  // 直接紹介者のIDを取得
-  const getDirectReferrals = async (userId: string): Promise<string[]> => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('user_id')
-      .eq('referrer_user_id', userId)
-
-    if (error) return []
-    return data.map(user => user.user_id)
-  }
-
-  // Level2紹介者のIDを取得
-  const getLevel2Referrals = async (userId: string): Promise<string[]> => {
-    const level1Ids = await getDirectReferrals(userId)
-    if (level1Ids.length === 0) return []
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('user_id')
-      .in('referrer_user_id', level1Ids)
-
-    if (error) return []
-    return data.map(user => user.user_id)
-  }
-
-  // Level3紹介者のIDを取得
-  const getLevel3Referrals = async (userId: string): Promise<string[]> => {
-    const level2Ids = await getLevel2Referrals(userId)
-    if (level2Ids.length === 0) return []
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('user_id')
-      .in('referrer_user_id', level2Ids)
-
-    if (error) return []
-    return data.map(user => user.user_id)
-  }
-
-  // 指定されたユーザーIDリストの利益を取得
-  const getReferralProfits = async (userIds: string[], monthStart: string, monthEnd: string): Promise<number> => {
-    if (userIds.length === 0) return 0
-
-    // NFT承認済みかつ実際に運用開始しているユーザーのみフィルター
-    const { data: usersData, error: usersError } = await supabase
-      .from('users')
-      .select(`
-        user_id, 
-        has_approved_nft,
-        affiliate_cycle!inner(total_nft_count)
-      `)
-      .in('user_id', userIds)
-      .eq('has_approved_nft', true)
-      .gt('affiliate_cycle.total_nft_count', 0)
-
-    if (usersError) return 0
-
-    const eligibleUserIds = usersData.map(user => user.user_id)
-    if (eligibleUserIds.length === 0) return 0
-
-    const { data, error } = await supabase
-      .from('user_daily_profit')
-      .select('daily_profit')
-      .in('user_id', eligibleUserIds)
-      .gte('date', monthStart)
-      .lte('date', monthEnd)
-
-    if (error) return 0
-    return data.reduce((sum, row) => sum + (parseFloat(row.daily_profit) || 0), 0)
-  }
-
   const fetchCycleData = async () => {
     try {
       setLoading(true)
       setError("")
 
-      // 現在の月の利益データを取得（個人利益）
-      const now = new Date()
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
-      const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
-
-      const { data: profitData, error: profitError } = await supabase
-        .from('user_daily_profit')
-        .select('daily_profit')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
-
-      if (profitError && profitError.code !== 'PGRST116') throw profitError
-
-      // affiliate_cycleから正確なNFTデータを取得
-      // タイムスタンプを追加してキャッシュを回避
-      const timestamp = Date.now()
+      // affiliate_cycleから累積紹介報酬とNFTデータを取得
       const { data: cycleInfo, error: cycleError } = await supabase
         .from('affiliate_cycle')
-        .select('total_nft_count, manual_nft_count, auto_nft_count, cum_usdt, available_usdt, last_updated')
+        .select('total_nft_count, manual_nft_count, auto_nft_count, cum_usdt, available_usdt')
         .eq('user_id', userId)
         .single()
 
       if (cycleError) throw cycleError
 
-      // デバッグ: 取得したデータをコンソールに出力
-      console.log('🔍 CycleStatusCard - Fetched data:', {
-        userId,
-        timestamp,
-        cycleInfo,
-        manual_nft_count: cycleInfo?.manual_nft_count,
-        auto_nft_count: cycleInfo?.auto_nft_count,
-        total_nft_count: cycleInfo?.total_nft_count
-      })
-
-      // 紹介報酬を計算（referral-profit-card.tsxと同じロジックを使用）
-      // ⭐ NFTサイクルは紹介報酬のみで計算（個人利益は含めない）
-      const referralProfit = await calculateMonthlyReferralProfit(userId, monthStart, monthEnd)
-
-      // サイクル計算用の利益（紹介報酬のみ）
-      const totalProfit = referralProfit
+      // ⭐ NFTサイクルは紹介報酬の全期間累積額（cum_usdt）で計算
+      const cumUsdt = cycleInfo?.cum_usdt || 0
 
       // affiliate_cycleから正確なNFT数を取得
       const totalNfts = cycleInfo?.total_nft_count || 0
@@ -187,18 +56,18 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       // 1100ドルサイクル計算
       // マイナス利益の場合は0として扱う（フェーズ変更を防ぐ）
-      const effectiveProfit = Math.max(0, totalProfit)
+      const effectiveProfit = Math.max(0, cumUsdt)
       const cyclesCompleted = Math.floor(effectiveProfit / 1100)
       const remainingProfit = effectiveProfit % 1100
       const nextAction = cyclesCompleted % 2 === 0 ? 'usdt' : 'nft'
 
       setCycleData({
         next_action: nextAction,
-        available_usdt: 0, // 一旦0で設定
+        available_usdt: cycleInfo?.available_usdt || 0,
         total_nft_count: manualNfts + autoNfts,
         auto_nft_count: autoNfts,
         manual_nft_count: manualNfts,
-        cum_profit: totalProfit,
+        cum_profit: cumUsdt,
         remaining_profit: remainingProfit
       })
     } catch (err: any) {
