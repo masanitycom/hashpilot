@@ -11,6 +11,8 @@ interface MonthlyCumulativeProfitCardProps {
 
 export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitCardProps) {
   const [monthlyProfit, setMonthlyProfit] = useState<number>(0)
+  const [personalProfit, setPersonalProfit] = useState<number>(0)
+  const [referralProfit, setReferralProfit] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [currentMonth, setCurrentMonth] = useState("")
@@ -72,6 +74,8 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
 
       // 合計
       const total = personalTotal + referralTotal
+      setPersonalProfit(personalTotal)
+      setReferralProfit(referralTotal)
       setMonthlyProfit(total)
 
     } catch (err: any) {
@@ -115,6 +119,22 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
           </div>
           <div className="text-xs text-gray-400 mt-2">
             {currentMonth}の累積利益
+          </div>
+
+          {/* 内訳表示 */}
+          <div className="mt-3 pt-3 border-t border-gray-700 space-y-1">
+            <div className="flex justify-between text-xs">
+              <span className="text-gray-400">個人利益:</span>
+              <span className={personalProfit >= 0 ? "text-green-400" : "text-red-400"}>
+                ${personalProfit.toFixed(3)}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-gray-400">紹介報酬:</span>
+              <span className={referralProfit >= 0 ? "text-green-400" : "text-red-400"}>
+                ${referralProfit.toFixed(3)}
+              </span>
+            </div>
           </div>
         </div>
 
