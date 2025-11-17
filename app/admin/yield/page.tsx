@@ -984,7 +984,7 @@ export default function AdminYieldPage() {
                           <td
                             className={`p-2 font-medium ${Number.parseFloat(item.user_rate) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(Number.parseFloat(item.user_rate) * 100).toFixed(3)}%
+                            {Number.parseFloat(item.user_rate).toFixed(3)}%
                           </td>
                           <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
                           <td className="p-2 space-x-1">
