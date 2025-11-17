@@ -185,7 +185,7 @@
             const totalRecords = data.length;
             const positiveCount = data.filter(d => d.user_rate > 0).length;
             const negativeCount = data.filter(d => d.user_rate < 0).length;
-            const totalUserRate = (data.reduce((sum, d) => sum + d.user_rate, 0) * 100).toFixed(3);
+            const totalUserRate = data.reduce((sum, d) => sum + d.user_rate, 0).toFixed(3);
 
             statsDiv.innerHTML = `
                 <div class="stat-card">
@@ -216,7 +216,7 @@
             table.style.display = 'table';
 
             tableBody.innerHTML = data.map(item => {
-                const userRateValue = (parseFloat(item.user_rate) * 100).toFixed(3);
+                const userRateValue = parseFloat(item.user_rate).toFixed(3);
                 const userRateClass = parseFloat(item.user_rate) > 0 ? 'positive-value' : 'negative-value';
                 const userRateSign = parseFloat(item.user_rate) > 0 ? '+' : '';
 
