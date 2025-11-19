@@ -319,19 +319,11 @@ export default function AdminYieldPage() {
         text: `✅ ${result.message || '日利設定完了'}
 
 処理詳細:
-• 入力: 全体利益 $${details.input.total_profit_amount.toFixed(2)}
-• NFT数: ${details.input.total_nft_count}個 → 1NFTあたり $${details.input.profit_per_nft.toFixed(4)}
-
-累積計算:
-• 累積利益（手数料前）: $${details.cumulative.G_d.toFixed(2)}
-• 累積手数料: $${details.cumulative.F_d.toFixed(2)}
-• 顧客累積利益: $${details.cumulative.N_d.toFixed(2)}
-• 当日利益: $${details.cumulative['ΔN_d'].toFixed(2)}
-
-分配:
-• 配当 (60%): $${details.distribution.dividend.toFixed(2)}
-• アフィリ (30%): $${details.distribution.affiliate.toFixed(2)}
-• ストック (10%): $${details.distribution.stock.toFixed(2)}`,
+• 日利配布: ${details.total_users}名に総額$${details.total_personal_profit.toFixed(2)}
+• 紹介報酬: $${details.total_referral_profit.toFixed(2)}
+• NFT自動付与: ${details.total_auto_nft}名に付与
+• 有効NFT数: ${details.total_nft_count}個
+• 1NFTあたり利益: $${details.profit_per_nft.toFixed(4)}`,
       })
 
       setTotalProfitAmount("")
