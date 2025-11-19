@@ -356,7 +356,7 @@ export default function AdminYieldPage() {
   }
 
   const handleCancel = async (cancelDate: string) => {
-    if (!confirm(`${cancelDate}の日利設定をキャンセルしますか？この操作は取り消せません。`)) {
+    if (!confirm(`${cancelDate}の日利設定を完全に削除しますか？\n\n⚠️ この操作は以下を全て削除します：\n• 個人利益配布\n• 紹介報酬配布\n• 自動付与されたNFT\n• affiliate_cycleの巻き戻し\n\nこの操作は取り消せません。`)) {
       return
     }
 
@@ -367,70 +367,38 @@ export default function AdminYieldPage() {
         throw new Error("ユーザー認証が必要です")
       }
 
-      // まず削除対象データの存在確認
-      const { data: existingData, error: checkExistError } = await supabase
-        .from("daily_yield_log_v2")
-        .select("*")
-        .eq("date", cancelDate)
+      console.log('🗑️ 日利削除開始（完全版）:', { date: cancelDate })
 
-      console.log("削除対象データ:", existingData)
+      // RPC関数で完全削除
+      const { data: deleteResult, error: deleteError } = await supabase.rpc('delete_daily_yield_v2', {
+        p_date: cancelDate
+      })
 
-      if (checkExistError) {
-        throw new Error(`データ確認エラー: ${checkExistError.message}`)
+      if (deleteError) {
+        console.error('❌ 削除RPC関数エラー:', deleteError)
+        throw new Error(`日利削除エラー: ${deleteError.message}`)
       }
 
-      if (!existingData || existingData.length === 0) {
-        throw new Error("削除対象のデータが見つかりません")
+      const result = Array.isArray(deleteResult) ? deleteResult[0] : deleteResult
+
+      console.log('✅ 削除完了:', result)
+
+      if (result.status !== 'SUCCESS') {
+        throw new Error(result.message || '日利削除に失敗しました')
       }
 
-      // IDを使用して削除を試みる
-      const targetId = existingData[0].id
-      console.log("削除対象ID:", targetId)
-
-      // 関連データを削除
-      const { error: deleteYieldError } = await supabase
-        .from("daily_yield_log_v2")
-        .delete()
-        .eq("id", targetId)
-
-      if (deleteYieldError) {
-        console.error("daily_yield_log_v2削除エラー:", deleteYieldError)
-        throw new Error(`日利設定の削除に失敗: ${deleteYieldError.message}`)
-      }
-
-      // nft_daily_profitから削除
-      const { error: deleteProfitError } = await supabase
-        .from("nft_daily_profit")
-        .delete()
-        .eq("date", cancelDate)
-
-      if (deleteProfitError) {
-        console.warn("nft_daily_profit削除エラー:", deleteProfitError)
-      }
-
-      // user_referral_profitから削除
-      const { error: deleteReferralError } = await supabase
-        .from("user_referral_profit")
-        .delete()
-        .eq("date", cancelDate)
-
-      if (deleteReferralError) {
-        console.warn("user_referral_profit削除エラー:", deleteReferralError)
-      }
-
-      // stock_fundから削除
-      const { error: deleteStockError } = await supabase
-        .from("stock_fund")
-        .delete()
-        .eq("date", cancelDate)
-
-      if (deleteStockError) {
-        console.warn("stock_fund削除エラー:", deleteStockError)
-      }
+      const details = result.details
 
       setMessage({
         type: "success",
-        text: `${cancelDate}の日利設定をキャンセルしました`,
+        text: `✅ ${result.message}
+
+削除詳細:
+• 個人利益: ${details.deleted_nft_daily_profit}件
+• 紹介報酬: ${details.deleted_referral_profit}件
+• 自動NFT: ${details.deleted_auto_nft}個
+• 自動購入: ${details.deleted_purchases}件
+• 影響ユーザー: ${details.affected_users}名`,
       })
 
       // 少し待ってから再取得
@@ -440,10 +408,10 @@ export default function AdminYieldPage() {
       }, 500)
 
     } catch (error: any) {
-      console.error("キャンセルエラー:", error)
+      console.error("❌ 削除エラー:", error)
       setMessage({
         type: "error",
-        text: error.message || "キャンセルに失敗しました",
+        text: error.message || "削除に失敗しました",
       })
     }
   }
