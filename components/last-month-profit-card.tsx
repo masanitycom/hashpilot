@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Calendar, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Calendar, Loader2, History } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import Link from "next/link"
 
 interface LastMonthProfitCardProps {
   userId: string
@@ -136,6 +138,16 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
                 ${referralProfit.toFixed(3)}
               </span>
             </div>
+          </div>
+
+          {/* 月別履歴リンク */}
+          <div className="mt-4">
+            <Link href="/profit-history">
+              <Button variant="outline" size="sm" className="w-full bg-gray-700 text-white border-gray-600 hover:bg-gray-600">
+                <History className="h-3 w-3 mr-2" />
+                月別履歴を見る
+              </Button>
+            </Link>
           </div>
         </div>
 
