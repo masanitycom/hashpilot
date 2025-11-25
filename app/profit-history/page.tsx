@@ -144,6 +144,19 @@ export default function ProfitHistoryPage() {
         return b.month - a.month
       })
 
+      // 当月のデータは紹介報酬を0にする（月末まで確定しないため）
+      const now = new Date()
+      const currentYear = now.getFullYear()
+      const currentMonth = now.getMonth() + 1
+
+      monthlyArray.forEach(monthData => {
+        if (monthData.year === currentYear && monthData.month === currentMonth) {
+          // 当月の場合、紹介報酬を0にして合計を再計算
+          monthData.referralProfit = 0
+          monthData.totalProfit = monthData.personalProfit
+        }
+      })
+
       setMonthlyProfits(monthlyArray)
 
     } catch (err: any) {
@@ -201,34 +214,45 @@ export default function ProfitHistoryPage() {
         {/* 月別利益一覧 */}
         {monthlyProfits.length > 0 && (
           <div className="space-y-4">
-            {monthlyProfits.map((profit) => (
-              <Card key={`${profit.year}-${profit.month}`} className="bg-gray-800 border-gray-700">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg font-medium text-gray-300">
-                    {profit.year}年{profit.month}月
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* 個人利益 */}
-                    <div className="bg-gray-900/50 rounded-lg p-4">
-                      <div className="text-xs text-gray-400 mb-2">個人利益</div>
-                      <div className={`text-2xl font-bold ${
-                        profit.personalProfit >= 0 ? "text-blue-400" : "text-red-400"
-                      }`}>
-                        ${profit.personalProfit.toFixed(3)}
-                      </div>
-                    </div>
+            {monthlyProfits.map((profit) => {
+              const now = new Date()
+              const isCurrentMonth = profit.year === now.getFullYear() && profit.month === (now.getMonth() + 1)
 
-                    {/* 紹介報酬 */}
-                    <div className="bg-gray-900/50 rounded-lg p-4">
-                      <div className="text-xs text-gray-400 mb-2">紹介報酬</div>
-                      <div className={`text-2xl font-bold ${
-                        profit.referralProfit >= 0 ? "text-green-400" : "text-red-400"
-                      }`}>
-                        ${profit.referralProfit.toFixed(3)}
+              return (
+                <Card key={`${profit.year}-${profit.month}`} className="bg-gray-800 border-gray-700">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg font-medium text-gray-300">
+                      {profit.year}年{profit.month}月
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* 個人利益 */}
+                      <div className="bg-gray-900/50 rounded-lg p-4">
+                        <div className="text-xs text-gray-400 mb-2">個人利益</div>
+                        <div className={`text-2xl font-bold ${
+                          profit.personalProfit >= 0 ? "text-blue-400" : "text-red-400"
+                        }`}>
+                          ${profit.personalProfit.toFixed(3)}
+                        </div>
                       </div>
-                    </div>
+
+                      {/* 紹介報酬 */}
+                      <div className="bg-gray-900/50 rounded-lg p-4">
+                        <div className="text-xs text-gray-400 mb-2">紹介報酬</div>
+                        {isCurrentMonth ? (
+                          <div className="text-center py-1">
+                            <div className="text-sm text-gray-400 mb-1">月末集計後に表示</div>
+                            <div className="text-2xl font-bold text-gray-500">--</div>
+                          </div>
+                        ) : (
+                          <div className={`text-2xl font-bold ${
+                            profit.referralProfit >= 0 ? "text-green-400" : "text-red-400"
+                          }`}>
+                            ${profit.referralProfit.toFixed(3)}
+                          </div>
+                        )}
+                      </div>
 
                     {/* 合計 */}
                     <div className="bg-gray-900/50 rounded-lg p-4">
