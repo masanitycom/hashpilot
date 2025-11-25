@@ -678,9 +678,9 @@ export default function OptimizedDashboardPage() {
 
         {/* 最重要カード（即座に表示） */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6">
+          <MonthlyCumulativeProfitCard userId={userData?.user_id || ""} />
           <DailyProfitCard userId={userData?.user_id || ""} />
           <LastMonthProfitCard userId={userData?.user_id || ""} />
-          <MonthlyCumulativeProfitCard userId={userData?.user_id || ""} />
         </div>
 
         {/* 遅延読み込みコンテンツ */}
