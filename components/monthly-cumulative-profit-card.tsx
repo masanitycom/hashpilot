@@ -72,10 +72,10 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
         ? referralProfitData.reduce((sum, record) => sum + parseFloat(record.profit_amount), 0)
         : 0
 
-      // 合計（紹介報酬は月末集計後のため個人利益のみ）
+      // 合計（紹介報酬は月末集計のため$0で表示）
       const total = personalTotal
       setPersonalProfit(personalTotal)
-      setReferralProfit(referralTotal)
+      setReferralProfit(0)  // 紹介報酬は$0表示
       setMonthlyProfit(total)
 
     } catch (err: any) {
@@ -131,8 +131,8 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-400">紹介報酬:</span>
-              <span className="text-gray-400 text-xs">
-                月末集計後に表示
+              <span className="text-gray-400">
+                $0.000
               </span>
             </div>
           </div>
