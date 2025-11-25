@@ -239,10 +239,6 @@ export function ReferralProfitCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="text-xs text-gray-400 mb-3">
-          Level1-3投資額: ${(totalLevel3Investment || 0).toLocaleString()}
-        </div>
-
         {/* 月末集計後に表示されます */}
         <div className="text-center py-8 space-y-3">
           <div className="text-sm text-muted-foreground mb-2">
@@ -256,9 +252,89 @@ export function ReferralProfitCard({
           </div>
         </div>
 
+        {/* 旧コード（コメントアウト）
+        <div className="text-xs text-gray-400 mb-3">
+          Level1-3投資額: ${(totalLevel3Investment || 0).toLocaleString()}
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-gray-400">昨日の報酬</span>
+            <div className="flex items-center space-x-1">
+              <TrendingUp className="h-3 w-3 text-purple-400" />
+              <span className={`text-sm font-semibold ${
+                (profitData?.yesterdayProfit || 0) >= 0 ? "text-purple-400" : "text-red-400"
+              }`}>
+                ${(profitData?.yesterdayProfit || 0).toFixed(3)}
+              </span>
+            </div>
+          </div>
+
+          {profitData && totalLevel3Investment > 0 && (
+            <div className="text-xs space-y-1 ml-4 opacity-75">
+              {level1Investment > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-green-400">L1(20%):</span>
+                  <span className="text-green-400">${profitData.breakdown.level1Yesterday.toFixed(3)}</span>
+                </div>
+              )}
+              {level2Investment > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-blue-400">L2(10%):</span>
+                  <span className="text-blue-400">${profitData.breakdown.level2Yesterday.toFixed(3)}</span>
+                </div>
+              )}
+              {level3Investment > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-purple-400">L3(5%):</span>
+                  <span className="text-purple-400">${profitData.breakdown.level3Yesterday.toFixed(3)}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-2 border-t border-gray-600 pt-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-gray-400">今月累計</span>
+            <div className="flex items-center space-x-1">
+              <TrendingUp className="h-3 w-3 text-orange-400" />
+              <span className={`text-lg font-bold ${
+                (profitData?.monthlyProfit || 0) >= 0 ? "text-orange-400" : "text-red-400"
+              }`}>
+                ${(profitData?.monthlyProfit || 0).toFixed(3)}
+              </span>
+            </div>
+          </div>
+
+          {profitData && totalLevel3Investment > 0 && (
+            <div className="text-xs space-y-1 ml-4 opacity-75">
+              {level1Investment > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-green-400">L1(20%):</span>
+                  <span className="text-green-400">${profitData.breakdown.level1Monthly.toFixed(3)}</span>
+                </div>
+              )}
+              {level2Investment > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-blue-400">L2(10%):</span>
+                  <span className="text-blue-400">${profitData.breakdown.level2Monthly.toFixed(3)}</span>
+                </div>
+              )}
+              {level3Investment > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-purple-400">L3(5%):</span>
+                  <span className="text-purple-400">${profitData.breakdown.level3Monthly.toFixed(3)}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         {error && (
           <p className="text-xs text-red-400 mt-2">{error}</p>
         )}
+        */}
       </CardContent>
     </Card>
   )
