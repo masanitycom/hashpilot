@@ -48,18 +48,11 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
         return
       }
 
-      // 個人利益データの取得
+      // 個人利益データの取得（yield_rateはビューから取得）
       const { data: dailyProfitData, error } = await supabase
         .from('user_daily_profit')
         .select('date, daily_profit, base_amount, phase, user_rate, yield_rate')
         .eq('user_id', userId)
-        .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
-        .order('date', { ascending: true })
-
-      // 管理画面設定値を取得（正確な日利率用）
-      const { data: yieldLogData, error: yieldError } = await supabase
-        .from('daily_yield_log')
-        .select('date, yield_rate, user_rate, margin_rate')
         .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
         .order('date', { ascending: true })
       
@@ -88,22 +81,16 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
       }
 
       if (dailyProfitData && dailyProfitData.length > 0) {
-        // 管理画面設定値をマップ化
-        const yieldLogMap = new Map()
-        if (yieldLogData) {
-          yieldLogData.forEach(log => {
-            yieldLogMap.set(log.date, log.user_rate)
-          })
-        }
+        console.log('📊 Daily profit data sample:', dailyProfitData.slice(-5))
 
         // 実際のデータを使用
         const formattedData: DailyPNLData[] = dailyProfitData.map((item: DailyProfitRecord) => {
           const date = new Date(item.date)
           const dateStr = item.date
-          
-          // 管理画面設定値から正確な日利率を取得
-          const actualYieldRate = yieldLogMap.get(dateStr) || item.user_rate || 0
-          
+
+          // user_daily_profitビューからyield_rateを取得（既に小数形式）
+          const actualYieldRate = item.yield_rate || 0
+
           return {
             date: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
             pnl: parseFloat(item.daily_profit) || 0,
@@ -111,6 +98,8 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
             formattedDate: date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
           }
         })
+
+        console.log('📈 Formatted chart data sample:', formattedData.slice(-5))
         
         setData(formattedData)
         
