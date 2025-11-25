@@ -211,8 +211,11 @@ BEGIN
   END IF;
 
   -- ========================================
-  -- 紹介報酬を計算・配布（プラスの時のみ、ペガサス交換ユーザーも含む）
+  -- 紹介報酬を計算・配布（削除: 月次計算に変更 2025-11-23）
   -- ========================================
+  -- 注意: 紹介報酬は月末に process_monthly_referral_profit() で計算します
+  --       日次では個人利益のみ配布
+  /*
   IF v_distribution_dividend > 0 THEN
     FOR v_user_record IN
       SELECT DISTINCT u.user_id
@@ -357,6 +360,7 @@ BEGIN
       END LOOP;
     END LOOP;
   END IF;
+  */
 
   -- ========================================
   -- NFT自動付与（cum_usdt >= $2,200、プラス日利の時のみ）
