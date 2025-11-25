@@ -87,14 +87,13 @@ export function TotalProfitCard({
       const personalMonthly = monthlyData ? 
         monthlyData.reduce((sum, record) => sum + record.daily_profit, 0) : 0
 
-      // 紹介報酬は別途計算（ReferralProfitCardと同じロジック）
-      const referralProfits = await calculateReferralProfits(userId, monthStart, monthEnd, yesterdayStr)
-      const referralYesterday = referralProfits.yesterday
-      const referralMonthly = referralProfits.monthly
+      // 紹介報酬は月末集計のため$0
+      const referralYesterday = 0
+      const referralMonthly = 0
 
-      // 合計を計算
-      const yesterdayTotal = personalYesterday + referralYesterday
-      const monthlyTotal = personalMonthly + referralMonthly
+      // 合計を計算（個人利益のみ）
+      const yesterdayTotal = personalYesterday
+      const monthlyTotal = personalMonthly
 
       setProfitData({
         yesterdayTotal,
