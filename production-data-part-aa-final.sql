@@ -1,0 +1,3001 @@
+SET session_replication_role = replica;
+SET session_replication_role = replica;
+
+pg_dump: warning: there are circular foreign-key constraints on this table:
+pg_dump: detail: users
+pg_dump: hint: You might not be able to restore the dump without using --disable-triggers or temporarily dropping the constraints.
+pg_dump: hint: Consider using a full dump instead of a --data-only dump to avoid this problem.
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 17.4
+-- Dumped by pg_dump version 17.4
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Data for Name: admins; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."admins" ("id", "user_id", "email", "role", "created_at", "is_active") VALUES
+	('381f27ea-187a-4e53-bfbc-e160feb0630f', 'ADMIN3', 'masataka.tak@gmail.com', 'super_admin', '2025-06-17 14:21:23.84339+00', true),
+	('13716eac-5520-4341-bbd8-2d2dbcf4550e', 'ADMIN2', 'basarasystems@gmail.com', 'admin', '2025-06-17 12:44:55.331184+00', true),
+	('c1afe8d9-5f3d-4cc6-9210-709082a5dcfa', '14375a3b-1235-4721-92a7-c1df33b22edd', 'support@dshsupport.biz', 'admin', '2025-07-11 06:42:10.726502+00', true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."users" ("id", "user_id", "email", "full_name", "referrer_user_id", "created_at", "updated_at", "is_active", "total_purchases", "total_referral_earnings", "has_approved_nft", "first_nft_approved_at", "coinw_uid", "reward_address_bep20", "nft_address", "nft_sent", "nft_sent_at", "nft_sent_by", "nft_receive_address", "coinw_uid_for_withdrawal", "nft_distributed", "nft_distributed_at", "nft_distributed_by", "nft_distribution_notes", "is_pegasus_exchange", "pegasus_exchange_date", "pegasus_withdrawal_unlock_date", "is_active_investor", "operation_start_date", "is_operation_only", "email_blacklisted") VALUES
+	('0028dc69-4bb4-4233-88ad-f40daab5adc8', '57CBEB', 'goldbenchan@gmail.com', NULL, '230F31', '2025-10-31 10:49:07.435193+00', '2025-10-31 10:49:07.435193+00', true, 0.00, 0.00, false, NULL, '26399257', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('8921022f-1b34-47e2-8171-94212085c86f', '80AADD', 'kiyokowinter4@gmail.com', NULL, '938133', '2025-07-10 06:31:27.391962+00', '2025-07-10 06:31:27.391962+00', true, 0.00, 0.00, false, NULL, '3892210', '', NULL, false, NULL, NULL, '0xC3B3228EDA7B986CB1131AC0d7E7A8D8400Fd1b1', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('47c9802b-fa8d-4324-8c89-372bf8338f76', 'ECC482', 'tatsurou113@gmail.com', NULL, '917123', '2025-10-27 04:55:32.996348+00', '2025-11-04 06:26:54.886+00', true, 1100.00, 0.00, false, NULL, '26391495', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-11-15', false, false),
+	('a5c9a0ba-7d91-412b-9f23-1951048f7a97', 'C58662', '1014cho46@gmail.com', NULL, '55F766', '2025-10-12 05:30:16.789748+00', '2025-10-14 03:38:42.167773+00', true, 1100.00, 0.00, false, NULL, '26357927', NULL, NULL, false, NULL, NULL, '0x658A397642E76850659337FdD7d3b267e68Ce33a', NULL, true, '2025-10-14 03:38:42.167773+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('15cb7ce2-a770-49a9-9eea-db2a25233394', '59165B', 'tatsuta@b-faith.com', NULL, '07712F', '2025-10-09 08:02:10.562628+00', '2025-10-10 05:52:55.149116+00', true, 3300.00, 0.00, false, NULL, '26351557', NULL, NULL, false, NULL, NULL, '0x46A0eeFbf90f7Eb476BE0a799Bda24Ae2e7897E2', NULL, true, '2025-10-10 05:52:55.149116+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('15b4acc6-c8f2-4871-aa85-f7f705e73f3d', '413DC0', 'officey.d.m@gmail.com', NULL, '7A49CB', '2025-11-05 03:20:58.655742+00', '2025-11-05 03:20:58.655742+00', true, 0.00, 0.00, false, NULL, '26407291', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('b1851c1f-9be8-428e-8728-461304379456', '8B7A03', 'aihana8pu.xx@gmail.com', NULL, 'F54652', '2025-10-21 12:21:03.256995+00', '2025-11-05 05:11:44.038+00', true, 0.00, 0.00, false, NULL, '26379383', NULL, NULL, false, NULL, NULL, '0xdB533405857b3d5669D23d9d9BA57dC56fA63955', NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('3354ddfb-944a-4eb4-81b6-b19084de4558', '6764B9', 'hashpi560@gmail.com', NULL, 'B43A3D', '2025-11-05 10:28:14.201697+00', '2025-11-05 10:29:59.250028+00', true, 1100.00, 0.00, false, NULL, '3895160', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('a0992b04-24e9-4863-98d4-dce7859a0743', 'DC7A30', 'y.kazuki.1993@gmail.com', NULL, '230F31', '2025-10-08 07:48:53.661131+00', '2025-10-08 07:48:53.661131+00', true, 0.00, 0.00, false, NULL, '26349542', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('30c51c28-c7b1-43d2-b1d0-a7c6ffdaaeb3', 'A25154', 'aloha.friday1208@gmail.com', NULL, 'EC0A4D', '2025-07-09 12:25:18.65776+00', '2025-07-09 12:25:18.65776+00', true, 0.00, 0.00, false, NULL, '3885962', '0xB66B985152235539b64cAf882546C760Bce3DE49', NULL, false, NULL, NULL, '0xd3eE42bA01C8095D4dfb053cCc7a951c08d85a7C', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('e44f79c8-923a-4331-8970-70718a86b5cf', '04AC1A', 'crosstoyouz1@gmail.com', NULL, '80AADD', '2025-07-10 06:50:47.277459+00', '2025-07-10 06:50:47.277459+00', true, 0.00, 0.00, false, NULL, '3896595', '', NULL, false, NULL, NULL, '0x33CC57bD51c3aB685D12515a5180da8e754Cd1De', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('d6d825a5-4901-42f2-a04e-8c60e85736a7', '4918B8', 'kinuko39369@gmail.com', NULL, '2A973B', '2025-07-10 07:12:02.765713+00', '2025-07-10 07:12:02.765713+00', true, 0.00, 0.00, false, NULL, '3896538', '', NULL, false, NULL, NULL, '0x834be2f6fd10003428b7c0bfFae936c0Fa7cF8F8', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('97dfeac9-56c9-491f-9918-815e3001ce34', '3D9C65', 'my0503ex@gmail.com', NULL, 'A25154', '2025-07-10 11:32:25.170334+00', '2025-07-10 11:32:25.170334+00', true, 0.00, 0.00, false, NULL, '3887052', '0x101b11C129F2B951F4c5bF3ACce6b8075b8b868c', NULL, false, NULL, NULL, '0xF21ba83707024a53d0fe5b4B3D5f822cb090038A', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('14375a3b-1235-4721-92a7-c1df33b22edd', '7F85EE', 'support@dshsupport.biz', NULL, NULL, '2025-07-11 06:36:31.667702+00', '2025-07-11 06:36:31.667702+00', true, 0.00, 0.00, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('468e241f-0995-4a4a-b82d-7305b2955ed9', 'EFD820', 'apprecieight@gmail.com', NULL, '2443DD', '2025-07-11 11:35:20.362561+00', '2025-07-11 11:35:20.362561+00', true, 0.00, 0.00, false, NULL, '3899220', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('6a09a105-50d2-4857-a7f2-e96b250ad540', '19BB41', 'holiday6186@gmail.com', NULL, '2D85C2', '2025-07-09 14:47:50.646047+00', '2025-07-09 14:47:50.646047+00', true, 0.00, 0.00, false, NULL, '3885346', '0xA96F8b9FDE4DC2935e3dd108f5992Fcf4FF405C4', NULL, false, NULL, NULL, '0x1c903946a773F3a63866e6D1d6034d80E65548E5', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('46d8a5c0-a655-4e03-a73b-f87389ae0f15', '797609', 'sanaomanko37@gmail.com', NULL, '3B1E5E', '2025-07-04 10:36:59.148521+00', '2025-10-15 07:03:57.05+00', true, 1100.00, 0.00, true, '2025-07-04 10:39:09.864763+00', '3773831', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('c7876516-6c56-4686-bea5-664da9916304', 'AAE84C', 'iumiko.y@gmail.com', NULL, 'FFD473', '2025-07-11 05:50:57.938643+00', '2025-07-11 05:50:57.938643+00', true, 0.00, 0.00, false, NULL, '3898727', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7c4a0714-71b6-4560-a600-fd7de392fdcb', '2D85C2', 'shushu.betty6186@gmail.com', NULL, 'EC0A4D', '2025-07-09 14:41:22.858309+00', '2025-07-09 14:41:22.858309+00', true, 0.00, 0.00, false, NULL, '3885346', '0xA96F8b9FDE4DC2935e3dd108f5992Fcf4FF405C4', NULL, false, NULL, NULL, '0xDE2fD1b32142AFAefff5307D2F983b6EE5130368', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('05c7ea00-e42f-47a6-8e47-ec28d141b9e3', 'AEE591', 'ririri.717@gmail.com', NULL, '5A708D', '2025-07-15 12:33:08.061409+00', '2025-07-15 12:33:08.061409+00', true, 0.00, 0.00, false, NULL, '3905612', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('9a5feed1-402d-497f-a587-846932fe226e', '1401D2', 'masanxmining@gmail.com', NULL, '07712F', '2025-07-22 13:31:53.285071+00', '2025-07-22 13:31:53.285071+00', true, 0.00, 0.00, false, NULL, '3930110', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('f6fd0be9-ebc7-4347-a4dc-216b00c3472f', '38A16C', 'milkyway6310@gmail.com', NULL, '771730', '2025-07-08 11:07:43.886756+00', '2025-11-01 06:34:12.088+00', true, 0.00, 0.00, false, NULL, '3892445', NULL, NULL, false, NULL, NULL, '0x7787a4fb8129f5856040B11a250b26C93E237bed', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('3657663e-2129-40fb-8d7a-3808a854c06a', 'AB337A', 'kirk.kakusan34@gmail.com', NULL, '3D9C65', '2025-07-11 01:10:00.953821+00', '2025-07-13 02:33:02.93+00', true, 0.00, 0.00, false, NULL, '3896617', '0xF74336271c22BFb3D973bc547beFA0Ec93Bb429A', NULL, false, NULL, NULL, '0x4B84734fBfe250fCEB95e81d65B263BF22372D43', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('ba9853bd-e42e-4df7-85f3-d830b1c829e0', '3855F6', 'trrr18@i.softbank.jp', NULL, NULL, '2025-10-12 06:13:58.621762+00', '2025-10-12 06:13:58.621762+00', true, 0.00, 0.00, false, NULL, '26358039', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('7f3164e5-bad5-4f99-8775-a3bcf9ff86dc', 'E83446', 'shinkansenboy752@gmail.com', NULL, '0338DC', '2025-07-09 14:55:37.625097+00', '2025-10-21 01:04:35.282+00', true, 0.00, 0.00, false, NULL, '3887070', NULL, NULL, false, NULL, NULL, '0x927f38C9Fa6547e1058ebee4Cf4097D22bA01228', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('df6b4760-9ac1-4b81-ac44-406d0a6d8d5b', '8C1259', '1903momo0707@gmail.com', NULL, 'D51B93', '2025-07-10 09:39:22.607773+00', '2025-07-13 09:56:10.020582+00', true, 0.00, 0.00, false, NULL, '3896822', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('37c3b6d9-ed63-4616-9792-ab462cfb63ad', 'AB503F', 'coconutcrash1992@yahoo.co.jp', NULL, 'F8431B', '2025-10-10 07:15:20.856554+00', '2025-10-10 07:15:20.856554+00', true, 0.00, 0.00, false, NULL, '26353279', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('b8d4e733-a562-4e48-bc0a-b7d6d524f7b9', '764C02', 'yoppk.22@gmail.com', NULL, 'D3E589', '2025-07-11 12:18:11.194063+00', '2025-11-01 07:54:26.723+00', true, 0.00, 0.00, false, NULL, '3891823', NULL, NULL, false, NULL, NULL, '0x591a87f687e7F7fF23D930d70da77dc3d860936c', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('8ce250ba-0ec3-4ebb-aa29-5faaaa896674', '27DAEA', 'junmingsongpu@gmail.com', NULL, '76FA3B', '2025-07-10 11:31:32.870605+00', '2025-10-15 06:45:25.263+00', true, 0.00, 0.00, false, NULL, '3896950', NULL, NULL, false, NULL, NULL, '0x4B9Ee638F60E101BD9b52fBbD670F2388C7B2658', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7abb92a2-c482-4163-830e-2f1c50b0194d', 'C0DAFF', 'tsuneko1957@gmail.com', NULL, '12FE1D', '2025-07-13 12:47:07.469555+00', '2025-10-15 06:46:04.999+00', true, 0.00, 0.00, false, NULL, '3902284', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('14dbd6bf-7b72-452f-bd48-a3ddd9b8604e', '069AFF', 'sakura5068m@gmail.com', NULL, '764C02', '2025-07-12 02:17:17.303371+00', '2025-07-15 10:00:37.657+00', true, 0.00, 0.00, false, NULL, '3900214', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('3e5d72a7-f7ff-4f96-a9b3-3236c7a23bf7', '414A5E', '1996ki.04@gmail.com', NULL, 'B8D4D3', '2025-08-01 09:21:27.26184+00', '2025-08-01 09:21:27.26184+00', true, 1100.00, 0.00, true, NULL, '3131409', NULL, NULL, false, NULL, NULL, 'TVzxpnEabdscSdDMACTw4mvjpuNamRck5D', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-15', false, false),
+	('07155805-d78f-4514-ab97-553fcb2887aa', '268921', 'ktysy0218@gmail.com', NULL, '764C02', '2025-07-15 11:44:31.935408+00', '2025-07-15 11:44:31.935408+00', true, 0.00, 0.00, false, NULL, '3905488', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('e92d2a27-94de-4eb9-9ef5-5918eac47aee', 'C0B2DD', 'sachiyo.s561202@gmail.com', NULL, '19BB41', '2025-07-10 02:58:54.713534+00', '2025-07-10 02:58:54.713534+00', true, 0.00, 0.00, false, NULL, '3895477', '0x19950B87fc303d8E5F9708dBb9818CEDab7985b6', NULL, false, NULL, NULL, '0x22722FDf08a14781C1471873Ed6e898B615Ea7c3', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('a5a9c087-e129-4526-8e22-98f23ca1390c', '7B2CDF', 'in.the.hole32@gmail.com', NULL, '81F952', '2025-07-09 12:10:19.311427+00', '2025-10-22 02:30:32.719+00', true, 0.00, 0.00, false, NULL, '3883209', NULL, NULL, false, NULL, NULL, '0xCC48DDb52fC23b6C25Bd1ACe08b3E8d4bB5aB3BC', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('76c26074-7024-4769-858b-9ee0a98b62f9', 'B0E88D', 'kazukazu272727@gmail.com', NULL, 'CEDC61', '2025-10-22 07:40:14.575054+00', '2025-10-22 07:40:14.575054+00', true, 0.00, 0.00, false, NULL, '26381180', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('471fa3cd-3bea-466b-abad-4fe2a6b1a3e6', '9DCFD1', 'kazu83215@gmail.com', NULL, '0E47BC', '2025-07-04 08:14:08.916441+00', '2025-10-09 04:19:04.380445+00', true, 2200.00, 0.00, true, '2025-07-04 08:18:27.372802+00', '3796004', NULL, NULL, false, NULL, NULL, '0x4Eef8b1435BC59dC1f6a550027D3F1452113C407', NULL, true, '2025-10-09 04:19:04.380445+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-07-15', false, false),
+	('2e40b8bc-c52b-4a95-9362-82a1aef2a685', '9092DF', 'yukorin.r21@gmail.com', NULL, '19BB41', '2025-07-09 15:21:48.149261+00', '2025-11-02 10:22:58.311+00', true, 0.00, 0.00, false, NULL, '3895565', '', NULL, false, NULL, NULL, '0xC5048333b4f42eA27dd34270eCF7F7dD3015De09', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('aa731fd0-d04c-4a86-b472-ca57c53b9146', '88C473', 'snowwhite2021.office@gmail.com', NULL, 'DD138D', '2025-10-27 09:55:19.84821+00', '2025-10-31 05:55:06.787907+00', true, 1100.00, 0.00, false, NULL, '26391900', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('d76cf41a-2d37-4c1a-9461-bf3551756e21', '3D88CF', 'norimifam0101@gmail.com', NULL, '93E0DC', '2025-10-31 11:16:38.659018+00', '2025-11-03 16:07:48.942+00', true, 0.00, 0.00, false, NULL, '4013869', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('89efa936-f2d5-412e-b4f1-af0c9c36cd3a', '0E0171', 'yumie4300@gmail.com', NULL, '1A1610', '2025-08-19 04:34:55.586374+00', '2025-11-04 06:19:37.669+00', true, 2200.00, 0.00, true, NULL, '26187034', NULL, NULL, false, NULL, NULL, '0x739ecb5D89FC1E9780A322a65B1B61e097ba6e0a', NULL, true, '2025-10-09 03:17:30.536149+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('53526d22-ca2d-4a39-a373-85a99696c11b', 'EDA596', 'naochi0526@yahoo.co.jp', NULL, '1AF447', '2025-07-09 14:26:30.685288+00', '2025-09-01 07:16:05.789+00', true, 0.00, 0.00, false, NULL, '3895510', '0x7725fc4b25902e66786cb493935a817b474b0d8c', NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('ca0c5946-65a7-4d05-a4dc-e173ffb6aa0a', 'F68B31', 'takemoon2499@gmail.com', NULL, '8F5343', '2025-07-19 06:37:11.282732+00', '2025-11-05 03:52:50.965407+00', true, 1100.00, 0.00, false, NULL, '3918536', NULL, NULL, false, NULL, NULL, '0xF86Da34CA3E185F50a28fB322Aa620a30693C4ec', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('b5b79292-8b40-4401-94d0-152c1dbc78b0', '04B369', 'ty3268887@gmail.com', NULL, '7A49CB', '2025-11-05 04:21:08.680318+00', '2025-11-05 04:21:08.680318+00', true, 0.00, 0.00, false, NULL, '26407378', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('fefd6088-9209-43ea-a41c-639dfe899923', '12FE1D', 'i.b.karen.na.tow307@gmail.com', NULL, '27DAEA', '2025-07-10 11:35:49.77904+00', '2025-07-23 08:39:33.591+00', true, 0.00, 0.00, false, NULL, '3896952', NULL, NULL, false, NULL, NULL, '0xED8445585C71649ee44F5Cb7C5D1Dc72E66bF86f', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('25502ddc-d253-492a-bea3-e4a5e8455e05', '935D26', 'riko039riko@gmail.com', NULL, 'AA7C2B', '2025-07-25 04:33:47.612948+00', '2025-11-05 05:10:18.914+00', true, 0.00, 0.00, false, NULL, '3939528', NULL, NULL, false, NULL, NULL, '0xF79E968beE353EC2161320D833Bb963c24C505Ec', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('b5fb7b6d-9f5a-443e-9ed3-881b9625ce4e', 'A70DFE', 'jiro8mina@gmail.com', NULL, 'C09A54', '2025-11-05 14:56:47.718169+00', '2025-11-05 15:56:00.180367+00', true, 1100.00, 0.00, false, NULL, '26408725', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('eb4a58bb-3cc9-49cd-950d-f5380c3e773a', 'C56228', '120811marumaru@gmail.com', NULL, '07712F', '2025-07-22 06:04:47.733531+00', '2025-07-22 06:04:47.733531+00', true, 0.00, 0.00, false, NULL, '3927477', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('a6402b9d-91bf-4680-8757-1ad3b5e646cb', 'F5BCFC', 'chocoboy0929@gmail.com', NULL, '1D3F38', '2025-07-22 11:26:27.797065+00', '2025-07-22 11:26:27.797065+00', true, 0.00, 0.00, false, NULL, '3929072', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('b13a3549-1010-4138-bc55-6e47dec0043b', '440AB9', 'ca4.nn2005@gmail.com', NULL, '5AB27D', '2025-07-17 05:38:36.935501+00', '2025-07-17 05:38:36.935501+00', true, 0.00, 0.00, false, NULL, '3912312', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('43395f18-38e0-428c-9411-8a508bff60c1', '626713', 'toko_88888888@yahoo.co.jp', NULL, '5AB27D', '2025-07-19 02:21:47.524796+00', '2025-07-19 02:21:47.524796+00', true, 0.00, 0.00, false, NULL, '3917949', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('6e26e691-f7a4-4afb-837c-c958c297382d', '07712F', 'math.kazino@gmail.com', NULL, '1BAA30', '2025-07-04 06:44:05.315295+00', '2025-10-09 04:20:38.809869+00', true, 1100.00, 0.00, true, '2025-07-04 08:51:03.966237+00', '3785072', NULL, NULL, false, NULL, NULL, '0xEAE8E665216dBb69F7AC48bae04198565f33a163', NULL, true, '2025-10-09 04:20:38.809869+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-07-15', false, false),
+	('e2cd86ca-b4ee-4223-beb8-be18143e5080', 'CE978C', 'me06ron12@gmail.com', NULL, 'B51CA4', '2025-07-19 07:05:06.929296+00', '2025-07-19 07:05:06.929296+00', true, 0.00, 0.00, false, NULL, '3918615', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('b1d66fe2-d027-4a27-9ca3-ba136d0ea79e', '794682', 'tamakimining@gmail.com', NULL, '07712F', '2025-07-05 09:09:47.038524+00', '2025-07-13 09:56:10.020582+00', true, 0.00, 0.00, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('2bdd32a2-1c31-4213-9bcb-acdbd858c7c7', '531500', 'inve@mushika.com', NULL, '5AB27D', '2025-07-16 13:31:07.165922+00', '2025-07-16 13:31:07.165922+00', true, 0.00, 0.00, false, NULL, '3910053', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('c2c62dad-16f6-47ca-b772-92ac3d3e1dab', 'D473AC', 'junnoheya@gmail.com', NULL, 'B51CA4', '2025-07-19 07:05:18.133275+00', '2025-07-19 07:05:18.133275+00', true, 0.00, 0.00, false, NULL, '3918618', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7f347eb3-592b-4f08-98e0-0e466644b3ff', 'E02D36', 'ytsm0722@gmail.com', NULL, '1A1610', '2025-07-19 07:10:56.124414+00', '2025-07-19 07:10:56.124414+00', true, 0.00, 0.00, false, NULL, '3918634', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('99fb196e-2e8f-4ae9-b0d5-15d4a3db4ca8', '274090', 'gaman.gaman.111@gmail.com', NULL, 'A815EA', '2025-07-23 11:18:07.086834+00', '2025-07-27 07:43:31.206+00', true, 0.00, 0.00, false, NULL, '3933663', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('72eec2f2-90b1-496a-8f32-5613c66a3b2b', 'C41A9D', 'xata.tatsuy@gmail.com', NULL, '07712F', '2025-07-22 12:19:37.017456+00', '2025-07-22 12:19:37.017456+00', true, 0.00, 0.00, false, NULL, '3929718', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('5be10f38-da1d-4d35-b268-ccbc0a087453', '76573C', 'sunlecrinmining@gmail.com', NULL, '07712F', '2025-07-22 13:32:01.547198+00', '2025-07-22 13:32:01.547198+00', true, 0.00, 0.00, false, NULL, '3930079', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('e5821506-2bd2-449c-a063-68866bfac999', '3A6EDA', 'tomo322tomo@gmil.com', NULL, 'A512FF', '2025-10-12 06:17:01.453726+00', '2025-10-12 06:17:01.453726+00', true, 0.00, 0.00, false, NULL, '26358082', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('d769122e-aec5-4e97-a99a-e7dcda8d6377', 'AEFBCA', 'priccia971@gmail.com', NULL, '07712F', '2025-07-05 06:52:53.163741+00', '2025-10-10 03:36:27.146+00', true, 1100.00, 0.00, true, '2025-07-06 06:23:40.661984+00', '3886417', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('cbc0ef41-5c35-4237-8e72-f38ae315bb3d', 'D5F36A', 'kenken0719810@gmail.com', NULL, '7B2CDF', '2025-07-09 14:27:29.316251+00', '2025-10-22 02:10:28.443+00', true, 0.00, 0.00, false, NULL, '3853402', NULL, NULL, false, NULL, NULL, '0x4eF7b294f4fc1B7eA4f18bD6aC1237b055A7c339', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('a7d13075-054a-4c9f-977a-74a3e061ca2f', '8F5343', 'tkgntg.5500@gmail.com', NULL, '07712F', '2025-07-15 03:17:00.538729+00', '2025-10-09 05:51:13.89816+00', true, 1100.00, 0.00, true, NULL, '3904692', NULL, NULL, false, NULL, NULL, '0x19C4cC35152E85108b8E8244f520ca8eaBbDfDF5', NULL, true, '2025-10-09 05:51:13.89816+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('61700b0a-b035-4a2b-896e-d6e2e00a8ce9', '8676B0', 'porsche993.1004.999z@gmail.com', NULL, '4D247C', '2025-07-21 02:57:59.458979+00', '2025-07-21 02:57:59.458979+00', true, 0.00, 0.00, false, NULL, '3923737', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('23449f69-6105-41c5-843e-75e9c4f75462', '4DAC3A', 'yochama.7625@gmail.com', NULL, '4D247C', '2025-07-21 03:01:07.195797+00', '2025-07-21 03:01:07.195797+00', true, 0.00, 0.00, false, NULL, '3923755', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('1df609ba-d40b-4308-a5cf-1b639bb8da67', '885491', 'miyaryu888@gmail.com', NULL, '4D247C', '2025-07-21 03:06:09.855535+00', '2025-07-21 03:06:09.855535+00', true, 0.00, 0.00, false, NULL, '3923754', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('2a9139ea-9785-4209-8756-a27442d9a4f2', 'DF7EF1', 'shinagaichirou1111@gmail.com', NULL, '4D247C', '2025-07-21 03:25:33.473233+00', '2025-07-21 03:25:33.473233+00', true, 0.00, 0.00, false, NULL, '3923789', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('3e29a702-156d-42fd-af42-f472de62eaf9', '490F84', 'takey0717@gmail.com', NULL, '361CF6', '2025-10-22 12:24:33.30871+00', '2025-10-23 00:24:33.897138+00', true, 1100.00, 0.00, false, NULL, '26381974', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('f2f98ce8-f6ca-45d1-82fc-57b036600e88', '72E487', 'aimhigh144@gmail.com', NULL, 'EAA204', '2025-07-29 06:35:48.658183+00', '2025-10-25 03:17:14.201+00', true, 0.00, 0.00, false, NULL, '3965660', NULL, NULL, false, NULL, NULL, '0xFb8c9A1043BdE81Eb7B2C3E5Ea5Ac1f2858935B1', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('ae755e91-aaad-446f-a57e-8cbb31b80e14', 'D23CC4', 'tetsuobitmining@gmail.com', NULL, '07712F', '2025-07-24 05:02:23.23614+00', '2025-07-24 05:02:23.23614+00', true, 0.00, 0.00, false, NULL, '3935953', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('cc648cdf-5835-4a25-9d22-436507b901b4', '5E7097', 'exheadspin3@gmail.com', NULL, '8F5343', '2025-10-27 11:18:08.087065+00', '2025-10-27 11:18:08.087065+00', true, 0.00, 0.00, false, NULL, '26392004', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('72b89832-2969-405b-9aa0-28adffe08829', '62B1AF', 'masashi15uno@icloud.com', NULL, '07712F', '2025-10-27 11:20:58.118886+00', '2025-10-27 11:20:58.118886+00', true, 0.00, 0.00, false, NULL, '26392012', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('8ccc19d5-d11e-4bb0-bb88-9bb52d19fc47', '71AE10', 'akomugu@gmail.com', NULL, '177B83', '2025-10-31 15:25:06.939723+00', '2025-11-04 03:06:38.156179+00', true, 1100.00, 0.00, false, NULL, '26399759', NULL, NULL, false, NULL, NULL, '0xD9012D32d77acf8767D8f1af6C2893908B6dFbAe', NULL, true, '2025-11-04 03:06:38.156179+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('cea8a8f0-7f10-47ac-93e3-f22d3c4f3c74', 'D025CA', 'reshia737@icloud.com', NULL, '6E1304', '2025-07-16 06:25:55.841264+00', '2025-11-04 06:12:06.889+00', true, 1100.00, 0.00, true, NULL, '3908677', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-08-01', false, false),
+	('3186b9b6-92e9-4bc9-bc5b-dbb730a2cb97', '7CB7E4', 'tokinaomining@gmail.com', NULL, '4D247C', '2025-07-31 03:44:24.062235+00', '2025-11-05 03:48:41.191186+00', true, 1100.00, 0.00, false, NULL, '3979614', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('ef2c4d93-fcbd-49c7-a27b-29fea427f64b', '33F43F', 'kambe@garf.co.jp', NULL, '7A49CB', '2025-11-05 04:23:07.784005+00', '2025-11-05 04:23:07.784005+00', true, 0.00, 0.00, false, NULL, '26407380', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('05cfd0ef-b674-4f05-8cae-d8f7fd48a059', 'F0707E', 'r12098ku@gmail.com', NULL, '1A1610', '2025-07-28 03:14:14.538386+00', '2025-07-28 03:14:14.538386+00', true, 0.00, 0.00, false, NULL, '049243', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('00df0917-7c37-4efb-b000-bd48629a44e5', 'EA6B5E', 'sp.izumi.3@gmail.com', NULL, '07712F', '2025-07-30 06:12:13.542562+00', '2025-07-30 06:12:13.542562+00', true, 0.00, 0.00, false, NULL, '3970917', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('94c67f8b-7219-4ec0-ae97-20b23fedbefc', '7041CD', 'fnishimura32@gmail.com', NULL, 'EE904D', '2025-08-07 11:53:01.991217+00', '2025-10-09 03:23:09.043325+00', true, 1100.00, 0.00, true, NULL, '4006609', NULL, NULL, false, NULL, NULL, '0xB7cE7E3B957D13173A48d135F5f2A6FF2336183c', NULL, true, '2025-10-09 03:23:09.043325+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('6840ff61-1f36-4a54-bba3-c3b2a699176b', '4CC8DA', 'reform.kaz001@gmail.com', NULL, 'FD9275', '2025-11-06 05:00:05.16111+00', '2025-11-06 05:18:19.109437+00', true, 3300.00, 0.00, false, NULL, '26409838', NULL, NULL, false, NULL, NULL, '0x751c725ABd2d679be1864FC057282AeD0b6Fd96c', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('f999d35d-b49f-4abb-bc1b-2db80d98a355', '5D84C3', '358special.thanks@gmail.com', NULL, '76FA3B', '2025-07-22 14:45:11.914152+00', '2025-09-01 06:33:22.084+00', true, 0.00, 0.00, false, NULL, '3802545', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('ffae1c4b-2b02-4180-b30d-d11a82e5890d', '76FA3B', 'y.jiki69@gmail.com', NULL, 'EDA596', '2025-07-22 11:28:22.866904+00', '2025-09-01 06:34:05.666+00', true, 0.00, 0.00, false, NULL, '3929456', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('fcc9a8fa-0da3-4bbd-badb-f0c8ff45cac8', '18DC9F', 'naomi19630928@gmail.com', NULL, '4D247C', '2025-08-01 12:04:27.886759+00', '2025-08-01 12:04:27.886759+00', true, 0.00, 0.00, false, NULL, '3918052', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('5c3804c3-4c01-482d-8249-4fd38e3ce3c1', '1C341A', 'akipia310@icloud.com', NULL, '07712F', '2025-07-30 06:07:54.903017+00', '2025-07-30 06:07:54.903017+00', true, 1100.00, 0.00, true, NULL, '3970866', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('5b57c8b3-4c75-44c8-979d-335fd7aac47b', '9D9F83', 'ryuprince116@gmail.com', NULL, '2443DD', '2025-08-09 06:40:51.109933+00', '2025-08-09 06:40:51.109933+00', true, 1100.00, 0.00, true, NULL, '4011592', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('85ac12ae-54a7-4c14-ba0b-bd9f6113c9eb', 'CD914B', 'sakai.hex@gmail.com', NULL, '2443DD', '2025-07-30 08:38:38.335821+00', '2025-07-30 08:38:38.335821+00', true, 0.00, 0.00, false, NULL, '3972170', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('16ecdea9-f178-4147-b1da-dad4e87edb78', '124172', 'i.am.crazy.keisuke@softbank.ne.jp', NULL, 'E12E15', '2025-10-23 11:11:41.812501+00', '2025-10-23 11:11:41.812501+00', true, 0.00, 0.00, false, NULL, '26384382', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('2069674f-e004-4211-a442-e613845f81ab', 'C17025', 'sachiko.prumeria@gmail.com', NULL, 'B51CA4', '2025-07-19 07:01:26.624773+00', '2025-07-19 07:01:26.624773+00', true, 2200.00, 0.00, true, NULL, '3918607', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('89299491-0aca-4efb-a8d8-838c4c822df3', '85D94D', 'oga6551@gmail.com', NULL, 'C1ADF2', '2025-08-06 02:11:04.648403+00', '2025-08-06 02:11:04.648403+00', true, 0.00, 0.00, false, NULL, '4004458', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('60d25635-1832-401b-8011-1f8470e50b4e', 'C6B9E4', 'tomo322tomo@gmail.com', NULL, 'A512FF', '2025-10-12 06:18:05.08061+00', '2025-10-12 06:18:05.08061+00', true, 0.00, 0.00, false, NULL, '26358082', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('3ffe735c-79a2-4b9a-afa0-856d0413b7e9', 'F54652', 'kiyo.daichi@gmail.com', NULL, '771730', '2025-08-09 06:49:25.983789+00', '2025-09-23 04:47:13.786+00', true, 0.00, 0.00, false, NULL, '4011346', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('1c214c0e-e319-4c78-a94f-84b3291feba3', 'D84C17', 'taekoko0715@gmail.com', NULL, '2443DD', '2025-08-08 06:55:54.19563+00', '2025-08-08 06:55:54.19563+00', true, 0.00, 0.00, false, NULL, '4009034', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('ab39c048-919f-4790-a834-985be8bd7d5e', '600BE8', 'ange.maria333@gmail.com', NULL, '2443DD', '2025-08-10 06:42:52.611876+00', '2025-08-10 06:42:52.611876+00', true, 0.00, 0.00, false, NULL, '4013277', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('87712bc6-7f9f-4e21-96d5-a07931c35d83', '899254', 'tuyako.kaji.10.19@gmail.com', NULL, '9493FE', '2025-07-09 05:56:06.778819+00', '2025-10-25 10:52:47.692101+00', true, 1100.00, 0.00, true, '2025-07-09 07:03:27.186844+00', '3889989…', NULL, NULL, false, NULL, NULL, '0x60516B1e5f54A51b0431A9c2805339c3809EAC83', NULL, true, '2025-10-25 10:52:47.692101+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('b475e6c5-911e-4410-995c-9c99384bfed3', 'B5FC85', 'omachan0805@gmail.com', NULL, 'E03FDE', '2025-07-23 12:24:28.67062+00', '2025-07-23 12:24:28.67062+00', true, 1100.00, 0.00, true, NULL, '3933932', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-15', false, false),
+	('f08f7be0-006f-41d8-a3bd-5f59053ca977', '24B6D0', 'ayami.sorashido0401@gmail.com', NULL, '4D247C', '2025-08-12 12:19:12.77232+00', '2025-08-12 12:19:12.77232+00', true, 0.00, 0.00, false, NULL, '4018708', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('fd378a30-4f08-4213-b177-fb145bccfb12', '32B1F1', 'sion-norakuro@gmail.com', NULL, 'A81A5E', '2025-08-15 14:02:26.124912+00', '2025-08-15 14:02:26.124912+00', true, 0.00, 0.00, false, NULL, '26177597', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('530cd673-f2aa-45b3-a975-8748f82b108d', 'DD138D', 'punpunkun2@gmail.com', NULL, '3D88CF', '2025-07-24 06:34:17.065598+00', '2025-11-03 16:08:40.446+00', true, 1100.00, 0.00, true, NULL, '1868852', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-15', false, false),
+	('62afcdf0-00d9-4e7d-9241-28f114d36854', '84CC53', 'taisyuxmining@gmail.com', NULL, '07712F', '2025-10-31 16:33:36.061535+00', '2025-11-04 03:05:26.202003+00', true, 1100.00, 0.00, false, NULL, '26399899', NULL, NULL, false, NULL, NULL, '0xdcbd0e42656C134C94F5c8f00fb49Fa17f32F4C9', NULL, true, '2025-11-04 03:05:26.202003+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('cc4f14ae-ab14-4c56-bd39-df4540ac8921', 'C099F0', 'ty3268888@gmail.com', NULL, '7A49CB', '2025-11-05 04:23:08.530134+00', '2025-11-05 04:23:08.530134+00', true, 0.00, 0.00, false, NULL, '26407378', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('31af36ee-5a61-4d6d-abc7-65d5c27fd284', '1F7BF7', 'im8088tms@yahoo.ne.jp', NULL, 'A81A5E', '2025-08-15 14:14:36.981573+00', '2025-08-15 14:14:36.981573+00', true, 0.00, 0.00, false, NULL, '26177597', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('f52c0e50-e24a-4570-93f7-c247c426fe5d', 'E5E7B4', 'takeiteasy1187@gmail.com', NULL, 'A81A5E', '2025-08-16 23:47:17.481316+00', '2025-08-16 23:47:17.481316+00', true, 0.00, 0.00, false, NULL, '26180447', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('8f296f2b-7d99-490a-a814-34b101471306', '347ED5', 'rainbow.miyo@gmail.com', NULL, '2443DD', '2025-08-18 07:01:23.146374+00', '2025-08-18 07:01:23.146374+00', true, 0.00, 0.00, false, NULL, '26185000', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('5ce75d57-adea-4f02-8de0-604aba700ad3', 'AA7C2B', '8riki.m8sj8@gmail.com', NULL, 'F54652', '2025-08-01 14:59:00.024598+00', '2025-09-23 04:45:53.364+00', true, 0.00, 0.00, false, NULL, '3990437', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7d93fa52-4777-4b99-911b-861ba0243900', 'D84FA9', 'k.hanauchi@gmail.com', NULL, '1A1610', '2025-08-19 04:35:42.091895+00', '2025-08-19 04:35:42.091895+00', true, 0.00, 0.00, false, NULL, '26187124', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('890503e7-de40-4abb-b2a1-eae43677abb3', '0338DC', 'eriiinn60@gmail.com', NULL, '82DD3F', '2025-08-23 08:24:58.382916+00', '2025-09-23 04:42:50.757+00', true, 0.00, 0.00, false, NULL, '26203373', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('0d88cdca-fde2-4e61-8efe-0d12943a7cc5', '9442D0', 'komochanhappysmileneko0917@gmail.com', NULL, '1A1610', '2025-08-19 04:17:41.562871+00', '2025-08-19 04:17:41.562871+00', true, 0.00, 0.00, false, NULL, '26187115', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('0121cc32-cd61-4ac5-9b0c-6fcf23255b70', '8C3B2B', 'tomoefam0529@gmail.com', NULL, '84CC53', '2025-11-01 01:43:17.835573+00', '2025-11-01 02:11:57.157186+00', true, 1100.00, 0.00, false, NULL, '26399957', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('ca61b900-6e01-437c-b576-2772b8509cd8', '144A86', 'runba_naknak@yahoo.co.jp', NULL, 'AE95A3', '2025-07-28 03:39:55.561915+00', '2025-07-28 03:39:55.561915+00', true, 1100.00, 0.00, true, NULL, '3959180', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-15', false, false),
+	('e76b0ca9-aa8d-4979-a1fb-758c95f29beb', '972738', 'minto5259@gmail.com', NULL, '1A1610', '2025-07-19 07:11:54.955048+00', '2025-07-19 07:11:54.955048+00', true, 2200.00, 0.00, true, NULL, '3918628', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('607de6b0-15e0-49ad-b649-41fdb9210d01', '02FDF0', 'takutakommm@yahoo.co.jp', NULL, '047E33', '2025-08-26 07:16:45.484069+00', '2025-08-26 07:16:45.484069+00', true, 4400.00, 0.00, true, NULL, '26216785', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('eb860296-2f38-4758-96da-f82eac2e84ff', 'E43A9A', 'sachiko.h.1005@gmail.com', NULL, '1A1610', '2025-07-19 07:13:17.935511+00', '2025-11-04 06:13:12.141+00', true, 2200.00, 0.00, true, NULL, '3918629', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('1a70d5a1-ba28-4405-92b0-343e354a33bf', '01F96B', 'jawpalask@mirai.re', NULL, '099358', '2025-10-19 07:51:17.134218+00', '2025-11-05 03:53:03.758921+00', true, 1100.00, 0.00, false, NULL, '2734305', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('abe4388c-dc7d-4ad1-8ebb-03babdd35e5c', '39DFE3', 'chikako6561@gmail.com', NULL, '2F6364', '2025-10-15 06:28:20.406729+00', '2025-10-15 06:28:20.406729+00', true, 0.00, 0.00, false, NULL, '3908537', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('c66f0f4a-2652-4d23-beb8-ec48d377edf2', 'AD2A0E', 'n.takamizo@gmail.com', NULL, '4D247C', '2025-10-16 05:50:57.937116+00', '2025-10-16 05:50:57.937116+00', true, 0.00, 0.00, false, NULL, '26368415', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('2d2c36a8-e2a7-4fe7-9ab8-1ec071a355f2', 'FD5FBD', 'souriremayu0424@gmail.com', NULL, 'C73F2D', '2025-10-18 03:27:33.890971+00', '2025-10-18 03:27:33.890971+00', true, 0.00, 0.00, false, NULL, 'Mayu0424@', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('804b504e-dd98-4346-8036-c329e1feec22', 'E27F25', 'y.sakurai@teratomo.io', NULL, '04FF0C', '2025-10-06 13:53:23.413045+00', '2025-10-06 13:53:23.413045+00', true, 0.00, 0.00, false, NULL, '26346154', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('5e65bf99-9198-40eb-aaf1-087d12c75292', 'ACACDB', 'houshin.tetsuya@gmail.com', NULL, 'A34F44', '2025-11-05 05:37:07.830018+00', '2025-11-05 05:37:07.830018+00', true, 0.00, 0.00, false, NULL, '26407424', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('55def7d8-4222-422b-8cc0-5964fbc6fa02', '676E50', 'masako1961naoto1994@gmail.com', NULL, 'C73F2D', '2025-10-18 03:29:48.316663+00', '2025-10-18 03:29:48.316663+00', true, 0.00, 0.00, false, NULL, '26372187', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('f13282b3-5c38-4348-8447-3a207f844892', '1D4B39', 'sachiko.kageyama.2528@gmail.com', NULL, 'C73F2D', '2025-10-18 03:31:43.532219+00', '2025-10-18 03:31:43.532219+00', true, 0.00, 0.00, false, NULL, '3901648', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('cbf1430c-1de2-4420-966d-0dd43489fe06', 'BC9A93', 'takatsugu43414@gmail.com', NULL, '576E32', '2025-08-26 07:48:12.618138+00', '2025-08-26 07:48:12.618138+00', true, 1100.00, 0.00, true, NULL, '26217166', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('41fecc11-5ea9-4aa8-82b4-e491a94707e7', 'B7A2F5', 'i.am.crazy.keisuke@icloud.com', NULL, 'E12E15', '2025-10-23 11:15:35.063824+00', '2025-10-23 11:15:35.063824+00', true, 0.00, 0.00, false, NULL, '26384382', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('3b36adaf-df71-4824-ac0b-ae764c0e2775', '54B3DF', 'zhongmeixa@icloud.com', NULL, '81F952', '2025-08-22 12:34:36.950802+00', '2025-08-22 12:34:36.950802+00', true, 0.00, 0.00, false, NULL, '26200153', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('d4eeffd3-9a68-44ae-a558-f0e5d2d7fc55', 'DAF07B', 'mama.yumi7853@gmail.com', NULL, '394CEC', '2025-08-24 08:10:02.234021+00', '2025-08-24 08:10:02.234021+00', true, 0.00, 0.00, false, NULL, '26207959', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('c07d0d98-78da-48c2-99bf-fcc56d163c50', 'E783A2', 'minako.imanishi0126@gmail.com', NULL, '20248A', '2025-08-25 06:50:31.279796+00', '2025-08-25 06:50:31.279796+00', true, 0.00, 0.00, false, NULL, '26212602', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7896c0a0-0aec-46cc-8e5a-a4aafbfa2b23', '264E3C', 'm.hashpilot@gmail.com', NULL, '6E1304', '2025-11-01 07:04:09.207269+00', '2025-11-01 07:13:20.624142+00', true, 1100.00, 0.00, false, NULL, '26400546', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('e1e6c278-9641-4b33-ab1b-5ccb8a2aeb43', '177B83', 'witchmind0323@gmail.com', NULL, '380CE2', '2025-08-08 08:26:42.701789+00', '2025-11-01 10:12:11.859+00', true, 1100.00, 0.00, true, NULL, '3723567', NULL, NULL, false, NULL, NULL, '0xBF93b591DBB6e99be07597e9A17d1f1B020b1B74', NULL, true, '2025-10-09 03:21:07.380153+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('bc9e3a88-e9ef-4332-8181-5aea19c6312c', '2E2A39', 'jun369.1221@gmail.com', NULL, 'EE904D', '2025-08-07 08:58:36.537261+00', '2025-08-09 03:59:58.357+00', true, 1100.00, 0.00, true, NULL, '4006640', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('8b9f4287-8056-41a1-abc7-559bef93abfd', '0F7EC2', 'sonoya@gmail.com', NULL, 'E12E15', '2025-10-23 11:18:38.254449+00', '2025-10-23 11:18:38.254449+00', true, 0.00, 0.00, false, NULL, '26384399', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('0ba34d6b-4706-4a75-83d7-434618979a55', '0F88DD', 'msic200906@yahoo.co.jp', NULL, '5A708D', '2025-07-29 13:16:53.834255+00', '2025-11-04 06:07:26.555+00', true, 1100.00, 0.00, true, NULL, '3967729', NULL, NULL, false, NULL, NULL, '0xe34a2b7DC2be03432c11005eE2F62C201762cdCf', NULL, true, '2025-10-09 03:29:06.154984+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-15', false, false),
+	('207e5680-0f7f-4dd6-b011-46d6c31dc076', 'CF7C52', 'kazuki2046@docomo.ne.jp', NULL, NULL, '2025-09-01 09:32:00.235664+00', '2025-09-01 09:32:00.235664+00', true, 0.00, 0.00, false, NULL, '123456', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('92425393-3b9f-4959-a01e-79e007d8f55c', '4BF14D', 'bashi0227kiyo@gmail.com', NULL, 'EA7C20', '2025-08-05 06:14:13.652345+00', '2025-08-05 06:14:13.652345+00', true, 1100.00, 0.00, true, NULL, '4002496', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-15', false, false),
+	('c75dbc1d-9c7f-44b0-bfc4-9961bb6d2a54', '218AE2', 'bongo.bona0228@gmail.com', NULL, 'E12E15', '2025-10-23 11:17:47.848766+00', '2025-10-23 11:22:54.910423+00', true, 1100.00, 0.00, false, NULL, '26384382', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('8b783ad2-f1bb-42ec-bec7-860adc15a9b7', '2A8986', 'everblue.diving@gmai.com', NULL, '935D26', '2025-08-27 13:51:12.781533+00', '2025-08-27 13:51:12.781533+00', true, 0.00, 0.00, false, NULL, '3802545', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('f747e24c-8401-45d4-b5a0-b7d6e5bd2145', '4C92F6', 'ugokazarukotoyamanogotoshi@gmail.com', NULL, '0E47BC', '2025-08-27 15:09:09.701402+00', '2025-08-27 15:09:09.701402+00', true, 0.00, 0.00, false, NULL, '3802545', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('b6c59e7b-50a8-4409-a562-855863c18009', 'DFCE2F', 'da7.u3uk@gmail.com', NULL, 'DE17E8', '2025-08-29 10:21:08.327644+00', '2025-10-17 02:49:35.491+00', true, 0.00, 0.00, false, NULL, '26230902', NULL, NULL, false, NULL, NULL, '0x1f6b234c652B51Cd157bffe8d25eE1eaE230D872', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('b7fc0c1f-b257-4c11-a146-789f00691f4e', 'DE17E8', 'huu6141221920@gmail.com', NULL, '1AF447', '2025-08-28 12:22:08.64431+00', '2025-10-17 02:50:15.766+00', true, 0.00, 0.00, false, NULL, '26206568', NULL, NULL, false, NULL, NULL, '0x5efC641B42001ffc0702F0972a59217b33541dCC', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('9049395e-282f-4bca-bd4c-811834981d9c', 'D61EA6', 'poporon.803.y3958@gmail.com', NULL, '62CED1', '2025-07-19 07:26:45.265748+00', '2025-11-04 06:13:31.771+00', true, 1100.00, 0.00, true, NULL, '3918622', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-08-01', false, false),
+	('9d0a5b6a-c4bd-4001-bfd5-c524c9d261f0', '62CED1', '39isara@gmail.com', NULL, '1A1610', '2025-07-19 07:12:11.272251+00', '2025-11-04 06:13:47.982+00', true, 1100.00, 0.00, true, NULL, '3918616', NULL, NULL, false, NULL, NULL, '0x3ff620A497D2F07F0D16c7886234dFcBad596b2E', NULL, true, '2025-10-09 03:37:38.700818+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-01', false, false),
+	('14d404b5-af0c-4b56-afc9-b79b71c15ef2', '0FAE8F', 'kayo.easygoing.0611@gmail.com', NULL, '394CEC', '2025-08-14 12:25:30.967397+00', '2025-08-14 12:25:30.967397+00', true, 1100.00, 0.00, true, NULL, '26174632', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('237d5c07-a7f7-40c7-942b-a1d0f039be52', 'D159A1', 'does3887@gmail.com', NULL, 'B51CA4', '2025-07-19 06:55:25.910293+00', '2025-11-04 06:14:37.483+00', true, 1100.00, 0.00, true, NULL, '3918613', NULL, NULL, false, NULL, NULL, '0x53d54Caee951F38df53760091BD0b6B5DF34dB0b', NULL, true, '2025-10-09 03:40:55.628113+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-01', false, false),
+	('6ac3301b-c323-4b5d-a008-b6c17e95380b', '9E5315', 'downtheline1109@gmail.com', NULL, '1A1610', '2025-07-19 07:09:45.04603+00', '2025-11-04 06:15:18.824+00', true, 2200.00, 0.00, true, NULL, '3918630', NULL, NULL, false, NULL, NULL, '0x17c72b9204C957C125e2a3Eb66aa91d8E836BCd9', NULL, true, '2025-10-09 03:38:26.804892+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('b9070a02-68d6-4c77-887f-78c00aff992b', 'A827F5', 'riko1788riko@gmail.com', NULL, '935D26', '2025-08-29 08:44:40.602734+00', '2025-08-29 08:44:40.602734+00', true, 0.00, 0.00, false, NULL, '3939528', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('65981f3c-3228-4891-8518-e8e59d7aaa58', 'E9B103', 'kazuto.0129@gmail.com', NULL, 'AE95A3', '2025-07-30 03:41:55.455882+00', '2025-10-09 03:28:17.923702+00', true, 1100.00, 0.00, true, NULL, '3969860', NULL, NULL, false, NULL, NULL, '0x14A92ba57292004C890ae019aCd1373Ec7A8e128', NULL, true, '2025-10-09 03:28:17.923702+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('df5e2a76-d863-431e-af23-689ec9329622', '63F6D2', 'nk00616100@gmail.com', NULL, 'A416E4', '2025-11-05 06:38:54.661665+00', '2025-11-05 09:41:36.019555+00', true, 1100.00, 0.00, false, NULL, '26405898', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('2e0f1464-b864-4809-ba31-9e84b2899895', 'FE75AC', 'supremexyz0001+1@gmail.com', NULL, 'F92E72', '2025-07-26 09:25:38.773066+00', '2025-10-09 03:32:57.325022+00', true, 1100.00, 0.00, true, NULL, '2791629', NULL, NULL, false, NULL, NULL, '0x28ff9B47E3E947002BA15c76a90EC91Bfc7FcF9B', NULL, true, '2025-10-09 03:32:57.325022+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('9f105a9e-b50c-4700-90cb-4bf368eaa432', 'F92E72', 'supremexyz0001@gmail.com', NULL, 'DD138D', '2025-07-24 10:25:42.264613+00', '2025-10-09 03:33:46.845624+00', true, 1100.00, 0.00, true, NULL, '2791629', NULL, NULL, false, NULL, NULL, '0x28ff9B47E3E947002BA15c76a90EC91Bfc7FcF9B', NULL, true, '2025-10-09 03:33:46.845624+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('2f795d95-d2a6-4c55-851d-9e9a3fe2f4a9', 'AE95A3', 'k9312021234@icloud.com', NULL, '59C23C', '2025-07-19 09:41:23.495078+00', '2025-10-09 03:34:47.727616+00', true, 1100.00, 0.00, true, NULL, '3918931', NULL, NULL, false, NULL, NULL, '0x78D0EFaE414A31f07e292C8Ec6893Bd843CF7c1d', NULL, true, '2025-10-09 03:34:47.727616+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('1856f875-f6d3-4698-a4c4-b12ef9c22e51', '7FDD29', 'everblue.diving@gmail.com', NULL, 'A827F5', '2025-08-27 13:52:08.512513+00', '2025-09-01 04:09:14.561+00', true, 0.00, 0.00, false, NULL, '3802545', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('82c0ea9c-e4ab-4ff6-8ccc-72c575600cfb', 'E460F1', 'guangbaoyanfu@gmail.com', NULL, 'A827F5', '2025-08-29 03:31:07.473+00', '2025-09-01 04:09:41.629+00', true, 0.00, 0.00, false, NULL, '26229746', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('f88d4cf5-6dfe-47f0-ab6c-a87a14aacf25', '2F6364', 'officetomorrow3944@gmail.com', NULL, '232A2B', '2025-07-16 06:05:37.675914+00', '2025-10-20 03:37:36.042927+00', true, 1100.00, 0.00, false, NULL, '3908149', NULL, NULL, false, NULL, NULL, '0xF91f8880b3Bb487FBBEE6c776406Ab3138673C87', NULL, true, '2025-10-20 03:37:36.042927+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('55480fa0-7d42-4e29-9544-152bfbef4452', 'DB4690', 'apprecieight358@gmail.com', NULL, '2443DD', '2025-07-11 11:36:26.557878+00', '2025-07-12 01:07:31.756369+00', true, 1100.00, 0.00, true, NULL, '3899220', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('1bafe27f-4581-4180-aeda-5d0a5f92edbb', '375EE3', 'srjkzmining@gmail.com', NULL, '07712F', '2025-09-03 07:40:22.043445+00', '2025-09-03 07:40:22.043445+00', true, 0.00, 0.00, false, NULL, '26249279', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('113ba748-127f-4387-a80f-d61c02e43405', '5036CF', 'plantard.jp@gmail.com', NULL, '1A1610', '2025-07-19 07:08:19.162483+00', '2025-10-09 03:39:19.174444+00', true, 2200.00, 0.00, true, NULL, '3918617', NULL, NULL, false, NULL, NULL, '0x5556256758cC7948de218B344784D76937Ca55fe', NULL, true, '2025-10-09 03:39:19.174444+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('f44c161c-26b1-446b-b2b5-a0c3a2fcfb83', 'A815EA', 'tochimoto1969@gmail.com', NULL, '59C23C', '2025-07-17 05:02:06.650384+00', '2025-10-09 03:43:48.417636+00', true, 1100.00, 0.00, true, NULL, '3912227', NULL, NULL, false, NULL, NULL, '0x9F0AFC1BFc551Ff36227b264C891bD81BacC442d', NULL, true, '2025-10-09 03:43:48.417636+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('fda932a7-189d-4d22-8bd7-25a44a965229', 'A54290', 'maru230023maru@gmail.com', NULL, '59C23C', '2025-10-10 11:38:23.132743+00', '2025-10-14 03:42:08.964838+00', true, 15400.00, 0.00, false, NULL, '26319527', NULL, NULL, false, NULL, NULL, '0x44ADCB5b83f722DbFd354313A45De6f982f85EE0', NULL, true, '2025-10-14 03:42:08.964838+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('8fee3706-62e0-4d3d-adfc-119526409de8', '04161E', 'arisakura0729@gmail.com', NULL, 'EE904D', '2025-08-07 11:52:30.957514+00', '2025-10-09 03:23:59.872591+00', true, 1100.00, 0.00, true, NULL, '4006098', NULL, NULL, false, NULL, NULL, '0x944fCAb73F4C87c542348288aB43791a12065f6b', NULL, true, '2025-10-09 03:23:59.872591+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('c26994b3-3686-43ea-ab69-576e695b5b3c', '9E6DA5', 'miina19580106@gmail.com', NULL, '81F952', '2025-07-15 04:47:42.866333+00', '2025-10-09 03:50:39.272544+00', true, 11000.00, 0.00, true, NULL, '3904805', NULL, NULL, false, NULL, NULL, '0xB0F5976fe983653a8475aEF35B8263a6a31be8F2', NULL, true, '2025-10-09 03:50:39.272544+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('76f4c02f-a5bb-40e3-a6ff-e937ece5391f', 'DF61A9', 'ugokazarukotoyamanogktoshi@gmail.com', NULL, '0E47BC', '2025-08-27 15:10:37.566987+00', '2025-09-25 06:42:50.924+00', true, 0.00, 0.00, false, NULL, '3802545', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7ccce1c2-561b-41d3-af2f-017af6561fc8', '232A2B', 'asukabe0916@gmail.com', NULL, 'DE9AC6', '2025-07-16 03:42:52.094388+00', '2025-10-15 08:53:16.418304+00', true, 1100.00, 0.00, true, NULL, '3908149', NULL, NULL, false, NULL, NULL, '0xF91f8880b3Bb487FBBEE6c776406Ab3138673C87', NULL, true, '2025-10-15 08:53:16.418304+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('7d166493-13d6-45c2-88fc-786787e2b114', '3B1E5E', 'supremexyz0001+3@gmail.com', NULL, 'B8D4D3', '2025-07-27 14:59:40.747583+00', '2025-10-15 07:03:00.602+00', true, 1100.00, 0.00, true, NULL, '2791629', NULL, NULL, false, NULL, NULL, '0x28ff9B47E3E947002BA15c76a90EC91Bfc7FcF9B', NULL, true, '2025-10-09 03:31:26.15298+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('3f82a558-3b4f-49af-b5bd-a2668320dc23', 'CABC84', 'ambit.koide@gmail.com', NULL, 'C17025', '2025-07-19 07:13:28.019937+00', '2025-11-04 06:16:03.004+00', true, 1100.00, 0.00, true, NULL, '3918626', NULL, NULL, false, NULL, NULL, '0x73a24b3020F05a8f1e3E2562D06393221FeadD45', NULL, true, '2025-10-09 03:36:18.657135+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-01', false, false),
+	('60ea7dbb-02e6-4054-89e6-8e8267843081', '53B452', 'toyaiwaya@gmail.com', NULL, 'B51CA4', '2025-07-18 01:49:39.434453+00', '2025-11-04 06:17:54.837+00', true, 1100.00, 0.00, true, NULL, '3915152', NULL, NULL, false, NULL, NULL, '0x6719c419A365f171B27dc20Af08d7D0AAD47894C', NULL, true, '2025-10-09 03:42:52.578966+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-15', false, false),
+	('9df78017-b567-4e22-b7fb-31384c13476c', '449AA2', 'kiwakiwa.kaeru@gmail.com', NULL, '5AB27D', '2025-07-16 12:32:26.2721+00', '2025-11-04 06:20:57.951+00', true, 1100.00, 0.00, true, NULL, '3909894', NULL, NULL, false, NULL, NULL, '0x844D69D0bb37786005e7912921259b12963185aB', NULL, true, '2025-10-09 03:44:36.345859+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('f14f1f66-5e99-494c-9830-52e516d9225a', 'F8BA82', 'arataku@gmail.com', NULL, '71AE10', '2025-11-05 07:39:26.38228+00', '2025-11-05 08:28:37.92107+00', true, 1100.00, 0.00, false, NULL, '26407610', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('3389494e-ed68-44b0-901e-ae8453818783', 'FCFB9B', 'kokuryu358.net@gmail.com', NULL, '7ECF42', '2025-09-13 23:35:54.462518+00', '2025-09-13 23:35:54.462518+00', true, 0.00, 0.00, false, NULL, '26217298', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7acbd720-fce2-42a7-a2dd-6b433a2f1b57', 'E275F2', 'monohonabe@gmail.com', NULL, 'C162DD', '2025-09-14 14:56:54.234572+00', '2025-09-14 14:56:54.234572+00', true, 0.00, 0.00, false, NULL, '26290893', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('36c926df-03cc-4733-b370-0fae91a5c66c', '154E00', 'fujita.sachiko1009@gmail.com', NULL, 'E4FC38', '2025-09-15 06:20:13.323041+00', '2025-09-15 06:20:13.323041+00', true, 0.00, 0.00, false, NULL, '26292389', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('814e018d-2f44-4fd6-b625-195d6db60c5e', '8964D7', 'cat2dog6@gmail.com', NULL, '8C3B2B', '2025-11-01 07:57:59.752779+00', '2025-11-03 16:03:42.959201+00', true, 1100.00, 0.00, false, NULL, '26400484', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('3d32e9dc-cb31-469b-a4bf-a705fa7de935', '19A5C8', 'breaking3of5limit8@gmail.com', NULL, '6E8123', '2025-07-09 03:39:41.284938+00', '2025-11-04 03:11:05.609591+00', true, 1100.00, 0.00, true, '2025-07-09 03:41:59.160188+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-11-04 03:11:05.609591+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('2fad8fd6-1f23-48f6-a7c1-a371456357ef', 'CA7902', 'usui@tbas99.com', NULL, 'C162DD', '2025-07-18 12:23:59.811879+00', '2025-10-16 04:41:43.094157+00', true, 2200.00, 0.00, true, NULL, '3916406', NULL, NULL, false, NULL, NULL, '0x37A9AC6f0Eeb8fc3dB268b69DDE50CCB815ab747', NULL, true, '2025-10-16 04:41:43.094157+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('27641bb0-049d-4f38-b9f0-4486cb9ecbbc', '394CEC', 'kim06451207@gmail.com', NULL, '870323', '2025-08-05 08:21:57.468827+00', '2025-10-17 05:24:06.498546+00', true, 2200.00, 0.00, true, NULL, '4002312', NULL, NULL, false, NULL, NULL, '0x23eFF135d247329e2484B565162eF27F1b7fd075', NULL, true, '2025-10-17 05:24:06.498546+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('76354d9e-d519-4f8e-af3f-900061308609', '03D636', 'ayucororo59@gmail.com', NULL, 'B43A3D', '2025-09-08 04:01:35.892767+00', '2025-09-08 04:01:35.892767+00', true, 0.00, 0.00, false, NULL, '3895160', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('bc6b780c-7084-4dc7-8336-c1a31ce5333a', 'F8431B', 'abfact@gmail.com', NULL, '07712F', '2025-08-18 07:33:35.964904+00', '2025-10-14 10:50:46.171179+00', true, 1100.00, 0.00, true, NULL, '26185050', NULL, NULL, false, NULL, NULL, '0x5A4fabF2CfD478fB22827c6B13b7e6e159B372fa', NULL, true, '2025-10-14 10:50:46.171179+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('e30d1e99-16d5-4a57-a433-2839dfc32346', '356B74', 'ck73967396@gmail.com', NULL, '6764B9', '2025-08-04 13:19:07.881595+00', '2025-11-05 10:34:52.893+00', true, 1100.00, 0.00, true, NULL, '4000750', NULL, NULL, false, NULL, NULL, '0x8F0DB67d3Aa392c104d1C9bB1bD798F76eB9618F', NULL, true, '2025-10-15 08:49:18.681853+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('997235e8-7764-47f2-b2e1-a80e36b6b3cb', 'F88096', 'madflippy7@gmail.com', NULL, '07712F', '2025-09-08 16:55:43.153171+00', '2025-09-08 16:55:43.153171+00', true, 0.00, 0.00, false, NULL, '26271478', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('42d035a0-3131-4e17-8d26-a90bc10fb4f3', '2A973B', 'saihitori358@gmail.com', NULL, '80AADD', '2025-07-10 06:35:19.135268+00', '2025-10-09 03:51:40.093814+00', true, 1100.00, 0.00, true, NULL, '3874670', '0x7b6a9e86A10AD3631f216D64cD7D35D9E3906674', NULL, false, NULL, NULL, '0xa787d4545b064Ccb6ce9E30fF6E3BD90FE6DAa69', NULL, true, '2025-10-09 03:51:40.093814+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('098d4f68-f27d-45e3-a5ae-29c1c034b01a', 'A9A42D', 'elg.elg.bam@gmail.com', NULL, '6E1304', '2025-09-09 02:38:30.270073+00', '2025-09-09 02:38:30.270073+00', true, 0.00, 0.00, false, NULL, '26272614', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('3df53f91-402d-4d2d-a425-7582f242db23', '41F5B0', 'u_u.go.1014@gmail.com', NULL, 'E4FC38', '2025-09-09 07:59:15.989261+00', '2025-09-09 07:59:15.989261+00', true, 0.00, 0.00, false, NULL, '26273437', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('ef0234a0-8913-4ea6-bfcd-39f393742136', '5AE03B', 'sonoya1109@gmail.com', NULL, 'E12E15', '2025-10-23 11:20:49.967339+00', '2025-10-23 11:29:58.309895+00', true, 1100.00, 0.00, false, NULL, '26384399', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('301dfe0b-eaed-4bdd-9bde-9b58d9e91063', '076D31', 'koma20171121@gmail.com', NULL, '917123', '2025-10-11 05:56:07.800665+00', '2025-10-11 06:56:46.381139+00', true, 1100.00, 0.00, false, NULL, '26355649', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('b3c08bfe-09bb-43c1-821b-3193acd9f46c', 'DEB705', 'h.shibata.0926@gmail.com', NULL, 'C035D7', '2025-08-27 05:44:32.502736+00', '2025-08-27 05:44:32.502736+00', true, 1100.00, 0.00, true, NULL, '26221377', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('07bf35e6-d410-4571-9c14-8236385606b2', 'A0535F', 'spaceleo105@gmail.com', NULL, 'FD6DC2', '2025-09-15 06:23:43.063567+00', '2025-09-15 06:23:43.063567+00', true, 0.00, 0.00, false, NULL, '26292399', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('be8cd121-9f7f-40ad-be44-8385b7cab3b1', 'E6FE4D', 'soukou.cha0224yukie@gmail.com', NULL, '1A1610', '2025-08-19 05:05:28.791228+00', '2025-11-04 06:21:42.461+00', true, 1100.00, 0.00, true, NULL, '26187204', NULL, NULL, false, NULL, NULL, '0x8faD7fCFCd69F7259D2677d99A3D583859C60953', NULL, true, '2025-10-09 03:15:31.835469+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('201be258-98eb-467d-ae14-035daa06eea3', '850BCC', 'julia.kb@gmail.com', NULL, 'CE4FF7', '2025-09-12 05:10:12.549199+00', '2025-09-12 05:10:12.549199+00', true, 0.00, 0.00, false, NULL, '26283839', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('af539de3-a30c-4718-9763-b8f4f0cb63b1', '858570', 'hisae03240320@gmail.com', NULL, '1A1610', '2025-08-19 04:40:05.652239+00', '2025-11-04 06:22:26.372+00', true, 1100.00, 0.00, true, NULL, '26187160', NULL, NULL, false, NULL, NULL, '0x9864912e6BF1c2b16Fc1Fce472c529962B09681e', NULL, true, '2025-10-09 03:16:40.635168+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('c45f263b-a445-47c5-bd22-249eb52371d7', '7DCFB7', 'muma.mieko@gmail.com', NULL, 'A81A5E', '2025-08-16 05:23:49.451223+00', '2025-11-04 06:23:30.764+00', true, 1100.00, 0.00, true, NULL, '26178931', NULL, NULL, false, NULL, NULL, '0xc56355c6f4D5C79d6f4aE2C39C58cEF8a482503A', NULL, true, '2025-10-25 10:48:44.029547+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-15', false, false),
+	('16330bd1-c12e-492a-9cc4-ca6b998d56a0', '6E8123', 'torihjp09@gmail.com', NULL, '938133', '2025-09-06 12:08:04.774265+00', '2025-11-05 05:09:19.103+00', true, 0.00, 0.00, false, NULL, '26263755', NULL, NULL, false, NULL, NULL, '0x694EFE5D8e390e778557C23B5d400d5CAbe7D83E', NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('b3ee2115-1f10-474d-90b4-6ea3b24c6d4b', 'B40CA6', 'cccmyyy_33310822@yahoo.ne.jp', NULL, NULL, '2025-09-13 09:15:52.740768+00', '2025-09-13 09:15:52.740768+00', true, 0.00, 0.00, false, NULL, '26287597', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('77a59b5e-8928-4ee1-85bf-7b45b13b7a08', '67A45C', 'c.n.isy324@gmail.com', NULL, '7ECF42', '2025-09-13 13:29:18.180604+00', '2025-09-13 13:29:18.180604+00', true, 0.00, 0.00, false, NULL, '26288118', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7a7f17b4-8f30-4d17-ad86-2cd3d2bcafb3', '4BBE5F', 'hakuryu333.net@gmail.com', NULL, '7ECF42', '2025-09-16 15:39:52.049544+00', '2025-09-16 15:39:52.049544+00', true, 0.00, 0.00, false, NULL, '26297235', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('fb7eb2f8-282a-45a7-93d5-74e08b4944d9', '6022BA', 'iwanedenki@gmail.com', NULL, '099358', '2025-09-17 04:30:04.815011+00', '2025-09-17 04:30:04.815011+00', true, 0.00, 0.00, false, NULL, '26298424', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('d1058485-8f6e-4c39-87d9-d9c4cc9f5aea', 'DF427F', 'sakaeseki059@gmail.com', NULL, '2F6364', '2025-09-17 05:31:09.983464+00', '2025-09-17 05:31:09.983464+00', true, 0.00, 0.00, false, NULL, '3908475', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('e3dd0b28-b075-4de3-b9cb-87507a414f5e', '7AFBEE', 'o9o4o3oxxxx@gmail.com', NULL, 'E4FC38', '2025-09-17 10:07:45.573289+00', '2025-09-17 10:07:45.573289+00', true, 0.00, 0.00, false, NULL, '26299148', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('7f4c0e65-7715-476c-854e-d97ac1894557', '412F6A', 'ritz.nov08@gmail.com', NULL, NULL, '2025-09-21 12:39:19.362742+00', '2025-09-21 12:39:19.362742+00', true, 0.00, 0.00, false, NULL, '26309504', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('988a6f92-9343-4ff9-974e-4f422e3a7b71', '380CE2', 'cdp100million@gmail.com', NULL, '773AC7', '2025-11-01 08:00:43.812894+00', '2025-11-01 08:00:43.812894+00', true, 0.00, 0.00, false, NULL, '123456', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('0c6e8286-43c7-4fca-bc7a-581197dfb506', '127B98', 'risaringo9585@gmail.com', NULL, '394CEC', '2025-08-15 01:38:53.067425+00', '2025-08-15 01:38:53.067425+00', true, 1100.00, 0.00, true, NULL, '26176045', NULL, NULL, false, NULL, NULL, 'TCbJgyV2H9zPmJX1DLaQkAeuTLmN76D2jq', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('58b6cb03-3482-43e9-ab05-cda46dbcaf52', 'A46E6C', 'panasi77@icloud.com', NULL, 'E9557E', '2025-11-05 08:17:14.313862+00', '2025-11-05 09:35:12.612395+00', true, 1100.00, 0.00, false, NULL, '26407699', NULL, NULL, false, NULL, NULL, '0x92ed6E034900bF4f212b6a0Eb4541657B1f2c333', NULL, true, '2025-11-05 09:35:12.612395+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('8fe8ae75-f770-43fb-834c-fda49668e6d3', '6BCCED', 'basarasystems@gmail.com', NULL, NULL, '2025-06-17 11:19:02.149928+00', '2025-06-21 09:14:26.462954+00', true, 0.00, 0.00, false, NULL, '3773831', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('dfc0dd7f-54f3-4286-8488-00dd79c34bf2', 'CA66A9', 'nomadic5732@gmail.com', NULL, 'E12E15', '2025-10-08 10:30:18.393775+00', '2025-10-08 10:35:41.657389+00', true, 1100.00, 0.00, false, NULL, '26349578', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('8aa559e5-14c4-45ee-8aa0-56037d600396', 'EA7C20', 'mxwrkrosy@gmail.com', NULL, '2443DD', '2025-07-30 08:37:22.764013+00', '2025-10-09 03:27:31.933802+00', true, 1100.00, 0.00, true, NULL, '3972199', NULL, NULL, false, NULL, NULL, '0xbA21a093E7CC5bF5dB6970a7E9CE9FE8b6a5b64A', NULL, true, '2025-10-09 03:27:31.933802+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('65b79ccf-ede9-44e7-b810-15d19170cc4f', 'C31741', 'riebou311@gmail.com', NULL, '81F952', '2025-08-24 05:40:27.175623+00', '2025-10-08 05:41:54.2499+00', true, 2200.00, 0.00, true, NULL, '26207288', NULL, NULL, false, NULL, NULL, '0xbD06eb8884fcC8A239A84Dc8baDf8fCF9022Cc68', NULL, true, '2025-10-08 05:41:54.2499+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('d317da32-4fd2-46ee-8f56-b615ce1f2983', 'DAD086', 'yoshi.naga525@gmail.com', NULL, '099358', '2025-09-22 22:13:59.482973+00', '2025-09-22 22:13:59.482973+00', true, 0.00, 0.00, false, NULL, '26311917', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('6db1e5fa-cb99-4362-8477-1a2167fb2875', '82DD3F', 'mugennogotoku358@gmail.com', NULL, 'A827F5', '2025-08-27 13:55:28.835207+00', '2025-09-23 04:44:01.466+00', true, 0.00, 0.00, false, NULL, '3802545', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('e2f4c34b-c792-4d69-b576-f60fa9cbda12', '9BB49B', 'hitomi8579@gmail.com', NULL, '4D247C', '2025-10-04 06:27:53.258056+00', '2025-10-04 06:27:53.258056+00', true, 0.00, 0.00, false, NULL, '26342138', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('c44682bb-a966-49da-9e08-cc2ad6030667', '0BBAE0', 'kurashisociety@gmail.com', NULL, '07712F', '2025-10-04 06:46:02.634207+00', '2025-10-04 06:46:02.634207+00', true, 0.00, 0.00, false, NULL, '3895719', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('f70fb41f-80b0-4d15-ab74-c22f7df6d213', '2533DA', 'decollage58@gmail.com', NULL, '917123', '2025-10-11 02:47:16.521981+00', '2025-10-15 03:26:41.294413+00', true, 1100.00, 0.00, false, NULL, '26355378', NULL, NULL, false, NULL, NULL, '0x80F1584D9d18F743B43395d3BB368f83bd5A4Fc5', NULL, true, '2025-10-15 03:26:41.294413+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('71966cb7-11b6-45e4-ab4e-e762ff715608', '8F7AD9', 'kyoka.koreeda@gmail.com', NULL, '07712F', '2025-07-31 01:18:07.546756+00', '2025-10-20 06:39:28.540669+00', true, 1100.00, 0.00, false, NULL, '3978945', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('9d8d627c-4fd6-44a9-8df4-51c566cda6c2', 'C0E0E0', 'ikariko0510@gmail.com', NULL, '394CEC', '2025-08-13 06:37:57.75613+00', '2025-08-13 06:37:57.75613+00', true, 2200.00, 0.00, true, NULL, '4020861', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('f80bd5d8-4240-4c7b-989d-1f0829c05e44', '225F87', 'akihiro.y.grant@gmail.com', NULL, '5A708D', '2025-08-15 14:04:43.906337+00', '2025-11-04 06:11:24.5+00', true, 1100.00, 0.00, true, NULL, '26177615', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('150be515-6724-4a3c-9087-70f82f6d1530', '1D0200', 'yoshie1235t@gmail.com', NULL, '4D247C', '2025-09-25 09:28:58.358155+00', '2025-09-25 09:28:58.358155+00', true, 0.00, 0.00, false, NULL, '26322709', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('a3c66d59-c825-4024-8726-80d1b178f347', 'C37E74', '990032ck@gmail.com', NULL, '62CED1', '2025-08-01 08:43:49.725265+00', '2025-11-04 06:14:06.922+00', true, 2200.00, 0.00, true, NULL, '3989068', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('88b5f1c4-bd4e-4f93-bb4b-553f84d8e0e0', 'E1A5D5', 'mie.exo.k@gmail.com', NULL, '394CEC', '2025-08-14 01:45:58.498177+00', '2025-08-14 01:45:58.498177+00', true, 1100.00, 0.00, true, NULL, '4022777', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('c98c9376-0dd3-464d-b62b-f519451f1b71', '0B2371', 'f222.k927@gmail.com', NULL, '8F5343', '2025-08-17 04:30:34.854246+00', '2025-08-17 04:30:34.854246+00', true, 11000.00, 0.00, true, NULL, '123456', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('999837af-6bf5-41ac-a273-030eaaf5c74f', 'D834EA', 'balinaokomining@gmail.com', NULL, '07712F', '2025-09-27 07:19:06.362691+00', '2025-09-27 07:19:06.362691+00', true, 0.00, 0.00, false, NULL, '26327826', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('67ec5bbb-dd7f-4f38-bd09-55ec6f80f393', '8F51C6', 'onenextmining@gmail.com', NULL, '07712F', '2025-09-27 10:34:30.247652+00', '2025-09-27 10:34:30.247652+00', true, 0.00, 0.00, false, NULL, '3902624', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('0f08a996-4be3-46f6-a049-7b4b741b30b3', 'D08E40', 'jiyuuliving@gmail.com', NULL, 'C035D7', '2025-09-28 03:25:47.553802+00', '2025-09-28 03:25:47.553802+00', true, 0.00, 0.00, false, NULL, '26329854', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('391fccc9-d35f-4c3d-bedf-f2f4e0718d44', '9493FE', 'monkado1117@gmail.com', NULL, 'BC3409', '2025-09-29 07:13:23.978792+00', '2025-09-29 07:13:23.978792+00', true, 0.00, 0.00, false, NULL, '3889990', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('c23eacc4-9cd0-48fc-83be-708d3d8ba8ba', '02637E', 'natural.rika@gmail.com', NULL, '099358', '2025-10-12 15:18:24.299155+00', '2025-10-12 15:18:24.299155+00', true, 0.00, 0.00, false, NULL, '26359378', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('8b6d27fd-11fa-4d8e-8324-be73baa44802', 'AA65D3', 'shigeru@issue.bz', NULL, '773AC7', '2025-08-05 12:54:31.231105+00', '2025-08-05 12:54:31.231105+00', true, 1100.00, 0.00, true, NULL, '3175949', NULL, NULL, false, NULL, NULL, 'TSHB64rhmzxodqz3fVs1HRCxtPC4JQBxxf', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('44360612-cf54-4d1e-bfd9-0379dbc54d57', 'A605F4', 'atsuhimekojima0208@gmail.com', NULL, '0B2371', '2025-08-17 04:39:09.198484+00', '2025-08-17 04:39:09.198484+00', true, 5500.00, 0.00, true, NULL, '123456', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('8a9e0a09-3ba0-4492-9b7c-42df9caee4db', '7B9F5B', 'ka.kimura555@gmail.com', NULL, '6E1304', '2025-08-24 08:56:36.091054+00', '2025-11-04 06:24:03.642+00', true, 1100.00, 0.00, true, NULL, '26208166', NULL, NULL, false, NULL, NULL, '0x5B6597358fF2B58B495D6476e283e9e189E744FF', NULL, true, '2025-10-08 05:41:11.197434+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-15', false, false),
+	('71529506-d3b3-429c-86ba-04b7bd63fc64', 'B329F0', 'koerinda@gmail.com', NULL, '490F84', '2025-10-28 09:19:47.541044+00', '2025-11-05 06:57:38.954127+00', true, 1100.00, 0.00, false, NULL, '26384088', NULL, NULL, false, NULL, NULL, '0xf8DA85AA6ce5cD3Cd83E076FAE336BFBcbb69a92', NULL, true, '2025-11-05 06:57:38.954127+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('9e6a6980-ab31-4315-8bdb-f6ff46d8f0e4', 'A5E3EA', 'rekisasaki@gmail.com', NULL, NULL, '2025-10-02 09:40:48.345332+00', '2025-10-02 09:40:48.345332+00', true, 0.00, 0.00, false, NULL, '26242032', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('821179ff-a2e1-40d8-9947-5cb254a43e4a', '7D5A07', 'minid708@gmail.com', NULL, '04FF0C', '2025-10-06 07:54:29.344236+00', '2025-10-20 11:33:20.190065+00', true, 15400.00, 0.00, false, NULL, '26345570', NULL, NULL, false, NULL, NULL, 'minid708@gmail.com', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('96044dbf-fb4d-484c-8606-b953a95975c2', '8EEC73', 'atsuko02081@gmail.com', NULL, 'A605F4', '2025-08-17 04:52:07.378298+00', '2025-08-17 04:52:07.378298+00', true, 5500.00, 0.00, true, NULL, '12345', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('b101e6c1-6704-4b62-b0cf-81956aaa017f', '885952', 'ahba02089@gmail.com', NULL, '8EEC73', '2025-08-17 05:01:20.565448+00', '2025-08-17 05:01:20.565448+00', true, 5500.00, 0.00, true, NULL, '123456', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('a741901b-2785-4991-ba6f-b78b7fd36b5a', 'F2A752', 'mh.10.17.p@gmail.com', NULL, '8F5343', '2025-08-18 02:17:40.107797+00', '2025-08-18 02:17:40.107797+00', true, 3300.00, 0.00, true, NULL, '26184550', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('6278a124-39ac-49cf-85c2-95a5f6cffb3d', '320D5E', 'yukarimama1984@gmail.com', NULL, '4DF9A5', '2025-09-25 03:55:24.921783+00', '2025-10-25 10:37:36.088869+00', true, 1100.00, 0.00, false, NULL, '26321733', NULL, NULL, false, NULL, NULL, '0x438056E3fC4f15b7a4520053AcC91C5AFb194C93', NULL, true, '2025-10-25 10:37:36.088869+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-15', false, false),
+	('c8d435ca-b028-42a4-851b-4e05d371208d', '3DE7BA', 'aki.yajima@gmail.com', NULL, '07712F', '2025-08-20 03:37:57.484358+00', '2025-10-31 09:56:47.22683+00', true, 1100.00, 0.00, true, NULL, '26190386', NULL, NULL, false, NULL, NULL, '0x329a9B36908ccd5A4AE33ab76f55B8d1fbb0C714', NULL, true, '2025-10-31 09:56:47.22683+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('985bb7cc-23b3-455e-90d1-30e5941f810b', 'FC2F0B', 'sunmoon6811@gmail.com', NULL, 'C31741', '2025-10-12 16:08:52.426056+00', '2025-10-12 16:08:52.426056+00', true, 0.00, 0.00, false, NULL, '26359490', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('787c8903-9a71-45d4-af41-32215a8fe8e2', '22CCAC', 'kazu123masaru@gmail.com', NULL, '07712F', '2025-08-20 08:03:51.329499+00', '2025-08-20 08:03:51.329499+00', true, 11000.00, 0.00, true, NULL, '3970919', NULL, NULL, false, NULL, NULL, '0x075742cF12ef7b922808d8f4dC67DBE704a98b35', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('354972d5-bd18-47b7-96fc-90a52d05c928', '17BEFD', 'sonoya1109+1@gmail.com', NULL, '5AE03B', '2025-10-23 11:34:54.828204+00', '2025-10-23 11:42:35.746574+00', true, 1100.00, 0.00, false, NULL, '26384399', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('0d98298f-a23b-460c-b7f1-ed625586a05d', '93E0DC', 'stkrln0808@gmail.com', NULL, 'E03FDE', '2025-11-01 08:03:04.141163+00', '2025-11-01 08:03:04.141163+00', true, 0.00, 0.00, false, NULL, '123456', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('f5529e2d-2af3-4416-90c4-b1edeb1541e1', 'AC7086', 'flhx2012d@gmail.com', NULL, '8F5343', '2025-10-28 12:14:22.778405+00', '2025-10-28 12:18:28.1024+00', true, 1100.00, 0.00, false, NULL, '26393468', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('d889bba9-0557-41b2-b6a9-70272c3a87ae', '20248A', 'balance.p.p.p.p.1060@gmail.com', NULL, '225F87', '2025-08-20 13:29:53.262593+00', '2025-11-04 06:11:12.49+00', true, 1100.00, 0.00, true, NULL, '26192259', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-15', false, false),
+	('eec760d5-cc02-4fac-ad04-58c22dea671b', '94A681', 'kazuny504@gmail.com', NULL, '62CED1', '2025-08-05 04:07:25.056756+00', '2025-11-04 06:14:26.372+00', true, 1100.00, 0.00, true, NULL, '4001909', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-10-01', false, false),
+	('5ad8d5a4-87ec-4122-86f6-8c8b3d7455ad', '2EF243', 'happysmileneko@ezweb.ne.jp', NULL, 'C17025', '2025-08-19 06:31:43.642789+00', '2025-11-04 06:18:15.947+00', true, 1100.00, 0.00, true, NULL, '26187115', NULL, NULL, false, NULL, NULL, '0xC02BBBfdB733f76066D7B230390E5D2ffcBdB540', NULL, true, '2025-10-08 08:29:40.265271+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('c7dec80c-8a93-4515-9dcf-ac9704658356', '29581F', 'marsarsakai@gmail.com', NULL, '5036CF', '2025-08-19 07:05:24.037009+00', '2025-11-04 06:20:21.709+00', true, 1100.00, 0.00, true, NULL, '26187164', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('ac651a45-02be-4f75-af64-2b76403261ab', 'E77AA7', 'keikoiwao1036@gmail.com', NULL, '1A1610', '2025-08-19 06:53:53.261047+00', '2025-11-04 06:20:30.689+00', true, 1100.00, 0.00, true, NULL, '26187148', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('f8459890-859f-46af-b573-b072a49decca', '865483', 'ways21kimura@gmail.com', NULL, 'C17025', '2025-08-19 06:26:16.829644+00', '2025-11-04 06:20:49.1+00', true, 1100.00, 0.00, true, NULL, '26187414', NULL, NULL, false, NULL, NULL, '0x57578CCFE15F20f73E71d84041BE50836b983aB0', NULL, true, '2025-10-08 08:30:35.379729+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('a46b3df0-4e51-4f45-9194-59f7eb86a915', '378E29', 'kenko.0429@gmail.com', NULL, '62CED1', '2025-08-19 06:52:22.841577+00', '2025-11-04 06:21:12.121+00', true, 1100.00, 0.00, true, NULL, '26187362', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('b9b79e7b-ad74-4def-a2d8-d445c9824fb4', '8F3D05', 'kazueyamazaki0518@gmail.com', NULL, '1A1610', '2025-08-05 05:20:22.689322+00', '2025-11-04 06:21:27.501+00', true, 1100.00, 0.00, true, NULL, '4002301', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('c6be0e89-8827-4beb-a533-cb3143a226ad', 'B1BF1F', 'azuki.mumu3@gmail.com', NULL, 'B51CA4', '2025-08-19 07:03:15.987335+00', '2025-11-04 06:22:17.871+00', true, 1100.00, 0.00, true, NULL, '26187514', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-01', false, false),
+	('0f277212-107e-443f-90e7-9ee62b99b2f4', 'D3FE28', 'masaemorisawa@gmail.com', NULL, 'A81A5E', '2025-08-05 09:23:15.333979+00', '2025-08-05 09:23:15.333979+00', true, 1100.00, 0.00, true, NULL, '3908267', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('cd61d3d5-479d-4806-a48c-c61ec1264870', 'AC6649', 'tomotomogo@proton.me', NULL, 'A81A5E', '2025-08-16 09:58:07.453901+00', '2025-08-16 09:58:07.453901+00', true, 1100.00, 0.00, true, NULL, '2941598', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('f6811049-41ee-4530-84ef-729157920b88', '351859', 'sanctuary.endo0311@gmail.com', NULL, '07712F', '2025-08-01 05:35:51.91247+00', '2025-08-01 05:35:51.91247+00', true, 1100.00, 0.00, true, NULL, '3988132', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('8c610166-c29b-40cd-aded-18634f416338', '08C96C', 'sakurarin3949@gmail.com', NULL, '394CEC', '2025-08-20 03:22:30.985465+00', '2025-08-20 03:22:30.985465+00', true, 1100.00, 0.00, true, NULL, '26190370', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('2c2e4b53-d080-44d1-af4d-34cf9a4f7007', '994D9D', 'mrfam.lovely@gmail.com', NULL, '351859', '2025-08-21 12:21:30.011639+00', '2025-08-21 12:21:30.011639+00', true, 1100.00, 0.00, true, NULL, '4007383', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('45546e50-830e-4620-b303-7b9e4c5a4d2c', 'ED9E45', 'oidon.s+coinw@gmail.com', NULL, '840D16', '2025-08-21 04:08:26.893344+00', '2025-08-21 04:08:26.893344+00', true, 1100.00, 0.00, true, NULL, '3167549', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('c2d7ee66-3c6e-40b4-a50f-8e51b9b75145', '723997', 'hagikyonmining@gmail.com', NULL, '07712F', '2025-08-22 06:24:23.111513+00', '2025-08-22 06:24:23.111513+00', true, 1100.00, 0.00, true, NULL, '26198586', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('4985de83-828d-4539-b580-4bea847947f9', '6DA8C7', 'cherry28sa@gmail.com', NULL, '3C06BA', '2025-10-11 03:58:25.9554+00', '2025-10-26 03:37:25.249171+00', true, 1100.00, 0.00, false, NULL, '26327672', NULL, NULL, false, NULL, NULL, '0xc5970386F8b066DDf8b2c2A32fe817Bb1F1fD988', NULL, true, '2025-10-26 03:37:25.249171+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-15', false, false),
+	('03218c2c-c972-4b4d-bc20-c7dd44bb28ec', '31B405', 'cibimi070@gmail.com', NULL, '55F766', '2025-10-12 06:25:27.499259+00', '2025-10-12 11:41:40.463472+00', true, 1100.00, 0.00, false, NULL, '26358065', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('84792d4b-5f83-4ca8-952b-10b962a1248b', 'B8D4D3', 'supremexyz0001+2@gmail.com', NULL, 'FE75AC', '2025-07-27 02:00:30.106143+00', '2025-10-09 03:32:15.647392+00', true, 1100.00, 0.00, true, NULL, '2791629', NULL, NULL, false, NULL, NULL, '0x28ff9B47E3E947002BA15c76a90EC91Bfc7FcF9B', NULL, true, '2025-10-09 03:32:15.647392+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('71d3659b-433b-4ae5-b137-d7841206352f', 'E7ECDC', 'nakano@en-design.com', NULL, '04FF0C', '2025-10-08 04:19:38.741252+00', '2025-10-08 04:19:38.741252+00', true, 0.00, 0.00, false, NULL, '26349125', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('dbf18976-af30-483c-a72b-824c400d240a', 'CCB464', 's500art@gmail.com', NULL, 'C79F62', '2025-10-16 07:45:39.566695+00', '2025-10-16 07:45:39.566695+00', true, 0.00, 0.00, false, NULL, '26368585', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('ab09d799-c7e6-4fcb-873a-2f592c211c70', '4B03EC', 'y2reo.2@gmail.com', NULL, 'C73F2D', '2025-10-18 03:37:16.097514+00', '2025-10-18 03:37:16.097514+00', true, 0.00, 0.00, false, NULL, '26237816', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('2e0dac06-69ad-4b6f-a605-844812efe54c', 'E28F37', 'yuzuki.aoi523840326@gmail.com', NULL, 'C79F62', '2025-10-08 06:25:52.32935+00', '2025-10-30 01:52:28.679+00', true, 1100.00, 0.00, false, NULL, 'Yu523840326.com', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('c4afae93-1ecb-4066-9d3a-fbc88d49ea53', '5DAC9D', 'fullpon@gmail.com', NULL, '264E3C', '2025-10-19 13:40:23.61434+00', '2025-11-01 11:20:28.703803+00', true, 1100.00, 0.00, false, NULL, '26375271', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('71d1f763-be2b-46c1-8f83-e776d6be9294', '7E74B4', 'arigatou888333555@gmail.com', NULL, '4D247C', '2025-10-30 07:52:04.115922+00', '2025-10-30 07:52:04.115922+00', true, 0.00, 0.00, false, NULL, '26396607', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('82ec4245-7ab3-4e7f-8a05-77298db8cbaf', '9A3A16', 'sh5552493day@yahoo.co.jp', NULL, '59C23C', '2025-09-01 05:14:21.707675+00', '2025-10-28 04:58:51.190614+00', true, 171600.00, 0.00, true, NULL, '26240567', NULL, NULL, false, NULL, NULL, '0x89AAF718Ea5EF1f5E55ad11efcf0026CdDD7eE9f', NULL, true, '2025-10-08 05:22:44.193383+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('5a25a3c0-279a-45e8-9c5c-082e7746ebd2', '684B00', 'nekoni.karikari7337@gmail.com', NULL, 'CABC84', '2025-07-19 07:20:16.080667+00', '2025-11-04 06:16:48.296+00', true, 2200.00, 0.00, true, NULL, '3918625', NULL, NULL, false, NULL, NULL, '0x60204e6d3336E56A64B4336995b3634F5a609500', NULL, true, '2025-10-09 03:35:35.287613+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-01', false, false),
+	('ef69e322-e65f-47a7-a142-21e09bb1fb71', 'F60F23', '777kuruko@gmail.com', NULL, '9431BA', '2025-11-02 05:37:16.303038+00', '2025-11-04 03:04:46.393833+00', true, 1100.00, 0.00, false, NULL, '26399624', NULL, NULL, false, NULL, NULL, '0x892fF7D95b66b5bCBCc1c7f42c114D136610AfA8', NULL, true, '2025-11-04 03:04:46.393833+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('4dede09d-37d9-431d-870d-1179b5d6fa3f', 'C035D7', 'nisekoamakara@gmail.com', NULL, 'F8431B', '2025-08-23 23:14:51.990368+00', '2025-10-08 05:52:06.665057+00', true, 1100.00, 0.00, true, NULL, '26206529', NULL, NULL, false, NULL, NULL, '0x6719c419A365f171B27dc20Af08d7D0AAD47894C', NULL, true, '2025-10-08 05:52:06.665057+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('dab6cacd-9a68-4ba6-943a-04cf25a0c65c', '78D313', 'funita385b@gmail.com', NULL, '5A708D', '2025-08-12 05:23:52.544699+00', '2025-08-12 05:23:52.544699+00', true, 1100.00, 0.00, true, NULL, '4017879', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('d282092c-0cae-436c-b8b0-06a17a603fd6', '6E1304', 'masa19751108@gmail.com', NULL, '7A9637', '2025-06-22 09:39:14.830486+00', '2025-06-22 10:14:13.711643+00', true, 1100.00, 0.00, true, '2025-06-22 09:56:44.661441+00', '3722480', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('eaaa2fa9-74bc-416c-8fed-d2a78741fd9a', 'F79391', 'hp3rd@axlcore.com', NULL, '5112D6', '2025-10-20 03:02:16.610015+00', '2025-10-26 03:36:23.485316+00', true, 1100.00, 0.00, false, NULL, '26376124', NULL, NULL, false, NULL, NULL, '0x1e28a1e33477d3114242b60805e76c85e27d550a', NULL, true, '2025-10-26 03:36:23.485316+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('0d0a2bed-44aa-4608-9649-a7dd55dcc5a4', '66D65D', 'hasshupairotto+1@gmail.com', NULL, '4F1773', '2025-07-02 11:16:20.558872+00', '2025-07-02 11:16:20.558872+00', true, 1100.00, 0.00, true, '2025-07-02 11:20:39.559341+00', '3881113', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('60f7f972-4d8e-4054-b02d-245b66716caf', '892389', 'hiroshi.inve@gmail.com', NULL, 'AA65D3', '2025-08-15 06:01:08.345424+00', '2025-10-09 03:20:29.564103+00', true, 1100.00, 0.00, true, NULL, '3167535', NULL, NULL, false, NULL, NULL, '0xadf082adaa490b0a563cc8b28fa50ad3d271803d', NULL, true, '2025-10-09 03:20:29.564103+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('73ffba6a-87b9-4497-aaa3-9512da363443', '840D16', 'quesodesoya@yahoo.co.jp', NULL, '892389', '2025-08-19 09:40:02.053724+00', '2025-10-15 08:47:34.373136+00', true, 1100.00, 0.00, true, NULL, '3167536', NULL, NULL, false, NULL, NULL, '0x160573f2117614F42aBB50D79F086c0110e63605', NULL, true, '2025-10-15 08:47:34.373136+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('7a00b175-6935-4e9c-ae54-1c1a4bb62c20', 'AB16AA', 'piacere0310@gmail.com', NULL, 'EE904D', '2025-08-07 09:02:54.5348+00', '2025-10-09 03:24:38.552239+00', true, 1100.00, 0.00, true, NULL, '3988352', NULL, NULL, false, NULL, NULL, '0x24caf38Ac11e56f20c4af78C424971DFe95d7E37', NULL, true, '2025-10-09 03:24:38.552239+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('5b55f356-c3bb-42af-8eab-b43a55129fcd', 'EE904D', 'shion337wave@gmail.com', NULL, 'EA7C20', '2025-07-30 14:26:35.539804+00', '2025-10-09 03:26:42.77865+00', true, 1100.00, 0.00, true, NULL, '3972783', NULL, NULL, false, NULL, NULL, '0x47362E4bfAF95c533b4bdcF67fcB5399BBCEE43E', NULL, true, '2025-10-09 03:26:42.77865+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('fcf9b328-e9f3-492f-832d-f9e2a0b6ab8c', '092270', 'happy1016728@gmail.com', NULL, '1A1610', '2025-08-19 05:39:42.719889+00', '2025-10-08 08:31:11.833424+00', true, 1100.00, 0.00, true, NULL, '26187202', NULL, NULL, false, NULL, NULL, '0x229d5aA7A1E521deF689D79e796DE40781b39a5d', NULL, true, '2025-10-08 08:31:11.833424+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('128a9157-e021-42bc-82b7-214cdaccc1c5', 'B25642', 'ksmy01020402@gmail.com', NULL, '5A708D', '2025-08-24 18:37:18.494042+00', '2025-08-24 18:37:18.494042+00', true, 1100.00, 0.00, true, NULL, '26210880', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('8c3eb633-5cf1-412f-8735-5e9c9677114a', '8B6B9B', 'bigsmile0624@gmail.com', NULL, 'F733BD', '2025-08-24 08:40:03.198461+00', '2025-08-24 08:40:03.198461+00', true, 1100.00, 0.00, true, NULL, '26208014', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('363bf00b-a876-4c9d-b844-ad8e4cd24e9c', '8B8965', 'wasamon999@gmail.com', NULL, 'C0E0E0', '2025-08-23 02:02:42.98301+00', '2025-08-23 02:02:42.98301+00', true, 1100.00, 0.00, true, NULL, '26202344', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('a0bcd578-7c12-41c1-92c5-5abadc82d137', 'FD9E4F', 'will0525y@gmail.com', NULL, '356B74', '2025-08-26 04:32:30.141498+00', '2025-08-26 04:32:30.141498+00', true, 1100.00, 0.00, true, NULL, '26216652', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('6c532fe5-203f-48da-81ee-033906b69845', '3F679F', 'mugi0619tako0606@gmail.com', NULL, '0B2371', '2025-08-26 05:07:28.67823+00', '2025-08-26 05:07:28.67823+00', true, 1100.00, 0.00, true, NULL, '26216785', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('1c58231e-e5ce-42c3-a859-a20af5db08f6', '047E33', 'kataokatakako91@gmail.com', NULL, '3F679F', '2025-08-26 06:40:06.955096+00', '2025-08-26 06:40:06.955096+00', true, 5500.00, 0.00, true, NULL, '26216785', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('7c792433-720a-428f-834e-c8a25d456ee9', 'BA4B5B', 'a.tagai6161@gmail.com', NULL, '2443DD', '2025-08-26 08:47:48.05941+00', '2025-10-15 09:06:55.748953+00', true, 1100.00, 0.00, true, NULL, '26217282', NULL, NULL, false, NULL, NULL, '0x0Bf62d7069Bfa718f976AdAB2645AfBB9636b911', NULL, true, '2025-10-15 09:06:55.748953+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('90a40c2d-d5fb-4d57-b5c1-299d6fca6658', 'AFE2FB', 'kiyomiiii8856@gmail.com', NULL, '2443DD', '2025-08-26 07:35:46.274516+00', '2025-08-26 07:35:46.274516+00', true, 1100.00, 0.00, true, NULL, '26217148', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('72560528-998a-4289-8b65-821ea687639a', '4C7F6C', 'enotaku0904@gmail.com', NULL, '9DE96C', '2025-08-27 14:00:56.05302+00', '2025-08-27 14:00:56.05302+00', true, 1100.00, 0.00, true, NULL, '3167534', NULL, NULL, false, NULL, NULL, 'TRXPbZYT1cPoXU21tYfz4poegKwvVexwLv', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('148cf2c0-8079-4c90-872d-2175dfd9e159', '80C48F', 'maikotake27@gmail.com', NULL, 'B25642', '2025-08-26 14:59:05.711+00', '2025-08-26 14:59:05.711+00', true, 1100.00, 0.00, true, NULL, '26218776', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('bbf04a69-72ab-4319-9b15-4aaaa033dba9', 'C819F7', 'rekisasaki44@gmail.com', NULL, NULL, '2025-10-11 05:38:18.214113+00', '2025-10-11 07:56:42.857721+00', true, 1100.00, 0.00, false, NULL, '26355604', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('9f40215d-5657-47d0-9d35-a6195e42d0bd', 'F59D48', 'mokayuka130@gmail.com', NULL, '55F766', '2025-10-12 06:27:56.569028+00', '2025-10-20 04:34:20.830824+00', true, 1100.00, 0.00, false, NULL, '26358040', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('0288ce93-ca8c-4f98-ac39-937ad59e7fbb', '779902', 'wwhappyhappyww@gmail.com', NULL, 'C17025', '2025-07-19 07:13:25.707739+00', '2025-10-09 03:36:58.003094+00', true, 2200.00, 0.00, true, NULL, '3918604', NULL, NULL, false, NULL, NULL, '0xcb4105642f27eAf9104300ED705583adafD17037', NULL, true, '2025-10-09 03:36:58.003094+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('f7da35d2-f2fb-48be-bfbc-d1515b970764', 'AA0CEA', 'sisyamakiri@gmail.com', NULL, 'CA7902', '2025-08-20 05:09:19.221977+00', '2025-10-08 05:55:47.022817+00', true, 1100.00, 0.00, true, NULL, '26190615', NULL, NULL, false, NULL, NULL, '0x4E56344dB9e29bf479582dDaf9f5Bb870Aca126c', NULL, true, '2025-10-08 05:55:47.022817+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('dde10203-d6b3-46ca-84c2-6fb3971fad9a', '62EAE3', 'ake.k.ake@gmail.com', NULL, 'EE904D', '2025-08-07 08:59:20.73032+00', '2025-08-07 08:59:20.73032+00', true, 1100.00, 0.00, true, NULL, '3988344', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('f1278050-a154-41b7-b0ef-2000ffd5049a', '2AF0E1', 'sonoya1109+2@gmail.com', NULL, 'E12E15', '2025-10-23 11:47:27.609322+00', '2025-10-23 11:52:24.470305+00', true, 1100.00, 0.00, false, NULL, '26384399', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('3baf9c99-8ec7-4427-8fab-e880ff3c18e0', '45D474', 'choko.miyu.ami@gmail.com', NULL, '1A1610', '2025-08-19 03:30:22.628682+00', '2025-11-04 06:20:10.709+00', true, 1100.00, 0.00, true, NULL, '26187050', NULL, NULL, false, NULL, NULL, '0xBBeA41332e7Caa9206DB95B91Eb46A47Ef095dd4', NULL, true, '2025-10-09 03:19:28.762128+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('945ff17b-e3e2-4119-838a-d8fa979e6178', 'E18A65', 'mizuki4068s@gmail.com', NULL, '1A1610', '2025-08-19 04:15:37.749779+00', '2025-11-04 06:20:41.08+00', true, 1100.00, 0.00, true, NULL, '26180044', NULL, NULL, false, NULL, NULL, '0x619987Fc82295A5Ad08f810BE2E75e454DaCD035', NULL, true, '2025-10-09 03:18:13.469222+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('0dd6ad4e-048d-43ad-b6ea-3a737e6d46f3', '86C126', 'kumika2496@gmail.com', NULL, '1A1610', '2025-08-05 09:01:38.859545+00', '2025-11-04 06:21:58.902+00', true, 1100.00, 0.00, true, NULL, '4002850', NULL, NULL, false, NULL, NULL, '0xC545336834a603271bA0DcBBD91fbc3128218Ba3', NULL, true, '2025-10-09 03:25:28.594146+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('72ecae64-3cc5-4dcb-92a7-05c415efb545', 'DF623D', 'kyoko7oha@gmail.com', NULL, 'A81A5E', '2025-08-19 15:43:25.678208+00', '2025-11-04 06:23:43.864+00', true, 1100.00, 0.00, true, NULL, '26183199', NULL, NULL, false, NULL, NULL, '0x1ED456a7A69cEFb279a21C0873A1863B49029B2F', NULL, true, '2025-10-25 10:47:01.185669+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-15', false, false),
+	('6f2488dc-0089-428e-a10b-958018c61a9f', '2380A3', 'oaiaiaio1226@gmail.com', NULL, 'A81A5E', '2025-08-19 12:25:20.65353+00', '2025-11-04 06:23:53.794+00', true, 1100.00, 0.00, true, NULL, '26188360', NULL, NULL, false, NULL, NULL, '0xcf4308C392F08e4dC4DD2908CD3c8A63c97701e7', NULL, true, '2025-10-25 10:47:48.354883+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-15', false, false),
+	('d058c23d-b0ba-45d1-8f02-a1e4ebbf2fa7', 'D51B93', 'jeune.0515@gmail.com', NULL, '72E487', '2025-07-08 04:55:54.074207+00', '2025-09-23 04:58:58.486+00', true, 1100.00, 0.00, true, '2025-07-08 05:07:51.18485+00', '3892200', NULL, NULL, false, NULL, NULL, '0x45e081C88533CA8d1c790Cd4A348B10006a35Ae8', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('d2744558-dd10-4019-b9c4-3a2d080e1250', '1F7402', 'takashi0717004649@gmail.com', NULL, '264E3C', '2025-11-02 07:01:40.946251+00', '2025-11-02 07:24:51.351937+00', true, 1100.00, 0.00, false, NULL, '26401025', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('69b1eabc-9330-4d1e-abad-0afea1ee4e52', 'F3AAF6', 'orimc74933@yahoo.co.jp', NULL, 'BA790B', '2025-10-23 11:56:07.394423+00', '2025-10-23 11:57:16.545269+00', true, 1100.00, 0.00, false, NULL, '26384382', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('41b27e5f-8bc0-4be4-8375-ad3d55355f6a', '005E0E', 'maiyasoyou@gmail.com', NULL, '4D247C', '2025-10-30 08:10:40.407404+00', '2025-10-30 08:10:40.407404+00', true, 0.00, 0.00, false, NULL, '26396623', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('8164d436-4ac4-4d03-8dbf-ca0f9a6034aa', '5AB27D', 'satokotomisawa@gmail.com', NULL, 'B51CA4', '2025-07-16 10:27:12.567171+00', '2025-11-04 06:12:55.55+00', true, 1100.00, 0.00, true, NULL, '3909375', NULL, NULL, false, NULL, NULL, '0xEA9e439D1e94D930e7c9731A31D45707537784f8', NULL, true, '2025-10-09 03:45:34.124454+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-01', false, false),
+	('e7cefc12-2385-4a6d-b5a2-0c911fef2c99', '1A1610', 'okapon.dsh@gmail.com', NULL, '5AB27D', '2025-07-19 07:00:19.091372+00', '2025-11-04 06:16:26.625+00', true, 2200.00, 0.00, true, NULL, '3918596', NULL, NULL, false, NULL, NULL, '0x19d4CBbE4A6666F6De2e2BE63A7f87f22E168E39', NULL, true, '2025-10-09 03:40:09.789047+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-01', false, false),
+	('f0606a3a-4f4e-4a3b-b63a-24e2e23d1ecf', '040671', 'nancymoore0330@gmail.com', NULL, 'B51CA4', '2025-08-19 06:33:13.196185+00', '2025-11-04 06:18:05.156+00', true, 1100.00, 0.00, true, NULL, '26187219', NULL, NULL, false, NULL, NULL, '0xC9F7c61603aab13b96f9A1a87c4564Cf081885bB', NULL, true, '2025-10-08 08:28:41.807309+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('f3a8174d-d972-4502-9fc9-7c30ca9faa44', '0C65C2', 'masakoeco88@gmail.com', NULL, '040671', '2025-08-19 07:09:55.508281+00', '2025-11-04 06:20:01.019+00', true, 1100.00, 0.00, true, NULL, '26187359', NULL, NULL, false, NULL, NULL, '0x5eB18Dc7a47443582E10d4E636590dbCdE32FB88', NULL, true, '2025-10-08 05:57:26.519829+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('88aac8c8-1b1a-4f3d-9f77-ce3b785be185', 'B6D0D5', 'wakako.and.taka@gmail.com', NULL, '449AA2', '2025-08-19 07:23:41.801157+00', '2025-11-04 06:22:08.233+00', true, 1100.00, 0.00, true, NULL, '26187599', NULL, NULL, false, NULL, NULL, '0xADeB1D4e1ac966b24922CC3A2875864E3C7B6d01', NULL, true, '2025-10-08 05:56:31.768253+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('f866f672-1a73-4569-bef6-d33302e79eee', '24AECB', 'hanasaka8713g@gmail.com', NULL, 'DFCE2F', '2025-07-08 04:13:44.702162+00', '2025-10-09 04:00:55.953741+00', true, 1100.00, 0.00, true, '2025-07-08 04:16:35.323847+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:00:55.953741+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('a584e448-c7c5-4360-b1e8-67f8af980053', '5452E7', 'hayhay7707@gmail.com', NULL, '576E32', '2025-08-28 04:33:50.638022+00', '2025-08-28 04:33:50.638022+00', true, 2200.00, 0.00, true, NULL, '26225720', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('021d1823-c71a-4d45-b874-88e705983ffc', '684AC6', '114514.2514.karushifa@gmail.com', NULL, '59D41C', '2025-08-28 04:59:34.202494+00', '2025-08-28 04:59:34.202494+00', true, 1100.00, 0.00, true, NULL, '26225818', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('71b859db-e760-49bc-9c6b-a0aa4596bf29', 'F69E81', 'tsutomu_watanabe@hotmail.co.jp', NULL, '892389', '2025-08-29 01:09:09.390368+00', '2025-08-29 01:09:09.390368+00', true, 1100.00, 0.00, true, NULL, '26229571', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('1f742eca-fb05-46de-a997-6f47af81e54b', '7B703E', 'info@aikentiku.com', NULL, 'BC9A93', '2025-08-29 08:28:23.508853+00', '2025-08-29 08:28:23.508853+00', true, 1100.00, 0.00, true, NULL, '26230534', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('35b4b753-0716-4cca-800c-94b0ff0f8cdd', 'F6E460', 't.kawamoto.ksr@gmail.com', NULL, '07712F', '2025-09-19 11:59:37.036866+00', '2025-10-15 08:05:40.458413+00', true, 1100.00, 0.00, false, NULL, '26304706', NULL, NULL, false, NULL, NULL, '0x185b2903184eC67aeb67dFB35D2366895918Ede9', NULL, true, '2025-10-15 08:05:40.458413+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('6ce31aa7-e00f-4869-a597-e8015f547281', '14498C', 'grabit1951@gmail.com', NULL, '22CCAC', '2025-09-01 11:25:59.158221+00', '2025-09-01 11:25:59.158221+00', true, 1100.00, 0.00, true, NULL, '26241868', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('4cba76cb-7984-48eb-a2c6-9a0374c2bdec', '892576', 'wowcommunity2023@gmail.com', NULL, '063CE0', '2025-09-03 06:19:05.162503+00', '2025-09-03 06:19:05.162503+00', true, 1100.00, 0.00, true, NULL, '26248874', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('1759f611-767b-449f-bfc1-7f03e742c503', 'FB0A66', 'wowcommunity2023+1@gmail.com', NULL, '892576', '2025-09-03 07:24:11.630537+00', '2025-09-03 07:24:11.630537+00', true, 1100.00, 0.00, true, NULL, '26248874', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('de5ed2e4-45d6-451b-9870-52a9482a1b6a', '1F85EE', 'wowcommunity2023+2@gmail.com', NULL, 'FB0A66', '2025-09-03 07:51:58.086856+00', '2025-09-03 07:51:58.086856+00', true, 1100.00, 0.00, true, NULL, '26248874', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('520c99da-c6ae-4833-83bb-04f9f2e97015', '230F31', 'wowcommunity2023+3@gmail.com', NULL, '1F85EE', '2025-09-03 08:29:13.677489+00', '2025-09-03 08:29:13.677489+00', true, 1100.00, 0.00, true, NULL, '26248874', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-15', false, false),
+	('786c21df-3961-46e3-9f0d-e812551afd8a', 'BA790B', 'camino.official.111@gmail.com', NULL, '218AE2', '2025-10-23 11:25:48.122488+00', '2025-10-23 11:38:48.769711+00', true, 1100.00, 0.00, false, NULL, '26384382', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('0b5269ad-ca17-42e7-9277-22983662f6c6', '1757CC', 'momotoshi1446@gmail.com', NULL, '076D31', '2025-10-11 07:25:32.146226+00', '2025-10-18 01:13:49.563968+00', true, 1100.00, 0.00, false, NULL, '26355846', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('aaf4147e-0c47-4689-9e66-aa9e93034798', 'FD6DC2', '08041884339garo@gmail.com', NULL, '6E1304', '2025-08-31 04:22:52.105097+00', '2025-08-31 04:22:52.105097+00', true, 1100.00, 0.00, true, NULL, '26237316', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('e1a61e3c-103d-4f40-867f-03cff5fc4fe9', '8DDB99', 'inoakiko0820@gmail.com', NULL, '0B2371', '2025-08-28 04:04:16.729452+00', '2025-08-28 04:04:16.729452+00', true, 2200.00, 0.00, true, NULL, '26216775', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('2ad2fa93-d22d-4ebd-8993-fb6c62f446af', '40B221', 'mie123mie54321@gmail.com', NULL, 'FB9CDC', '2025-09-05 05:50:28.937029+00', '2025-10-08 04:37:32.851669+00', true, 1100.00, 0.00, true, NULL, '26259092', NULL, NULL, false, NULL, NULL, '0xdA9f24ff3A4Ecc6285dE6DaAbf50fc34D784809A', NULL, true, '2025-10-08 04:37:32.851669+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('0fe437fd-4ec1-4f42-84ee-6286560f5513', '21721A', 'ken.atae727@gmail.com', NULL, 'FB9CDC', '2025-09-05 05:20:38.0416+00', '2025-10-08 04:38:15.068382+00', true, 1100.00, 0.00, true, NULL, '26258996', NULL, NULL, false, NULL, NULL, '0xe0d3BE1CB500F431Cd35c744ABbdefa9417aE195', NULL, true, '2025-10-08 04:38:15.068382+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('6dfa59b7-7c03-4ee4-b5e7-34050d10c4fa', 'FB9CDC', 'yarenshanxia901@gmail.com', NULL, '59C23C', '2025-09-05 04:57:45.918519+00', '2025-10-08 04:51:08.31362+00', true, 1100.00, 0.00, true, NULL, '26258900', NULL, NULL, false, NULL, NULL, '0x36D268f170c294c846fB735d1d02a57AE8B85353', NULL, true, '2025-10-08 04:51:08.31362+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('8510c56d-f662-4400-9da6-33d77603f3b7', '8A805A', 'kimonji0111@gmail.com', NULL, '07712F', '2025-09-03 14:50:21.743547+00', '2025-10-08 05:02:49.092008+00', true, 1100.00, 0.00, true, NULL, '26251484', NULL, NULL, false, NULL, NULL, '0xb9Eb2D878Db0Bbeefd6Ef30764eA469f91A96d60', NULL, true, '2025-10-08 05:02:49.092008+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('19d977c2-2779-4a72-a9a6-aa46dc0bdd91', '4C3A86', 'a.y.oumee.nok124@gmail.com', NULL, 'E9F758', '2025-08-29 03:32:51.419063+00', '2025-10-15 08:46:25.312501+00', true, 1100.00, 0.00, true, NULL, '3167544', NULL, NULL, false, NULL, NULL, '0xC7E19A162E710d8679Aa8beC5a41DBe2768d6Cfb', NULL, true, '2025-10-15 08:46:25.312501+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('3ae39f8e-fd00-4cd5-9c29-79e13fe6f6d6', 'FCB962', 'satobet95@gmail.com', NULL, 'F2B03A', '2025-08-26 08:25:24.649601+00', '2025-10-08 05:34:04.774514+00', true, 1100.00, 0.00, true, NULL, '3167537', NULL, NULL, false, NULL, NULL, '0x2a73f054f32bb84e54ae45e772d9db3ef19d31b6', NULL, true, '2025-10-08 05:34:04.774514+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('79ef915d-ef8a-4496-b553-0eae19c64c30', 'BC3409', 'whitenorse.17@gmail.com', NULL, '81F952', '2025-07-07 13:52:53.632659+00', '2025-10-09 04:03:48.181925+00', true, 2200.00, 0.00, true, '2025-07-08 05:07:45.256889+00', '3889990', NULL, NULL, false, NULL, NULL, '0x554BD26756A4cE504B2E594FA339375647D4de76', NULL, true, '2025-10-09 04:03:48.181925+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('11fc66f0-2c95-466d-811e-aa83bcae2ea2', 'A50876', 'navyfukada@gmail.com', NULL, '2443DD', '2025-08-25 10:54:16.981897+00', '2025-10-08 05:40:35.143748+00', true, 9900.00, 0.00, true, NULL, '26213620', NULL, NULL, false, NULL, NULL, '0xc72Fb6570363e2CfB35441aB6FCb5023685996C0', NULL, true, '2025-10-08 05:40:35.143748+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('a76519d6-1e02-4ab4-9bf0-ebdbdc3e5fd4', '880053', 'kmetaversek@gmail.com', NULL, '78A3D1', '2025-07-06 10:10:36.335585+00', '2025-10-09 04:11:19.574173+00', true, 1100.00, 0.00, true, '2025-07-06 10:11:37.949595+00', '3888718', NULL, NULL, false, NULL, NULL, '0x647Bf84bF279909281C00A6476CdC4049Bf8879f', NULL, true, '2025-10-09 04:11:19.574173+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('fbed1ddc-d9ec-4458-a927-e1a34d5428c2', 'DEC31E', '358hanasakaa@gmail.com', NULL, '8BF2FC', '2025-07-05 04:21:27.813911+00', '2025-10-09 04:16:24.245653+00', true, 1100.00, 0.00, true, '2025-07-05 04:28:18.514248+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:16:24.245653+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-07-15', false, false),
+	('82f32fda-954f-4d38-9c72-fd3219000749', 'A94B2B', 's2.mico.mico.s2@icloud.com', NULL, 'BC9A93', '2025-09-09 11:29:21.967694+00', '2025-09-09 11:29:21.967694+00', true, 1100.00, 0.00, true, NULL, '26274373', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('aca5f675-d93f-4f59-974d-5c9a5da0b661', 'DC9AEE', 'rie20100412@gmail.com', NULL, 'C035D7', '2025-09-09 12:44:26.509813+00', '2025-09-09 12:44:26.509813+00', true, 1100.00, 0.00, true, NULL, '26274693', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('f0db0988-cd7f-4704-868f-025b9077bd60', '81B308', 'kazushigesomeya@gmail.com', NULL, '6E1304', '2025-08-27 05:28:14.150431+00', '2025-11-04 06:24:13.504+00', true, 9900.00, 0.00, true, NULL, '26221301', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-09-15', false, false),
+	('21fa0342-498b-4cb9-b07e-51ee2ffce5d6', '1DEFED', 'yuki.shirai1949@gmail.com', NULL, 'CEDC61', '2025-09-06 06:39:57.158399+00', '2025-11-04 06:25:16.286+00', true, 1100.00, 0.00, true, NULL, '26262698', NULL, NULL, false, NULL, NULL, '0x6714450d977eDF499CE7b8D9c780AFfc25b47012', NULL, true, '2025-10-08 04:33:16.196149+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('d8b6bc4a-a6ff-45f8-8f47-41b4f82fa69c', '039483', 'mayumi.j0222ayc@ezweb.ne.jp', NULL, 'CEDC61', '2025-09-06 06:34:31.606415+00', '2025-11-04 06:25:56.007+00', true, 1100.00, 0.00, true, NULL, '26262696', NULL, NULL, false, NULL, NULL, '0x9c0A20fFdbd3c891c1B3cCAddcA4525aFbd8A3Ee', NULL, true, '2025-10-08 04:34:28.476079+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('27537a2b-d50b-455e-abca-2d5840ab5b5b', '975A87', 'yus77uke@gmail.com', NULL, '8D01EC', '2025-10-13 14:33:26.954824+00', '2025-10-13 14:33:26.954824+00', true, 0.00, 0.00, false, NULL, '26354966', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('a22c3bcf-43db-48b5-828d-eb2a4e819ddc', '9431BA', 's_miwa@nifty.com', NULL, '3DE7BA', '2025-08-21 04:48:04.607122+00', '2025-10-31 09:55:43.310808+00', true, 1100.00, 0.00, true, NULL, '26193880', NULL, NULL, false, NULL, NULL, '0xae7a37A3827b76d4E52D087d431B7B1014F5c2B5', NULL, true, '2025-10-31 09:55:43.310808+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('df8175b4-2169-4d34-ab8d-fa5f4d093dd2', 'C9DE9F', 'soap0928@gmail.com', NULL, '885952', '2025-08-26 06:17:30.807261+00', '2025-10-15 03:52:39.709233+00', true, 1100.00, 0.00, true, NULL, '26216777', NULL, NULL, false, NULL, NULL, '', NULL, true, '2025-10-15 03:52:39.709233+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('7d5f9a56-2cc7-4a71-96ff-a8aa1686a932', 'C162DD', 't.mitsuko.1989@gmail.com', NULL, '6764B9', '2025-07-17 04:59:58.061383+00', '2025-11-05 10:34:29.089+00', true, 1100.00, 0.00, true, NULL, '3910837', NULL, NULL, false, NULL, NULL, '0x6bA4bf3A85A8A974c70711179C99Ba2Cce4A77b0', NULL, true, '2025-10-15 08:50:25.830236+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('571d740c-6fe2-47fd-95d0-f61119d36ddf', 'B3B3A2', 'center.west.land@gmail.com', NULL, '8A805A', '2025-09-10 07:02:20.072468+00', '2025-09-10 07:02:20.072468+00', true, 1100.00, 0.00, true, NULL, '26277004', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('5e2bfc76-eb4c-4e9c-937a-d099497183cb', 'AC80D0', 'love.kitty0233@gmail.com', NULL, 'A2A479', '2025-09-13 06:53:18.074256+00', '2025-09-13 06:53:18.074256+00', true, 1100.00, 0.00, true, NULL, 'uid:26287261', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('fe05b6eb-59ce-4521-8de3-99a3fa638aaa', '4DF9A5', 'shinazhongxiong@gmail.com', NULL, '1C341A', '2025-09-16 06:36:56.415503+00', '2025-09-16 06:36:56.415503+00', true, 1100.00, 0.00, true, NULL, '3970959', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('e9a9da2d-cfe3-41fe-8b16-87560cf2b05d', 'A515A3', 'ogu.awgp@gmail.com', NULL, 'B8D4D3', '2025-09-13 13:17:07.122489+00', '2025-09-13 13:17:07.122489+00', true, 1100.00, 0.00, true, NULL, '2817632', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('cafda107-e0b5-403e-a565-ade6a590d64f', '79E96F', 'kazuya.d3251@gmail.com', NULL, 'CA7902', '2025-09-17 08:17:54.018667+00', '2025-09-17 08:17:54.018667+00', true, 1100.00, 0.00, true, NULL, '26298908', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('fd109885-9039-40e6-a4ef-a7b3e3f13787', 'D866AD', 'mari.w.2929@gmail.com', NULL, '04161E', '2025-09-19 11:31:33.781559+00', '2025-09-19 11:31:33.781559+00', true, 1100.00, 0.00, true, NULL, '26304592', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('cfd39ace-d80c-481e-b408-e6940f0245b4', '59C23C', 'raita0083@gmail.com', NULL, '177B83', '2025-07-04 10:28:51.698642+00', '2025-10-09 04:18:20.784447+00', true, 1100.00, 0.00, true, '2025-07-04 10:33:07.89493+00', '3885061', NULL, NULL, false, NULL, NULL, '0x67518670e71B3190782B31Bbe9143a1A039aDd70', NULL, true, '2025-10-09 04:18:20.784447+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-07-15', false, false),
+	('4ca85d4a-97d3-4028-8ca9-292a24d39ead', 'A4C3C8', '1985yaichi@gmail.com', NULL, '5FAE2C', '2025-08-20 11:00:28.558855+00', '2025-10-14 10:49:46.296132+00', true, 95700.00, 0.00, true, NULL, '26191792', NULL, NULL, false, NULL, NULL, '0xB1C55F2C12d4df76AB03CF720A6521B7C59Ab4ae', NULL, true, '2025-10-14 10:49:46.296132+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('8b9bdec5-d178-4f3a-b716-c8bddaa5840d', 'DD4154', 'takayayoshioka50@gmail.com', NULL, '07712F', '2025-08-04 07:39:14.231128+00', '2025-10-14 10:51:38.667923+00', true, 1100.00, 0.00, true, NULL, '4000180', NULL, NULL, false, NULL, NULL, '0xc213287E34a6A16E7c9eED231bd8a705aBE041CB', NULL, true, '2025-10-14 10:51:38.667923+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('7da49254-bff1-4ccb-8d21-4ce6ccddb253', '1CF795', 'arksakatti@gmail.com', NULL, 'C31741', '2025-09-10 08:34:10.768878+00', '2025-10-15 03:51:26.787665+00', true, 1100.00, 0.00, true, NULL, '26276358', NULL, NULL, false, NULL, NULL, '0x6a064c40768a9E80B78B3697f2DbC2b0d72fEeA9', NULL, true, '2025-10-15 03:51:26.787665+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('f0f7b568-8ac3-4f8b-adcb-b397d9b292ef', '0B3BA6', '4m4m906z@gmail.com', NULL, 'CB4F3A', '2025-09-17 05:27:23.775549+00', '2025-10-15 08:45:34.7129+00', true, 1100.00, 0.00, true, NULL, '3908469', NULL, NULL, false, NULL, NULL, '0xE3a2BAB185630edB9BF29AFC0AA847B3091B539B', NULL, true, '2025-10-15 08:45:34.7129+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('07cc0758-087b-4a3b-9e11-be8bbd4cd7a5', '7A49CB', 'teamgracis13@gmail.com', NULL, 'E16C9E', '2025-10-13 02:58:53.517859+00', '2025-10-31 08:34:28.493154+00', true, 1100.00, 0.00, false, NULL, '26360531', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('bb419d0a-5ba3-4a9d-9fd2-6f0d8671f907', 'F59081', 'yuuzenya.2.11@gmail.com', NULL, '55F766', '2025-10-13 05:41:57.075641+00', '2025-10-14 03:37:45.749077+00', true, 1100.00, 0.00, false, NULL, '26356491', NULL, NULL, false, NULL, NULL, '0xc5d4199913bc803ec5b3d15c0Da7f9b56a4a51A7', NULL, true, '2025-10-14 03:37:45.749077+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('8d188d6b-4d81-4e60-a8a6-e1e583c18d7e', '3194C4', 'kaeru35353535@gmail.com', NULL, '356B74', '2025-08-08 06:39:29.145431+00', '2025-10-09 03:22:26.894181+00', true, 1100.00, 0.00, true, NULL, '4008964', NULL, NULL, false, NULL, NULL, '0x2390987cCab764c8f4557aFbdb63e4b47da72194', NULL, true, '2025-10-09 03:22:26.894181+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('720b564f-42c7-4935-b4d0-34a2baf95937', '2EAA6E', 'omachan080522@gmail.com', NULL, 'E28F37', '2025-10-08 06:29:06.440072+00', '2025-10-08 07:23:54.817+00', true, 1100.00, 0.00, false, NULL, '26349427', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('17354a36-d8a4-444e-b688-53fe5d12943b', '79DAC5', 'kei0628keiko@gmail.com', NULL, '076D31', '2025-10-24 04:28:06.44672+00', '2025-10-24 04:34:46.745123+00', true, 1100.00, 0.00, false, NULL, '26385833', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('a377909f-d65f-46ce-bd32-992b5df13526', '870323', 'twister.kenji@gmail.com', NULL, 'C1ADF2', '2025-08-05 02:09:01.75197+00', '2025-10-17 05:24:48.889363+00', true, 1100.00, 0.00, true, NULL, '4001883', NULL, NULL, false, NULL, NULL, '0x27d739943161DCE1cd442da7bd448d091077AC3a', NULL, true, '2025-10-17 05:24:48.889363+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('5750355b-cd98-4ef0-a788-d42ff3fb3e77', '28DC01', 'allatatatatata@gmail.com', NULL, 'E9557E', '2025-11-02 11:35:47.000301+00', '2025-11-04 03:04:04.917989+00', true, 1100.00, 0.00, false, NULL, 'E9557E', NULL, NULL, false, NULL, NULL, '0xBbDF4b4107EdBC7F738B66b2DE6e0567Ee3580B1', NULL, true, '2025-11-04 03:04:04.917989+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('5277d0e3-541a-4d0d-bdbe-b3f3d74e5be9', 'C79F62', 'mugen5600@gmail.com', NULL, '04FF0C', '2025-10-08 01:49:11.671951+00', '2025-10-11 08:39:38.777394+00', true, 1100.00, 0.00, false, NULL, '26348980', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('0efbb395-65f3-495a-adb4-2fc35caac7f8', 'CEDC61', 'reo199359@gmail.com', NULL, '177B83', '2025-09-08 08:44:56.176856+00', '2025-10-08 04:27:15.044443+00', true, 1100.00, 0.00, true, NULL, '26268892', NULL, NULL, false, NULL, NULL, '0x51DB77F104540F3B0C4d4E06AC8978DEee85C383', NULL, true, '2025-10-08 04:27:15.044443+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('2aa1341d-93a8-414d-8f63-610787d44454', 'CE4129', 'coubsgr10@gmail.com', NULL, '4D247C', '2025-07-21 03:00:48.703795+00', '2025-10-20 03:35:18.270454+00', true, 1100.00, 0.00, true, NULL, '3923752', NULL, NULL, false, NULL, NULL, '0x9FA830206b79921b028594AdD895B57e0eb6a986', NULL, true, '2025-10-20 03:35:18.270454+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('7980e4a2-638c-4add-8c56-6fd6a511059f', '576E32', 'miubit0124@gmail.com', NULL, '07712F', '2025-08-23 22:42:29.684883+00', '2025-10-08 05:52:40.288222+00', true, 3300.00, 0.00, true, NULL, '26206486', NULL, NULL, false, NULL, NULL, '0xbD10F2441B42D93C722BC801398301DBf70b71cC', NULL, true, '2025-10-08 05:52:40.288222+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('a6134735-27b2-4a92-8e4a-a926afdf3e38', 'EAA204', 'kosama1173@gmail.com', NULL, 'E877D7', '2025-07-09 07:13:21.663479+00', '2025-10-09 03:53:14.815592+00', true, 1100.00, 0.00, true, '2025-07-09 07:18:11.513677+00', '3803418', '0x3A433b8de5EDB2F16e31400b3b1EB26666fc14D0', NULL, false, NULL, NULL, '0xa0A34e92301F666FbCe244fE236A482C415b5F22', NULL, true, '2025-10-09 03:53:14.815592+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('58850061-f06e-40e8-b066-04d28f103bfb', '4BECF6', 'ogasawarachan@gmail.com', NULL, 'BF86BA', '2025-08-30 08:51:13.95319+00', '2025-10-08 05:25:11.945171+00', true, 1100.00, 0.00, true, NULL, '26225987', NULL, NULL, false, NULL, NULL, '0x3218a8A0dA96ED80Df2875143E6C0c334E0A4e4c', NULL, true, '2025-10-08 05:25:11.945171+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('67ba2dee-c1ac-487f-9c4e-829177c1f114', '3C06BA', 'nao1203ko@gmail.com', NULL, 'EE904D', '2025-09-11 11:10:05.026743+00', '2025-10-25 10:45:36.787341+00', true, 1100.00, 0.00, true, NULL, '26281415', NULL, NULL, false, NULL, NULL, '0xFbF577B70E4D8801A9a3627bBAFdc42B4cA4C659', NULL, true, '2025-10-25 10:45:36.787341+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('992b0df5-6b6e-4cc8-84d0-4b79356ce3c9', '938133', 'kiyoko.winter@gmail.com', NULL, '24AECB', '2025-07-08 05:39:50.767456+00', '2025-10-15 09:08:46.670769+00', true, 1100.00, 0.00, true, '2025-07-08 07:46:22.014476+00', '3892210', NULL, NULL, false, NULL, NULL, '0xC3B3228EDA7B986CB1131AC0d7E7A8D8400Fd1b1', NULL, true, '2025-10-15 09:08:46.670769+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('76c04e83-4676-473a-93e8-d45bc10943ea', 'E0332F', 'syaomao1221@gmail.com', NULL, 'CEDC61', '2025-09-11 06:59:50.521372+00', '2025-09-11 06:59:50.521372+00', true, 1100.00, 0.00, true, NULL, '26270041', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('99e3170d-b741-4a2f-88b5-15c8c61cd97f', '361CF6', 'y7586694@gmail.com', NULL, '5A708D', '2025-09-08 04:04:41.121593+00', '2025-09-08 05:20:54.948+00', true, 1100.00, 0.00, true, NULL, '3895160', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('714586dc-99d0-4a5e-b37d-8db736b330f7', 'E4FC38', 'yumiyumi2010@gmail.com', NULL, 'FD6DC2', '2025-09-09 01:31:57.246151+00', '2025-09-09 01:31:57.246151+00', true, 1100.00, 0.00, true, NULL, '26272537', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('c106f6be-c10f-4a52-b065-e7c2a619f0b1', 'A2A479', 'u.u.go.1014@gmail.com', NULL, 'E4FC38', '2025-09-09 08:08:27.157906+00', '2025-09-09 08:08:27.157906+00', true, 1100.00, 0.00, true, NULL, '26273437', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('1db03304-ae26-492e-b835-462955c8e50b', 'DBCE95', 'hairsalon.artvert@gmail.com', NULL, '5A708D', '2025-07-08 05:42:27.072496+00', '2025-11-04 06:08:51.756+00', true, 1100.00, 0.00, true, NULL, '3892273', NULL, NULL, false, NULL, NULL, '0x0E2ef7a360290BbE32862213366500EA48c04763', NULL, true, '2025-10-14 10:53:33.99481+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('afe8f5c8-eec6-4a4e-8f3b-1df7551ae647', 'D51E01', 'inokun1213@gmail.com', NULL, '6E1304', '2025-07-16 06:51:28.645917+00', '2025-11-04 06:11:40.439+00', true, 1100.00, 0.00, true, NULL, '3908735', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-08-01', false, false),
+	('f3bcf0d5-c3cb-4c29-9759-3204a0167096', 'B39333', 'tanaka1006hiroki@gmail.com', NULL, 'B43A3D', '2025-09-11 07:23:18.891308+00', '2025-11-04 06:26:21.394+00', true, 1100.00, 0.00, true, NULL, '26280454', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-10-01', false, false),
+	('1ce4f3aa-3b5f-4eb1-840d-91b9a464acfd', '5676B5', 'shinmisoo311@gmail.com', NULL, '771730', '2025-09-25 15:11:30.393443+00', '2025-11-04 06:26:28.687+00', true, 1100.00, 0.00, true, NULL, '26323571', NULL, NULL, false, NULL, NULL, '0xcd2A52bE12411F6031f0f4B6B9f4fD568Cee2D48', NULL, true, '2025-10-28 05:51:42.448524+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-15', false, false),
+	('9e959bfb-99c0-4af2-8304-a780f3ee9b12', '6B0504', 'kei0628keiko@icloud.com', NULL, '79DAC5', '2025-10-24 04:44:55.974067+00', '2025-10-24 04:51:55.44589+00', true, 1100.00, 0.00, false, NULL, '26385833', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-15', false, false),
+	('4e261d1c-cb56-4eca-a519-a6cef35ae4a9', '17673A', 'reo.kaori0824@gmail.com', NULL, '55F766', '2025-10-14 00:43:20.919026+00', '2025-10-14 03:48:38.724226+00', true, 1100.00, 0.00, false, NULL, '26362892', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('c6b2d66b-a01b-48da-9353-9624ce129070', 'EC0A4D', 'kosama1022@gmail.com', NULL, 'EAA204', '2025-07-09 07:21:49.974641+00', '2025-10-09 03:52:32.847305+00', true, 1100.00, 0.00, true, '2025-07-09 07:37:31.280164+00', '3803418', '0x3A433b8de5EDB2F16e31400b3b1EB26666fc14D0', NULL, false, NULL, NULL, '0xbb700FF56eF02F865073F2CDE2893311E0Fcf261', NULL, true, '2025-10-09 03:52:32.847305+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('1ccc0b50-bd9b-44f1-a5a9-ede5f718067e', 'D9CD43', 'jcs.m.tagami@gmail.com', NULL, '07712F', '2025-10-20 02:13:08.792789+00', '2025-10-20 04:34:02.650317+00', true, 5500.00, 0.00, false, NULL, '26376107', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('2972023e-7c3f-4a8f-ad4f-e62ed4458bc0', '773AC7', 'info.apple1107@gmail.com', NULL, 'OOCJ16', '2025-07-02 08:03:53.741671+00', '2025-07-02 08:03:53.741671+00', true, 1100.00, 0.00, true, '2025-07-02 08:10:29.855596+00', '2373215', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('c073d6ca-d3b8-46f0-b3ac-7eb72dac8585', 'OOCJ16', 'masashitakakuwa9@gmail.com', NULL, '7A9637', '2025-06-22 06:59:07.467582+00', '2025-06-22 07:08:31.050095+00', true, 1100.00, 0.00, true, '2025-06-22 07:02:33.401919+00', '3722480', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('c4a446e7-46d7-49b5-999a-011a2ab2a9b4', 'DE5328', 'oshiboriakihiro@gmail.com', NULL, '466809', '2025-07-06 07:30:31.95947+00', '2025-07-06 09:04:40.240701+00', true, 1100.00, 0.00, true, '2025-07-06 07:34:04.664189+00', NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('6c291c28-f97b-449d-b6e1-259b2f0e0560', '31C7CB', 'aggak8008@gmail.com', NULL, '07712F', '2025-09-09 06:20:48.835286+00', '2025-10-08 04:26:28.25356+00', true, 1100.00, 0.00, true, NULL, '26273163', NULL, NULL, false, NULL, NULL, '0x53975e356c639cE636A0A39aA4d44e7ea4669f9f', NULL, true, '2025-10-08 04:26:28.25356+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('c64444ef-6901-48a4-9f65-93c61005386a', '917123', 'yaman.yaman29290631@gmail.com', NULL, 'E4FC38', '2025-10-01 06:45:45.992411+00', '2025-10-01 06:45:45.992411+00', true, 1100.00, 0.00, true, NULL, '26336399', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-15', false, false),
+	('a3e2c6a0-2167-489e-b979-15058b52e99a', 'B73ADE', 'ayugo.0611@gmail.com', NULL, 'FD5FBD', '2025-10-18 03:46:05.247609+00', '2025-10-18 03:46:05.247609+00', true, 0.00, 0.00, false, NULL, '26372151', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('14093580-62a4-4636-9c44-d91472882d0b', '176CB0', 'hkou9673@gmail.com', NULL, '917123', '2025-10-01 07:20:51.935119+00', '2025-10-01 07:20:51.935119+00', true, 1100.00, 0.00, true, NULL, '26336436', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-15', false, false),
+	('60e69a6e-d900-4c36-9ee2-11bac74d7b17', '3C30A2', 'yn09076418332@gmail.com', NULL, '54A4DE', '2025-08-28 03:18:05.001527+00', '2025-10-08 05:29:19.964899+00', true, 1100.00, 0.00, true, NULL, '26225513', NULL, NULL, false, NULL, NULL, '0xa427822DfcDE4a39e8AEEb5C6222ec68a45FF020', NULL, true, '2025-10-08 05:29:19.964899+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('6e3b2c8b-ec05-48c0-bb5a-e76cd3c67974', 'A34F44', 'gladiator2000@au.com', NULL, '59C23C', '2025-10-02 03:51:21.193509+00', '2025-10-08 04:07:33.612243+00', true, 5500.00, 0.00, true, NULL, '26338004', NULL, NULL, false, NULL, NULL, '0x0a5CE57292dF3DA217871F6c2eF2F4Ac65e9bF43', NULL, true, '2025-10-08 04:07:33.612243+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('7241f7f8-d05f-4c62-ac32-c2f8d8a93323', '7A9637', 'masakuma1108@gmail.com', NULL, NULL, '2025-06-21 12:21:13.155661+00', '2025-07-16 07:25:41.735+00', true, 1100.00, 0.00, true, '2025-06-21 12:22:43.15731+00', '', NULL, NULL, false, NULL, NULL, '', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('742516a0-b32d-436e-ba7b-0ff100e53ad1', 'F1E4E8', 'kanchan17115@gmail.com', NULL, '81F952', '2025-09-28 06:09:42.722553+00', '2025-10-08 04:08:23.938433+00', true, 2200.00, 0.00, true, NULL, '26330170', NULL, NULL, false, NULL, NULL, '0x2648a294409BAe8487FCbCa40d60BCcC8f0ED22A', NULL, true, '2025-10-08 04:08:23.938433+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('4a13866b-9d93-43ec-8a0f-3c7262417fb1', 'EF9073', 'wwhappyhappyww1@gmail.com', NULL, 'C162DD', '2025-09-21 12:50:58.611833+00', '2025-10-08 04:19:50.338659+00', true, 1100.00, 0.00, true, NULL, '26309504', NULL, NULL, false, NULL, NULL, '0x3eed85F1fD532cd8A5F5c5Af97F1C93c9a5ae5a2', NULL, true, '2025-10-08 04:19:50.338659+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('cbba2430-6c66-486c-81ae-891437692a4d', 'C6F0B3', 'girlinthebox.beyondthesea@gmail.com', NULL, 'E0332F', '2025-09-21 07:44:35.274054+00', '2025-10-08 04:24:16.621227+00', true, 1100.00, 0.00, true, NULL, '26309021', NULL, NULL, false, NULL, NULL, '0x58C7fbD2d2451b29d6A5F8112144B8E36A47CA80', NULL, true, '2025-10-08 04:24:16.621227+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('bf74e9ff-1455-411f-86ed-da06dd8a6ecf', '139C2F', 'a.iijima@arc-re.jp', NULL, '59C23C', '2025-09-08 05:49:53.320406+00', '2025-10-08 04:31:46.005265+00', true, 3300.00, 0.00, true, NULL, '26269107', NULL, NULL, false, NULL, NULL, '0x49886111C554125f0B7F129a66feDc547aB23B4A', NULL, true, '2025-10-08 04:31:46.005265+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('f38aef1c-0b6f-4035-964a-fede894208f4', 'E9557E', 'tetsucorporation.co.ltd@gmail.com', NULL, '59C23C', '2025-09-05 04:36:09.147546+00', '2025-10-08 04:53:26.28373+00', true, 1100.00, 0.00, true, NULL, '26258795', NULL, NULL, false, NULL, NULL, '0x51d59CF1c971054bEE17BecC15aAC5712C151AeD', NULL, true, '2025-10-08 04:53:26.28373+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('194d233e-18ff-4ea3-aa21-cec1d40b5bfc', '371774', 'mizutake93@gmail.com', NULL, 'E9557E', '2025-11-02 11:39:44.297406+00', '2025-11-04 03:03:20.411637+00', true, 1100.00, 0.00, false, NULL, '26402330', NULL, NULL, false, NULL, NULL, '0xa4576A1d8074cC75A13409456E603c1BF23F0Ba8', NULL, true, '2025-11-04 03:03:20.411637+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('2d7e0a8c-0c9a-4031-9698-8b4070c98537', '5A708D', 'feel.me.yurie@gmail.com', NULL, 'B51CA4', '2025-07-04 07:43:15.383399+00', '2025-11-04 06:06:59.303+00', true, 1100.00, 0.00, true, '2025-07-04 07:48:42.391621+00', '3884719', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-07-15', false, false),
+	('32d89742-32a1-46d5-b261-5a8f73ab5c0c', 'F733BD', 'yosshi.manmaru.oka1027@gmail.com', NULL, 'A81A5E', '2025-08-15 09:07:11.642867+00', '2025-11-04 06:23:13.953+00', true, 1100.00, 0.00, true, NULL, '26176918', NULL, NULL, false, NULL, NULL, '0xaB1c4Ef9D88856BC4D6A8BC0812Aab86Cd88e4a2', NULL, true, '2025-10-16 08:10:37.413332+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-15', false, false),
+	('c549ae9c-6e4b-4105-b811-d407ee514fe1', '99024A', 'sugiura4735@gmail.com', NULL, 'C9015D', '2025-09-12 05:00:18.091748+00', '2025-11-04 06:24:56.385+00', true, 3300.00, 0.00, true, NULL, '26283833', NULL, NULL, false, NULL, NULL, '0x15e93C779b3AA1e1bb2bbB95C359FB18821A5042', NULL, true, '2025-10-08 04:25:48.868786+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('7edb9180-5bcf-47af-b918-81c1b34efc21', '5086F7', 'julia.97kb@gmail.com', NULL, 'CE4FF7', '2025-09-12 05:13:24.916364+00', '2025-11-04 06:25:06.906+00', true, 3300.00, 0.00, true, NULL, '26283839', NULL, NULL, false, NULL, NULL, '0x9ca7543D118E36E9EcadE5cb10952A9903d8DA2c', NULL, true, '2025-10-08 04:25:09.763565+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('ea8b2f20-136e-452f-ac1a-0b2155ccc24e', '2D378C', 'miyaeri136@gmail.com', NULL, 'CEDC61', '2025-09-06 06:34:08.444976+00', '2025-11-04 06:25:47.816+00', true, 1100.00, 0.00, true, NULL, '26262694', NULL, NULL, false, NULL, NULL, '0xE68776D10C2D37945E93EB2807171ff4391c9c70', NULL, true, '2025-10-08 04:35:29.551484+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('a09f2d96-30bb-4038-89e3-48f641c74a8f', '0A051F', 'tkpuraimu@gmail.com', NULL, '771730', '2025-09-25 14:50:11.31793+00', '2025-11-04 06:26:36.756+00', true, 1100.00, 0.00, true, NULL, '26323603', NULL, NULL, false, NULL, NULL, '0xA755bE819e11be4208F09C2c251265b7d5cB1bf2', NULL, true, '2025-10-28 05:41:38.208897+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-15', false, false),
+	('33e7f18d-733c-4074-a262-7674ad13a492', '3C4FB6', 'carat.888.1220@gmail.com', NULL, 'E9557E', '2025-11-02 11:41:45.917363+00', '2025-11-02 11:41:45.917363+00', true, 0.00, 0.00, false, NULL, '26402333', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('99ac854b-e7fe-40b7-930c-1e09aa97fb4d', '92B2C3', 'iosongtian4@gmail.com', NULL, '177B83', '2025-09-06 07:35:47.359333+00', '2025-11-04 06:25:29.655+00', true, 1100.00, 0.00, true, NULL, '26262969', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-10-01', false, false),
+	('e6920095-3d66-4593-8a5c-92106224398f', '98A9E9', 'kenta.shigoto0111@gmail.com', NULL, '4D247C', '2025-10-14 02:32:45.491714+00', '2025-10-14 02:32:45.491714+00', true, 0.00, 0.00, false, NULL, '26363051', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('755f2c7a-e07e-4d3a-8b9f-57244014d3de', 'FF2068', 'hayatoruriko@gmail.com', NULL, NULL, '2025-10-14 11:29:21.159284+00', '2025-10-14 11:29:21.159284+00', true, 0.00, 0.00, false, NULL, '12345', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('c3b75cfd-6dba-4341-a82a-0171c70ec03a', '251D2B', 'sense.20170907@gmail.com', NULL, '04FF0C', '2025-10-15 11:13:57.451287+00', '2025-10-17 02:45:20.489104+00', true, 1100.00, 0.00, false, NULL, '26366365', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('dd6a7fd9-eaa1-4b9b-883a-765c18c95e19', 'F5D253', 'haruka.san1014@gmail.com', NULL, '55F766', '2025-10-19 02:46:29.111568+00', '2025-10-19 04:00:00.705905+00', true, 1100.00, 0.00, false, NULL, '26372035', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('e897216a-1873-4c95-9786-6bbd434305da', '27E203', 'hp1st@axlcore.com', NULL, 'DD138D', '2025-10-20 02:29:49.801138+00', '2025-10-26 03:36:34.680231+00', true, 1100.00, 0.00, false, NULL, '26376112', NULL, NULL, false, NULL, NULL, '0x1e28a1e33477d3114242b60805e76c85e27d550a', NULL, true, '2025-10-26 03:36:34.680231+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('2299704c-2538-478c-9f71-756371946048', '41CAAD', 'ww.ecco.ww@gmail.com', NULL, 'C64AA2', '2025-10-17 00:56:16.829231+00', '2025-10-17 03:00:14.813+00', true, 0.00, 0.00, false, NULL, '26370214', NULL, NULL, false, NULL, NULL, '0xd1FaC456e79DED3737541bFef95cb497b544EA13', NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('d31e7bb4-88fe-476a-842e-41f37f623157', '6229D2', 'sachie.h.0717@gmail.com', NULL, '4D247C', '2025-10-24 04:52:20.216977+00', '2025-10-24 04:52:20.216977+00', true, 0.00, 0.00, false, NULL, '26385865', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('1928996a-1489-4957-bd78-73d325d4607d', '9BEAB7', 'sachyoko.315@gmail.com', NULL, 'C6F0B3', '2025-09-21 08:03:21.563186+00', '2025-10-08 04:20:43.238574+00', true, 1100.00, 0.00, true, NULL, '26309018', NULL, NULL, false, NULL, NULL, '0x82237ec6bF75652Ed985028b69dc2ecd4ADF7a4b', NULL, true, '2025-10-08 04:20:43.238574+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('008b43eb-3fe3-4498-85cf-28c53299f093', 'B34768', 'yonechan.11.144@gmail.com', NULL, '9431BA', '2025-11-02 11:47:36.017048+00', '2025-11-05 03:55:49.38919+00', true, 1100.00, 0.00, false, NULL, '26399552', NULL, NULL, false, NULL, NULL, '0xCA3fa3818d5027a2174b45dB2797726Be88D1c72', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('07129ae2-ba5b-4f27-99c1-ffecea1ef8d9', 'E02027', 'pantyou1997@gmail.con', NULL, NULL, '2025-10-24 05:50:23.210891+00', '2025-10-24 05:50:23.210891+00', true, 0.00, 0.00, false, NULL, '3771600', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('7c13c566-3610-496b-8bf7-148a135bacaf', '8B07AE', 'kazue828112@gmail.com', NULL, 'CE4FF7', '2025-08-30 05:57:26.874799+00', '2025-11-04 06:24:35.564+00', true, 3300.00, 0.00, true, NULL, '26234088', NULL, NULL, false, NULL, NULL, '0x6CB7E71FB7d7630aa7098e8A3a9c3C47ab59c8FE', NULL, true, '2025-10-08 05:25:52.36694+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('64787e98-e597-4671-a2c5-2566f8309f81', '7ECF42', 'san.san.tomomi@gmail.com', NULL, '2443DD', '2025-08-26 07:46:10.891744+00', '2025-10-08 05:35:04.189717+00', true, 1100.00, 0.00, true, NULL, '26217118', NULL, NULL, false, NULL, NULL, '0x81B56c5b45f6a5F2193105a298F0faD77dA2De48', NULL, true, '2025-10-08 05:35:04.189717+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('80f79e05-e20b-4cf0-90c8-1ba401532909', 'A55E96', 'kimiko121627@gmail.com', NULL, 'CB4F3A', '2025-10-15 05:56:11.228843+00', '2025-10-15 08:42:31.245+00', true, 0.00, 0.00, false, NULL, '26365722', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('1866bae4-b9b3-48a7-8d4d-d30afc991a9a', 'F22C3E', 'sayuri2937@gmail.com', NULL, '04FF0C', '2025-10-15 11:38:11.333083+00', '2025-10-15 11:38:11.333083+00', true, 0.00, 0.00, false, NULL, '26345574', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('fb103cb0-3d44-47cf-9092-2d5ce00e65c5', '27F014', 'pufami283@onlyapp.net', NULL, NULL, '2025-10-17 03:21:08.523719+00', '2025-10-18 00:27:23.2+00', true, 0.00, 0.00, false, NULL, '12345678', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('803e5f21-46fd-4688-abf6-d56290d9c623', 'E16C9E', 'arato1007430ta@gmail.com', NULL, '04FF0C', '2025-10-08 05:26:41.182104+00', '2025-10-11 08:39:18.056311+00', true, 1100.00, 0.00, false, NULL, '26349273', NULL, NULL, false, NULL, NULL, '', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('2e3381ce-7beb-4477-a0df-ad8075217213', '7861AD', 'aimhigh1072@gmail.com', NULL, '72E487', '2025-10-24 11:22:17.743775+00', '2025-10-25 03:17:28.017+00', true, 0.00, 0.00, false, NULL, '3965660', NULL, NULL, false, NULL, NULL, '0xFb8c9A1043BdE81Eb7B2C3E5Ea5Ac1f2858935B1', NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('02143356-3467-46f4-a356-e813b8b1c194', 'CAB76E', 'nunsutanaka3356843@gmail.com', NULL, 'E9557E', '2025-11-02 12:08:56.704894+00', '2025-11-04 03:02:42.547291+00', true, 1100.00, 0.00, false, NULL, '26402362', NULL, NULL, false, NULL, NULL, '0xc941f37237ae4c5AbBB85Ae1F9e9f51967EbD6C7', NULL, true, '2025-11-04 03:02:42.547291+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('c278fc2a-235a-4db0-86b6-620a81c55277', 'C92A91', 'teasato555@gmail.com', NULL, 'DEC31E', '2025-07-07 09:34:12.126535+00', '2025-11-04 03:12:26.677459+00', true, 1100.00, 0.00, true, '2025-07-07 10:10:30.388286+00', '3804261', NULL, NULL, false, NULL, NULL, '0x0A2127F84CDC9CE1dB603776A3693d273fB2addC', NULL, true, '2025-11-04 03:12:26.677459+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('f15d8304-d863-4ef6-a3d7-f4d90e2b8e37', '469E53', 'jin.luxe0414@gmail.com', NULL, '7B9F5B', '2025-09-25 07:42:06.211396+00', '2025-11-04 06:26:45.707+00', true, 1100.00, 0.00, true, NULL, '26322347', NULL, NULL, false, NULL, NULL, '0x74cdfD27c6F6a0C4742EEfb00f352b8446df9667', NULL, true, '2025-10-08 04:11:02.64423+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-15', false, false),
+	('8ed2e6ac-5aac-42aa-b328-69981e371638', '4E9884', 'y-ono313@i.softbank.jp', NULL, '59C23C', '2025-10-02 05:25:58.810561+00', '2025-10-08 04:06:26.104543+00', true, 29700.00, 0.00, true, NULL, '26338166', NULL, NULL, false, NULL, NULL, '0xcDe4ee28a52B56e043673385a1A7A379A9F210B5', NULL, true, '2025-10-08 04:06:26.104543+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('55d5e62e-5010-4c9f-a18a-68238f8e355f', 'AD1FE8', 'beluyuka0921@gmail.com', NULL, '04FF0C', '2025-10-06 08:40:55.099028+00', '2025-10-06 08:40:55.099028+00', true, 0.00, 0.00, false, NULL, '26345620', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('a62bf75a-c707-4d44-b15f-6c331510222b', '0D4DCC', 'aloha.sui@gmail.com', NULL, '4D247C', '2025-10-05 08:30:13.332871+00', '2025-10-05 08:30:13.332871+00', true, 0.00, 0.00, false, NULL, '26344111', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('61014dbb-5946-4044-93c6-21d0d2782fb3', '599EBC', 'yaga.gaga0805@icloud.com', NULL, '04FF0C', '2025-10-06 07:51:28.839498+00', '2025-10-06 07:51:28.839498+00', true, 0.00, 0.00, false, NULL, '26345583', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('4e8293dd-b42c-434f-b002-a46fa1593a47', '7F76C0', 'takataka12061127@gmail.com', NULL, '04FF0C', '2025-10-06 07:52:10.652423+00', '2025-10-06 07:52:10.652423+00', true, 0.00, 0.00, false, NULL, '26345566', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('2a78cd9c-566d-454a-86ce-0834165db945', '5267CB', 'take_shoji@icloud.com', NULL, '04FF0C', '2025-10-06 07:53:40.011425+00', '2025-10-06 07:53:40.011425+00', true, 0.00, 0.00, false, NULL, '26345587', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, false),
+	('e1ab5990-2347-4dd2-9354-418c2800dbb2', '5112D6', 'hp2nd@axlcore.com', NULL, '27E203', '2025-10-20 02:50:27.588128+00', '2025-10-26 03:36:29.059445+00', true, 1100.00, 0.00, false, NULL, '26376118', NULL, NULL, false, NULL, NULL, '0x1e28a1e33477d3114242b60805e76c85e27d550a', NULL, true, '2025-10-26 03:36:29.059445+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('0f30e3a5-c68f-4a52-a708-e985d7760c9f', '39CD6D', 'tatsue4950@gmail.com', NULL, '81F952', '2025-07-08 05:44:54.981422+00', '2025-10-09 03:59:06.243931+00', true, 1100.00, 0.00, true, '2025-07-08 06:30:53.048856+00', '3892302', NULL, NULL, false, NULL, NULL, '0x7B31F124617Ef2Ca45C839bAce8C0355d2598d7f', NULL, true, '2025-10-09 03:59:06.243931+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('f041b056-2326-41e4-95f0-2e126c08c96f', 'FCB215', 'ruby.nyao.coco@gmail.com', NULL, '81F952', '2025-09-28 05:56:23.609382+00', '2025-10-08 04:09:11.943081+00', true, 3300.00, 0.00, true, NULL, '26204537', NULL, NULL, false, NULL, NULL, '0xA1634f3F0Db51d711A741cDf5642617025f8588B', NULL, true, '2025-10-08 04:09:11.943081+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('2183a760-242b-4336-970d-0b4b3596ba2b', '497B16', 'dropfee888@outlook.com', NULL, '9BEAB7', '2025-09-25 11:54:01.908864+00', '2025-10-08 04:10:02.133716+00', true, 1100.00, 0.00, true, NULL, '26323347', NULL, NULL, false, NULL, NULL, '0xe3bEF0A25af06e26DF965d770d1d804049117565', NULL, true, '2025-10-08 04:10:02.133716+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('563de0c4-1949-4c3f-9b36-fbc0aabef159', 'FD9275', 'ref.y.yamaguchi@gmail.com', NULL, 'DD4154', '2025-10-14 06:16:53.972098+00', '2025-10-14 09:18:49.923496+00', true, 3300.00, 0.00, false, NULL, '26363302', NULL, NULL, false, NULL, NULL, '0x9993E618A9EA08d5948405e177749Ed50087CE2B', NULL, true, '2025-10-14 09:18:49.923496+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('2756bba8-6d29-45cf-a8ab-0389002583ab', '525C88', 'futoshiseto@nifty.com', NULL, '59C23C', '2025-09-18 07:10:07.457046+00', '2025-10-07 08:10:21.248961+00', true, 1100.00, 0.00, true, NULL, '26301445', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('f75fc092-7f14-4149-a777-89f780ab8c44', 'E62210', 'mokudai77@gmail.com', NULL, 'DD4154', '2025-09-21 04:47:54.449483+00', '2025-10-25 10:44:09.071639+00', true, 1100.00, 0.00, true, NULL, '26308715', NULL, NULL, false, NULL, NULL, '0xF2b46F2De41772B2CD869A2f644abba95a95295A', NULL, true, '2025-10-25 10:44:09.071639+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('b1bceaa3-6973-43fa-b0f6-2edd4a04a427', 'B108AD', 'kudomiyoko@yahoo.co.jp', NULL, '3DE7BA', '2025-10-19 03:34:11.286257+00', '2025-10-19 04:00:19.424287+00', true, 1100.00, 0.00, false, NULL, '26374100', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('dbecd2ca-538d-4f8f-80a9-66a22a997f00', 'YBVQ9D', 'yamadesu1111+07@gmail.com', NULL, '2C44D5', '2025-07-06 09:30:33.318942+00', '2025-07-06 09:39:15.365663+00', true, 1100.00, 0.00, true, '2025-07-06 09:38:01.622666+00', NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('d3811ca6-1700-44cb-a73d-7b0af34cdab9', 'AE6C1C', 'tmtm0106526@gmail.com', NULL, 'YBVQ9D', '2025-07-06 09:47:50.106594+00', '2025-07-06 09:47:50.106594+00', true, 1100.00, 0.00, true, '2025-07-06 09:53:48.494842+00', '2345678', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('302cb8ea-88d4-4a99-85d3-e88357f807ba', 'E03FDE', 'haruto5261108@gmail.com', NULL, '177B83', '2025-07-02 08:29:22.537159+00', '2025-08-09 03:54:56.905+00', true, 1100.00, 0.00, true, '2025-07-02 08:34:08.674761+00', '3722480', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('8534fdbd-45cb-4794-8bd6-165fd35c4dd7', 'EA7476', 'aimhigh8165@gmail.com', NULL, '72E487', '2025-10-24 11:24:34.716774+00', '2025-10-25 03:17:42.139+00', true, 0.00, 0.00, false, NULL, '3965660', NULL, NULL, false, NULL, NULL, '0xFb8c9A1043BdE81Eb7B2C3E5Ea5Ac1f2858935B1', NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('0b45b000-b478-430f-84ef-bfc214e8c960', '0E47BC', '358hanasaka@gmail.com', NULL, '361CF6', '2025-07-04 07:59:24.81684+00', '2025-10-09 04:19:55.60941+00', true, 1100.00, 0.00, true, '2025-07-04 08:04:50.435844+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:19:55.60941+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-07-15', false, false),
+	('e8ae43e5-0e4e-4ae4-a942-4b3a1b9257ce', '1BAA30', 'tmtm19751108@gmail.com', NULL, '6764B9', '2025-07-02 07:48:04.593097+00', '2025-11-05 10:34:08.253+00', true, 1100.00, 0.00, true, '2025-07-02 07:50:18.851627+00', '3722480', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('4329ed0e-e293-41c8-b4f6-25c6401e9847', '81F952', '358hanasakac@gmail.com', NULL, 'FFD473', '2025-07-07 12:52:29.932254+00', '2025-11-02 10:05:12.935761+00', true, 1100.00, 0.00, true, '2025-07-07 13:02:53.564849+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-11-02 10:05:12.935761+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('fb43cddc-b0b3-4632-849d-1faf6f210187', '5D098D', 'co.danke3@gmail.com', NULL, '3C6DD3', '2025-11-03 05:47:21.732119+00', '2025-11-03 06:05:15.547067+00', true, 1100.00, 0.00, false, NULL, '26191752', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('ec780ff5-5919-43e8-aa88-ae72ac43dc35', '1D3F38', 'riko16913@gmail.com', NULL, '81F952', '2025-07-07 13:41:25.123085+00', '2025-11-04 03:11:48.964848+00', true, 1100.00, 0.00, true, '2025-07-08 03:59:26.357216+00', '3803206', NULL, NULL, false, NULL, NULL, '0xb576a0ED1fEa62fb32C15652aFa9e10791E1D0B6', NULL, true, '2025-11-04 03:11:48.964848+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('4da1faaf-5c79-467e-9097-f0d00738840f', 'A81A5E', 'sakanatsuri303@gmail.com', NULL, '5A708D', '2025-07-16 04:47:13.707469+00', '2025-11-04 06:10:53.679+00', true, 1100.00, 0.00, true, NULL, '3908267', NULL, NULL, false, NULL, NULL, '0x823Eb620b863e3Fc4902f28d83a035D6d9af4a10', NULL, true, '2025-10-14 10:52:31.889205+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-08-01', false, false),
+	('2053926e-e80f-4ca2-a27f-282fc359befb', 'C69073', 'mihosevern@yahoo.co.jp', NULL, '6E1304', '2025-07-16 06:35:00.145879+00', '2025-11-04 06:12:21.46+00', true, 1100.00, 0.00, true, NULL, '3908672', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-08-01', false, false),
+	('5e692850-b9bc-4b81-87c6-19b7d18bec33', '27DBE5', 'ask27ntm3339@gmail.com', NULL, '6E1304', '2025-07-16 06:51:12.736807+00', '2025-11-04 06:12:44.831+00', true, 1100.00, 0.00, true, NULL, '3908722', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-08-01', false, false),
+	('4be23492-0159-4eff-b427-172e5a33980a', 'B51CA4', 'miraclestarys@gmail.com', NULL, '66D65D', '2025-07-02 11:34:49.24942+00', '2025-11-04 06:23:01.031+00', true, 2200.00, 0.00, true, '2025-07-03 09:19:41.677947+00', '3918188', NULL, NULL, false, NULL, NULL, '0xfd2C21D2426a0F60A3b307D25D0B5Ab15Bc85ED4', NULL, true, '2025-10-09 04:21:24.960396+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-07-15', false, false),
+	('fad01181-72c7-48b0-ae7f-223d9e803033', '64342C', 'makikooishi@gmail.com', NULL, '2443DD', '2025-08-18 07:58:32.254729+00', '2025-11-04 06:26:10.246+00', true, 1100.00, 0.00, true, NULL, '26185093', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-10-01', false, false),
+	('7ddde483-1d04-40bc-91b0-b2828334fc7c', '59D41C', 'taka46.halu103@gmail.com', NULL, 'C0E0E0', '2025-08-15 06:13:55.126647+00', '2025-08-15 06:13:55.126647+00', true, 6600.00, 0.00, true, NULL, '26176520', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-09-01', false, false),
+	('3902114f-c659-4486-88b5-fa72132b9858', 'C73F2D', 'knsteruyo@gmail.com', NULL, '81F952', '2025-09-20 03:59:22.454761+00', '2025-10-18 05:15:52.779894+00', true, 1100.00, 0.00, true, NULL, '3901640', NULL, NULL, false, NULL, NULL, '0x288102f33B4143a946D61Fe108Af0f2a16A396Ef', NULL, true, '2025-10-18 05:15:52.779894+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('142d3882-6134-4778-bafb-fdcd5b975f18', '07AD41', 'uktku61014@yahoo.co.jp', NULL, 'C73F2D', '2025-09-20 04:56:14.079894+00', '2025-10-18 05:15:19.901589+00', true, 1100.00, 0.00, true, NULL, '3901647', NULL, NULL, false, NULL, NULL, '0xc93dA7e7150860F28Aec82bE9aE6e232debb5626', NULL, true, '2025-10-18 05:15:19.901589+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('c63e9cde-e46a-438a-bfc3-a2e73a762e29', '30BC41', 'destroyed358luxus@gmail.com', NULL, 'EC0A4D', '2025-07-09 03:27:18.124434+00', '2025-10-22 09:54:50.501+00', true, 1100.00, 0.00, true, '2025-07-09 03:29:38.695283+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 03:56:08.756636+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('421cb3c2-5ef6-4060-b235-7233c56c41a2', 'D3A133', 'momokokomining@gmail.com', NULL, '07712F', '2025-07-07 08:22:16.950094+00', '2025-07-07 08:22:16.950094+00', true, 1100.00, 0.00, true, NULL, '3890176', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('bb527933-ee1d-4a6c-a9f9-8ab77689cdfd', '54A4DE', 'n43mtced@gmail.com', NULL, '07712F', '2025-08-27 03:55:10.07637+00', '2025-10-08 05:32:09.244826+00', true, 1100.00, 0.00, true, NULL, '26221062', NULL, NULL, false, NULL, NULL, '0xAEc89ecF2243dB3B3794B6DF145e2121D2B5486A', NULL, true, '2025-10-08 05:32:09.244826+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('dd4cd032-e93b-4131-bcd4-8ea740ed92a6', 'B43A3D', 'yanoyui5632@gmail.com', NULL, '6E1304', '2025-07-01 10:03:58.293073+00', '2025-07-13 09:56:10.020582+00', true, 2200.00, 0.00, true, '2025-07-01 10:09:01.59455+00', '3878562', '', NULL, false, NULL, NULL, '', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('576528ff-e363-4139-a151-ed4af8af9253', '4517C9', 'nadeshiko25keiko@gmail.com', NULL, '764C02', '2025-07-12 02:21:40.33349+00', '2025-07-15 10:00:25.409+00', true, 1100.00, 0.00, true, NULL, '3900216', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-15', false, false),
+	('2e819804-7820-4078-8c14-ad07bedc7937', 'CB4F3A', 'yasuko09seki@gmail.com', NULL, '2F6364', '2025-07-16 06:21:50.608239+00', '2025-10-15 08:52:22.527394+00', true, 1100.00, 0.00, true, NULL, '3908443', NULL, NULL, false, NULL, NULL, '0x8Bd35b7CA083D14A6D13aDB36491D37B071Bed9E', NULL, true, '2025-10-15 08:52:22.527394+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('e6df1b74-1108-40f1-bbc1-b1cc90c221dc', '4D247C', 't.ta.ma.ki777@gmail.com', NULL, '07712F', '2025-07-16 01:16:57.835669+00', '2025-10-16 09:06:30.127284+00', true, 1100.00, 0.00, true, NULL, '3896243', NULL, NULL, false, NULL, NULL, '0x03381078490230401310b789C84A67aAD6cfDf09', NULL, true, '2025-10-16 09:06:30.127284+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('c7a06c52-e778-413f-9ab2-bdeb2701bb85', 'C1ADF2', 'sou30175@gmail.com', NULL, '07712F', '2025-07-09 04:42:22.323377+00', '2025-10-17 05:26:00.040895+00', true, 1100.00, 0.00, true, NULL, '3894642', NULL, NULL, false, NULL, NULL, '0x4D26Ad98210aD62d1feD783d653a5Cd989b5ecD7', NULL, true, '2025-10-17 05:26:00.040895+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-15', false, false),
+	('e49a5193-b1e3-4ca5-bdde-faca55b818d0', '08FD06', 'nishimura3513@gmail.com', NULL, '1BAA30', '2025-07-15 06:07:46.860583+00', '2025-07-15 06:07:46.860583+00', true, 2200.00, 0.00, true, NULL, '3799802', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('edd30697-c3c0-4041-ad9b-b4c69160c48b', 'F3961F', 'socmurakamimining@gmail.com', NULL, '576E32', '2025-08-28 09:13:05.854973+00', '2025-10-08 05:28:50.852266+00', true, 1100.00, 0.00, true, NULL, '26226793', NULL, NULL, false, NULL, NULL, '0x044e9c444203F85a2Bcf80B24198Fc9Ba756fADa', NULL, true, '2025-10-08 05:28:50.852266+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('f7eaa40f-ffa2-4cd4-9a34-c25a8256259a', '04FF0C', 'kawaguchi.t36@gmail.com', NULL, '230F31', '2025-10-06 06:15:16.012372+00', '2025-10-14 03:45:23.818879+00', true, 11000.00, 0.00, true, NULL, '26345472', NULL, NULL, false, NULL, NULL, '0x804556068f7bb11f59eA431CEDA8C38f1522EA52', NULL, true, '2025-10-14 03:45:23.818879+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('88fecbf2-fdbe-4df4-bcf0-4835bd9c1b33', '5844F0', 'kaiser2ponchamamezo@gmail.com', NULL, '6E1304', '2025-07-16 06:47:54.826502+00', '2025-11-04 06:11:52.82+00', true, 1100.00, 0.00, true, NULL, '3908670', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-08-01', false, false),
+	('154338df-7857-47a6-95a8-f8390016a4f0', '0D4493', 'gyukotsuhorusoba@gmail.com', NULL, 'AEFBCA', '2025-10-03 13:08:10.734623+00', '2025-10-14 07:00:23.916+00', true, 1100.00, 0.00, true, NULL, '26340917', NULL, NULL, false, NULL, NULL, '0x261F1c6F0Ebc1F5fE9933950a0C65f13DC0b4094', NULL, true, '2025-10-08 04:03:15.289299+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('4b3ee6f5-764a-42a4-93b7-84da612bf2ab', 'D3E589', '358hanasakae@gmail.com', NULL, 'C64AA2', '2025-07-08 04:05:23.220019+00', '2025-10-09 04:01:30.638903+00', true, 1100.00, 0.00, true, '2025-07-08 04:16:30.896308+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:01:30.638903+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('6eb23b43-046d-4fdd-ae68-2170a0979c51', 'B1B311', 'chiha.kuru.nakayoshi130@gmail.com', NULL, 'E9557E', '2025-10-06 10:21:59.200245+00', '2025-10-08 03:52:38.512763+00', true, 1100.00, 0.00, true, NULL, '26345820', NULL, NULL, false, NULL, NULL, '0x645E11b6b6106139BdCaF6014c68333E1b77DFe7', NULL, true, '2025-10-08 03:52:38.512763+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('23e98973-5832-4f5e-bba3-c7602b41ded3', '55F766', 'kaori.san0824@gmail.com', NULL, '04FF0C', '2025-10-06 07:51:58.013838+00', '2025-10-08 03:53:26.987854+00', true, 1100.00, 0.00, true, NULL, '26345576', NULL, NULL, false, NULL, NULL, '0xfC931e74Df2F4f25f16feB2E01C787Ec6Eb27c2b', NULL, true, '2025-10-08 03:53:26.987854+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('54d9c847-f0bd-41c0-a2c1-f067d51732f9', '3C6DD3', 'co.danke2@gmail.com', NULL, '5FAE2C', '2025-10-05 07:02:43.583996+00', '2025-10-08 03:54:34.084416+00', true, 5500.00, 0.00, true, NULL, '26191752', NULL, NULL, false, NULL, NULL, '0x8a19b6A4793F4e66E279Cf67A5f1923E3B16d98a', NULL, true, '2025-10-08 03:54:34.084416+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('90f6cc28-958f-426e-aef5-0ee613c754e4', '571179', 'ikuyo.arakaki@gmail.com', NULL, 'DD8A82', '2025-10-04 10:36:18.972787+00', '2025-10-08 03:55:11.743774+00', true, 1100.00, 0.00, true, NULL, '26342538', NULL, NULL, false, NULL, NULL, '0x3d8fc3c8eB18d460417b28151C89294CDbE5cA31', NULL, true, '2025-10-08 03:55:11.743774+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('2b5f5252-63a0-4d6d-846c-e999ce7b0a90', 'DD8A82', 'sugihiro1122@gmail.com', NULL, 'CA7902', '2025-10-04 10:23:44.400242+00', '2025-10-08 04:02:19.188007+00', true, 1100.00, 0.00, true, NULL, '26342537', NULL, NULL, false, NULL, NULL, '0x5dec0AA21F2342D706D7172D1fE6abDd021d7840', NULL, true, '2025-10-08 04:02:19.188007+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('eb7cadc0-f194-4f8e-9797-42265c8211a2', '5DA455', 'atsuko02180218@gmail.com', NULL, '6E1304', '2025-07-16 06:47:48.199869+00', '2025-11-04 06:12:32.611+00', true, 1100.00, 0.00, true, NULL, '3908698', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, true, NULL, NULL, true, '2025-08-01', false, false),
+	('d4c3c4a0-aae1-42b6-a472-8c69da36fc42', '3E2190', 'masakin1008@gmail.com', NULL, '4D247C', '2025-10-25 05:28:33.928912+00', '2025-10-25 05:28:33.928912+00', true, 0.00, 0.00, false, NULL, '26388238', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, false, NULL, false, false),
+	('8d7e75be-f5f8-4f16-b4da-9e9218a94656', 'A512FF', 'ymtk20101213@yahoo.co.jp', NULL, '04FF0C', '2025-10-06 07:49:37.106248+00', '2025-10-14 03:43:35.304381+00', true, 6600.00, 0.00, false, NULL, '26345572', NULL, NULL, false, NULL, NULL, '0xDaA15F91f8cE8B0B3e7A941510093E894FDDa6B2', NULL, true, '2025-10-14 03:43:35.304381+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('e9cc6d3f-fb68-4fed-9245-09a59cbd1eaf', 'C2FDA7', 'dragon.hors71@gmail.com', NULL, '3C30A2', '2025-10-03 06:04:10.261786+00', '2025-10-08 04:03:51.751819+00', true, 1100.00, 0.00, true, NULL, '26340313', NULL, NULL, false, NULL, NULL, '0xdbF03A338c50eDf2f3Ef9de8C0cB912b7d49C2c1', NULL, true, '2025-10-08 04:03:51.751819+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-15', false, false),
+	('9f35b38f-d6ec-4e4e-9cb0-ff16b6600e65', 'E9F758', 'morimori02080403@gmail.com', NULL, '4C7F6C', '2025-08-28 22:53:24.229569+00', '2025-10-08 05:28:20.830465+00', true, 1100.00, 0.00, true, NULL, '26229448', NULL, NULL, false, NULL, NULL, '0x6d168F0F090578bc181eD9B0E4b27bbe5C3d9798', NULL, true, '2025-10-08 05:28:20.830465+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('4d876412-2f5f-4955-ab1b-b5cf9ae74352', '5FAE2C', 'co.danke@gmail.com', NULL, '177B83', '2025-08-20 10:47:00.496393+00', '2025-10-08 05:54:33.820155+00', true, 5500.00, 0.00, true, NULL, '26191752', NULL, NULL, false, NULL, NULL, '0xF1e4c82865938fAb85C6EDE9646dB6d0064c575B', NULL, true, '2025-10-08 05:54:33.820155+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-01', false, false),
+	('458d4b7e-3725-4d44-9f2b-b78f7c7e3af3', '4B98CC', '358destroyed@gmail.com', NULL, '19A5C8', '2025-07-09 03:38:59.027425+00', '2025-10-09 03:55:37.621203+00', true, 1100.00, 0.00, true, '2025-07-09 06:51:15.828016+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 03:55:37.621203+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('94451dd7-a6fa-46bd-95d4-2616697d1c72', '1AF447', 'balineko9@gmail.com', NULL, '1D3F38', '2025-07-08 13:23:58.042334+00', '2025-10-09 03:57:03.137812+00', true, 1100.00, 0.00, true, '2025-07-09 03:41:54.367941+00', '3892853', NULL, NULL, false, NULL, NULL, '0x84317E6A9f7272d7751E1039D305fAbf5eAA0580', NULL, true, '2025-10-09 03:57:03.137812+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('b1b202cd-2776-4efb-9758-705159bdae47', '0E9C6C', 'kumhmry@gmail.com', NULL, '81F952', '2025-07-08 05:57:48.035478+00', '2025-10-09 03:58:24.55897+00', true, 1100.00, 0.00, true, '2025-07-08 06:30:57.720112+00', '3892337', NULL, NULL, false, NULL, NULL, '0xEeA3d3cb4bd69534927F6854C24f2a16E1d5dFAE', NULL, true, '2025-10-09 03:58:24.55897+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('75b0041f-4e20-4cb7-8a58-51577779fc8c', 'E877D7', '358hanasakad@gmail.com', NULL, '8FFDFE', '2025-07-08 03:49:46.31986+00', '2025-10-09 04:02:03.207703+00', true, 1100.00, 0.00, true, '2025-07-08 03:59:20.931753+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:02:03.207703+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('a98c565c-6e6c-4d3c-adf9-399a7e56dea3', '771730', 'marueri.t5@gmail.com', NULL, '81F952', '2025-07-07 10:19:26.386707+00', '2025-10-09 04:09:33.877229+00', true, 1100.00, 0.00, true, '2025-07-07 10:40:25.138404+00', '3820223', NULL, NULL, false, NULL, NULL, '0xA7141d96697483a294b77B3694d7ecac9FA116a7', NULL, true, '2025-10-09 04:09:33.877229+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('85eb76ea-e43e-4feb-9071-fae61a35321b', '78A3D1', 'koganext214@gmail.com', NULL, '23865D', '2025-07-06 10:07:20.255879+00', '2025-10-09 04:11:53.884132+00', true, 1100.00, 0.00, true, '2025-07-06 10:09:22.295846+00', '3888718', NULL, NULL, false, NULL, NULL, '0x647Bf84bF279909281C00A6476CdC4049Bf8879f', NULL, true, '2025-10-09 04:11:53.884132+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('92dfb633-4736-4d49-acd0-00c304ff555c', '8FFDFE', 'mineyuki.kobayashi@gmail.com', NULL, '81F952', '2025-07-07 13:32:54.632125+00', '2025-10-09 04:07:36.603171+00', true, 23100.00, 0.00, true, '2025-07-08 01:31:24.815278+00', '3833912', NULL, NULL, false, NULL, NULL, '0xf0FDBAD9F43Ecb3Ef0a431024918f527f227AcCF', NULL, true, '2025-10-09 04:07:36.603171+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('390d5a0f-a2a6-4a24-a80c-c87855a8e5c9', 'FFD473', '358hanasakab@gmail.com', NULL, 'C92A91', '2025-07-07 12:44:37.680978+00', '2025-10-09 04:08:43.746078+00', true, 1100.00, 0.00, true, '2025-07-07 12:48:42.635227+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:08:43.746078+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('940c7f15-b0ae-47fb-9251-db1ff85898c2', 'FF7CAE', 'tomo.zo315@gmail.com', NULL, '7ECF42', '2025-09-01 02:25:41.666611+00', '2025-10-08 05:24:25.234909+00', true, 1100.00, 0.00, true, NULL, '26240256', NULL, NULL, false, NULL, NULL, '0x44b3AAe4A7682b817FD8c33Fb5bAcc90Df7088a2', NULL, true, '2025-10-08 05:24:25.234909+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('78a387f3-879b-4592-831e-85e29540f106', 'BF86BA', 'ogaoga350z@gmail.com', NULL, 'F54652', '2025-08-29 14:09:03.719983+00', '2025-10-08 05:27:45.576145+00', true, 1100.00, 0.00, true, NULL, '26225987', NULL, NULL, false, NULL, NULL, '0x3218a8A0dA96ED80Df2875143E6C0c334E0A4e4c', NULL, true, '2025-10-08 05:27:45.576145+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('e3694780-b147-4568-bb1c-8733adba282a', 'CBBF16', 'tomoriko0409@gmail.com', NULL, '1A1610', '2025-08-19 04:12:58.388652+00', '2025-11-04 06:19:50.61+00', true, 1100.00, 0.00, true, NULL, '26180189', NULL, NULL, false, NULL, NULL, '0x4847dC1073AE1224A17f06499db4524F509DF530', NULL, true, '2025-10-09 03:19:02.092286+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-01', false, false),
+	('3f1587d8-b747-482c-b2d1-609ef193199e', '063CE0', 'natuyosouka777@gmail.com', NULL, 'A815EA', '2025-08-27 11:07:02.039562+00', '2025-10-08 05:30:23.174977+00', true, 1100.00, 0.00, true, NULL, '26222425', NULL, NULL, false, NULL, NULL, '0xdEF0938592Bdc53f77C5905a1247e077969Df745', NULL, true, '2025-10-08 05:30:23.174977+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('93e082b0-4864-4bc0-ac8e-89fb322886ac', '2F8CBC', '811kakko@gmail.com', NULL, '66AD54', '2025-08-27 06:10:08.772127+00', '2025-10-08 05:31:01.489955+00', true, 1100.00, 0.00, true, NULL, '26221492', NULL, NULL, false, NULL, NULL, '0x88C6bFAE911Da63E0d317cD8425c692AfA701f45', NULL, true, '2025-10-08 05:31:01.489955+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('f94bdb36-15b6-484f-9ee3-9ea4d7839346', '66AD54', 'mt.tsururun73@gmail.com', NULL, '0B2371', '2025-08-27 05:45:18.90188+00', '2025-10-08 05:31:34.903868+00', true, 1100.00, 0.00, true, NULL, '26221380', NULL, NULL, false, NULL, NULL, '0x17DBCcf9Ea5e5B0a10368485A98135A284954f0C', NULL, true, '2025-10-08 05:31:34.903868+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('de2c2a8e-ed16-4fa4-87c5-1429dfc00a38', 'C9015D', 'mt514akki@gmail.com', NULL, 'CE4FF7', '2025-08-30 05:56:46.272833+00', '2025-11-04 06:24:27.044+00', true, 1100.00, 0.00, true, NULL, '26234086', NULL, NULL, false, NULL, NULL, '0x6f4fCe2274b754c142FE849Dedd78A651Fa14599', NULL, true, '2025-10-08 05:26:24.903214+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('69fcd645-b239-492a-92c0-52dc01c103e6', '328E04', 'extra.lunge@gmail.com', NULL, '2EAA6E', '2025-10-08 08:11:46.778111+00', '2025-10-08 08:23:27.622803+00', true, 1100.00, 0.00, false, NULL, '26349578', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('a86b5c12-cbcf-4521-9245-702a617a065e', 'CE4FF7', 'pchee41@gmail.com', NULL, '6E1304', '2025-08-30 05:32:22.523359+00', '2025-11-04 06:24:45.164+00', true, 3300.00, 0.00, true, NULL, '26234068', NULL, NULL, false, NULL, NULL, '0x720FB32b94960A694aE3353078aeF57d07cc34fa', NULL, true, '2025-10-08 05:27:10.640916+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-09-15', false, false),
+	('c3315209-65bc-4806-98c6-d78ab06dc019', '9DE96C', 'zero.one.world7@gmail.com', NULL, 'FCB962', '2025-08-26 14:16:10.145454+00', '2025-10-08 05:32:51.129434+00', true, 1100.00, 0.00, true, NULL, '3175961', NULL, NULL, false, NULL, NULL, '0xEfcae2cf4dFE19C5d0B66eF14c3F232505AC9980', NULL, true, '2025-10-08 05:32:51.129434+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('0b751879-3d9e-4bf7-986b-c0316419d5d9', '099358', 'chantillyrushe@yahoo.co.jp', NULL, '723997', '2025-08-26 10:05:51.073065+00', '2025-10-08 05:33:27.313924+00', true, 1100.00, 0.00, true, NULL, '3773972', NULL, NULL, false, NULL, NULL, '0x301b07cDFFF755bAA1586160715eB6d4EF5E6D3e', NULL, true, '2025-10-08 05:33:27.313924+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('55913f64-1411-439b-aac4-e019702bffdf', '2443DD', 'top.ion214h@gmail.com', NULL, '880053', '2025-07-06 10:12:50.42044+00', '2025-10-09 04:10:46.400187+00', true, 1100.00, 0.00, true, '2025-07-06 10:14:20.521795+00', '3888718', NULL, NULL, false, NULL, NULL, '0x647Bf84bF279909281C00A6476CdC4049Bf8879f', NULL, true, '2025-10-09 04:10:46.400187+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('0e7ffdd2-2dd4-468b-9fa3-b86bbd4507f2', 'F2B03A', '109yamato@gmail.com', NULL, 'ED9E45', '2025-08-22 07:32:42.508404+00', '2025-10-08 05:53:24.376914+00', true, 1100.00, 0.00, true, NULL, '3167556', NULL, NULL, false, NULL, NULL, '0x33b6d8458657FEF9EebC481Ef6c1892Adec76ae1', NULL, true, '2025-10-08 05:53:24.376914+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-09-15', false, false),
+	('221421e9-24d8-426a-9ede-3fcea863ba44', '4771BF', 'omachan08052@gmail.com', NULL, 'E12E15', '2025-10-08 10:31:45.303595+00', '2025-10-08 10:48:41.671698+00', true, 1100.00, 0.00, false, NULL, '26349785', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('5c65b60c-cb8a-4ca9-b6e6-5a1383898d67', '4F1773', 'hasshupairotto@gmail.com', NULL, '797609', '2025-07-02 11:01:21.106715+00', '2025-10-13 10:36:41.744+00', true, 1100.00, 0.00, true, '2025-07-02 11:12:05.622504+00', '3881113', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-07-15', false, false),
+	('223545de-dbc2-452c-a81a-5b52d6ae3fe2', '7C7956', 'aero224.224@gmail.com', NULL, 'F3961F', '2025-09-15 02:56:52.537813+00', '2025-09-15 02:56:52.537813+00', true, 1100.00, 0.00, true, NULL, '26292048', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-10-01', false, false),
+	('2978253b-9dc9-49cf-852f-09721954e5ca', 'DAF88D', 'marimari.3786@gmail.com', NULL, '80AADD', '2025-10-25 07:24:16.123605+00', '2025-10-26 03:33:30.860845+00', true, 1100.00, 0.00, false, NULL, '26388364', NULL, NULL, false, NULL, NULL, '0x8Cf75dc0aeB9E3d80931637da1cB6086c6ebd3fF', NULL, true, '2025-10-26 03:33:30.860845+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-15', false, false),
+	('479fa428-35d3-41eb-96c7-671cd1da295f', 'E5CD48', 'toyo0800@icloud.com', NULL, 'E4FC38', '2025-10-08 12:33:08.328423+00', '2025-10-08 13:12:55.310997+00', true, 9900.00, 0.00, false, NULL, '26349923', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('480ce20b-b52f-4abb-bdca-e3ff154eb79e', 'DE9AC6', 'hanasaka8713h@gmail.com', NULL, '6E8123', '2025-07-08 04:32:55.767205+00', '2025-10-14 06:50:48.118+00', true, 1100.00, 0.00, true, '2025-07-08 04:39:07.561615+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:00:15.518899+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('ca31d483-ae44-4fca-8a12-cb9bbe1a2f40', '466809', 'soccergurataku@gmail.com', NULL, '0D4493', '2025-07-06 07:04:20.645621+00', '2025-10-14 07:06:49.53+00', true, 1100.00, 0.00, true, '2025-07-06 07:14:01.833278+00', '3888280', NULL, NULL, false, NULL, NULL, '0xa10F5457884AE7fCA13065ddb13a5C1695ba4471', NULL, true, '2025-10-09 04:14:19.842922+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('c5cb0a53-68a5-4d04-a5c3-1e36efcd3bbc', 'C64AA2', 'kananana1012@gmail.com', NULL, '30BC41', '2025-07-08 13:16:03.325473+00', '2025-10-22 09:54:31.068+00', true, 1100.00, 0.00, true, '2025-07-08 23:01:25.69088+00', '3893438', NULL, NULL, false, NULL, NULL, '0xd1FaC456e79DED3737541bFef95cb497b544EA13', NULL, true, '2025-10-09 03:57:46.643884+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('2545d76c-39d3-4d08-a657-164c2decf661', '2C44D5', 'yutaka19791105@gmail.com', NULL, 'DE5328', '2025-07-06 07:38:34.547167+00', '2025-07-09 07:27:18.591044+00', true, 1100.00, 0.00, true, '2025-07-06 07:42:32.184357+00', NULL, NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-08-01', false, false),
+	('1ec45a43-14ba-408e-b3ed-a4527220aab2', 'DD525A', 'chinablue.aug31.noriko@gmail.com', NULL, '5D098D', '2025-11-03 06:17:22.817957+00', '2025-11-04 03:01:16.250556+00', true, 9900.00, 0.00, false, NULL, '26403439', NULL, NULL, false, NULL, NULL, '0xc1E41968BA59B52422163C0B120aF8DaB0BB7CBc', NULL, true, '2025-11-04 03:01:16.250556+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('732b6be4-04e1-46dc-a5bf-0307820812c8', '6FF2D1', 'happy.magic.51@gmail.com', NULL, 'CEDC61', '2025-09-06 06:34:08.308939+00', '2025-11-04 06:25:37.466+00', true, 1100.00, 0.00, true, NULL, '26262688', NULL, NULL, false, NULL, NULL, '0x65375625DB278e9D25cf32eb7baB8FCC420243E7', NULL, true, '2025-10-08 04:36:46.2513+00', 'support@dshsupport.biz', 'NFT配布完了', true, NULL, NULL, true, '2025-10-01', false, false),
+	('db933f57-d01b-4b6e-bd36-2912e91544b8', '307FD5', 'takasuzu1234567890@gmail.com', NULL, '328E04', '2025-10-08 08:54:24.894486+00', '2025-10-08 09:10:28.958923+00', true, 1100.00, 0.00, false, NULL, '26349659', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('07d4e3f9-ab2b-483f-bb4b-4580c59efdf5', '23865D', 'kitagaki214@gmail.com', NULL, 'AE6C1C', '2025-07-06 10:02:55.353462+00', '2025-10-09 04:12:27.474006+00', true, 1100.00, 0.00, true, '2025-07-06 10:06:11.131742+00', '3888718', NULL, NULL, false, NULL, NULL, '0x647Bf84bF279909281C00A6476CdC4049Bf8879f', NULL, true, '2025-10-09 04:12:27.474006+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-08-01', false, false),
+	('2e833248-be35-457c-9938-0308d792deb4', '576A08', 'ruruharu373@gmail.com', NULL, '41CAAD', '2025-11-04 02:14:14.166014+00', '2025-11-05 06:56:38.713284+00', true, 1100.00, 0.00, false, NULL, '26403232', NULL, NULL, false, NULL, NULL, '0xbd1F20CdEe1315cDb08C2213bfC68e83ef378A88', NULL, true, '2025-11-05 06:56:38.713284+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, NULL, false, false),
+	('45aecae7-ced9-47ee-a9e9-a73c3484ef06', '75F5A0', 'takasuzu1234567890+1@gmail.com', NULL, '307FD5', '2025-10-08 09:23:18.516061+00', '2025-10-08 09:40:14.209372+00', true, 1100.00, 0.00, false, NULL, '26349659', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('0af980e3-413e-44fd-b384-68121e8ce58d', '5881AB', 'ahiahi16de@gmail.com', NULL, '3C30A2', '2025-10-09 05:26:51.827182+00', '2025-10-09 05:50:18.388522+00', true, 1100.00, 0.00, false, NULL, '26351307', NULL, NULL, false, NULL, NULL, '0x11C3D264629a8D17054E7730a8A724344aa22eB7', NULL, true, '2025-10-09 05:50:18.388522+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-01', false, false),
+	('460ed9ba-067a-4a77-b9c2-8dc8e67bd5bf', 'D7D48D', 'pa.pi.copoppo@gmail.com', NULL, '59C23C', '2025-07-05 04:23:34.259896+00', '2025-10-09 04:15:30.301461+00', true, 1100.00, 0.00, true, '2025-07-05 04:27:57.465896+00', '3886308', NULL, NULL, false, NULL, NULL, '0xD376A999523cDB68fC9a21E95AeCd6CA94d03F1f', NULL, true, '2025-10-09 04:15:30.301461+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-07-15', false, false),
+	('57930e8b-c164-4b7a-a761-3f0396a64b71', 'A416E4', 'c.o.09043297287@gmail.com', NULL, '07712F', '2025-11-04 14:31:56.512447+00', '2025-11-05 03:47:13.476226+00', true, 1100.00, 0.00, false, NULL, '26405898', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('0bf0efff-3338-4a0a-ade3-0ab9d1a5cb74', 'C09A54', 'akomugu@icloud.com', NULL, '71AE10', '2025-11-04 17:13:17.804562+00', '2025-11-05 03:53:35.376723+00', true, 1100.00, 0.00, false, NULL, '26406203', NULL, NULL, false, NULL, NULL, '0xEb3aa10A98EF5ae7d2b0a5E321cc14082F140eA1', NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, NULL, false, false),
+	('abe3ecfa-9bbb-465c-8d28-286dab4403ee', '3C9E56', 'milk30519@gmail.com', NULL, 'A81A5E', '2025-09-09 10:37:56.284905+00', '2025-11-04 03:08:41.597705+00', true, 1100.00, 0.00, true, NULL, '26274113', NULL, NULL, false, NULL, NULL, '0x0021e4BCF2Ed4e1462b2c06a2FBf8B12a72bd659', NULL, true, '2025-11-04 03:08:41.597705+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-10-01', false, false),
+	('ebb02c81-0681-4af5-b5a4-de7135bd0e70', 'D31C3B', 'aomasyu@gmail.com', NULL, 'CA7902', '2025-10-26 03:01:04.588553+00', '2025-10-26 03:34:27.69823+00', true, 1100.00, 0.00, false, NULL, '26389866', NULL, NULL, false, NULL, NULL, '0xd2485E09DB87E68484d11aec7203200d4Bb86f9F', NULL, true, '2025-10-26 03:34:27.69823+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-11-15', false, false),
+	('2521338a-6d52-4714-86c3-2b1c7139d11d', 'E12E15', 'takasuzu1234567890+2@gmail.com', NULL, '75F5A0', '2025-10-08 09:42:20.29298+00', '2025-10-08 10:00:20.521286+00', true, 1100.00, 0.00, false, NULL, '26349659', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false),
+	('bf7217ab-6ee3-4dbe-b1b4-a5012d7c0f66', '8BF2FC', 'maple.re.w.d@gmail.com', NULL, '0E47BC', '2025-07-05 01:56:03.199453+00', '2025-10-09 04:17:02.860836+00', true, 1100.00, 0.00, true, '2025-07-05 03:19:21.968941+00', '3802545', NULL, NULL, false, NULL, NULL, '0x1C4a6f0380d6aACbF325d79612f4b9786d9Fbb7A', NULL, true, '2025-10-09 04:17:02.860836+00', 'support@dshsupport.biz', 'NFT配布完了', false, NULL, NULL, true, '2025-07-15', false, false),
+	('00b49492-f591-4ac8-b82a-6cabf63fb682', '8D01EC', 'investmentffg@gmail.com', NULL, 'E12E15', '2025-10-09 06:22:55.184483+00', '2025-10-12 05:08:41.089418+00', true, 1100.00, 0.00, false, NULL, 'investmentffg@gmail.com', NULL, NULL, false, NULL, NULL, NULL, NULL, false, NULL, NULL, NULL, false, NULL, NULL, true, '2025-11-01', false, false);
+
+
+--
+-- Data for Name: affiliate_cycle; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."affiliate_cycle" ("id", "user_id", "cycle_number", "phase", "cum_usdt", "available_usdt", "total_nft_count", "auto_nft_count", "manual_nft_count", "created_at", "updated_at", "cycle_start_date", "last_updated", "next_action") VALUES
+	(4662, '5D098D', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-03 06:05:15.547067+00', '2025-11-03 06:05:15.547067+00', NULL, '2025-11-03 06:05:15.547067+00', 'usdt'),
+	(5491, 'B329F0', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-04 05:32:26.630135+00', '2025-11-04 05:32:26.630135+00', NULL, '2025-11-04 05:32:26.630135+00', 'usdt'),
+	(514, '6B0504', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-24 04:51:55.44589+00', '2025-10-24 04:51:55.44589+00', NULL, '2025-10-24 04:51:55.44589+00', 'usdt'),
+	(5938, '4CC8DA', 1, 'USDT', 0.00, 0.00, 3, 0, 3, '2025-11-06 05:18:19.109437+00', '2025-11-06 05:18:19.109437+00', NULL, '2025-11-06 05:18:19.109437+00', 'usdt'),
+	(525, '5DAC9D', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-01 11:20:28.703803+00', '2025-11-01 11:20:28.703803+00', NULL, '2025-11-01 11:20:28.703803+00', 'usdt'),
+	(298, '45D474', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:19:16.75605+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(491, 'F6E460', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-15 07:08:51.987616+00', '2025-10-15 07:08:51.987616+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(503, '7D5A07', 1, 'USDT', 0.00, -236.88, 14, 0, 14, '2025-10-20 11:33:20.190065+00', '2025-10-20 11:33:20.190065+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(301, '86C126', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:20:14.723125+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(297, '8F3D05', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:18:57.398111+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(294, '9E5315', 0, 'USDT', 0.55, -31.37, 2, 0, 2, '2025-08-19 07:17:23.36784+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(288, 'CBBF16', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:12:54.128805+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(300, 'E18A65', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:19:56.778378+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(283, 'E43A9A', 0, 'USDT', 0.55, -31.37, 2, 0, 2, '2025-08-19 07:09:08.359029+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(302, 'E6FE4D', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:20:54.724189+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(303, 'E77AA7', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:21:09.018605+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(387, '92B2C3', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-06 07:39:00.978028+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5710, 'A416E4', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 03:47:13.476226+00', '2025-11-05 03:47:13.476226+00', NULL, '2025-11-05 03:47:13.476226+00', 'usdt'),
+	(20, 'D3E589', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(398, 'A94B2B', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-09 11:38:35.714054+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(203, '08FD06', 0, 'USDT', 0.26, -47.26, 2, 0, 2, '2025-07-15 06:23:49.654338+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(381, '21721A', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-05 05:31:44.575214+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(419, '8DDB99', 0, 'USDT', 2.68, -47.26, 2, 0, 2, '2025-09-18 01:44:52.934394+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(194, 'C64AA2', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(264, '3194C4', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-08 06:50:48.169006+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(382, '40B221', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-05 05:54:16.714028+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(225, '5036CF', 0, 'USDT', 0.81, -47.26, 2, 0, 2, '2025-07-19 07:15:48.720933+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(284, '972738', 0, 'USDT', 0.55, -47.26, 2, 0, 2, '2025-08-19 07:10:09.093168+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(299, '092270', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-08-19 07:19:39.702149+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(340, '02FDF0', 0, 'USDT', 1.36, -94.52, 4, 0, 4, '2025-08-26 07:36:38.096818+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(366, '7B703E', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-29 08:59:22.624733+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(433, '0A051F', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-26 11:14:29.262589+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(434, '5676B5', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-26 11:14:34.293492+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(470, 'A54290', 0, 'USDT', 0.00, -236.88, 14, 0, 14, '2025-10-10 11:50:45.580401+00', '2025-10-10 11:50:45.580401+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(481, '31B405', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-12 11:41:40.463472+00', '2025-10-12 11:41:40.463472+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(486, 'FD9275', 0, 'USDT', 0.00, -50.76, 3, 0, 3, '2025-10-14 06:36:38.73977+00', '2025-10-14 06:36:38.73977+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(4663, 'DD525A', 1, 'USDT', 0.00, 0.00, 9, 0, 9, '2025-11-03 06:25:55.904456+00', '2025-11-03 06:25:55.904456+00', NULL, '2025-11-03 06:25:55.904456+00', 'usdt'),
+	(5492, '576A08', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-04 05:32:43.087288+00', '2025-11-04 05:32:43.087288+00', NULL, '2025-11-04 05:32:43.087288+00', 'usdt'),
+	(5711, '7CB7E4', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 03:48:41.191186+00', '2025-11-05 03:48:41.191186+00', NULL, '2025-11-05 03:48:41.191186+00', 'usdt'),
+	(15, 'D3A133', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(393, '31C7CB', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-09 07:20:01.446171+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(4376, 'F60F23', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-02 05:55:42.973062+00', '2025-11-02 05:55:42.973062+00', NULL, '2025-11-02 05:55:42.973062+00', 'usdt'),
+	(254, '356B74', 0, 'USDT', 0.13, -23.60, 1, 0, 1, '2025-08-05 03:22:21.382144+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(321, '351859', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-21 12:14:23.066677+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(45, '6BCCED', 0, 'USDT', 0.00, 0.00, 0, 0, 0, '2025-07-08 04:32:03.255957+00', '2025-07-16 14:10:26.759182+00', NULL, '2025-10-14 14:04:35.684998+00', 'usdt'),
+	(234, '4517C9', 0, 'USDT', 0.00, -23.60, 1, 0, 1, '2025-07-23 09:35:55.890794+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(413, '1C341A', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-16 06:27:19.381365+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(336, 'FD9E4F', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-26 04:48:06.483896+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(504, '6DA8C7', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-20 15:23:45.902559+00', '2025-10-20 15:23:45.902559+00', NULL, '2025-10-20 15:23:45.902559+00', 'usdt'),
+	(515, 'DAF88D', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-25 10:40:47.771588+00', '2025-10-25 10:40:47.771588+00', NULL, '2025-10-25 10:40:47.771588+00', 'usdt'),
+	(492, '251D2B', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-17 02:45:20.489104+00', '2025-10-17 02:45:20.489104+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(458, 'E28F37', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 07:19:23.69638+00', '2025-10-08 07:19:23.69638+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(460, '328E04', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 08:23:27.622803+00', '2025-10-08 08:23:27.622803+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(468, '5881AB', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-09 05:46:04.023395+00', '2025-10-09 05:46:04.023395+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(461, '307FD5', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 09:10:28.958923+00', '2025-10-08 09:10:28.958923+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(483, 'C58662', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-13 10:33:19.361499+00', '2025-10-13 10:33:19.361499+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(474, 'E16C9E', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-11 08:39:18.056311+00', '2025-10-11 08:39:18.056311+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(485, '17673A', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-14 03:48:38.724226+00', '2025-10-14 03:48:38.724226+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(296, '0E0171', 0, 'USDT', 0.55, -31.37, 2, 0, 2, '2025-08-19 07:18:42.777804+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(307, '858570', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:22:30.458053+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(4377, '1F7402', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-02 07:24:51.351937+00', '2025-11-02 07:24:51.351937+00', NULL, '2025-11-02 07:24:51.351937+00', 'usdt'),
+	(4664, '8964D7', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-03 16:03:42.959201+00', '2025-11-03 16:03:42.959201+00', NULL, '2025-11-03 16:03:42.959201+00', 'usdt'),
+	(5712, 'F68B31', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 03:52:50.965407+00', '2025-11-05 03:52:50.965407+00', NULL, '2025-11-05 03:52:50.965407+00', 'usdt'),
+	(505, '320D5E', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-22 11:08:21.763354+00', '2025-10-22 11:08:21.763354+00', NULL, '2025-10-22 11:08:21.763354+00', 'usdt'),
+	(275, '0B2371', 0, 'USDT', 2.12, -236.25, 10, 0, 10, '2025-08-17 04:35:51.004003+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(446, 'F1E4E8', 0, 'USDT', 0.26, -47.26, 2, 0, 2, '2025-10-03 09:24:22.75318+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(516, 'D31C3B', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-26 03:13:57.853212+00', '2025-10-26 03:13:57.853212+00', NULL, '2025-10-26 03:13:57.853212+00', 'usdt'),
+	(189, '0E9C6C', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(395, '64342C', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-09 10:16:13.577963+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(342, 'BA4B5B', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-26 08:56:14.941959+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(343, 'AFE2FB', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-26 08:56:52.166495+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(228, '684B00', 0, 'USDT', 0.26, -31.37, 2, 0, 2, '2025-07-19 07:22:50.74168+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(306, '29581F', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:22:16.739603+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(30, 'YBVQ9D', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(493, '1757CC', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-18 01:13:49.563968+00', '2025-10-18 01:13:49.563968+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(305, '378E29', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-08-19 07:22:04.252259+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(423, '94A681', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-19 06:13:10.619684+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(295, 'C37E74', 0, 'USDT', 0.26, -31.37, 2, 0, 2, '2025-08-19 07:17:55.959556+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(230, 'D61EA6', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-19 07:29:51.917015+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(229, '62CED1', 0, 'USDT', 0.68, -15.66, 1, 0, 1, '2025-07-19 07:24:35.084177+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(471, '2533DA', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-11 03:02:21.385371+00', '2025-10-11 03:02:21.385371+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(469, '59165B', 0, 'USDT', 0.00, -50.76, 3, 0, 3, '2025-10-09 08:17:37.726229+00', '2025-10-09 08:17:37.726229+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(271, 'AA65D3', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-15 03:44:06.916859+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(443, 'C2FDA7', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-10-03 06:13:13.212455+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(399, 'DC9AEE', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-09 14:00:28.502782+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(274, '892389', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-15 10:03:40.977294+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(370, '4BECF6', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-31 01:25:42.457363+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(26, '466809', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(4378, '371774', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-02 12:01:20.480583+00', '2025-11-02 12:01:20.480583+00', NULL, '2025-11-02 12:01:20.480583+00', 'usdt'),
+	(10, '794682', 0, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-07-16 14:10:26.759182+00', NULL, '2025-10-14 14:04:35.684998+00', 'usdt'),
+	(506, '490F84', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-23 00:24:33.897138+00', '2025-10-23 00:24:33.897138+00', NULL, '2025-10-23 00:24:33.897138+00', 'usdt'),
+	(517, 'ECC482', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-27 06:39:55.985784+00', '2025-10-27 06:39:55.985784+00', NULL, '2025-10-27 06:39:55.985784+00', 'usdt'),
+	(494, 'F5D253', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-19 04:00:00.705905+00', '2025-10-19 04:00:00.705905+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(459, '2EAA6E', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 07:21:00.381613+00', '2025-10-08 07:21:00.381613+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5713, '01F96B', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 03:53:03.758921+00', '2025-11-05 03:53:03.758921+00', NULL, '2025-11-05 03:53:03.758921+00', 'usdt'),
+	(12, 'OOCJ16', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(13, '24AECB', 0, 'USDT', 0.21, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(262, '04161E', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-08 02:14:40.521256+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(380, 'E9557E', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-05 05:05:46.968977+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(472, '076D31', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-11 06:56:46.381139+00', '2025-10-11 06:56:46.381139+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(354, '099358', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-27 13:16:53.69029+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(375, '1F85EE', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-03 08:17:30.05892+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(7, '8FFDFE', 0, 'USDT', 3.15, -496.10, 21, 0, 21, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(346, 'FCB962', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-26 11:18:43.29277+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(379, 'FB9CDC', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-05 05:03:58.498981+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(220, 'C162DD', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-17 07:03:38.854794+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(442, 'FCB215', 0, 'USDT', 0.26, -70.86, 3, 0, 3, '2025-10-03 05:41:31.989009+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(8, '2443DD', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(270, 'E1A5D5', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-08-15 02:47:32.772442+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(411, 'FF7CAE', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-15 14:28:10.57579+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(278, '885952', 0, 'USDT', 2.04, -118.13, 5, 0, 5, '2025-08-17 05:04:33.712433+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(6, 'D7D48D', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(371, '9A3A16', 0, 'USDT', 0.26, -3685.48, 156, 0, 156, '2025-09-01 05:59:01.036779+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'nft'),
+	(391, '361CF6', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-08 10:48:36.204377+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5714, 'C09A54', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 03:53:35.376723+00', '2025-11-05 03:53:35.376723+00', NULL, '2025-11-05 03:53:35.376723+00', 'usdt'),
+	(4379, '28DC01', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-02 12:02:07.205444+00', '2025-11-02 12:02:07.205444+00', NULL, '2025-11-02 12:02:07.205444+00', 'usdt'),
+	(410, '7C7956', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-15 03:07:11.104363+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(507, '218AE2', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-23 11:22:54.910423+00', '2025-10-23 11:22:54.910423+00', NULL, '2025-10-23 11:22:54.910423+00', 'usdt'),
+	(518, 'AC7086', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-28 12:18:28.1024+00', '2025-10-28 12:18:28.1024+00', NULL, '2025-10-28 12:18:28.1024+00', 'usdt'),
+	(473, 'C819F7', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-11 07:56:42.857721+00', '2025-10-11 07:56:42.857721+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(495, 'B108AD', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-19 04:00:19.424287+00', '2025-10-19 04:00:19.424287+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(4380, 'CAB76E', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-02 12:14:25.622682+00', '2025-11-02 12:14:25.622682+00', NULL, '2025-11-02 12:14:25.622682+00', 'usdt'),
+	(5715, 'B34768', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 03:55:49.38919+00', '2025-11-05 03:55:49.38919+00', NULL, '2025-11-05 03:55:49.38919+00', 'usdt'),
+	(335, 'A50876', 0, 'USDT', 0.26, -212.65, 9, 0, 9, '2025-08-26 03:02:59.870447+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(198, 'DB4690', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-12 00:51:58.283874+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(415, '9D9F83', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-16 08:07:17.045753+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(508, '5AE03B', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-23 11:29:58.309895+00', '2025-10-23 11:29:58.309895+00', NULL, '2025-10-23 11:29:58.309895+00', 'usdt'),
+	(519, '88C473', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-31 05:55:06.787907+00', '2025-10-31 05:55:06.787907+00', NULL, '2025-10-31 05:55:06.787907+00', 'usdt'),
+	(484, 'F59081', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-13 10:33:35.188697+00', '2025-10-13 10:33:35.188697+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(463, '75F5A0', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 09:40:14.209372+00', '2025-10-08 09:40:14.209372+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(464, 'E12E15', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 10:00:20.521286+00', '2025-10-08 10:00:20.521286+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(496, '2F6364', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-19 10:28:32.964253+00', '2025-10-19 10:28:32.964253+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(465, 'CA66A9', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 10:35:41.657389+00', '2025-10-08 10:35:41.657389+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(475, 'C79F62', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-11 08:39:38.777394+00', '2025-10-11 08:39:38.777394+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(476, 'A512FF', 0, 'USDT', 0.00, -101.52, 6, 0, 6, '2025-10-11 08:42:12.667944+00', '2025-10-11 08:42:12.667944+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5716, 'A46E6C', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 08:20:13.761642+00', '2025-11-05 08:20:13.761642+00', NULL, '2025-11-05 08:20:13.761642+00', 'usdt'),
+	(509, 'BA790B', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-23 11:38:48.769711+00', '2025-10-23 11:38:48.769711+00', NULL, '2025-10-23 11:38:48.769711+00', 'usdt'),
+	(520, '7A49CB', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-31 08:34:28.493154+00', '2025-10-31 08:34:28.493154+00', NULL, '2025-10-31 08:34:28.493154+00', 'usdt'),
+	(497, 'D9CD43', 1, 'USDT', 0.00, -84.60, 5, 0, 5, '2025-10-20 04:34:02.650317+00', '2025-10-20 04:34:02.650317+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(466, '4771BF', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-08 10:48:41.671698+00', '2025-10-08 10:48:41.671698+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(510, '17BEFD', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-23 11:42:35.746574+00', '2025-10-23 11:42:35.746574+00', NULL, '2025-10-23 11:42:35.746574+00', 'usdt'),
+	(5717, 'F8BA82', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 08:28:37.92107+00', '2025-11-05 08:28:37.92107+00', NULL, '2025-11-05 08:28:37.92107+00', 'usdt'),
+	(521, '71AE10', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-31 16:34:40.397332+00', '2025-10-31 16:34:40.397332+00', NULL, '2025-10-31 16:34:40.397332+00', 'usdt'),
+	(480, '8D01EC', 0, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-12 05:08:41.089418+00', '2025-10-12 05:08:41.089418+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(498, 'F59D48', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-20 04:34:20.830824+00', '2025-10-20 04:34:20.830824+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(467, 'E5CD48', 0, 'USDT', 0.00, -152.28, 9, 0, 9, '2025-10-08 13:12:55.310997+00', '2025-10-08 13:12:55.310997+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5718, '63F6D2', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 09:41:36.019555+00', '2025-11-05 09:41:36.019555+00', NULL, '2025-11-05 09:41:36.019555+00', 'usdt'),
+	(511, '2AF0E1', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-23 11:52:24.470305+00', '2025-10-23 11:52:24.470305+00', NULL, '2025-10-23 11:52:24.470305+00', 'usdt'),
+	(522, '84CC53', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-31 17:00:51.506131+00', '2025-10-31 17:00:51.506131+00', NULL, '2025-10-31 17:00:51.506131+00', 'usdt'),
+	(499, '8F7AD9', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-20 06:39:28.540669+00', '2025-10-20 06:39:28.540669+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5719, '6764B9', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 10:29:59.250028+00', '2025-11-05 10:29:59.250028+00', NULL, '2025-11-05 10:29:59.250028+00', 'usdt'),
+	(512, 'F3AAF6', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-23 11:57:16.545269+00', '2025-10-23 11:57:16.545269+00', NULL, '2025-10-23 11:57:16.545269+00', 'usdt'),
+	(523, '8C3B2B', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-01 02:11:57.157186+00', '2025-11-01 02:11:57.157186+00', NULL, '2025-11-01 02:11:57.157186+00', 'usdt'),
+	(500, '27E203', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-20 11:24:51.197198+00', '2025-10-20 11:24:51.197198+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(501, '5112D6', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-20 11:25:10.566784+00', '2025-10-20 11:25:10.566784+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5720, 'A70DFE', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-05 15:56:00.180367+00', '2025-11-05 15:56:00.180367+00', NULL, '2025-11-05 15:56:00.180367+00', 'usdt'),
+	(361, '684AC6', 0, 'USDT', 1.62, -23.60, 1, 0, 1, '2025-08-28 05:35:41.072537+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(513, '79DAC5', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-10-24 04:34:46.745123+00', '2025-10-24 04:34:46.745123+00', NULL, '2025-10-24 04:34:46.745123+00', 'usdt'),
+	(524, '264E3C', 1, 'USDT', 0.00, 0.00, 1, 0, 1, '2025-11-01 07:13:20.624142+00', '2025-11-01 07:13:20.624142+00', NULL, '2025-11-01 07:13:20.624142+00', 'usdt'),
+	(502, 'F79391', 1, 'USDT', 0.00, -16.92, 1, 0, 1, '2025-10-20 11:26:44.070795+00', '2025-10-20 11:26:44.070795+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(376, '230F31', 0, 'USDT', 1.07, -23.60, 1, 0, 1, '2025-09-03 09:00:13.152936+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(14, 'FFD473', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(246, 'EA7C20', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-30 09:17:41.572221+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(237, 'CA7902', 0, 'USDT', 0.60, -47.26, 2, 0, 2, '2025-07-24 09:16:05.639967+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(440, 'A34F44', 0, 'USDT', 0.26, -118.13, 5, 0, 5, '2025-10-02 03:58:12.500481+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(333, '8B6B9B', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-25 00:34:48.452139+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(252, '870323', 0, 'USDT', 0.52, -23.60, 1, 0, 1, '2025-08-05 03:21:45.342097+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(374, 'FB0A66', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-03 07:45:40.321741+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(339, 'F2B03A', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-26 07:15:52.798144+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(330, 'C035D7', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-24 07:05:45.691827+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(372, '14498C', 0, 'USDT', 2.68, -23.60, 1, 0, 1, '2025-09-02 07:29:32.837341+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(9, 'AEFBCA', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(364, 'F69E81', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-29 04:37:56.482195+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(16, 'B43A3D', 0, 'USDT', 0.52, -47.26, 2, 0, 2, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(452, 'CE4129', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-10-05 10:13:53.043602+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(322, '994D9D', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-21 12:31:46.248086+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(312, '840D16', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-20 03:58:40.64477+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(432, '497B16', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-25 12:01:10.727666+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(447, '0D4493', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-10-03 13:12:41.909628+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(219, 'A815EA', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-17 05:08:19.90196+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(266, 'C0E0E0', 0, 'USDT', 1.19, -47.26, 2, 0, 2, '2025-08-15 02:37:01.520351+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(188, '938133', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(32, '07712F', 0, 'USDT', 2.24, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(412, '1CF795', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-09-15 14:28:40.232212+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(185, '899254', 0, 'USDT', 0.00, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(263, '7041CD', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-08 02:14:47.678937+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(260, '62EAE3', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-07 09:11:04.514573+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(320, '9431BA', 0, 'USDT', 0.43, -23.60, 1, 0, 1, '2025-08-21 09:35:48.312725+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(39, '59C23C', 0, 'USDT', 0.71, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(324, '723997', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-22 07:47:31.666165+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(453, '04FF0C', 0, 'USDT', 1.70, -236.25, 10, 0, 10, '2025-10-06 07:37:12.98643+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(3, '1BAA30', 0, 'USDT', 0.21, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(38, '23865D', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(425, 'C6F0B3', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-21 07:51:49.290495+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(420, '525C88', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-18 08:08:33.80253+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(327, 'F8431B', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-23 07:31:36.709259+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(454, '55F766', 0, 'USDT', 2.81, -23.60, 1, 0, 1, '2025-10-06 08:00:25.69367+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(449, '571179', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-10-04 11:05:44.60719+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(195, '39CD6D', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(377, '4C3A86', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-04 02:59:30.777796+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(17, 'BC3409', 0, 'USDT', 0.52, -47.26, 2, 0, 2, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(231, 'AE95A3', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-19 09:48:22.217358+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(359, '063CE0', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-28 04:30:52.563946+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(224, 'C17025', 0, 'USDT', 0.89, -47.26, 2, 0, 2, '2025-07-19 07:09:22.302021+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(187, '1AF447', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(345, 'C9DE9F', 0, 'USDT', 1.36, -23.60, 1, 0, 1, '2025-08-26 09:06:58.346782+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(217, '2A973B', 0, 'USDT', 0.13, -23.60, 1, 0, 1, '2025-07-16 13:28:56.323522+00', '2025-11-06 01:14:51.619219+00', '2025-07-10 00:00:00+00', '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(390, 'CEDC61', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-08 08:56:32.949807+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(265, '177B83', 0, 'USDT', 0.71, -23.60, 1, 0, 1, '2025-08-08 08:31:02.709587+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(369, 'BF86BA', 0, 'USDT', 0.13, -23.60, 1, 0, 1, '2025-08-30 05:37:22.498829+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(41, '8BF2FC', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(277, '8EEC73', 0, 'USDT', 2.38, -118.13, 5, 0, 5, '2025-08-17 04:57:19.741722+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(276, 'A605F4', 0, 'USDT', 3.70, -118.13, 5, 0, 5, '2025-08-17 04:44:45.372386+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(428, 'EF9073', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-21 14:33:16.119158+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(21, '1D3F38', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(4, '9DCFD1', 0, 'USDT', 0.26, -47.26, 2, 0, 2, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(326, 'DD4154', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-23 02:20:16.529564+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(25, '66D65D', 0, 'USDT', 0.52, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(36, '6E1304', 0, 'USDT', 0.89, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(414, '4DF9A5', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-16 06:42:40.509587+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(363, 'E9F758', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-29 01:30:20.334556+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(403, 'B39333', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-09-11 07:35:18.361438+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(223, '1A1610', 0, 'USDT', 0.73, -31.37, 2, 0, 2, '2025-07-19 07:03:21.860487+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(250, '414A5E', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-01 12:58:36.07711+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(367, '2380A3', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-08-30 01:06:34.168478+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(356, '7DCFB7', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-08-27 13:32:11.308271+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(355, 'DF623D', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-08-27 13:30:06.65658+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(325, 'F733BD', 0, 'USDT', 0.39, -15.66, 1, 0, 1, '2025-08-22 07:48:10.659326+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(334, '8B8965', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-08-25 04:06:02.632024+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(409, 'AC80D0', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-13 07:10:40.389254+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(319, 'AC6649', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-21 03:21:13.454837+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(394, 'A2A479', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-09 08:19:28.742296+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(238, 'DD138D', 0, 'USDT', 0.21, -23.60, 1, 0, 1, '2025-07-24 10:12:27.294196+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(273, '59D41C', 0, 'USDT', 1.36, -141.73, 6, 0, 6, '2025-08-15 10:03:04.662171+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(348, '80C48F', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-27 03:56:34.877958+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(424, 'D866AD', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-20 04:18:38.43023+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(338, '047E33', 0, 'USDT', 0.94, -118.13, 5, 0, 5, '2025-08-26 07:03:08.268345+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(243, '144A86', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-28 08:33:16.768974+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(186, 'EC0A4D', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(192, '30BC41', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(353, '2F8CBC', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-27 06:17:47.761531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(397, '3C9E56', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-09 11:38:24.295695+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(416, 'A515A3', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-17 00:51:02.905655+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(360, '5452E7', 0, 'USDT', 0.81, -47.26, 2, 0, 2, '2025-08-28 04:46:10.843448+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(341, 'BC9A93', 0, 'USDT', 0.94, -23.60, 1, 0, 1, '2025-08-26 08:12:21.94667+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(239, 'F92E72', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-25 14:26:50.564597+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(337, '3F679F', 0, 'USDT', 3.15, -23.60, 1, 0, 1, '2025-08-26 05:48:39.150596+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(351, '66AD54', 0, 'USDT', 2.81, -23.60, 1, 0, 1, '2025-08-27 05:52:38.315688+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(245, 'E9B103', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-30 07:25:04.728734+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(317, 'D3FE28', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-21 03:20:20.825437+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(362, 'F3961F', 0, 'USDT', 0.94, -23.60, 1, 0, 1, '2025-08-28 10:09:54.564541+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(240, 'FE75AC', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-27 00:15:56.319497+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(329, '576E32', 0, 'USDT', 0.80, -70.86, 3, 0, 3, '2025-08-24 07:05:14.46629+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(244, '0F88DD', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-30 03:55:30.044227+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(213, 'A81A5E', 0, 'USDT', 0.47, -15.66, 1, 0, 1, '2025-07-16 08:28:35.496366+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(448, 'DD8A82', 0, 'USDT', 0.68, -23.60, 1, 0, 1, '2025-10-04 10:29:41.843299+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(258, 'DBCE95', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-08-07 08:27:19.994837+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(431, '469E53', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-25 07:44:52.104471+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(287, '2EF243', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:12:42.175045+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(292, '865483', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:15:41.803218+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(226, 'CABC84', 0, 'USDT', 0.68, -15.66, 1, 0, 1, '2025-07-19 07:15:58.665541+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(163, 'DE9AC6', 0, 'USDT', 0.21, -23.60, 1, 0, 1, '2025-07-08 04:40:49.437112+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(445, 'A4C3C8', 0, 'USDT', 1.36, -2055.39, 87, 0, 87, '2025-10-03 08:24:53.541674+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(235, 'CB4F3A', 0, 'USDT', 0.13, -23.60, 1, 0, 1, '2025-07-23 09:39:51.554335+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(332, 'B25642', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-25 00:34:35.033212+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(417, '0B3BA6', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-17 08:03:36.060769+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(191, '19A5C8', 0, 'USDT', 0.13, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(201, '8F5343', 0, 'USDT', 1.07, -23.60, 1, 0, 1, '2025-07-15 03:22:38.703444+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(251, 'C1ADF2', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-04 11:21:46.123009+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(196, '4B98CC', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(279, 'F2A752', 0, 'USDT', 0.26, -70.86, 3, 0, 3, '2025-08-18 02:24:47.517149+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(316, '5FAE2C', 0, 'USDT', 1.36, -118.13, 5, 0, 5, '2025-08-20 10:52:55.167953+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(280, '78D313', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-18 10:53:45.608039+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(34, '880053', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(418, '79E96F', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-09-17 08:30:52.727258+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(23, '4F1773', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(314, 'AA0CEA', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-08-20 05:18:06.775865+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(205, '232A2B', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-16 03:57:18.395544+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(227, '779902', 0, 'USDT', 0.55, -47.26, 2, 0, 2, '2025-07-19 07:16:27.470917+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(256, '4BF14D', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-05 07:12:11.738105+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(450, '3C6DD3', 0, 'USDT', 2.20, -118.13, 5, 0, 5, '2025-10-05 07:06:31.288855+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(257, '394CEC', 0, 'USDT', 0.65, -47.26, 2, 0, 2, '2025-08-05 11:00:42.588678+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(259, '2E2A39', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-07 09:10:56.292114+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(267, '127B98', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-08-15 02:39:29.359001+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(388, 'FD6DC2', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-07 04:52:45.689939+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(261, 'AB16AA', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-07 09:11:14.295395+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(242, '3B1E5E', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-27 23:53:16.063977+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(28, '773AC7', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(406, '99024A', 0, 'USDT', 0.26, -47.03, 3, 0, 3, '2025-09-12 05:06:16.154764+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(437, '3C06BA', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-28 14:25:01.915314+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(455, 'B1B311', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-10-06 10:24:36.644333+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(43, 'E03FDE', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(2, '797609', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(310, '08C96C', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-08-20 03:57:58.367553+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(208, '27DBE5', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-16 06:59:47.990257+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(209, '5844F0', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-16 06:59:55.758842+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(210, '5DA455', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-16 07:00:03.036043+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(331, '7B9F5B', 0, 'USDT', 0.39, -15.66, 1, 0, 1, '2025-08-24 09:06:16.291789+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(350, '81B308', 0, 'USDT', 0.26, -141.15, 9, 0, 9, '2025-08-27 05:34:37.777891+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(193, 'D51B93', 0, 'USDT', 0.13, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(207, 'C69073', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-16 06:59:39.698675+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(212, 'D025CA', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-16 07:00:15.39826+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(211, 'D51E01', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-07-16 07:00:09.229116+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(272, '0FAE8F', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-08-15 10:02:25.119455+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(392, 'E4FC38', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-09-09 01:51:43.133664+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(438, '917123', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-10-01 07:01:40.677924+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(247, 'EE904D', 0, 'USDT', 0.55, -23.60, 1, 0, 1, '2025-07-31 04:32:40.128666+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(236, 'B5FC85', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-07-24 09:08:03.767813+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(241, 'B8D4D3', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-27 07:35:22.267285+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(35, '7A9637', 0, 'USDT', 0.29, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(439, '176CB0', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-10-01 07:35:00.321962+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(344, '7ECF42', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-26 08:58:03.493694+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(311, '3DE7BA', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-20 03:58:15.787629+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(373, '892576', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-03 07:13:10.344115+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(309, 'B6D0D5', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-08-19 07:39:25.088642+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(282, '449AA2', 0, 'USDT', 0.39, -15.66, 1, 0, 1, '2025-08-19 07:07:43.037524+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(426, 'E62210', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-21 07:52:38.94515+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(389, '139C2F', 0, 'USDT', 0.26, -70.86, 3, 0, 3, '2025-09-08 05:53:06.94928+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(323, 'ED9E45', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-21 13:07:57.636489+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(441, '4E9884', 0, 'USDT', 0.26, -637.89, 27, 0, 27, '2025-10-02 05:37:25.294256+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(190, 'EAA204', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-10 05:39:40.977531+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(386, '039483', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-06 06:54:18.756826+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(385, '1DEFED', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-06 06:54:07.20495+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(384, '2D378C', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-06 06:53:42.646984+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(383, '6FF2D1', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-09-06 06:53:27.138239+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(206, '4D247C', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-16 04:48:37.292628+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(42, 'E877D7', 0, 'USDT', 5.87, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(202, '9E6DA5', 0, 'USDT', 0.26, -236.25, 10, 0, 10, '2025-07-15 05:23:15.970109+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(1, '78A3D1', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(315, '22CCAC', 0, 'USDT', 1.62, -236.25, 10, 0, 10, '2025-08-20 08:35:28.099204+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(27, '771730', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(435, 'C73F2D', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-27 03:46:48.655345+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(5, 'DE5328', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(396, 'C31741', 0, 'USDT', 0.52, -47.26, 2, 0, 2, '2025-09-09 11:38:09.574678+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(402, 'E0332F', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-09-11 07:03:49.538426+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(436, '07AD41', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-28 05:52:31.284108+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(427, '9BEAB7', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-21 08:06:16.731875+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(357, '3C30A2', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-08-28 03:49:17.390419+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(347, '9DE96C', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-27 03:56:10.733608+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(18, 'DEC31E', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(31, 'AE6C1C', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(352, 'DEB705', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-08-27 05:56:09.383263+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(349, '54A4DE', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-27 04:08:38.617596+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(29, '81F952', 0, 'USDT', 2.29, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(37, '2C44D5', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(400, 'B3B3A2', 0, 'USDT', 0.26, -23.60, 1, 0, 1, '2025-09-10 07:10:26.466464+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(33, '0E47BC', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(19, 'C92A91', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(378, '8A805A', 0, 'USDT', 0.39, -23.60, 1, 0, 1, '2025-09-04 02:59:48.918011+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(308, '0C65C2', 0, 'USDT', 0.26, -15.66, 1, 0, 1, '2025-08-19 07:22:42.851728+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(358, '4C7F6C', 0, 'USDT', 0.47, -23.60, 1, 0, 1, '2025-08-28 03:55:24.573272+00', '2025-11-06 01:14:51.619219+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(281, '040671', 0, 'USDT', 0.68, -15.66, 1, 0, 1, '2025-08-19 07:04:51.216214+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(233, '53B452', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-07-21 07:32:06.129959+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(214, '5AB27D', 0, 'USDT', 0.89, -15.66, 1, 0, 1, '2025-07-16 10:47:14.059826+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(304, 'B1BF1F', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-08-19 07:21:48.813956+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(222, 'D159A1', 0, 'USDT', 0.55, -15.66, 1, 0, 1, '2025-07-19 06:58:55.465843+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(24, 'B51CA4', 0, 'USDT', 0.89, -31.37, 2, 0, 2, '2025-07-08 04:32:03.255957+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(318, '20248A', 0, 'USDT', 0.39, -15.66, 1, 0, 1, '2025-08-21 03:20:36.819379+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(313, '225F87', 0, 'USDT', 0.47, -15.66, 1, 0, 1, '2025-08-20 03:59:35.727435+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(22, '5A708D', 0, 'USDT', 1.00, -15.66, 1, 0, 1, '2025-07-08 04:32:03.255957+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(407, '5086F7', 0, 'USDT', 0.81, -47.03, 3, 0, 3, '2025-09-12 05:19:34.745367+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(408, '8B07AE', 0, 'USDT', 0.81, -47.03, 3, 0, 3, '2025-09-13 03:55:12.730998+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(404, 'C9015D', 0, 'USDT', 0.94, -15.66, 1, 0, 1, '2025-09-12 04:29:19.298653+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt'),
+	(368, 'CE4FF7', 0, 'USDT', 0.72, -47.03, 3, 0, 3, '2025-08-30 05:35:42.459462+00', '2025-11-04 05:21:11.296796+00', NULL, '2025-11-02 02:55:55.519694+00', 'usdt');
+
+
+--
+-- Data for Name: affiliate_reward; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: backup_auth_users_metadata_20250706; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."backup_auth_users_metadata_20250706" ("id", "email", "raw_user_meta_data", "created_at", "email_confirmed_at", "last_sign_in_at") VALUES
+	('302cb8ea-88d4-4a99-85d3-e88357f807ba', 'haruto5261108@gmail.com', '{"sub": "302cb8ea-88d4-4a99-85d3-e88357f807ba", "email": "haruto5261108@gmail.com", "coinw_uid": "3722480", "email_verified": true, "phone_verified": false, "referrer_user_id": "773AC7", "registration_source": "web_form", "registration_timestamp": "2025-07-02T08:29:20.502Z"}', '2025-07-02 08:29:22.537503+00', '2025-07-02 08:29:42.935019+00', '2025-07-02 08:35:59.309522+00'),
+	('d282092c-0cae-436c-b8b0-06a17a603fd6', 'masa19751108@gmail.com', '{"sub": "d282092c-0cae-436c-b8b0-06a17a603fd6", "email": "masa19751108@gmail.com", "coinw_uid": "3722480", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-06-22T09:39:13.934Z"}', '2025-06-22 09:39:14.830911+00', '2025-06-22 09:51:08.724513+00', '2025-07-01 09:33:36.358816+00'),
+	('f9cba11a-660d-4093-9bfc-585b9dce5a88', 'torucajino@gmail.com', '{"sub": "f9cba11a-660d-4093-9bfc-585b9dce5a88", "email": "torucajino@gmail.com", "coinw_uid": "3773831", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-06-18T07:45:26.122Z"}', '2025-06-18 07:45:27.78876+00', '2025-06-18 07:49:06.530935+00', '2025-07-04 08:54:07.281622+00'),
+	('4e9afb05-aa71-4624-8f03-711ead9cb4bd', 'masataka.tak@gmail.com', '{"sub": "4e9afb05-aa71-4624-8f03-711ead9cb4bd", "email": "masataka.tak@gmail.com", "email_verified": true, "phone_verified": false}', '2025-06-17 09:44:25.083686+00', '2025-06-17 09:53:34.17654+00', '2025-07-05 06:04:08.15633+00'),
+	('dd4cd032-e93b-4131-bcd4-8ea740ed92a6', 'yanoyui5632@gmail.com', '{"sub": "dd4cd032-e93b-4131-bcd4-8ea740ed92a6", "email": "yanoyui5632@gmail.com", "coinw_uid": "3878562", "email_verified": true, "phone_verified": false, "referrer_user_id": "6E1304", "registration_source": "web_form", "registration_timestamp": "2025-07-01T10:03:57.314Z"}', '2025-07-01 10:03:58.293414+00', '2025-07-01 10:04:22.247471+00', '2025-07-02 04:10:49.660134+00'),
+	('2972023e-7c3f-4a8f-ad4f-e62ed4458bc0', 'info.apple1107@gmail.com', '{"sub": "2972023e-7c3f-4a8f-ad4f-e62ed4458bc0", "email": "info.apple1107@gmail.com", "coinw_uid": "2373215", "email_verified": true, "phone_verified": false, "referrer_user_id": "OOCJ16", "registration_source": "web_form", "registration_timestamp": "2025-07-02T08:03:52.606Z"}', '2025-07-02 08:03:53.742017+00', '2025-07-02 08:04:05.627618+00', '2025-07-02 08:08:08.879075+00'),
+	('7241f7f8-d05f-4c62-ac32-c2f8d8a93323', 'masakuma1108@gmail.com', '{"email_verified": true}', '2025-06-21 12:20:51.310957+00', '2025-06-21 12:20:51.316387+00', '2025-07-06 06:43:28.406278+00'),
+	('e8ae43e5-0e4e-4ae4-a942-4b3a1b9257ce', 'tmtm19751108@gmail.com', '{"sub": "e8ae43e5-0e4e-4ae4-a942-4b3a1b9257ce", "email": "tmtm19751108@gmail.com", "coinw_uid": "3722480", "email_verified": true, "phone_verified": false, "referrer_user_id": "B43A3D", "registration_source": "web_form", "registration_timestamp": "2025-07-02T07:48:02.204Z"}', '2025-07-02 07:48:04.593417+00', '2025-07-02 07:48:42.476406+00', '2025-07-04 10:22:10.648677+00'),
+	('8fe8ae75-f770-43fb-834c-fda49668e6d3', 'basarasystems@gmail.com', '{"sub": "8fe8ae75-f770-43fb-834c-fda49668e6d3", "email": "basarasystems@gmail.com", "email_verified": true, "phone_verified": false}', '2025-06-17 11:19:02.150272+00', '2025-06-17 11:21:20.535734+00', '2025-07-05 07:25:11.925402+00'),
+	('c073d6ca-d3b8-46f0-b3ac-7eb72dac8585', 'masashitakakuwa9@gmail.com', '{"sub": "c073d6ca-d3b8-46f0-b3ac-7eb72dac8585", "email": "masashitakakuwa9@gmail.com", "coinw_uid": "3722480", "email_verified": true, "phone_verified": false, "referrer_user_id": "7A9637", "registration_source": "web_form", "registration_timestamp": "2025-06-22T06:57:19.096Z"}', '2025-06-22 06:57:20.331426+00', '2025-06-22 06:58:43.087231+00', '2025-07-03 09:16:18.937245+00'),
+	('bf7217ab-6ee3-4dbe-b1b4-a5012d7c0f66', 'maple.re.w.d@gmail.com', '{"sub": "bf7217ab-6ee3-4dbe-b1b4-a5012d7c0f66", "email": "maple.re.w.d@gmail.com", "coinw_uid": "3802545", "email_verified": true, "phone_verified": false, "referrer_user_id": "0E47BC", "registration_source": "web_form", "registration_timestamp": "2025-07-05T01:56:02.963Z"}', '2025-07-05 01:56:03.199819+00', '2025-07-05 01:56:43.594757+00', '2025-07-05 02:26:16.843039+00'),
+	('460ed9ba-067a-4a77-b9c2-8dc8e67bd5bf', 'pa.pi.copoppo@gmail.com', '{"sub": "460ed9ba-067a-4a77-b9c2-8dc8e67bd5bf", "email": "pa.pi.copoppo@gmail.com", "coinw_uid": "3886308", "email_verified": true, "phone_verified": false, "referrer_user_id": "797609", "registration_source": "web_form", "registration_timestamp": "2025-07-05T04:23:33.164Z"}', '2025-07-05 04:23:34.260231+00', '2025-07-05 04:23:54.169522+00', '2025-07-05 04:26:30.398134+00'),
+	('5c65b60c-cb8a-4ca9-b6e6-5a1383898d67', 'hasshupairotto@gmail.com', '{"sub": "5c65b60c-cb8a-4ca9-b6e6-5a1383898d67", "email": "hasshupairotto@gmail.com", "coinw_uid": "3881113", "email_verified": true, "phone_verified": false, "referrer_user_id": "E03FDE", "registration_source": "web_form", "registration_timestamp": "2025-07-02T11:01:15.922Z"}', '2025-07-02 11:01:21.107036+00', '2025-07-02 11:02:01.424577+00', '2025-07-03 01:25:21.951075+00'),
+	('c4a446e7-46d7-49b5-999a-011a2ab2a9b4', 'oshiboriakihiro@gmail.com', '{"sub": "c4a446e7-46d7-49b5-999a-011a2ab2a9b4", "email": "oshiboriakihiro@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-06T07:30:30.617Z"}', '2025-07-06 07:30:31.959806+00', '2025-07-06 07:30:48.720607+00', '2025-07-06 07:33:23.00072+00'),
+	('fbed1ddc-d9ec-4458-a927-e1a34d5428c2', '358hanasakaa@gmail.com', '{"sub": "fbed1ddc-d9ec-4458-a927-e1a34d5428c2", "email": "358hanasakaa@gmail.com", "coinw_uid": "3802545", "email_verified": true, "phone_verified": false, "referrer_user_id": "8BF2FC", "registration_source": "web_form", "registration_timestamp": "2025-07-05T04:21:27.182Z"}', '2025-07-05 04:21:27.814269+00', '2025-07-05 04:21:40.250307+00', '2025-07-05 04:22:40.911687+00'),
+	('2545d76c-39d3-4d08-a657-164c2decf661', 'tmtm1108tmtm@gmail.com', '{"sub": "2545d76c-39d3-4d08-a657-164c2decf661", "email": "tmtm1108tmtm@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-06T07:38:33.041Z"}', '2025-07-06 07:38:34.547504+00', '2025-07-06 07:38:59.459059+00', '2025-07-06 07:43:07.136537+00'),
+	('0d0a2bed-44aa-4608-9649-a7dd55dcc5a4', 'hasshupairotto+1@gmail.com', '{"sub": "0d0a2bed-44aa-4608-9649-a7dd55dcc5a4", "email": "hasshupairotto+1@gmail.com", "coinw_uid": "3881113", "email_verified": true, "phone_verified": false, "referrer_user_id": "4F1773", "registration_source": "web_form", "registration_timestamp": "2025-07-02T11:16:20.155Z"}', '2025-07-02 11:16:20.559207+00', '2025-07-02 11:16:41.171062+00', '2025-07-02 11:17:51.194128+00'),
+	('d769122e-aec5-4e97-a99a-e7dcda8d6377', 'priccia971@gmail.com', '{"sub": "d769122e-aec5-4e97-a99a-e7dcda8d6377", "email": "priccia971@gmail.com", "coinw_uid": "3886417", "email_verified": true, "phone_verified": false, "referrer_user_id": "07712F", "registration_source": "web_form", "registration_timestamp": "2025-07-05T06:52:52.116Z"}', '2025-07-05 06:52:53.164076+00', '2025-07-05 06:53:39.377953+00', '2025-07-06 06:42:52.478013+00'),
+	('2d7e0a8c-0c9a-4031-9698-8b4070c98537', 'feel.me.yurie@gmail.com', '{"sub": "2d7e0a8c-0c9a-4031-9698-8b4070c98537", "email": "feel.me.yurie@gmail.com", "coinw_uid": "3884719", "email_verified": true, "phone_verified": false, "referrer_user_id": "B51CA4", "registration_source": "web_form", "registration_timestamp": "2025-07-04T07:43:13.700Z"}', '2025-07-04 07:43:15.383725+00', '2025-07-04 07:43:32.058944+00', '2025-07-04 07:46:37.654708+00'),
+	('4be23492-0159-4eff-b427-172e5a33980a', 'miraclestarys@gmail.com', '{"sub": "4be23492-0159-4eff-b427-172e5a33980a", "email": "miraclestarys@gmail.com", "coinw_uid": "123456", "email_verified": true, "phone_verified": false, "referrer_user_id": "66D65D", "registration_source": "web_form", "registration_timestamp": "2025-07-02T11:34:48.525Z"}', '2025-07-02 11:34:49.249755+00', '2025-07-02 11:36:36.994597+00', '2025-07-03 09:19:46.156721+00'),
+	('0b45b000-b478-430f-84ef-bfc214e8c960', '358hanasaka@gmail.com', '{"sub": "0b45b000-b478-430f-84ef-bfc214e8c960", "email": "358hanasaka@gmail.com", "coinw_uid": "3802545", "email_verified": true, "phone_verified": false, "referrer_user_id": "5A708D", "registration_source": "web_form", "registration_timestamp": "2025-07-04T07:59:23.955Z"}', '2025-07-04 07:59:24.817168+00', '2025-07-04 07:59:47.221384+00', '2025-07-05 06:31:01.23443+00'),
+	('b1f850b4-fc5e-4665-834e-fc05d5b8ab59', 'mitsuki.gif@gmail.com', '{"sub": "b1f850b4-fc5e-4665-834e-fc05d5b8ab59", "email": "mitsuki.gif@gmail.com", "coinw_uid": "1111111", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-04T05:36:17.291Z"}', '2025-07-04 05:36:18.709002+00', '2025-07-04 05:37:07.036202+00', '2025-07-04 05:37:54.341001+00'),
+	('471fa3cd-3bea-466b-abad-4fe2a6b1a3e6', 'kazu83215@gmail.com', '{"sub": "471fa3cd-3bea-466b-abad-4fe2a6b1a3e6", "email": "kazu83215@gmail.com", "coinw_uid": "3796004", "email_verified": true, "phone_verified": false, "referrer_user_id": "0E47BC", "registration_source": "web_form", "registration_timestamp": "2025-07-04T08:14:07.623Z"}', '2025-07-04 08:14:08.916775+00', '2025-07-04 08:14:26.419602+00', '2025-07-04 08:14:41.678546+00'),
+	('b1d66fe2-d027-4a27-9ca3-ba136d0ea79e', 'tamakimining@gmail.com', '{"sub": "b1d66fe2-d027-4a27-9ca3-ba136d0ea79e", "email": "tamakimining@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-05T09:09:46.233Z"}', '2025-07-05 09:09:47.03884+00', '2025-07-05 09:10:27.217458+00', '2025-07-05 09:11:19.429782+00'),
+	('6e26e691-f7a4-4afb-837c-c958c297382d', 'math.kazino@gmail.com', '{"sub": "6e26e691-f7a4-4afb-837c-c958c297382d", "email": "math.kazino@gmail.com", "coinw_uid": "3785072", "email_verified": true, "phone_verified": false, "referrer_user_id": "1BAA30", "registration_source": "web_form", "registration_timestamp": "2025-07-04T06:44:03.831Z"}', '2025-07-04 06:44:05.315655+00', '2025-07-04 06:44:32.010682+00', '2025-07-06 06:47:21.694266+00'),
+	('cfd39ace-d80c-481e-b408-e6940f0245b4', 'raita0083@gmail.com', '{"sub": "cfd39ace-d80c-481e-b408-e6940f0245b4", "email": "raita0083@gmail.com", "coinw_uid": "3885061", "email_verified": true, "phone_verified": false, "referrer_user_id": "1BAA30", "registration_source": "web_form", "registration_timestamp": "2025-07-04T10:28:51.096Z"}', '2025-07-04 10:28:51.698972+00', '2025-07-04 10:30:15.790351+00', '2025-07-04 10:34:10.962395+00'),
+	('ca31d483-ae44-4fca-8a12-cb9bbe1a2f40', 'soccergurataku@gmail.com', '{"sub": "ca31d483-ae44-4fca-8a12-cb9bbe1a2f40", "email": "soccergurataku@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-06T07:04:19.885Z"}', '2025-07-06 07:04:20.645959+00', '2025-07-06 07:04:40.417687+00', '2025-07-06 07:13:05.279022+00'),
+	('46d8a5c0-a655-4e03-a73b-f87389ae0f15', 'sanaomanko37@gmail.com', '{"sub": "46d8a5c0-a655-4e03-a73b-f87389ae0f15", "email": "sanaomanko37@gmail.com", "coinw_uid": "3773831", "email_verified": true, "phone_verified": false, "referrer_user_id": "59C23C", "registration_source": "web_form", "registration_timestamp": "2025-07-04T10:36:58.219Z"}', '2025-07-04 10:36:59.148857+00', '2025-07-04 10:37:27.519033+00', '2025-07-05 04:00:54.226198+00');
+
+
+--
+-- Data for Name: backup_problem_users_20250706; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."backup_problem_users_20250706" ("id", "user_id", "email", "referrer_user_id", "coinw_uid", "created_at", "updated_at", "raw_user_meta_data", "issue_type") VALUES
+	('ca31d483-ae44-4fca-8a12-cb9bbe1a2f40', '466809', 'soccergurataku@gmail.com', NULL, NULL, '2025-07-06 07:04:20.645621+00', '2025-07-06 07:55:06.540897+00', '{"sub": "ca31d483-ae44-4fca-8a12-cb9bbe1a2f40", "email": "soccergurataku@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-06T07:04:19.885Z"}', 'missing_coinw_uid'),
+	('c4a446e7-46d7-49b5-999a-011a2ab2a9b4', 'DE5328', 'oshiboriakihiro@gmail.com', NULL, NULL, '2025-07-06 07:30:31.95947+00', '2025-07-06 07:55:06.540897+00', '{"sub": "c4a446e7-46d7-49b5-999a-011a2ab2a9b4", "email": "oshiboriakihiro@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-06T07:30:30.617Z"}', 'missing_coinw_uid'),
+	('2545d76c-39d3-4d08-a657-164c2decf661', '2C44D5', 'tmtm1108tmtm@gmail.com', NULL, NULL, '2025-07-06 07:38:34.547167+00', '2025-07-06 07:55:06.540897+00', '{"sub": "2545d76c-39d3-4d08-a657-164c2decf661", "email": "tmtm1108tmtm@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-06T07:38:33.041Z"}', 'missing_coinw_uid'),
+	('7241f7f8-d05f-4c62-ac32-c2f8d8a93323', '7A9637', 'masakuma1108@gmail.com', NULL, NULL, '2025-06-21 12:21:13.155661+00', '2025-06-21 12:21:13.155661+00', '{"email_verified": true}', 'missing_coinw_uid'),
+	('b1d66fe2-d027-4a27-9ca3-ba136d0ea79e', '794682', 'tamakimining@gmail.com', NULL, NULL, '2025-07-05 09:09:47.038524+00', '2025-07-06 07:55:06.540897+00', '{"sub": "b1d66fe2-d027-4a27-9ca3-ba136d0ea79e", "email": "tamakimining@gmail.com", "email_verified": true, "phone_verified": false, "registration_source": "web_form", "registration_timestamp": "2025-07-05T09:09:46.233Z"}', 'missing_coinw_uid');
+
+
+--
+-- Data for Name: backup_purchases_20250706; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."backup_purchases_20250706" ("id", "user_id", "nft_quantity", "amount_usd", "usdt_address_bep20", "usdt_address_trc20", "payment_status", "nft_sent", "created_at", "confirmed_at", "completed_at", "admin_approved", "admin_approved_at", "admin_approved_by", "payment_proof_url", "user_notes", "admin_notes") VALUES
+	('81984a27-7e00-4e7c-bb3a-335eb6d09c87', 'B43A3D', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-02 04:18:20.833796+00', NULL, NULL, true, '2025-07-02 07:50:02.700408+00', 'basarasystems@gmail.com', NULL, NULL, '入金確認済み'),
+	('0aabfb76-7ab1-47c9-8310-7776fb9ab318', '1BAA30', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-02 07:48:59.293445+00', NULL, NULL, true, '2025-07-02 07:50:18.851627+00', 'basarasystems@gmail.com', NULL, NULL, '入金確認済み'),
+	('214037e5-43f4-4d96-8376-1125ee5ab011', '2BF53B', 2, 2200.00, NULL, NULL, 'approved', false, '2025-06-17 13:13:05.200888+00', NULL, NULL, true, '2025-06-17 13:46:11.83939+00', 'basarasystems@gmail.com', '0x1234567890123456789012345678901234567890', 'お願いします', '入金確認済み'),
+	('d5fa0d1b-c874-416d-8265-9e4e39d74da2', '466809', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-06 07:05:15.803009+00', NULL, NULL, true, '2025-07-06 07:14:01.833278+00', 'basarasystems@gmail.com', '7a516db2cbfbc0eab1e874471baefe87e89af22a9c9c1e1bcd7df6ea24384169', '大阪事務所', '入金確認済み'),
+	('fcc66313-7c84-4604-8704-7dc330df3603', '773AC7', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-02 08:05:16.509097+00', NULL, NULL, true, '2025-07-02 08:10:29.855596+00', 'basarasystems@gmail.com', NULL, NULL, '入金確認済み'),
+	('a41164e5-0710-41b9-b32b-b0b31e3d6a14', 'Y9FVT1', 1, 1100.00, NULL, NULL, 'approved', false, '2025-06-18 07:50:04.214299+00', NULL, NULL, true, '2025-06-18 07:52:08.106723+00', 'basarasystems@gmail.com', NULL, NULL, '入金確認済み'),
+	('8aed3311-bab3-495f-981f-0acb47f0fc99', 'E03FDE', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-02 08:32:48.418524+00', NULL, NULL, true, '2025-07-02 08:34:08.674761+00', 'basarasystems@gmail.com', NULL, NULL, '入金確認済み'),
+	('276817ca-47cf-45cc-adb0-f41ba1f67701', '07712F', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-04 06:45:30.252699+00', NULL, NULL, true, '2025-07-04 08:51:03.966237+00', 'basarasystems@gmail.com', '9c6845ac3787fe2bc773a419f7a3c3fcb79acbd050e9f33351f2d69e854b4ab5', '', '入金確認済み'),
+	('78436333-d519-4bbc-8251-a823b0c2c5b6', '7A9637', 1, 1100.00, NULL, NULL, 'approved', false, '2025-06-21 12:21:19.313329+00', NULL, NULL, true, '2025-06-21 12:22:43.15731+00', 'basarasystems@gmail.com', NULL, NULL, '入金確認済み'),
+	('81f71369-5007-4258-8fcc-60464daf96fa', '4F1773', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-02 11:03:17.650762+00', NULL, NULL, true, '2025-07-02 11:12:05.622504+00', 'basarasystems@gmail.com', '0x', '', '入金確認済み'),
+	('1a58b3db-bc43-4301-a57f-868592f539c8', 'Y9FVT1', 1, 1100.00, NULL, NULL, 'pending', false, '2025-07-04 08:54:14.934076+00', NULL, NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('1a144d15-d8d9-4f18-a692-2fb778968fd9', '66D65D', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-02 11:18:02.147212+00', NULL, NULL, true, '2025-07-02 11:20:39.559341+00', 'basarasystems@gmail.com', '0x', '', '入金確認済み'),
+	('f30ca11a-8d35-44c9-b0b4-2f212c3b4d8c', 'B51CA4', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-03 09:09:18.931902+00', NULL, NULL, true, '2025-07-03 09:19:41.677947+00', 'basarasystems@gmail.com', '0xab9c2497a0fdab78a60a0fa312041dbb426e19df561158d541dfe71ac62c6f75', '', '入金確認済み'),
+	('81e613cd-4952-406c-bad5-2617e6b2cb4f', '12961B', 11, 12100.00, NULL, NULL, 'pending', false, '2025-07-04 05:38:30.406286+00', NULL, NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('c552023a-b630-4a99-b048-05d4bfa8f07b', 'OOCJ16', 1, 1100.00, NULL, NULL, 'approved', false, '2025-06-22 07:00:42.88242+00', NULL, NULL, true, '2025-06-22 07:02:33.401919+00', 'basarasystems@gmail.com', '0x06663095c6cffe22db1ff61dd699c67aef70e69b1111e9cc99d63f63cd2e0607', '10ドル
+6/22', '入金確認済み'),
+	('e2708357-7d86-45dc-89eb-fb9f1f255315', '59C23C', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-04 10:31:15.494219+00', NULL, NULL, true, '2025-07-04 10:33:07.89493+00', 'basarasystems@gmail.com', '0xオジー', '', '入金確認済み'),
+	('3ab82db7-45c0-48de-8d2a-32ba52e6a73b', 'DE5328', 1, 1100.00, NULL, NULL, 'payment_sent', false, '2025-07-06 07:33:31.028155+00', NULL, NULL, true, '2025-07-06 07:34:04.664189+00', 'basarasystems@gmail.com', '0xe8AA6D950B5CE684DE2cED8914565e48693fAfF5', '', '入金確認済み'),
+	('a903b5e5-9397-4472-baf0-4188779566de', '6E1304', 1, 1100.00, NULL, NULL, 'approved', false, '2025-06-22 09:51:53.710738+00', NULL, NULL, true, '2025-06-22 09:56:44.661441+00', 'basarasystems@gmail.com', '0x06663095c6cffe22db1ff61dd699c67aef70e69b1111e9cc99d63f63cd2e0607', '会社3ポジ', '入金確認済み'),
+	('c5a8d6d6-cf97-4c9f-8c80-b5098b85827d', '5A708D', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-04 07:44:05.165471+00', NULL, NULL, true, '2025-07-04 07:48:42.391621+00', 'basarasystems@gmail.com', '0xa8a47643a755add294bde7f8b29cf2910eaf416d7436e95e4334f981ea345bc2', '', '入金確認済み'),
+	('e05594f2-e901-42de-a7b4-3806ea432a58', 'B43A3D', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-01 10:05:43.383846+00', NULL, NULL, true, '2025-07-01 10:09:01.59455+00', 'basarasystems@gmail.com', '0x2e78692e33f7485c16d93aeb8c18d20bb0d0e1d9c3f7677f7edb547ba088cdc8', 'テスト', '入金確認済み'),
+	('0e39fbb1-0a4f-453a-a49a-f7b545a1857d', '797609', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-04 10:38:06.068212+00', NULL, NULL, true, '2025-07-04 10:39:09.864763+00', 'basarasystems@gmail.com', '0x会社7', '会社7', '入金確認済み'),
+	('21f582c6-c865-44dd-8c26-edef45bd59ef', '0E47BC', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-04 08:00:56.025472+00', NULL, NULL, true, '2025-07-04 08:04:50.435844+00', 'basarasystems@gmail.com', '0xaed885618980e882c71371cff2bbe0249e3aa92e626e0d76935c62aac9b143f9', '2025年7月4日　BEP20  1100USDT', '入金確認済み'),
+	('a04d76ce-fcad-4140-8890-dbb40237a5b6', '8BF2FC', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-05 02:26:23.996935+00', NULL, NULL, true, '2025-07-05 03:19:21.968941+00', 'basarasystems@gmail.com', '0x3438fdc18a0b1deafa1b4d083139ffbc261a2b1d3401511fd4545f047b3eb513', '2025年7月5日　BEP20 1000USDT', '入金確認済み'),
+	('ef130aca-4597-4c2f-87fa-bfd31fcd46b4', '9DCFD1', 1, 1100.00, NULL, NULL, 'payment_sent', false, '2025-07-04 08:16:57.859386+00', NULL, NULL, true, '2025-07-04 08:18:27.372802+00', 'basarasystems@gmail.com', '0xbb0cba1cd170f1c7a122e872ecdb97ae79966c3b64660bd97b189a7e97ca4a80', '', '入金確認済み'),
+	('5559724c-8030-4388-8254-4afef104cd92', '2C44D5', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-06 07:42:15.922801+00', NULL, NULL, true, '2025-07-06 07:42:32.184357+00', 'basarasystems@gmail.com', NULL, NULL, '入金確認済み'),
+	('521399d9-5467-4118-9fd9-0a5cd99081a1', '9DCFD1', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-04 08:22:03.016264+00', NULL, NULL, true, '2025-07-04 08:22:44.553779+00', 'basarasystems@gmail.com', '0xbb0cba1cd170f1c7a122e872ecdb97ae79966c3b64660bd97b189a7e97ca4a80', '', '入金確認済み'),
+	('283943b2-2462-43ea-8279-af451f5cb578', 'D7D48D', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-05 04:24:35.794926+00', NULL, NULL, true, '2025-07-05 04:27:57.465896+00', 'basarasystems@gmail.com', '0xdc6873f04398da7eea3742deb6aeded83d42deac89829122647f800f349b47b3', '', '入金確認済み'),
+	('97df80e6-f92e-4cbf-99e8-88df4172d656', 'DEC31E', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-05 04:22:48.194056+00', NULL, NULL, true, '2025-07-05 04:28:18.514248+00', 'basarasystems@gmail.com', '0xf412d72e76df43cac587af23cd5c8fe053ba13cc486a61d3bcef21ee50e462df', '2025年7月5日　BEP20 1100USDT', '入金確認済み'),
+	('544a7ef8-8848-45a9-ab3b-22ac0ed92534', '794682', 1, 1100.00, NULL, NULL, 'pending', false, '2025-07-05 09:11:28.2699+00', NULL, NULL, false, NULL, NULL, NULL, NULL, NULL),
+	('f16ba1c7-fd5a-4081-95bc-f9cb2d68853b', 'AEFBCA', 1, 1100.00, NULL, NULL, 'approved', false, '2025-07-05 13:55:36.255782+00', NULL, NULL, true, '2025-07-06 06:23:40.661984+00', 'basarasystems@gmail.com', '0x6a74af291e70d64c8902ffc71fb3898b98c58a0619f5f0ee88980c1df13fecae', '', '入金確認済み');
+
+
+--
+-- Data for Name: backup_users_20250706; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."backup_users_20250706" ("id", "user_id", "email", "full_name", "referrer_user_id", "coinw_uid", "created_at", "updated_at", "is_active", "has_approved_nft", "total_purchases", "total_referral_earnings") VALUES
+	('302cb8ea-88d4-4a99-85d3-e88357f807ba', 'E03FDE', 'haruto5261108@gmail.com', NULL, '773AC7', '3722480', '2025-07-02 08:29:22.537159+00', '2025-07-02 08:29:22.537159+00', true, true, 1100.00, 0.00),
+	('46d8a5c0-a655-4e03-a73b-f87389ae0f15', '797609', 'sanaomanko37@gmail.com', NULL, '59C23C', '3773831', '2025-07-04 10:36:59.148521+00', '2025-07-04 10:36:59.148521+00', true, true, 1100.00, 0.00),
+	('ca31d483-ae44-4fca-8a12-cb9bbe1a2f40', '466809', 'soccergurataku@gmail.com', NULL, NULL, NULL, '2025-07-06 07:04:20.645621+00', '2025-07-06 07:55:06.540897+00', true, true, 1100.00, 0.00),
+	('5c65b60c-cb8a-4ca9-b6e6-5a1383898d67', '4F1773', 'hasshupairotto@gmail.com', NULL, 'E03FDE', '3881113', '2025-07-02 11:01:21.106715+00', '2025-07-02 11:01:21.106715+00', true, true, 1100.00, 0.00),
+	('f9cba11a-660d-4093-9bfc-585b9dce5a88', 'Y9FVT1', 'torucajino@gmail.com', NULL, NULL, '3773831', '2025-06-18 07:49:34.285183+00', '2025-06-22 07:57:14.496092+00', true, true, 1100.00, 0.00),
+	('bf7217ab-6ee3-4dbe-b1b4-a5012d7c0f66', '8BF2FC', 'maple.re.w.d@gmail.com', NULL, '0E47BC', '3802545', '2025-07-05 01:56:03.199453+00', '2025-07-05 01:56:03.199453+00', true, true, 1100.00, 0.00),
+	('d282092c-0cae-436c-b8b0-06a17a603fd6', '6E1304', 'masa19751108@gmail.com', NULL, '7A9637', '3722480', '2025-06-22 09:39:14.830486+00', '2025-06-22 10:14:13.711643+00', true, true, 1100.00, 0.00),
+	('c4a446e7-46d7-49b5-999a-011a2ab2a9b4', 'DE5328', 'oshiboriakihiro@gmail.com', NULL, NULL, NULL, '2025-07-06 07:30:31.95947+00', '2025-07-06 07:55:06.540897+00', true, true, 1100.00, 0.00),
+	('0d0a2bed-44aa-4608-9649-a7dd55dcc5a4', '66D65D', 'hasshupairotto+1@gmail.com', NULL, '4F1773', '3881113', '2025-07-02 11:16:20.558872+00', '2025-07-02 11:16:20.558872+00', true, true, 1100.00, 0.00),
+	('2d7e0a8c-0c9a-4031-9698-8b4070c98537', '5A708D', 'feel.me.yurie@gmail.com', NULL, 'B51CA4', '3884719', '2025-07-04 07:43:15.383399+00', '2025-07-04 07:43:15.383399+00', true, true, 1100.00, 0.00),
+	('dd4cd032-e93b-4131-bcd4-8ea740ed92a6', 'B43A3D', 'yanoyui5632@gmail.com', NULL, '6E1304', '3878562', '2025-07-01 10:03:58.293073+00', '2025-07-01 10:03:58.293073+00', true, true, 2200.00, 0.00),
+	('460ed9ba-067a-4a77-b9c2-8dc8e67bd5bf', 'D7D48D', 'pa.pi.copoppo@gmail.com', NULL, '797609', '3886308', '2025-07-05 04:23:34.259896+00', '2025-07-05 04:23:34.259896+00', true, true, 1100.00, 0.00),
+	('fbed1ddc-d9ec-4458-a927-e1a34d5428c2', 'DEC31E', '358hanasakaa@gmail.com', NULL, '8BF2FC', '3802545', '2025-07-05 04:21:27.813911+00', '2025-07-05 04:21:27.813911+00', true, true, 1100.00, 0.00),
+	('2545d76c-39d3-4d08-a657-164c2decf661', '2C44D5', 'tmtm1108tmtm@gmail.com', NULL, NULL, NULL, '2025-07-06 07:38:34.547167+00', '2025-07-06 07:55:06.540897+00', true, true, 1100.00, 0.00),
+	('7241f7f8-d05f-4c62-ac32-c2f8d8a93323', '7A9637', 'masakuma1108@gmail.com', NULL, NULL, NULL, '2025-06-21 12:21:13.155661+00', '2025-06-21 12:21:13.155661+00', true, true, 1100.00, 0.00),
+	('e8ae43e5-0e4e-4ae4-a942-4b3a1b9257ce', '1BAA30', 'tmtm19751108@gmail.com', NULL, 'B43A3D', '3722480', '2025-07-02 07:48:04.593097+00', '2025-07-02 07:48:04.593097+00', true, true, 1100.00, 0.00),
+	('4be23492-0159-4eff-b427-172e5a33980a', 'B51CA4', 'miraclestarys@gmail.com', NULL, '66D65D', '123456', '2025-07-02 11:34:49.24942+00', '2025-07-02 11:34:49.24942+00', true, true, 1100.00, 0.00),
+	('0b45b000-b478-430f-84ef-bfc214e8c960', '0E47BC', '358hanasaka@gmail.com', NULL, '5A708D', '3802545', '2025-07-04 07:59:24.81684+00', '2025-07-04 07:59:24.81684+00', true, true, 1100.00, 0.00),
+	('d769122e-aec5-4e97-a99a-e7dcda8d6377', 'AEFBCA', 'priccia971@gmail.com', NULL, '07712F', '3886417', '2025-07-05 06:52:53.163741+00', '2025-07-05 06:52:53.163741+00', true, true, 1100.00, 0.00),
+	('b1f850b4-fc5e-4665-834e-fc05d5b8ab59', '12961B', 'mitsuki.gif@gmail.com', NULL, NULL, '1111111', '2025-07-04 05:36:18.708654+00', '2025-07-04 05:36:18.708654+00', true, false, 0.00, 0.00),
+	('2972023e-7c3f-4a8f-ad4f-e62ed4458bc0', '773AC7', 'info.apple1107@gmail.com', NULL, 'OOCJ16', '2373215', '2025-07-02 08:03:53.741671+00', '2025-07-02 08:03:53.741671+00', true, true, 1100.00, 0.00),
+	('471fa3cd-3bea-466b-abad-4fe2a6b1a3e6', '9DCFD1', 'kazu83215@gmail.com', NULL, '0E47BC', '3796004', '2025-07-04 08:14:08.916441+00', '2025-07-04 08:14:08.916441+00', true, true, 2200.00, 0.00),
+	('6e26e691-f7a4-4afb-837c-c958c297382d', '07712F', 'math.kazino@gmail.com', NULL, '1BAA30', '3785072', '2025-07-04 06:44:05.315295+00', '2025-07-04 06:44:05.315295+00', true, true, 1100.00, 0.00),
+	('cfd39ace-d80c-481e-b408-e6940f0245b4', '59C23C', 'raita0083@gmail.com', NULL, '1BAA30', '3885061', '2025-07-04 10:28:51.698642+00', '2025-07-04 10:28:51.698642+00', true, true, 1100.00, 0.00),
+	('b1d66fe2-d027-4a27-9ca3-ba136d0ea79e', '794682', 'tamakimining@gmail.com', NULL, NULL, NULL, '2025-07-05 09:09:47.038524+00', '2025-07-06 07:55:06.540897+00', true, false, 0.00, 0.00),
+	('4e9afb05-aa71-4624-8f03-711ead9cb4bd', '2BF53B', 'masataka.tak@gmail.com', '', NULL, '2236', '2025-06-17 11:25:56.932198+00', '2025-06-18 07:36:06.479599+00', true, true, 7700.00, 0.00),
+	('8fe8ae75-f770-43fb-834c-fda49668e6d3', '6BCCED', 'basarasystems@gmail.com', NULL, NULL, '3773831', '2025-06-17 11:19:02.149928+00', '2025-06-21 09:14:26.462954+00', true, false, 0.00, 0.00),
+	('c073d6ca-d3b8-46f0-b3ac-7eb72dac8585', 'OOCJ16', 'masashitakakuwa9@gmail.com', NULL, '7A9637', '3722480', '2025-06-22 06:59:07.467582+00', '2025-06-22 07:08:31.050095+00', true, true, 1100.00, 0.00);
+
+
+--
+-- Data for Name: buyback_requests; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: company_bonus_from_dormant; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: company_daily_profit; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: daily_yield_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."daily_yield_log" ("id", "date", "yield_rate", "margin_rate", "user_rate", "is_month_end", "created_at", "created_by") VALUES
+	(137, '2025-11-01', -0.020000, 30.0000, -0.000084, false, '2025-11-02 03:30:16.05921+00', NULL),
+	(138, '2025-11-02', -0.005000, 30.0000, -0.000021, false, '2025-11-03 03:39:50.010685+00', NULL),
+	(139, '2025-11-03', 0.400000, 30.0000, 0.001680, false, '2025-11-04 05:21:11.296796+00', NULL),
+	(140, '2025-11-04', -1.159000, 0.0000, -0.006954, false, '2025-11-05 03:14:40.191885+00', NULL),
+	(141, '2025-11-05', -0.165000, 0.0000, -0.000990, false, '2025-11-06 01:14:51.619219+00', NULL);
+
+
+--
+-- Data for Name: system_emails; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."system_emails" ("id", "subject", "body", "from_name", "from_email", "email_type", "sent_by", "target_group", "created_at") VALUES
+	('ae9d7c9d-58c5-4d7f-b0a2-d02e92092b19', '相談', 'テスト', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', NULL, '2025-10-11 15:26:50.726202+00'),
+	('221311d8-1bca-407d-89f3-0c6c21542777', 'テスト配信', 'tesuto配信です', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', NULL, '2025-10-11 15:47:31.417387+00'),
+	('5dc8bf01-b576-40ad-a4aa-6a5335e5b00c', 'テスト', 'テストです', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', NULL, '2025-10-11 15:50:36.200666+00'),
+	('3b097ca9-5701-490b-a374-d1e390c7cb1d', 'テスト、メール', 'テストザンス', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', NULL, '2025-10-11 15:53:30.991077+00'),
+	('05ac8a2d-ecc6-4c2d-8bc0-5cd2b160a768', 'テスト', 'テストしちゃう', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', NULL, '2025-10-12 00:46:11.411703+00'),
+	('7b8898c2-ab7f-4d06-93e5-fff23119d947', 'NFT受取アドレス設定のお願い', '{{email}}　
+{{user_id}}様
+
+お世話になります。
+ハッシュパイロットsupportです', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', NULL, '2025-10-12 01:10:43.710451+00'),
+	('7824ab13-8743-4559-a4a8-f8c6edb8afa8', 'テスト', '{{user_id}}様
+
+テスト', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', NULL, '2025-10-12 05:13:17.678064+00'),
+	('0f4fcea9-649c-4754-80ce-960a100351bb', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。
+
+{{user_id}}
+{{email}}
+様
+
+お世話になっております。
+HASH PILOTサポートチームからのご案内です。
+
+既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。
+
+・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。
+※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。
+※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。
+
+・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。
+※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。
+※(例)12345678のような仮設定状態の方は必ず修正して下さい。
+
+HASH PILOTダッシュボードURL
+https://hashpilot.net/
+
+何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。
+https://lin.ee/7gT3x5h
+
+HASH PILOTサポートチーム', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', NULL, '2025-10-14 05:52:49.14541+00'),
+	('d8cdbf6b-4569-47c7-9a4e-1eda860f81fa', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。
+
+{{user_id}}
+{{email}}
+様
+
+お世話になっております。
+HASH PILOTサポートチームからのご案内です。
+
+既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。
+
+・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。
+※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。
+※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。
+
+・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。
+※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。
+※(例)12345678のような仮設定状態の方は必ず修正して下さい。
+
+HASH PILOTダッシュボードURL
+https://hashpilot.net/
+
+何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。
+https://lin.ee/7gT3x5h
+
+HASH PILOTサポートチーム', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', NULL, '2025-10-14 07:23:19.487697+00'),
+	('c5cb526e-dfac-4f82-9ca8-7785ae0b8856', 'テスト', '※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。
+
+{{user_id}}
+{{email}}
+様
+
+お世話になっております。
+HASH PILOTサポートチームからのご案内です。
+
+既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。
+
+・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。
+※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。
+※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。
+
+・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。
+※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。
+※(例)12345678のような仮設定状態の方は必ず修正して下さい。
+
+HASH PILOTダッシュボードURL
+https://hashpilot.net/
+
+何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。
+https://lin.ee/7gT3x5h
+
+HASH PILOTサポートチーム', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', NULL, '2025-10-14 07:24:52.212002+00'),
+	('1f2af4a7-10a0-4cfc-a47b-92d150189c59', 'テスト', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        {{user_id}}様<br><br>テストです<br><br><a href="https://<a href="http://www.yahoo.co.jp/"" style="color: #3b82f6; text-decoration: underline;">www.yahoo.co.jp/"</a> style="color: #3b82f6; text-decoration: underline;">https://<a href="http://www.yahoo.co.jp/</a>" style="color: #3b82f6; text-decoration: underline;">www.yahoo.co.jp/</a></a>
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', 'all', '2025-10-14 07:38:30.524493+00'),
+	('7d62a04c-1cd1-40be-8020-2b0389a48f4e', 'てすちん', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        {{email}}<br>{{user_id}}様<br><br>お世話になります。<br><br><a href="https://www.yahoo.co.jp/" style="color: #3b82f6; text-decoration: underline;">https://www.yahoo.co.jp/</a>
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'basarasystems@gmail.com', 'all', '2025-10-14 07:51:55.034872+00'),
+	('61f63519-3e0e-4fb2-b89e-911f5d1b55f2', 'テスト', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 08:10:04.14271+00'),
+	('7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'broadcast', 'support@dshsupport.biz', 'all', '2025-10-14 08:13:10.700335+00'),
+	('09305467-66c5-40d6-84d9-60afb5db4240', 'テスト送信', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        お世話になります。<br>メールシステム確認のためのテスト送信です。
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'broadcast', 'basarasystems@gmail.com', 'all', '2025-10-14 08:17:22.684346+00'),
+	('ee705a0f-90ca-4b00-943c-a7ba8d252555', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 09:53:28.537902+00'),
+	('792fe399-0474-4511-83b1-ac89eccbcfec', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:20:14.499221+00'),
+	('6b390f36-5cbc-4780-897e-2798b431a272', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:29:30.042465+00'),
+	('f9e6dae8-680c-4d9e-baa3-9d3da66ccc51', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:34:56.120252+00'),
+	('6b36b7f6-4231-402d-811b-abfb30e81f15', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:35:36.351005+00'),
+	('80abfb3d-72a1-4b7e-9f49-18d77b618bd5', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:36:04.334787+00'),
+	('ef94314d-4025-4489-9c38-33badf3600a3', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:36:24.749742+00'),
+	('ab7e1c36-f149-4b13-8740-02b0ac9a1259', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:36:50.291822+00'),
+	('3f40764e-6afd-4dba-8f96-0a63a5ce57b1', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:37:12.955367+00'),
+	('b7950f9e-83c5-4e9f-967c-8b3138822784', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:37:35.875624+00'),
+	('9294ee06-6256-43c0-a82c-36685a27ae81', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:38:39.350362+00'),
+	('8026aa0c-58be-4ff4-b2da-0322b19fd24f', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:39:00.580515+00'),
+	('1d7a5b00-c1ec-4eaf-9350-2526d4e53493', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:37:58.920441+00'),
+	('571e7914-62f6-4fc4-bd6f-f8e90187c992', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:38:20.338201+00'),
+	('ecd38331-ae2d-42b6-92ad-04040c0edfff', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:39:24.092875+00'),
+	('8dd22319-87de-4f82-8bfa-3f496a293993', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:39:45.436156+00'),
+	('61e3a687-fc8c-4c64-bbee-afc4ec9bbcf5', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:40:06.956779+00'),
+	('42b72fad-6ad7-4910-bc39-773537532b05', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:40:28.564396+00'),
+	('b4f2d016-f99f-4f8c-b300-999a22f3cde7', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:40:49.352825+00'),
+	('b5a1f0e7-9ea5-4ea3-9e5e-33b5083cfaaa', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:41:14.896464+00'),
+	('4ad7b7a6-40f1-400f-9aae-7e0cf7e99255', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:41:34.802657+00'),
+	('65372585-a383-4a3a-971f-184e1763f2a3', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:42:16.419374+00'),
+	('ba617dcf-e939-43f5-923a-ef13a728ed3b', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:41:56.998349+00'),
+	('a3306d06-3c05-4dcb-a55e-9e2ef42db061', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:42:53.638238+00'),
+	('d68d97f4-2511-407f-9215-b5ec08a27e9b', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:43:12.795216+00'),
+	('72b24429-255d-4434-9349-6d6e651a8bf2', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:43:34.927613+00'),
+	('b01cbefc-525d-4265-bde1-8d4a9e91ff7a', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:43:54.768079+00'),
+	('20b6c186-00c7-47d7-b5fe-dc42ce4e6976', '【HASH PILOT】NFT受け取りアドレスとCoinwのUIDについて', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        ※このメールは送信専用メールアドレスから配信されていますので、ご返信をいただいてもお答えできませんのでご了承ください。<br><br>{{user_id}}<br>{{email}}<br>様<br><br>お世話になっております。<br>HASH PILOTサポートチームからのご案内です。<br><br>既にダッシュボートにNFT受け取りアドレスが設定されている方は、設定された受け取りアドレスにNFTが配布されております。<br><br>・現在正常に設定されていない方につきましては、ダッシュボードよりNFT受け取りアドレスの設定をお願いいたします。<br>※NFT受け取りアドレスはセーフパル、メタマスク等の取引所以外のウォレット(BEP20)をご記入下さい。<br>※(例)0x12345、メールアドレスを記入されている方、0xから始まらない明らかに受け取りアドレスと断定できない(BSCスキャンにて読み取れない)英数字、メールアドレスを記入されている方は必ず修正して下さい。<br><br>・CoinwのUIDについてですが、必ず正しいご自身のUIDを設定お願いいたします。<br>※正しく設定されていない場合は、運用実績分のUSDTがエアドロップされませんのでご了承下さい。<br>※(例)12345678のような仮設定状態の方は必ず修正して下さい。<br><br>HASH PILOTダッシュボードURL<br><a href="https://hashpilot.net/" style="color: #3b82f6; text-decoration: underline;">https://hashpilot.net/</a><br><br>何かご不明点などございましたら以下サポートラインまでお問い合わせ下さい。<br><a href="https://lin.ee/7gT3x5h" style="color: #3b82f6; text-decoration: underline;">https://lin.ee/7gT3x5h</a><br><br>HASH PILOTサポートチーム
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-14 10:44:22.042491+00'),
+	('8e094b52-0092-4f96-aaa1-5d4063e68517', '【HASH PILOT】VVIP bot 正式稼働開始に関するご案内', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        【重要】<br><br>VVIP bot 正式稼働開始に関するご案内<br><br>平素よりご愛顧いただき、誠にありがとうございます。<br><br>まず、最近の暗号資産市場についてご報告申し上げます。<br><br>10月10日、米国による中国製ハイテク製品への追加関税（最大100％）発表をきっかけに、暗号資産市場全体が急落いたしました。<br><br>ビットコインは高値から一時14％超、イーサリアムも約12％下落し、約190億ドル規模のレバレッジ清算が発生するなど、市場が一時的に大きく混乱しました。<br><br>しかしながら、VVIP botはこの暴落局面においても安定したパフォーマンスを維持し、相場の急変動をほとんど受けることなく堅調な結果を出しております。<br><br>テスト期間中のデータからも、リスク制御機能が十分に機能していることを確認しております。<br><br>VVIP botは10月3日よりテスト運用を開始し、現在も好成績を継続中です。<br><br>当サービスでは入金サイクルを以下の通り設けております。<br><br>•5日締め → 15日より運用開始<br>•20日締め → 翌月1日より運用開始<br><br>今回の初回運用については、直近の市場急落を踏まえ、相場が安定したことを確認した上で正式稼働することを最優先といたしました。<br><br>そのため、VVIP botの正式稼働は11月1日より開始いたします。<br><br>この判断は、短期的な成果を急ぐよりも、安定した市場環境下で正確かつ信頼性の高いデータを取得し、皆様の大切な資金を安全に運用するためのものです。<br><br>初回稼働にあたりご不便をおかけいたしますが、VVIP botは相場の急変にも動じない堅牢な設計で、長期的な安定運用を目指してまいります。<br><br>焦らず確実に、透明性の高い資金運用を行ってまいりますので、どうぞご安心ください。<br><br>今後とも変わらぬご理解とご支援を賜りますようお願い申し上げます。<br><br>――――――――――<br>Hash Pilot事務局<br>――――――――――
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-16 11:18:22.773892+00'),
+	('0109f2d6-157d-4373-a429-30125c01d5ec', '【HASH PILOT】VVIP bot 正式稼働開始に関するご案内', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        【重要】<br><br>平素よりご愛顧いただき、誠にありがとうございます。<br><br>まず、最近の暗号資産市場についてご報告申し上げます。<br><br>10月10日、米国による中国製ハイテク製品への追加関税（最大100％）発表をきっかけに、暗号資産市場全体が急落いたしました。<br><br>ビットコインは高値から一時14％超、イーサリアムも約12％下落し、約190億ドル規模のレバレッジ清算が発生するなど、市場が一時的に大きく混乱しました。<br><br>しかしながら、VVIP botはこの暴落局面においても安定したパフォーマンスを維持し、相場の急変動をほとんど受けることなく堅調な結果を出しております。<br><br>テスト期間中のデータからも、リスク制御機能が十分に機能していることを確認しております。<br><br>VVIP botは10月3日よりテスト運用を開始し、現在も好成績を継続中です。<br><br>当サービスでは入金サイクルを以下の通り設けております。<br><br>•5日締め → 15日より運用開始<br>•20日締め → 翌月1日より運用開始<br><br>今回の初回運用については、直近の市場急落を踏まえ、相場が安定したことを確認した上で正式稼働することを最優先といたしました。<br><br>そのため、VVIP botの正式稼働は11月1日より開始いたします。<br><br>この判断は、短期的な成果を急ぐよりも、安定した市場環境下で正確かつ信頼性の高いデータを取得し、皆様の大切な資金を安全に運用するためのものです。<br><br>初回稼働にあたりご不便をおかけいたしますが、VVIP botは相場の急変にも動じない堅牢な設計で、長期的な安定運用を目指してまいります。<br><br>焦らず確実に、透明性の高い資金運用を行ってまいりますので、どうぞご安心ください。<br><br>今後とも変わらぬご理解とご支援を賜りますようお願い申し上げます。<br><br>――――――――――<br>Hash Pilot事務局<br>――――――――――
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'individual', 'support@dshsupport.biz', 'all', '2025-10-16 11:48:29.294502+00'),
+	('f52ea44c-96b2-4145-b442-2941a7f8312c', 'Hash Pilotスタート記念！本日19:00〜Zoom説明会＆報告会開催のお知らせ', '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        Hash Pilot運営事務局でございます。<br>平素より弊社サービスをご利用いただき、誠にありがとうございます。<br><br>11月1日より、いよいよ Hash Pilotの正式運用がスタート いたしました！<br>そして本日、昨日分の収益がバックオフィスに反映されております。<br><br>この節目を記念し、本日19:00よりZoom説明会＆報告会 を開催いたします。<br><br>開催内容<br>・市場や相場の最新動向について<br>・バックオフィスの操作・確認方法<br>・今後の展望やお知らせ<br><br>Hash Pilotをより深く理解し、今後の運用をさらに有意義に進めていただくための大切な内容をお伝えいたします。<br><br>本日のzoomでは、Hash Pilotに強い情熱を持つ若手メンバー2名 がスピーカーとして登壇いたします。<br>熱意と向上心に溢れる2人が、皆様にわかりやすく、楽しくご説明いたします！<br><br>今後はサポートメンバーとしても活躍してまいりますので、ぜひこの機会にお顔を見にいらしてください😊<br><br>ZOOMはこちらから↓↓↓<br>2025年11月2日（日）19:00～<br><a href="https://us06web.zoom.us/j/5558105848?pwd=dFlsWVZyd0x0RE9uSXJkeFAwOGFnZz09" style="color: #3b82f6; text-decoration: underline;">https://us06web.zoom.us/j/5558105848?pwd=dFlsWVZyd0x0RE9uSXJkeFAwOGFnZz09</a><br>ミーティング ID: 555 810 5848<br>パスコード: 000000<br><br>皆様のご参加を心よりお待ちしております。<br>今後ともHash Pilotをどうぞよろしくお願いいたします。<br><br><br>Hash Pilot運営事務局<br><br><br>
+    </div>
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        <p>このメールは HASHPILOT システムから送信されています。</p>
+        <p>© 2025 HASHPILOT. All rights reserved.</p>
+    </div>
+</body>
+</html>', 'HASHPILOT', 'noreply@hashpilot.biz', 'broadcast', 'basarasystems@gmail.com', 'all', '2025-11-02 07:24:09.762374+00');
+
+
+--
+-- Data for Name: email_recipients; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."email_recipients" ("id", "email_id", "user_id", "to_email", "status", "sent_at", "read_at", "error_message", "resend_email_id", "created_at") VALUES
+	('3d867f74-7c8e-4a44-9f57-b36dd34b7b3b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '938133', 'kiyoko.winter@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('9188e944-512b-4604-a256-3fc229295e95', '8e094b52-0092-4f96-aaa1-5d4063e68517', '7041CD', 'fnishimura32@gmail.com', 'sent', '2025-10-16 11:21:09.384+00', NULL, NULL, 'e84f08f7-f7f6-423e-8f73-5bed6688bdc7', '2025-10-16 11:18:22.773892+00'),
+	('b8da1eea-2371-4532-92b6-4db991a47420', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E83446', 'shinkansenboy752@gmail.com', 'read', '2025-10-14 08:13:24.711+00', '2025-10-15 06:18:03.042216+00', NULL, 'af712cf1-4937-4658-88ca-c79072b0cb51', '2025-10-14 08:13:10.700335+00'),
+	('d89f7a26-044c-43ae-ab89-f6384bdc2957', '8e094b52-0092-4f96-aaa1-5d4063e68517', 'C17025', 'sachiko.prumeria@gmail.com', 'sent', '2025-10-16 11:21:13+00', NULL, NULL, '7c6f1d27-1d7a-4317-b292-9ffa7ef7fc88', '2025-10-16 11:18:22.773892+00'),
+	('1f3e0082-8152-4de6-8216-8e0eb0e7307e', '8e094b52-0092-4f96-aaa1-5d4063e68517', '4BF14D', 'bashi0227kiyo@gmail.com', 'sent', '2025-10-16 11:21:22.01+00', NULL, NULL, '6faa9285-690a-470f-b1a2-a365d4770fd1', '2025-10-16 11:18:22.773892+00'),
+	('654cf220-8ac4-47d8-b335-3eee72296064', '8e094b52-0092-4f96-aaa1-5d4063e68517', '0F88DD', 'msic200906@yahoo.co.jp', 'sent', '2025-10-16 11:21:25.594+00', NULL, NULL, '81b2dc01-bfbe-45ad-bd9a-50c0af405a6d', '2025-10-16 11:18:22.773892+00'),
+	('6670b08b-44e4-4dd4-bd23-34ccf79deff6', '8e094b52-0092-4f96-aaa1-5d4063e68517', 'A815EA', 'tochimoto1969@gmail.com', 'sent', '2025-10-16 11:21:34.645+00', NULL, NULL, 'bab655a7-ab82-44c2-9844-9ff08f17ae04', '2025-10-16 11:18:22.773892+00'),
+	('4fcf3f68-5f3a-4405-a2cc-30192942c9b8', '8e094b52-0092-4f96-aaa1-5d4063e68517', '75F5A0', 'takasuzu1234567890+1@gmail.com', 'sent', '2025-10-16 11:21:41.594+00', NULL, NULL, '434d5b4c-2af4-40c3-90f9-f679032571a1', '2025-10-16 11:18:22.773892+00'),
+	('a3126cfd-92d4-4a4d-a08e-b57bd6c1bd04', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '76573C', 'sunlecrinmining@gmail.com', 'sent', '2025-11-02 07:24:13.193+00', NULL, NULL, 'f8e18698-811f-40b4-b6af-763d2c0703bb', '2025-11-02 07:24:09.762374+00'),
+	('2471f059-62fa-451f-8e83-fdda071536aa', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '3A6EDA', 'tomo322tomo@gmil.com', 'sent', '2025-11-02 07:24:14.056+00', NULL, NULL, 'e45aa9ae-9454-4baf-9475-a07b319f34ba', '2025-11-02 07:24:09.762374+00'),
+	('ef5f0091-8332-417b-92a9-5d47be4bf67a', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '71AE10', 'akomugu@gmail.com', 'sent', '2025-11-02 07:24:15.022+00', NULL, NULL, 'ab2bfd4a-57dc-49c0-949e-ad4d6b1ff312', '2025-11-02 07:24:09.762374+00'),
+	('8c4a19a1-aee3-4ace-b1a2-2b3c79d6cc6c', 'f52ea44c-96b2-4145-b442-2941a7f8312c', 'D5F36A', 'kenken0719810@gmail.com', 'sent', '2025-11-02 07:24:16.729+00', NULL, NULL, 'bbc979cf-8fef-4fe3-922b-eeb4126d0473', '2025-11-02 07:24:09.762374+00'),
+	('ff597477-2b64-4b0e-b647-864ecd7f3bfa', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '8F5343', 'tkgntg.5500@gmail.com', 'sent', '2025-11-02 07:24:17.569+00', NULL, NULL, '47138f04-8504-4845-8f57-19f1e74078b4', '2025-11-02 07:24:09.762374+00'),
+	('7686d3c0-9b97-415c-8c25-6dcfce30d21d', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '4DAC3A', 'yochama.7625@gmail.com', 'sent', '2025-11-02 07:24:19.405+00', NULL, NULL, '6d21596e-9337-4b7f-a88b-252e71f93d71', '2025-11-02 07:24:09.762374+00'),
+	('254fdf15-c2e7-4ebf-9127-bdc3015aaff9', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '885491', 'miyaryu888@gmail.com', 'sent', '2025-11-02 07:24:20.276+00', NULL, NULL, '8950c7bc-c124-412a-b970-5f0efd3bfe61', '2025-11-02 07:24:09.762374+00'),
+	('ebd43662-c164-4f8b-809f-1c1673a9c965', 'f52ea44c-96b2-4145-b442-2941a7f8312c', 'DF7EF1', 'shinagaichirou1111@gmail.com', 'sent', '2025-11-02 07:24:21.171+00', NULL, NULL, 'a85c543c-52e5-47d6-8977-63ac04cb39b8', '2025-11-02 07:24:09.762374+00'),
+	('1f69eb27-d9cd-4f20-aec1-47c5148bf11d', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '72E487', 'aimhigh144@gmail.com', 'read', '2025-11-02 07:24:22.924+00', '2025-11-02 17:30:00.963884+00', NULL, 'b7530b70-a740-4330-a27d-876381c1a263', '2025-11-02 07:24:09.762374+00'),
+	('8bbe9335-9309-4718-9909-1fdae6f4290b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '80AADD', 'kiyokowinter4@gmail.com', 'sent', '2025-10-14 08:13:11.807+00', NULL, NULL, '63834223-18d4-4bf9-98d3-85f50298053e', '2025-10-14 08:13:10.700335+00'),
+	('e1bc7558-dd13-4d37-9ca8-5949017c07e9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C58662', '1014cho46@gmail.com', 'sent', '2025-10-14 08:13:12.17+00', NULL, NULL, '0c19e9a7-bd48-40bf-b4d1-6906569271ac', '2025-10-14 08:13:10.700335+00'),
+	('0371c49c-fd2c-44af-a7a4-5baf39d07ef2', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '59165B', 'tatsuta@b-faith.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('39615826-0914-40f3-aa5f-f87fbf8f414f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0E0171', 'yumie4300@gmail.com', 'sent', '2025-10-14 08:13:12.989+00', NULL, NULL, 'b2ec56e0-f41b-43c8-90f3-c32d1a57c23f', '2025-10-14 08:13:10.700335+00'),
+	('d5e79b81-966d-4700-8ac3-4611f5479d05', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '797609', 'sanaomanko37@gmail.com', 'sent', '2025-10-14 08:13:13.352+00', NULL, NULL, '16d63b90-9f51-4541-b8f9-78fe5ec1e6f8', '2025-10-14 08:13:10.700335+00'),
+	('c9c72845-ec24-40c2-a3fe-bee5fdb50342', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DC7A30', 'y.kazuki.1993@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('beac5802-bed6-4f11-8803-eabe0d0d0c24', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A25154', 'aloha.friday1208@gmail.com', 'sent', '2025-10-14 08:13:14.144+00', NULL, NULL, 'd6fa993f-cae4-41f0-86c7-c5bdc47fe2be', '2025-10-14 08:13:10.700335+00'),
+	('98bd6287-ddce-4372-b7d9-fd61fd500e99', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '04AC1A', 'crosstoyouz1@gmail.com', 'sent', '2025-10-14 08:13:14.567+00', NULL, NULL, 'e0f03a61-f0c4-4375-95f1-6ee47fad21b1', '2025-10-14 08:13:10.700335+00'),
+	('b9df3227-81de-4ce8-ab41-89989c07d2ab', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4918B8', 'kinuko39369@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('d1434af3-5806-4d8a-b9f0-c801727aaee4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3D9C65', 'my0503ex@gmail.com', 'sent', '2025-10-14 08:13:15.281+00', NULL, NULL, '10ee91f7-cec2-4d9c-9811-758ea61c205b', '2025-10-14 08:13:10.700335+00'),
+	('c158b36c-d1b7-45e9-ada6-e36b337fcb29', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7F85EE', 'support@dshsupport.biz', 'sent', '2025-10-14 08:13:15.712+00', NULL, NULL, '08cce517-1187-4149-bdfb-c3aed1e244a9', '2025-10-14 08:13:10.700335+00'),
+	('64ee8e7a-88cb-4e9b-aec3-f46fc58544b3', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EFD820', 'apprecieight@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4e10c6b4-b141-4407-bfb8-d617b174b090', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '19BB41', 'holiday6186@gmail.com', 'sent', '2025-10-14 08:13:16.451+00', NULL, NULL, '004e84e8-00b5-4dce-83f8-ca7953c703ab', '2025-10-14 08:13:10.700335+00'),
+	('2639c0dc-fccf-47a5-862f-4fd764c31d12', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AAE84C', 'iumiko.y@gmail.com', 'sent', '2025-10-14 08:13:16.866+00', NULL, NULL, '154be966-a45e-442f-9004-aabdfabc05c6', '2025-10-14 08:13:10.700335+00'),
+	('20b3a44a-70e3-4d66-969f-4ec088d1cd7b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AEE591', 'ririri.717@gmail.com', 'sent', '2025-10-14 08:13:17.613+00', NULL, NULL, 'dbe52169-be97-401b-8341-b9051507b98b', '2025-10-14 08:13:10.700335+00'),
+	('f28e679e-3fa2-44df-9494-5f362eff58fe', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1401D2', 'masanxmining@gmail.com', 'sent', '2025-10-14 08:13:18.046+00', NULL, NULL, '5f5a8ff5-c53b-4447-bda1-75dba42b5a9c', '2025-10-14 08:13:10.700335+00'),
+	('5720ec72-9491-493c-88a4-e642a2dec9d1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AB337A', 'kirk.kakusan34@gmail.com', 'sent', '2025-10-14 08:13:18.81+00', NULL, NULL, 'df0f9b0c-e1f9-4992-8827-2e3cb0de1de9', '2025-10-14 08:13:10.700335+00'),
+	('b4ff8133-cd69-4391-ab90-396dde72497f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3855F6', 'trrr18@i.softbank.jp', 'sent', '2025-10-14 08:13:19.212+00', NULL, NULL, '31378219-2164-4126-86cd-ad03bb7cdd7b', '2025-10-14 08:13:10.700335+00'),
+	('48505b64-6c5e-4306-b02e-09827ff42215', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8C1259', '1903momo0707@gmail.com', 'sent', '2025-10-14 08:13:20.066+00', NULL, NULL, '91901a2e-5c9e-455b-b8dd-3b6d8a7f3778', '2025-10-14 08:13:10.700335+00'),
+	('294884de-0286-44ba-a10f-bde6a744ccbe', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AB503F', 'coconutcrash1992@yahoo.co.jp', 'sent', '2025-10-14 08:13:20.47+00', NULL, NULL, 'd306dc82-043d-4bee-8b7f-a3a4573623fa', '2025-10-14 08:13:10.700335+00'),
+	('75f9ce27-a7d8-49f6-a420-4119f01c84d7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7B2CDF', 'in.the.hole32@gmail.com', 'sent', '2025-10-14 08:13:21.203+00', NULL, NULL, 'd17a3e5d-8b2d-4b94-b43b-aa04a38ba687', '2025-10-14 08:13:10.700335+00'),
+	('4f8ddece-44a9-41e3-9622-a784113f5615', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DB4690', 'apprecieight358@gmail.com', 'sent', '2025-10-14 08:13:21.62+00', NULL, NULL, '39836df6-418f-4a86-9a4b-2b969585f078', '2025-10-14 08:13:10.700335+00'),
+	('d7e2d979-2bb6-4bb0-a254-f9d05b397c8c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9092DF', 'yukorin.r21@gmail.com', 'sent', '2025-10-14 08:13:22.42+00', NULL, NULL, '59a091e5-4662-465e-bdab-64fbae6bbcf1', '2025-10-14 08:13:10.700335+00'),
+	('02d9da72-783d-4e56-8579-297d197e8090', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '268921', 'ktysy0218@gmail.com', 'sent', '2025-10-14 08:13:22.883+00', NULL, NULL, '4727e230-a01e-4289-aa58-57dc497cc36d', '2025-10-14 08:13:10.700335+00'),
+	('b60eb43d-8d36-4e4b-8e4f-97a5a14235c1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2F6364', 'officetomorrow3944@gmail.com', 'sent', '2025-10-14 08:13:23.606+00', NULL, NULL, '475625e5-fa46-4230-ac70-24667613a8f8', '2025-10-14 08:13:10.700335+00'),
+	('11999517-fc30-4ea2-a36d-12696f8b17a2', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EDA596', 'naochi0526@yahoo.co.jp', 'sent', '2025-10-14 08:13:23.979+00', NULL, NULL, '07377abc-ca18-40f1-84c2-e26f2274e661', '2025-10-14 08:13:10.700335+00'),
+	('a9a8cd47-98db-49e2-b0b4-faff0009ecaf', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A0535F', 'spaceleo105@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('96414f95-f422-40dd-bafa-6eb02ed69ac1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C56228', '120811marumaru@gmail.com', 'sent', '2025-10-14 08:13:25.801+00', NULL, NULL, 'b018bf84-60f0-4a1b-b34d-40c9cf01a9c9', '2025-10-14 08:13:10.700335+00'),
+	('e1e87725-a140-41e1-8c04-3f7bf5e1d424', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F5BCFC', 'chocoboy0929@gmail.com', 'sent', '2025-10-14 08:13:26.314+00', NULL, NULL, '0baa4ea7-1792-462e-8289-777b75c39f20', '2025-10-14 08:13:10.700335+00'),
+	('5e4d7603-d4b3-4644-9ac8-7d140063025e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '440AB9', 'ca4.nn2005@gmail.com', 'sent', '2025-10-14 08:13:27.063+00', NULL, NULL, '912c493d-10d6-4dd8-b4a8-9c3a56e808aa', '2025-10-14 08:13:10.700335+00'),
+	('84c18434-f1dd-4135-9ed5-ddd09243b8f4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '626713', 'toko_88888888@yahoo.co.jp', 'sent', '2025-10-14 08:13:27.46+00', NULL, NULL, '0536caf8-f534-4a30-8a79-62c6dfcdd3ad', '2025-10-14 08:13:10.700335+00'),
+	('0d104cb7-a95a-465e-87dc-93a093dba578', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CE978C', 'me06ron12@gmail.com', 'sent', '2025-10-14 08:13:28.257+00', NULL, NULL, 'cfc689b7-1a51-4626-bdf9-165d329e39fc', '2025-10-14 08:13:10.700335+00'),
+	('16cf2829-2c52-4b73-9415-dfca9c1e3b35', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '794682', 'tamakimining@gmail.com', 'sent', '2025-10-14 08:13:28.659+00', NULL, NULL, '7f85c29b-a4a2-4d58-a768-0c3627fca3ba', '2025-10-14 08:13:10.700335+00'),
+	('af125a98-3c54-4c4d-9760-f28b9a3c3c3a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D473AC', 'junnoheya@gmail.com', 'sent', '2025-10-14 08:13:29.496+00', NULL, NULL, 'b3e297d8-b748-491a-a13c-13a6c880bb39', '2025-10-14 08:13:10.700335+00'),
+	('fe7f53aa-28e0-45c1-b12f-45fd22568979', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E02D36', 'ytsm0722@gmail.com', 'sent', '2025-10-14 08:13:29.939+00', NULL, NULL, '1d21c27a-6783-4922-9395-8feece03fdb8', '2025-10-14 08:13:10.700335+00'),
+	('b03793c4-9892-403a-a6b5-81037b9f81fe', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C41A9D', 'xata.tatsuy@gmail.com', 'sent', '2025-10-14 08:13:30.708+00', NULL, NULL, '9c415e46-7fe6-481f-8cb6-57b0b920ebdb', '2025-10-14 08:13:10.700335+00'),
+	('04d31c0b-5b48-42ec-9039-74a51e148b92', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '76573C', 'sunlecrinmining@gmail.com', 'sent', '2025-10-14 08:13:31.199+00', NULL, NULL, 'd9a939ec-9a75-4118-b361-fd47ef2ba4a8', '2025-10-14 08:13:10.700335+00'),
+	('778c791c-3500-4e2d-a559-bc0895c819c4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A54290', 'maru230023maru@gmail.com', 'sent', '2025-10-14 08:13:32.027+00', NULL, NULL, '51748c11-ef6a-43b2-a2e0-e2115285b6af', '2025-10-14 08:13:10.700335+00'),
+	('bafb1db7-b77d-4513-ae6b-ab0bc404eae6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4DAC3A', 'yochama.7625@gmail.com', 'sent', '2025-10-14 08:13:33.104+00', NULL, NULL, '2d492c6b-01f8-4099-8569-9dd559176f06', '2025-10-14 08:13:10.700335+00'),
+	('2c900704-0389-47ae-8085-597b700c0502', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '885491', 'miyaryu888@gmail.com', 'sent', '2025-10-14 08:13:33.491+00', NULL, NULL, '8dcc8b99-9ed2-4e49-9d7c-501c55412574', '2025-10-14 08:13:10.700335+00'),
+	('73699012-ea4b-4f52-af8c-8ef1de9390e9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D23CC4', 'tetsuobitmining@gmail.com', 'sent', '2025-10-14 08:13:34.211+00', NULL, NULL, 'd25517a1-6e08-4d19-a423-a4109c6986c8', '2025-10-14 08:13:10.700335+00'),
+	('50460b7e-30ee-4ab3-97c5-c94c46b6e888', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F0707E', 'r12098ku@gmail.com', 'sent', '2025-10-14 08:13:34.617+00', NULL, NULL, '32264566-5c5e-493c-a53a-a1bb9f797dcc', '2025-10-14 08:13:10.700335+00'),
+	('e36b664e-a65c-4174-81ae-49e1504a2007', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '04161E', 'arisakura0729@gmail.com', 'sent', '2025-10-14 08:13:35.42+00', NULL, NULL, '5d1a9024-6434-47bf-a1bd-9f334b41075d', '2025-10-14 08:13:10.700335+00'),
+	('3a41a107-b430-44b9-a416-1b7c7dc57035', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D61EA6', 'poporon.803.y3958@gmail.com', 'sent', '2025-10-14 08:13:35.799+00', NULL, NULL, '4e25f87f-191f-4525-a527-749ea76aabe5', '2025-10-14 08:13:10.700335+00'),
+	('c4ede734-2f09-4cdb-b108-814d5b1613c9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '76FA3B', 'y.jiki69@gmail.com', 'sent', '2025-10-14 08:13:36.576+00', NULL, NULL, '868dc989-0f83-4224-84d5-b5359efbe9b2', '2025-10-14 08:13:10.700335+00'),
+	('194ccc61-0d83-445f-8bac-0fc42ea2472f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D5F36A', 'kenken0719810@gmail.com', 'sent', '2025-10-14 08:13:36.97+00', NULL, NULL, '059c97d2-28c8-4fa1-a245-c18172090d58', '2025-10-14 08:13:10.700335+00'),
+	('10832f0b-3d8f-40c8-afc9-05914a52b3ee', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7CB7E4', 'tokinaomining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b0f9110c-0739-4839-ae7b-73fde0ff9ce5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CA66A9', 'nomadic5732@gmail.com', 'sent', '2025-10-14 08:13:38.257+00', NULL, NULL, '61dccdb6-7d9a-4fc6-b16b-092460ddfa6d', '2025-10-14 08:13:10.700335+00'),
+	('66741c43-f9c3-426b-ada9-583f0a1187f1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8F7AD9', 'kyoka.koreeda@gmail.com', 'sent', '2025-10-14 08:13:39.109+00', NULL, NULL, '6aaf8636-cfc4-4e2c-9d69-31b2ba3fcc53', '2025-10-14 08:13:10.700335+00'),
+	('bff13bbc-1c45-4ba7-a17a-91519639e8be', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '85D94D', 'oga6551@gmail.com', 'sent', '2025-10-14 08:13:39.536+00', NULL, NULL, 'e3c12508-ef13-488e-ad1c-ebd2dfdfe210', '2025-10-14 08:13:10.700335+00'),
+	('a77b0d77-016a-479b-9ade-227af407068f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2533DA', 'decollage58@gmail.com', 'sent', '2025-10-14 08:13:40.433+00', NULL, NULL, '41b8d0fd-3075-41ab-9064-2324e014f59c', '2025-10-14 08:13:10.700335+00'),
+	('de31ccc0-a02d-4239-8ca9-da017ca48255', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F54652', 'kiyo.daichi@gmail.com', 'sent', '2025-10-14 08:13:40.842+00', NULL, NULL, '0d0384cd-55a5-4172-8ebf-a5df7f178d57', '2025-10-14 08:13:10.700335+00'),
+	('a9425193-adb0-4c53-a606-89a1808ed2f7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D84C17', 'taekoko0715@gmail.com', 'sent', '2025-10-14 08:13:41.668+00', NULL, NULL, '6eff5fe9-fd1e-40d3-8c9e-425a6efa5f88', '2025-10-14 08:13:10.700335+00'),
+	('59589dcb-c9df-451f-a614-3354dafc238d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '600BE8', 'ange.maria333@gmail.com', 'sent', '2025-10-14 08:13:42.095+00', NULL, NULL, '439339e7-4b1f-46c7-9549-c9ee315c022a', '2025-10-14 08:13:10.700335+00'),
+	('8f384ccd-55c1-4b5b-b4f4-fd0ee6f4a0d6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C31741', 'riebou311@gmail.com', 'sent', '2025-10-14 08:13:42.883+00', NULL, NULL, '1992791f-31d4-406c-91b9-978a61c1260f', '2025-10-14 08:13:10.700335+00'),
+	('32fb86fe-9b95-4725-b924-cedcce93e53c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '24B6D0', 'ayami.sorashido0401@gmail.com', 'sent', '2025-10-14 08:13:43.286+00', NULL, NULL, 'a3d7c379-3b98-4ff2-aa2d-edce0c5ae541', '2025-10-14 08:13:10.700335+00'),
+	('67ad565d-3f8e-4fd4-bd2a-3706a5cd0d6c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1F7BF7', 'im8088tms@yahoo.ne.jp', 'sent', '2025-10-14 08:13:44.037+00', NULL, NULL, '20de8661-c4e3-49f4-bc56-614cb3d43379', '2025-10-14 08:13:10.700335+00'),
+	('7c259240-39c1-48ad-844a-4eca1d2b7f14', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E5E7B4', 'takeiteasy1187@gmail.com', 'sent', '2025-10-14 08:13:44.456+00', NULL, NULL, '4091dafc-c480-4867-b47a-7f79bedf9256', '2025-10-14 08:13:10.700335+00'),
+	('0e1a2cdd-4255-479d-8187-462c869fbcea', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AA7C2B', '8riki.m8sj8@gmail.com', 'sent', '2025-10-14 08:13:45.231+00', NULL, NULL, 'e0c9e0fe-3527-4e72-960f-575c93e630f6', '2025-10-14 08:13:10.700335+00'),
+	('7c01e682-fa73-4dcd-a77f-55fbff976c00', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D84FA9', 'k.hanauchi@gmail.com', 'sent', '2025-10-14 08:13:45.63+00', NULL, NULL, '0d48a5f7-3271-410f-a618-d7eb2ae7bf7d', '2025-10-14 08:13:10.700335+00'),
+	('815f398a-d043-4040-81bb-6f23a9e9b77f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9442D0', 'komochanhappysmileneko0917@gmail.com', 'sent', '2025-10-14 08:13:46.383+00', NULL, NULL, '344df428-f51d-4fc0-9efe-ab64adaa2630', '2025-10-14 08:13:10.700335+00'),
+	('057b3bca-bdd9-4520-91ae-798ffd0a04ab', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '6DA8C7', 'cherry28sa@gmail.com', 'sent', '2025-10-14 08:13:46.752+00', NULL, NULL, '7e355ded-951e-4d83-8d64-ee433523b64b', '2025-10-14 08:13:10.700335+00'),
+	('091e7483-4ba8-4b79-ae25-1a9d73c9aa98', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C035D7', 'nisekoamakara@gmail.com', 'sent', '2025-10-14 08:13:47.543+00', NULL, NULL, '474efd62-c3b7-482f-b3aa-1671aee4f9fb', '2025-10-14 08:13:10.700335+00'),
+	('322ec395-243d-4599-918b-9505985de0a5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '78D313', 'funita385b@gmail.com', 'sent', '2025-10-14 08:13:47.962+00', NULL, NULL, '1762a7aa-33cf-414c-aee2-ce4347b3a42e', '2025-10-14 08:13:10.700335+00'),
+	('b356f2aa-246d-4d99-a64f-c5097fba3c7c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E27F25', 'y.sakurai@teratomo.io', 'sent', '2025-10-14 08:13:48.744+00', NULL, NULL, 'ccbbc9c1-fe44-4580-aeb9-b5034391acdc', '2025-10-14 08:13:10.700335+00'),
+	('0186d550-3db2-4794-ac10-e5649ac9afeb', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '54B3DF', 'zhongmeixa@icloud.com', 'sent', '2025-10-14 08:13:49.121+00', NULL, NULL, '70688f1a-c7f6-4361-98f6-7972340db419', '2025-10-14 08:13:10.700335+00'),
+	('906046ed-318e-47c7-aa5a-92fe0242c340', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E783A2', 'minako.imanishi0126@gmail.com', 'sent', '2025-10-14 08:13:49.902+00', NULL, NULL, '04dd51fe-65a2-4432-a732-66d496333e29', '2025-10-14 08:13:10.700335+00'),
+	('aa6157a4-407f-4084-ad1c-8438661a3118', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F59D48', 'mokayuka130@gmail.com', 'sent', '2025-10-14 08:13:50.285+00', NULL, NULL, '2468b4ca-5dfa-47e5-b6c1-54ca70ed2baf', '2025-10-14 08:13:10.700335+00'),
+	('be4f48fd-53be-472f-9589-87ecfb7e54de', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '779902', 'wwhappyhappyww@gmail.com', 'sent', '2025-10-14 08:13:51.129+00', NULL, NULL, '8d5f60e5-04b3-42a1-8069-7447483b00e4', '2025-10-14 08:13:10.700335+00'),
+	('aa0c32cb-e75f-40b5-8639-6f7b3a1ae632', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AA0CEA', 'sisyamakiri@gmail.com', 'sent', '2025-10-14 08:13:51.53+00', NULL, NULL, '0ad3c813-64db-4e80-8e4a-2e76d54b09ec', '2025-10-14 08:13:10.700335+00'),
+	('882f2476-137e-400f-a665-eccc1c69713f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2A8986', 'everblue.diving@gmai.com', 'sent', '2025-10-14 08:13:52.34+00', NULL, NULL, 'a58b1246-6216-49a7-9065-8fa3010a6095', '2025-10-14 08:13:10.700335+00'),
+	('9e183a06-b8d6-483e-abc2-a15a19bcf8a2', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1F85EE', 'wowcommunity2023+2@gmail.com', 'sent', '2025-10-14 08:14:04.825+00', NULL, NULL, 'e0bf6b13-c87f-45e6-8d18-42dbfe866fde', '2025-10-14 08:13:10.700335+00'),
+	('8fa0c0e5-62cf-4c5c-9897-8c38b9c41b85', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '230F31', 'wowcommunity2023+3@gmail.com', 'sent', '2025-10-14 08:14:05.702+00', NULL, NULL, 'feace432-61be-41ab-aed7-d3e3f62a8d71', '2025-10-14 08:13:10.700335+00'),
+	('43c338bd-a546-494e-b43d-fbf6566db784', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '850BCC', 'julia.kb@gmail.com', 'sent', '2025-10-14 08:14:06.129+00', NULL, NULL, '8857f7d5-9419-4073-9c39-5b2643171894', '2025-10-14 08:13:10.700335+00'),
+	('307035be-2408-4471-9132-dda114ba401d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B40CA6', 'cccmyyy_33310822@yahoo.ne.jp', 'sent', '2025-10-14 08:14:06.922+00', NULL, NULL, '823f0d3b-ee57-416f-b0aa-93f979e5aec1', '2025-10-14 08:13:10.700335+00'),
+	('454d18e0-1672-4869-b121-06bf106ceb13', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '67A45C', 'c.n.isy324@gmail.com', 'sent', '2025-10-14 08:14:07.307+00', NULL, NULL, '94ae773c-a4f7-4d9c-855f-30ddaaff5681', '2025-10-14 08:13:10.700335+00'),
+	('ada011e3-1c68-45e3-a76b-f78ace4b66b7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '6022BA', 'iwanedenki@gmail.com', 'sent', '2025-10-14 08:14:08.11+00', NULL, NULL, 'd8aa3683-3c5b-4c85-8413-718c3724efac', '2025-10-14 08:13:10.700335+00'),
+	('7d65a0b0-5989-4307-9b8e-67f71e14e74f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DF427F', 'sakaeseki059@gmail.com', 'sent', '2025-10-14 08:14:08.501+00', NULL, NULL, 'c1184729-6033-49d6-a7fa-fdf6593a35de', '2025-10-14 08:13:10.700335+00'),
+	('c9c9a325-5617-48d2-a76f-91f0a3c07a15', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F6E460', 't.kawamoto.ksr@gmail.com', 'sent', '2025-10-14 08:14:09.344+00', NULL, NULL, '03e0f196-0431-43b2-b0b4-9e88d14d8a16', '2025-10-14 08:13:10.700335+00'),
+	('02a40cfc-74c5-43c8-81b6-28e18ef49dd6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '412F6A', 'ritz.nov08@gmail.com', 'sent', '2025-10-14 08:14:09.735+00', NULL, NULL, '45122533-4d1f-46a3-993a-8499fe53f3a7', '2025-10-14 08:13:10.700335+00'),
+	('da1b517c-b2f3-4ac7-bee7-198a8e97fd53', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5AB27D', 'satokotomisawa@gmail.com', 'sent', '2025-10-14 08:14:10.465+00', NULL, NULL, '1f636c2d-9b5e-47b0-80b5-997a967ccbc8', '2025-10-14 08:13:10.700335+00'),
+	('6ee94a04-693f-47de-9998-4ae8eef2e030', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4C3A86', 'a.y.oumee.nok124@gmail.com', 'sent', '2025-10-14 08:14:10.903+00', NULL, NULL, '73c1a384-4b57-4827-a0f2-fd23855c54bc', '2025-10-14 08:13:10.700335+00'),
+	('b34aac26-77f9-4aa3-84d5-ef536c31f74d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1DEFED', 'yuki.shirai1949@gmail.com', 'sent', '2025-10-14 08:14:11.793+00', NULL, NULL, '709bd00e-b8bf-4e55-ad3c-2f672480f628', '2025-10-14 08:13:10.700335+00'),
+	('26e6e124-8a67-4cfe-af51-9da30949d306', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FD6DC2', '08041884339garo@gmail.com', 'sent', '2025-10-14 08:14:12.195+00', NULL, NULL, '09eabd64-ccb1-49ff-bb71-052a6aef777c', '2025-10-14 08:13:10.700335+00'),
+	('aee9a98c-f6ad-423f-82fa-f59f2dde6ca4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '039483', 'mayumi.j0222ayc@ezweb.ne.jp', 'sent', '2025-10-14 08:14:12.933+00', NULL, NULL, '0efd08fb-6e7f-45a3-90c8-f64cfdba34b7', '2025-10-14 08:13:10.700335+00'),
+	('02226efb-4ebb-4dc7-b7a3-7225893d4fa8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DAD086', 'yoshi.naga525@gmail.com', 'sent', '2025-10-14 08:14:13.315+00', NULL, NULL, '06989e2f-7529-44ce-92be-ac8287500cc5', '2025-10-14 08:13:10.700335+00'),
+	('801dcd3b-3f05-4ccb-8ad4-9d884995b3f9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '82DD3F', 'mugennogotoku358@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c2773f56-50d7-4cf1-9240-4fd9a90ed094', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '40B221', 'mie123mie54321@gmail.com', 'sent', '2025-10-14 08:14:14.536+00', NULL, NULL, '436c6adb-633e-436c-ab38-96b832255f28', '2025-10-14 08:13:10.700335+00'),
+	('01df3d02-fa93-4bc3-88f2-14bc1f3351d7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '21721A', 'ken.atae727@gmail.com', 'sent', '2025-10-14 08:14:15.322+00', NULL, NULL, '8819986b-2208-404b-bb40-cd7591bc139a', '2025-10-14 08:13:10.700335+00'),
+	('37aacf1d-4b0f-4b99-a384-d27666e49e65', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '320D5E', 'yukarimama1984@gmail.com', 'sent', '2025-10-14 08:14:15.739+00', NULL, NULL, '3e8647a7-ace7-4338-9c2c-70041f43f15f', '2025-10-14 08:13:10.700335+00'),
+	('59126b1f-5b95-465f-a8c8-9eddf5243acc', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FB9CDC', 'yarenshanxia901@gmail.com', 'sent', '2025-10-14 08:14:16.517+00', NULL, NULL, '4c116592-6785-4e32-8972-6bce8b18915e', '2025-10-14 08:13:10.700335+00'),
+	('8e1e32cf-e758-4493-b931-20244615c370', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8A805A', 'kimonji0111@gmail.com', 'sent', '2025-10-14 08:14:16.892+00', NULL, NULL, '91d8b403-da04-4a90-ae94-c0da313868c0', '2025-10-14 08:13:10.700335+00'),
+	('fdaee5b5-ca22-4f0b-9aa2-6bb13c80c896', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8F51C6', 'onenextmining@gmail.com', 'sent', '2025-10-14 08:14:17.611+00', NULL, NULL, '8f81167d-958d-4f43-82c4-70500efd4382', '2025-10-14 08:13:10.700335+00'),
+	('f6c7d1e1-0133-4287-9a86-9b6ff637cea7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D08E40', 'jiyuuliving@gmail.com', 'sent', '2025-10-14 08:14:18.007+00', NULL, NULL, '9e074281-a089-41d5-8c94-6a2eea2fea62', '2025-10-14 08:13:10.700335+00'),
+	('49925e67-cbd4-492c-9ab9-f912f35ff81a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '02637E', 'natural.rika@gmail.com', 'sent', '2025-10-14 08:14:18.785+00', NULL, NULL, '453c0509-842b-4099-adfd-21896e849452', '2025-10-14 08:13:10.700335+00'),
+	('f8839b25-35bf-4652-9ca3-82b9d59ebe5a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7D5A07', 'minid708@gmail.com', 'sent', '2025-10-14 08:14:19.183+00', NULL, NULL, '91588a4a-be86-46f2-a2a2-5a241d19d8cc', '2025-10-14 08:13:10.700335+00'),
+	('07b9fbf3-5762-47a3-9679-3d5add19a693', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '466809', 'soccergurataku@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('6929c271-11bc-48d8-8045-bc99d7b4ff2f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A827F5', 'riko1788riko@gmail.com', 'sent', '2025-10-14 08:13:53.53+00', NULL, NULL, '175c3e96-8767-4c58-9fb3-0f81f8ecc636', '2025-10-14 08:13:10.700335+00'),
+	('9dbe0d90-2fae-431a-95c9-80ecab7f0d42', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7FDD29', 'everblue.diving@gmail.com', 'sent', '2025-10-14 08:13:53.924+00', NULL, NULL, '41010156-9218-4d45-ab9e-70a9fc15b7eb', '2025-10-14 08:13:10.700335+00'),
+	('13868b24-68f3-4742-82da-c244f2c8f3a0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DFCE2F', 'da7.u3uk@gmail.com', 'sent', '2025-10-14 08:13:54.707+00', NULL, NULL, '3c878838-d087-4c4d-9dde-febf38fcc202', '2025-10-14 08:13:10.700335+00'),
+	('619cd28b-327b-471c-aa11-ce1726e08f0a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CF7C52', 'kazuki2046@docomo.ne.jp', 'sent', '2025-10-14 08:13:55.112+00', NULL, NULL, 'f964ff06-40e0-433c-947b-30ff43b0f7f7', '2025-10-14 08:13:10.700335+00'),
+	('63bca157-ceee-47c2-9637-8aae5b3f9745', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DF61A9', 'ugokazarukotoyamanogktoshi@gmail.com', 'sent', '2025-10-14 08:13:55.854+00', NULL, NULL, '34faf558-6198-4489-bf64-5ca309e3fc1c', '2025-10-14 08:13:10.700335+00'),
+	('d7c0773f-5081-4f63-8478-5b8fdb0f1892', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FCFB9B', 'kokuryu358.net@gmail.com', 'sent', '2025-10-14 08:13:56.237+00', NULL, NULL, '0f18866c-b705-4f73-bcb0-ab8ec7173e08', '2025-10-14 08:13:10.700335+00'),
+	('e5bbc998-8ce0-4c33-b628-3a806a62c796', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '154E00', 'fujita.sachiko1009@gmail.com', 'sent', '2025-10-14 08:13:57.023+00', NULL, NULL, 'c300ee45-d26a-4be0-9942-f9d659bb2b1c', '2025-10-14 08:13:10.700335+00'),
+	('503cb460-6932-4c7a-a914-bbbc479091d5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '6E8123', 'torihjp09@gmail.com', 'sent', '2025-10-14 08:13:57.418+00', NULL, NULL, 'd34fd9e6-a192-4085-819e-43adb020d28a', '2025-10-14 08:13:10.700335+00'),
+	('b5ef7235-01d3-47e0-8580-2278588cad92', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1A1610', 'okapon.dsh@gmail.com', 'sent', '2025-10-14 08:13:58.214+00', NULL, NULL, 'b44b7941-5306-4c75-91ee-760ce0e5080a', '2025-10-14 08:13:10.700335+00'),
+	('74a5a898-5911-4784-b42f-10145f695a28', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '24AECB', 'hanasaka8713g@gmail.com', 'sent', '2025-10-14 08:13:58.645+00', NULL, NULL, 'f1b27776-12d3-401b-aa1c-67c870a2cda8', '2025-10-14 08:13:10.700335+00'),
+	('c006c47b-e2cb-4c49-ba02-fba45748b6ae', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '03D636', 'ayucororo59@gmail.com', 'sent', '2025-10-14 08:13:59.452+00', NULL, NULL, 'c43b276d-f813-4de9-a669-8804eab63304', '2025-10-14 08:13:10.700335+00'),
+	('259297c3-9b74-45d2-8b8f-1d7326a6b758', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0C65C2', 'masakoeco88@gmail.com', 'sent', '2025-10-14 08:13:59.83+00', NULL, NULL, '49414214-93b8-42c4-899a-5649311f8fa0', '2025-10-14 08:13:10.700335+00'),
+	('9d2f8131-b19e-454f-8631-92d32ed4e7ca', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5452E7', 'hayhay7707@gmail.com', 'sent', '2025-10-14 08:14:00.61+00', NULL, NULL, 'de42748a-8004-4d20-bce8-ec819ba92e14', '2025-10-14 08:13:10.700335+00'),
+	('7df97177-db65-46b5-8dcc-24bdc9b83b71', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F88096', 'madflippy7@gmail.com', 'sent', '2025-10-14 08:14:01.067+00', NULL, NULL, '3a6555ed-ed8a-4c34-8c06-5256963379c7', '2025-10-14 08:13:10.700335+00'),
+	('d64720e2-d3c3-40f0-8099-4be58cbf58b9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A9A42D', 'elg.elg.bam@gmail.com', 'sent', '2025-10-14 08:14:01.825+00', NULL, NULL, '889a60a4-dce1-4dc0-aa0b-20a13426e9e1', '2025-10-14 08:13:10.700335+00'),
+	('44189656-d3ae-4226-becc-11a5b5577883', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F69E81', 'tsutomu_watanabe@hotmail.co.jp', 'sent', '2025-10-14 08:14:02.285+00', NULL, NULL, 'dbe7fdc9-5143-482e-8936-d38c8fdfc139', '2025-10-14 08:13:10.700335+00'),
+	('a211ee88-bad7-4ced-b7ca-0d5535207c0f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '41F5B0', 'u_u.go.1014@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('59945eb4-8a1f-4534-ad73-b5259103b085', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '14498C', 'grabit1951@gmail.com', 'sent', '2025-10-14 08:14:03.659+00', NULL, NULL, 'd3a7294f-83f6-471b-b443-747398270128', '2025-10-14 08:13:10.700335+00'),
+	('6a2cfd12-6ffe-4eb1-9a45-ddd5b64b0755', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FB0A66', 'wowcommunity2023+1@gmail.com', 'sent', '2025-10-14 08:14:04.405+00', NULL, NULL, '69f452f1-0cc3-4b92-b2ee-dcb6d524691d', '2025-10-14 08:13:10.700335+00'),
+	('f38f12b8-bbe2-472a-8e05-f236f165b10d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2C44D5', 'yutaka19791105@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('8076e968-771e-44af-8979-1a7be60e9c17', 'f52ea44c-96b2-4145-b442-2941a7f8312c', '5E7097', 'exheadspin3@gmail.com', 'sent', '2025-11-02 07:24:24.629+00', NULL, NULL, '67e41c53-cd25-42ec-8f63-ab756f63d7fe', '2025-11-02 07:24:09.762374+00'),
+	('1a0c6e58-31ec-4078-bd9a-c285590422ef', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7A49CB', 'teamgracis13@gmail.com', 'sent', '2025-10-14 08:14:21.171+00', NULL, NULL, '44ca7a71-597e-4af2-b5de-f039c1ee793a', '2025-10-14 08:13:10.700335+00'),
+	('85db79d3-e15f-4ead-9707-eab5b62e1e8d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E28F37', 'yuzuki.aoi523840326@gmail.com', 'sent', '2025-10-14 08:14:21.583+00', NULL, NULL, 'd93571c3-7c57-4787-a178-0b831475b905', '2025-10-14 08:13:10.700335+00'),
+	('45b9b0e5-96e3-41d2-a1fd-532c8e0b7300', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '62EAE3', 'ake.k.ake@gmail.com', 'sent', '2025-10-14 08:14:22.332+00', NULL, NULL, 'cbc306b3-75da-4f03-889f-fe0f7f5c706a', '2025-10-14 08:13:10.700335+00'),
+	('48f9ab2f-3591-44dd-b53e-6e220685f37c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F59081', 'yuuzenya.2.11@gmail.com', 'sent', '2025-10-14 08:14:22.82+00', NULL, NULL, '63385461-b65a-4abf-8267-7181c76e7d8d', '2025-10-14 08:13:10.700335+00'),
+	('e4b24a67-6ea2-4206-9544-ae4d39bca31f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3194C4', 'kaeru35353535@gmail.com', 'sent', '2025-10-14 08:14:23.654+00', NULL, NULL, '263a2bcf-2046-48e6-95fe-b8a5ad0fb575', '2025-10-14 08:13:10.700335+00'),
+	('f2479afa-56a6-4740-bfd7-e7981cd59033', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D51E01', 'inokun1213@gmail.com', 'sent', '2025-10-14 08:14:24.072+00', NULL, NULL, 'f7cef1b4-0bdc-4701-96ad-5d06209f3463', '2025-10-14 08:13:10.700335+00'),
+	('47b65a1d-bf8c-4731-8c88-76f987aba4bc', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C79F62', 'mugen5600@gmail.com', 'sent', '2025-10-14 08:14:24.822+00', NULL, NULL, 'b63d372c-22d1-452c-a352-02ce1e7c55de', '2025-10-14 08:13:10.700335+00'),
+	('abd40866-3b76-4bcc-b17e-ab04712eaf8b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '870323', 'twister.kenji@gmail.com', 'sent', '2025-10-14 08:14:25.199+00', NULL, NULL, '22929183-20ea-4406-98b2-0de2c10bf40b', '2025-10-14 08:13:10.700335+00'),
+	('ca309a76-6fb4-43f4-8ada-a79613fb3a19', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5A708D', 'feel.me.yurie@gmail.com', 'sent', '2025-10-14 08:14:25.892+00', NULL, NULL, '2c44753b-3c8f-4074-bd9c-2b98ee780954', '2025-10-14 08:13:10.700335+00'),
+	('2f6de3fe-40ff-4f1b-a526-e44d9cc2aa58', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DBCE95', 'hairsalon.artvert@gmail.com', 'sent', '2025-10-14 08:14:27.047+00', NULL, NULL, 'c1cc6148-b345-4673-a7b5-ef470a351682', '2025-10-14 08:13:10.700335+00'),
+	('421ddce9-df7a-40f6-bec8-64b739e38cb8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DE5328', 'oshiboriakihiro@gmail.com', 'sent', '2025-10-14 08:14:27.458+00', NULL, NULL, 'dd3f4620-4b0e-404b-9162-ff3050b50e27', '2025-10-14 08:13:10.700335+00'),
+	('3808fcc0-6d84-47dc-b0ba-a1c630539a11', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '31C7CB', 'aggak8008@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('9e3623cb-0f7c-45aa-9a03-fa6cc9833f1c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5676B5', 'shinmisoo311@gmail.com', 'sent', '2025-10-14 08:14:28.651+00', NULL, NULL, '28a68757-cf10-4fa9-a194-e5ca4d15ad88', '2025-10-14 08:13:10.700335+00'),
+	('9049b1ed-037b-4fd9-9891-c36a947a3f42', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '176CB0', 'hkou9673@gmail.com', 'sent', '2025-10-14 08:14:29.4+00', NULL, NULL, '5cc55a6e-2384-4f91-920e-2fa8bb9772db', '2025-10-14 08:13:10.700335+00'),
+	('6d70a8d8-265c-4747-83c9-97fc9109e470', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3C30A2', 'yn09076418332@gmail.com', 'sent', '2025-10-14 08:14:29.829+00', NULL, NULL, '3b77b739-d1c2-4fdb-951e-bf5b06f933f4', '2025-10-14 08:13:10.700335+00'),
+	('08a7e035-ee06-4464-944c-35ade13bf20f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '576E32', 'miubit0124@gmail.com', 'sent', '2025-10-14 08:14:30.664+00', NULL, NULL, 'f6c25317-3855-4c2b-a391-76bb887a7ad2', '2025-10-14 08:13:10.700335+00'),
+	('f76c3021-f9ef-407b-9fd2-377c5f7a14ee', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9BEAB7', 'sachyoko.315@gmail.com', 'sent', '2025-10-14 08:14:31.101+00', NULL, NULL, 'd0983b3c-04f9-4aad-af9d-952d028c77c2', '2025-10-14 08:13:10.700335+00'),
+	('cc9823d7-e5d5-4cc5-a2fb-1bcd9cf1b509', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9A3A16', 'sh5552493day@yahoo.co.jp', 'sent', '2025-10-14 08:14:31.852+00', NULL, NULL, 'bda43adf-a073-416d-b14c-ff16271f729f', '2025-10-14 08:13:10.700335+00'),
+	('1eb9e457-ed3d-49bc-bb9e-61aa9c25307e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '17673A', 'reo.kaori0824@gmail.com', 'sent', '2025-10-14 08:14:32.257+00', NULL, NULL, '0063b94c-c7dc-4cbd-ac97-6395f64db71a', '2025-10-14 08:13:10.700335+00'),
+	('51d96f3c-1441-46e2-ad68-be9d373e0c36', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '98A9E9', 'kenta.shigoto0111@gmail.com', 'sent', '2025-10-14 08:14:33.098+00', NULL, NULL, '5596862c-227a-4d7c-a64f-443a1b07e86c', '2025-10-14 08:13:10.700335+00'),
+	('1bfa49f0-251d-48e2-9201-d4bb9e367a33', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EAA204', 'kosama1173@gmail.com', 'sent', '2025-10-14 08:14:33.46+00', NULL, NULL, '67b7426d-0989-4cd0-b104-1f2b43a37689', '2025-10-14 08:13:10.700335+00'),
+	('0eae2aa2-2563-452e-a9d8-13387cb41ba5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E16C9E', 'arato1007430ta@gmail.com', 'sent', '2025-10-14 08:14:34.231+00', NULL, NULL, '0d7d39fb-a26b-4eef-99e4-7efa15565acc', '2025-10-14 08:13:10.700335+00'),
+	('e5227649-0748-43e2-ac72-dfb2208f34c8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '39CD6D', 'tatsue4950@gmail.com', 'sent', '2025-10-14 08:14:34.674+00', NULL, NULL, 'b96edb51-bed2-4da4-9877-234358954216', '2025-10-14 08:13:10.700335+00'),
+	('0f2d9013-eca6-4856-a68c-d138edbfe0f4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A512FF', 'ymtk20101213@yahoo.co.jp', 'sent', '2025-10-14 08:14:35.428+00', NULL, NULL, 'f3c68ab4-1bfe-4ab2-9a45-e7311288a8ec', '2025-10-14 08:13:10.700335+00'),
+	('97aab500-2692-4d07-a11c-08038c61081c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '04FF0C', 'kawaguchi.t36@gmail.com', 'sent', '2025-10-14 08:14:35.846+00', NULL, NULL, '3d784f47-e3db-4851-93e4-fa0f140bcd9f', '2025-10-14 08:13:10.700335+00'),
+	('afba865f-7d8f-4c6a-9068-59aad1c0483a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AD1FE8', 'beluyuka0921@gmail.com', 'sent', '2025-10-14 08:14:36.732+00', NULL, NULL, 'e1cec9de-6649-4658-960c-29afa560c883', '2025-10-14 08:13:10.700335+00'),
+	('dcc342cc-edbe-4d35-bc9d-80ef4da1aa8f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0D4DCC', 'aloha.sui@gmail.com', 'sent', '2025-10-14 08:14:37.128+00', NULL, NULL, '2e8fd2ed-62aa-4da0-906a-09ffbd8b7d33', '2025-10-14 08:13:10.700335+00'),
+	('96f88fe0-d936-49d7-ae40-0400aa551655', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7F76C0', 'takataka12061127@gmail.com', 'sent', '2025-10-14 08:14:37.998+00', NULL, NULL, 'eed78ad8-e92d-4a8d-81ff-4a3c360abf59', '2025-10-14 08:13:10.700335+00'),
+	('b850591b-03f8-4858-8c00-6a309965ee02', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5267CB', 'take_shoji@icloud.com', 'sent', '2025-10-14 08:14:38.417+00', NULL, NULL, '57df4919-7e8a-4488-a585-a408d8d113ef', '2025-10-14 08:13:10.700335+00'),
+	('553be19a-73fc-4b75-8091-171f1edd63d2', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B1B311', 'chiha.kuru.nakayoshi130@gmail.com', 'sent', '2025-10-14 08:14:39.179+00', NULL, NULL, 'df9aca0c-d2f8-424a-94ba-df4314591138', '2025-10-14 08:13:10.700335+00'),
+	('862a778e-7014-48a1-94b4-240665e2b3cd', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '55F766', 'kaori.san0824@gmail.com', 'sent', '2025-10-14 08:14:39.616+00', NULL, NULL, '4a594743-4444-43e2-b96e-1adc5c1adb12', '2025-10-14 08:13:10.700335+00'),
+	('4e21e582-3810-49cc-9939-8cbc25f799ef', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3C6DD3', 'co.danke2@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('cda6ab88-8d89-4685-afa5-ee6d95d9b74e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DD8A82', 'sugihiro1122@gmail.com', 'sent', '2025-10-14 08:14:40.864+00', NULL, NULL, '9f68d8e7-f6a5-4e5f-aee2-8863df6cf7e2', '2025-10-14 08:13:10.700335+00'),
+	('06748fd2-322f-4023-a8ec-39c4f9dfab8a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E9F758', 'morimori02080403@gmail.com', 'sent', '2025-10-14 08:14:41.792+00', NULL, NULL, 'a424c0a0-798a-4404-8456-4d367f57a920', '2025-10-14 08:13:10.700335+00'),
+	('5f78ad78-3b92-4c42-9828-7107d58f7161', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5FAE2C', 'co.danke@gmail.com', 'sent', '2025-10-14 08:14:42.216+00', NULL, NULL, '677cbf27-b3bf-42e7-8ed0-195fae0b3707', '2025-10-14 08:13:10.700335+00'),
+	('53614a63-3a59-4d5a-8b37-65b5a8d91070', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8FFDFE', 'mineyuki.kobayashi@gmail.com', 'sent', '2025-10-14 08:14:42.991+00', NULL, NULL, 'eca6a8b6-d207-4c49-b077-313cf31686c8', '2025-10-14 08:13:10.700335+00'),
+	('3fe30b11-fa2b-45ae-82cd-c5f01b8e1ed4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FFD473', '358hanasakab@gmail.com', 'sent', '2025-10-14 08:14:43.402+00', NULL, NULL, '6748003e-b0e7-46e8-9cc9-815c63cf1bdb', '2025-10-14 08:13:10.700335+00'),
+	('5e9f0cf2-8a3d-43ac-98ec-ef7d4925fc48', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FF7CAE', 'tomo.zo315@gmail.com', 'sent', '2025-10-14 08:14:44.168+00', NULL, NULL, 'f093f80a-ef9b-4495-b7c0-931665c5c94f', '2025-10-14 08:13:10.700335+00'),
+	('10d7ae37-ee2f-4e19-978f-732e69556e61', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C9015D', 'mt514akki@gmail.com', 'sent', '2025-10-14 08:14:44.549+00', NULL, NULL, 'a84e4b30-4147-49ed-8bb4-30bc7130ad46', '2025-10-14 08:13:10.700335+00'),
+	('1df55daa-c9da-45a0-bd26-1c4d4b89b583', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'BF86BA', 'ogaoga350z@gmail.com', 'sent', '2025-10-14 08:14:45.289+00', NULL, NULL, '846299e4-df52-4914-9064-181c3982111c', '2025-10-14 08:13:10.700335+00'),
+	('f15a841d-ec95-4fbd-a5a6-8ba06953b574', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F3961F', 'socmurakamimining@gmail.com', 'sent', '2025-10-14 08:14:45.706+00', NULL, NULL, '22694233-abb3-48d6-8c1e-dbe998b47839', '2025-10-14 08:13:10.700335+00'),
+	('91414628-42ec-419d-883f-a00c45326926', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2F8CBC', '811kakko@gmail.com', 'sent', '2025-10-14 08:14:46.498+00', NULL, NULL, '99f8b93a-18a2-4ab9-be86-367cea9d6fbd', '2025-10-14 08:13:10.700335+00'),
+	('3dd44938-8601-45fa-bd83-25004388685b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '66AD54', 'mt.tsururun73@gmail.com', 'sent', '2025-10-14 08:14:46.901+00', NULL, NULL, '1d984429-5566-4de2-85c2-8eb73665af02', '2025-10-14 08:13:10.700335+00'),
+	('7777626c-1077-421d-b21b-d90c1f892929', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '81F952', '358hanasakac@gmail.com', 'sent', '2025-10-14 08:15:04.653+00', NULL, NULL, 'df0f5894-70a0-4a59-b717-daec9ab475ba', '2025-10-14 08:13:10.700335+00'),
+	('eb92f46d-581e-472a-929f-1c5233e2fc7b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '59D41C', 'taka46.halu103@gmail.com', 'sent', '2025-10-14 08:15:05.036+00', NULL, NULL, 'e338bc60-7fc1-4927-85e9-69a376f40c5b', '2025-10-14 08:13:10.700335+00'),
+	('0a16d3d4-5d77-49f2-a0d8-b8bdb043c7e8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1D3F38', 'riko16913@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('5b69ba39-bb85-4c81-850e-fdbb9207cccf', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DE9AC6', 'hanasaka8713h@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1c2c735f-da16-41ca-a491-682dde49735f', '8e094b52-0092-4f96-aaa1-5d4063e68517', 'B5FC85', 'omachan0805@gmail.com', 'sent', '2025-10-16 11:21:15.702+00', NULL, NULL, 'e3d755fe-5eba-497e-9b1b-6080353b131d', '2025-10-16 11:18:22.773892+00'),
+	('0e16a18a-82ff-4e4d-b873-4b14ff9148ec', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1BAA30', 'tmtm19751108@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('475ef700-ec9e-4202-9f24-25697b561458', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B43A3D', 'yanoyui5632@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('445bf52b-c924-4ef6-91c9-972aae5b1d48', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E5CD48', 'toyo0800@icloud.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('cebe3bf6-9223-4a27-b700-6c3448596807', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '08FD06', 'nishimura3513@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('7025e0ab-cdaf-4a23-98eb-65b29b052615', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CB4F3A', 'yasuko09seki@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c29f66ec-f484-49a0-8e47-bc89c71e650c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4D247C', 't.ta.ma.ki777@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('25511ee7-ec33-40c2-8369-b59c812ce740', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5844F0', 'kaiser2ponchamamezo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('36e6434b-a6ce-4c82-b0bf-25246995e3a0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5DA455', 'atsuko02180218@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('dee12b14-68dc-421f-812b-28882cc4865a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '30BC41', 'destroyed358luxus@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1014c9b8-dc59-4d8b-adf2-8930853daa8a', '09305467-66c5-40d6-84d9-60afb5db4240', 'AA7C2B', '8riki.m8sj8@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('6a1a16d7-7939-4dfe-bd09-d46cf6f9c662', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E62210', 'mokudai77@gmail.com', 'read', '2025-10-14 08:14:53.763+00', '2025-10-15 18:14:38.770632+00', NULL, '6613dd8d-ecc9-4ff9-83f6-d87676a00050', '2025-10-14 08:13:10.700335+00'),
+	('fc6c78e4-36bd-49bb-afb9-82ca0ae990e0', '8e094b52-0092-4f96-aaa1-5d4063e68517', '02FDF0', 'takutakommm@yahoo.co.jp', 'sent', '2025-10-16 11:21:19.343+00', NULL, NULL, '475e2477-2d36-4c10-a34f-b93150719b48', '2025-10-16 11:18:22.773892+00'),
+	('84b7edfd-2616-478f-866d-360e98710ed9', '8e094b52-0092-4f96-aaa1-5d4063e68517', 'AE95A3', 'k9312021234@icloud.com', 'sent', '2025-10-16 11:21:28.335+00', NULL, NULL, '18da694c-24f2-4fc0-8e8d-fa25eee8e613', '2025-10-16 11:18:22.773892+00'),
+	('332b019f-76e5-4a68-8af3-172e36cbc2b5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '6FF2D1', 'happy.magic.51@gmail.com', 'read', '2025-10-14 08:14:49.039+00', '2025-11-02 13:28:36.943782+00', NULL, '54f5d6b2-c7f0-4bea-bc38-db016b43019f', '2025-10-14 08:13:10.700335+00'),
+	('7f49715a-f324-412c-9a0c-6187aeb483c8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2443DD', 'top.ion214h@gmail.com', 'sent', '2025-10-14 08:14:48.137+00', NULL, NULL, '39779f8a-eacb-446b-88d9-932cb1b7e61a', '2025-10-14 08:13:10.700335+00'),
+	('58c076c8-24db-4420-bfba-297b3ade59ce', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4771BF', 'omachan08052@gmail.com', 'sent', '2025-10-14 08:14:50.27+00', NULL, NULL, '677b2438-9e2a-4d16-9d66-57919350ef6b', '2025-10-14 08:13:10.700335+00'),
+	('93c704df-f872-4339-ab41-c2bacc928e08', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4F1773', 'hasshupairotto@gmail.com', 'sent', '2025-10-14 08:14:50.641+00', NULL, NULL, '0958d600-ab5f-4848-bcd7-438d5614f5e4', '2025-10-14 08:13:10.700335+00'),
+	('902b7522-c226-46a6-92a6-c6dc36a0c5ec', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '92B2C3', 'iosongtian4@gmail.com', 'sent', '2025-10-14 08:14:51.467+00', NULL, NULL, 'a3b89872-c29c-4ac5-9aa7-847c85c74563', '2025-10-14 08:13:10.700335+00'),
+	('bf32937a-cb78-469f-aa57-a199cb8606e7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E0332F', 'syaomao1221@gmail.com', 'sent', '2025-10-14 08:14:51.859+00', NULL, NULL, '620e05c9-227a-42df-82f1-1b3f0d0d650b', '2025-10-14 08:13:10.700335+00'),
+	('10f6d233-17b1-4605-8d41-7701e8da22f0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '361CF6', 'y7586694@gmail.com', 'sent', '2025-10-14 08:14:52.618+00', NULL, NULL, '7c8ac171-cc23-4084-bf28-361989e9a2a0', '2025-10-14 08:13:10.700335+00'),
+	('179b2c83-1295-4b76-bcaf-9a004409d34d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E4FC38', 'yumiyumi2010@gmail.com', 'sent', '2025-10-14 08:14:53.016+00', NULL, NULL, 'f400ca54-b55f-4712-90c8-0e7cb48d5298', '2025-10-14 08:13:10.700335+00'),
+	('fdbefdb4-c3d7-4c08-99e1-1f56b5492a38', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '07AD41', 'uktku61014@yahoo.co.jp', 'sent', '2025-10-14 08:14:54.118+00', NULL, NULL, 'bada3748-1dc5-46bf-a4d5-ecce8a5848bf', '2025-10-14 08:13:10.700335+00'),
+	('61c327aa-d196-4067-9151-cea093174331', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3C06BA', 'nao1203ko@gmail.com', 'sent', '2025-10-14 08:14:54.805+00', NULL, NULL, 'd639a255-e265-4166-b0d4-5437b1503c18', '2025-10-14 08:13:10.700335+00'),
+	('cfcd7fae-2fb8-4f06-824c-0a4a0bc0ec5b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F1E4E8', 'kanchan17115@gmail.com', 'sent', '2025-10-14 08:14:55.224+00', NULL, NULL, 'b1b11998-9d2c-43cb-948d-89df5909a0a0', '2025-10-14 08:13:10.700335+00'),
+	('5cba5539-3df2-49d5-b3f2-efecf0215369', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C6F0B3', 'girlinthebox.beyondthesea@gmail.com', 'sent', '2025-10-14 08:14:56.246+00', NULL, NULL, '77bd145e-5521-4b04-9dd5-343c272ec0c0', '2025-10-14 08:13:10.700335+00'),
+	('b1713d16-1cd6-4e4e-a4ff-b4e946ca9f43', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5086F7', 'julia.97kb@gmail.com', 'sent', '2025-10-14 08:14:56.634+00', NULL, NULL, '42dba8e4-742b-47c4-b453-195c8b9dbd2e', '2025-10-14 08:13:10.700335+00'),
+	('ee2361b8-f5e0-49cd-8a6b-1dbe7b80d631', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '139C2F', 'a.iijima@arc-re.jp', 'sent', '2025-10-14 08:14:57.358+00', NULL, NULL, '571cfe04-1291-482a-85c9-14645ff2517e', '2025-10-14 08:13:10.700335+00'),
+	('d240aad4-3083-4cad-b7e8-33933532a0a9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2D378C', 'miyaeri136@gmail.com', 'sent', '2025-10-14 08:14:57.765+00', NULL, NULL, 'e34e400a-9627-430b-a45e-29bc3df935d9', '2025-10-14 08:13:10.700335+00'),
+	('b03ded37-ce33-4346-82b4-bc60cb88853a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8B07AE', 'kazue828112@gmail.com', 'sent', '2025-10-14 08:14:58.52+00', NULL, NULL, '49ddde5c-b4c0-4e11-a114-200f1753a9e6', '2025-10-14 08:13:10.700335+00'),
+	('cf2dd3c5-b67a-4622-86d6-d267e5bc5de9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7ECF42', 'san.san.tomomi@gmail.com', 'sent', '2025-10-14 08:14:58.911+00', NULL, NULL, '08b48c6f-5d75-43dc-982b-8517b0e27330', '2025-10-14 08:13:10.700335+00'),
+	('ce456715-266b-4b7e-adf6-a2056bdaf4db', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FCB215', 'ruby.nyao.coco@gmail.com', 'sent', '2025-10-14 08:14:59.652+00', NULL, NULL, '4363af13-7db0-4bed-ba25-baa00ece1b8a', '2025-10-14 08:13:10.700335+00'),
+	('0e25a121-9faa-4dba-af42-030a40e6ae20', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '497B16', 'dropfee888@outlook.com', 'sent', '2025-10-14 08:15:00.049+00', NULL, NULL, 'df5825d3-d45d-4a17-a1a8-850153dd33de', '2025-10-14 08:13:10.700335+00'),
+	('cce18a55-fd07-4a9d-b800-ffdb9cae937b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C92A91', 'teasato555@gmail.com', 'sent', '2025-10-14 08:15:02.171+00', NULL, NULL, 'c04a84ea-f33a-4d9a-ba8d-a13d0bbdef4a', '2025-10-14 08:13:10.700335+00'),
+	('f989a2a1-2ccc-43a5-a605-283a9fb8ffe2', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'YBVQ9D', 'yamadesu1111+07@gmail.com', 'sent', '2025-10-14 08:15:02.642+00', NULL, NULL, '0985f1ca-6ed5-4adf-af2e-91cda4ffabd1', '2025-10-14 08:13:10.700335+00'),
+	('96eaad2d-3ef3-402e-a1a2-f64ad1675c24', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E03FDE', 'haruto5261108@gmail.com', 'sent', '2025-10-14 08:15:03.497+00', NULL, NULL, '0f26cea0-0905-4355-b2e3-eb8ebf9ba917', '2025-10-14 08:13:10.700335+00'),
+	('68460623-422c-4abb-ba4d-0b41709d7bca', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0E47BC', '358hanasaka@gmail.com', 'sent', '2025-10-14 08:15:03.88+00', NULL, NULL, '6a302b5a-e93f-4f25-bcc4-30df3657cb53', '2025-10-14 08:13:10.700335+00'),
+	('7d461eb9-7c85-44c3-9dc1-256fbb4c5365', '09305467-66c5-40d6-84d9-60afb5db4240', '0338DC', 'eriiinn60@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('2d2cb4e6-d008-4ca7-abc3-a1514fdb7c92', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E877D7', '358hanasakad@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('6af0004f-141c-4306-8045-ede77ed4132e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '78A3D1', 'koganext214@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('3866ec89-2e4b-43ec-95ba-069edb4b1792', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8BF2FC', 'maple.re.w.d@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1edb948f-0e5b-47cd-bb50-bb9966d95f5c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '307FD5', 'takasuzu1234567890@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e4839e5c-dc72-4d50-b574-d3b848495792', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AEFBCA', 'priccia971@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('01f2ab31-f13e-49d1-bc03-cd84b95ad8cd', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8F5343', 'tkgntg.5500@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('d02e8c49-f26f-4063-b2dd-5fb0cf5fcbec', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D025CA', 'reshia737@icloud.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('7cbfdb8c-eacd-4ab7-8547-ad7423f86d9d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1C341A', 'akipia310@icloud.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('950ea405-9317-43ab-84e6-0b8741d7156b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DD138D', 'punpunkun2@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b56df993-a995-4547-ba81-26d83e253f17', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E43A9A', 'sachiko.h.1005@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b56d0305-eb57-4372-a71b-d8a8fca302ee', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '144A86', 'runba_naknak@yahoo.co.jp', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a40c13a9-bfa0-4dad-832f-9153c6def08e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '02FDF0', 'takutakommm@yahoo.co.jp', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('db252140-e653-4089-9c19-eaef784f66a5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'BC9A93', 'takatsugu43414@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('6e71d244-b367-4bf7-8b24-6451df79c6d3', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2E2A39', 'jun369.1221@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a4be4a5c-8ad9-4f4f-91d8-e22e880d660a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4BF14D', 'bashi0227kiyo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('41f504f2-bc32-470a-b524-d3e777f615d9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F733BD', 'yosshi.manmaru.oka1027@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('daba7d7c-7480-44a5-8342-0c84814b1efa', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E9B103', 'kazuto.0129@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('f73235e1-c9df-4cbf-8d77-497241a6e0f6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FE75AC', 'supremexyz0001+1@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c7c8a503-6b88-4f64-b81d-ea2b5c8d82a1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F92E72', 'supremexyz0001@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('3b8a038a-1316-47c5-bfa3-33599fa9311d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CABC84', 'ambit.koide@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1f48b7c5-2503-4aa8-8312-7030a7d50b96', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5036CF', 'plantard.jp@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('63c88d66-25d7-458f-b3e9-d03ec9728825', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '53B452', 'toyaiwaya@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('d81af53d-0d27-473d-8f54-c6d8029865c9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9E6DA5', 'miina19580106@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c422a7c6-ea2c-4478-97ce-93ac258e80a3', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '75F5A0', 'takasuzu1234567890+1@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c1be053b-88d3-4418-8780-ad807ca84fc9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2A973B', 'saihitori358@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('baba4aca-d258-44b0-9e83-c2ee0124036d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '858570', 'hisae03240320@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c95aa526-e4e2-47d4-a734-62b06ca472b9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '127B98', 'risaringo9585@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b9350114-4ff0-4d4f-bee3-43ac9236bec3', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0B2371', 'f222.k927@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('6fa789b1-d6d4-4a6f-8ebc-add7b1842a62', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AA65D3', 'shigeru@issue.bz', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('bbb31e1c-3a84-40af-9e0d-f05677b33c0b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '885952', 'ahba02089@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4151c13a-4c14-4536-ad38-149649efb8fc', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F2A752', 'mh.10.17.p@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('2892a4ab-b929-4ec7-96fa-41af4021c32d', '09305467-66c5-40d6-84d9-60afb5db4240', '9442D0', 'komochanhappysmileneko0917@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('a4814346-0827-40a6-a2dd-a1c21dcf33a7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'BA4B5B', 'a.tagai6161@gmail.com', 'read', NULL, '2025-10-15 10:57:04.606251+00', NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('1884e7ff-8148-47e7-acb5-e3848fc9c042', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F8431B', 'abfact@gmail.com', 'read', NULL, '2025-10-15 16:53:47.024523+00', NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('a02ffe57-cede-4233-973b-5a2215b1c554', '8e094b52-0092-4f96-aaa1-5d4063e68517', '5036CF', 'plantard.jp@gmail.com', 'sent', '2025-10-16 11:21:31.986+00', NULL, NULL, 'aeb035d4-a4cf-43b8-b765-9e8eff904fbe', '2025-10-16 11:18:22.773892+00'),
+	('a21e1df5-fec6-401e-a456-e8a329c32d24', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '378E29', 'kenko.0429@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('f54f49ed-6564-4008-bcd0-11137d19c6a4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '29581F', 'marsarsakai@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('681fabd1-bbef-4569-8733-0c8522f89ffe', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '22CCAC', 'kazu123masaru@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('2be26bb9-a296-44db-be62-2b69b771675a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '865483', 'ways21kimura@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('991aeca9-1538-4539-b958-c53acc701380', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '20248A', 'balance.p.p.p.p.1060@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('37bac858-71d9-40c7-ab95-cb6aecca3488', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9431BA', 's_miwa@nifty.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('14a5b402-ba9f-431f-834a-2bd5a502194c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '994D9D', 'mrfam.lovely@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('8da49b2c-e8e1-4eff-abd3-daa1e0d902ed', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'ED9E45', 'oidon.s+coinw@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('de79e2f8-4070-4b4c-a490-87727be77b6a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '723997', 'hagikyonmining@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('1ba3f44e-964a-48ba-aa81-e2f920fb8551', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '6E1304', 'masa19751108@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('70b93c35-214d-447a-b027-768448f8ae72', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '66D65D', 'hasshupairotto+1@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('1dac1798-af0b-40f1-9355-4147c8868cc7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E18A65', 'mizuki4068s@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('6ea386b8-07f4-4ace-9ba6-71e55e6799f7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '45D474', 'choko.miyu.ami@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('de024608-8a3b-4cd3-a27d-b7c643288c71', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '892389', 'hiroshi.inve@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('dfeabb6b-1641-4c93-bc1d-0ad09f25dce1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E12E15', 'takasuzu1234567890+2@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('fe8a24f1-046b-44c1-94a6-c4562dad25a0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AB16AA', 'piacere0310@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('15581039-46b9-4344-8986-c6ff1b4d3c79', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '86C126', 'kumika2496@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('6d5a1533-ba8c-4e62-b3fb-7bea47b075d6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EE904D', 'shion337wave@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('ed5127f5-e613-44b6-b7a3-180f69d99668', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '684B00', 'nekoni.karikari7337@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('46583a3c-d533-4766-8e1a-6abdf52a508a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DD4154', 'takayayoshioka50@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('d958790f-8e59-4015-83c4-51f4984eb21f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '092270', 'happy1016728@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('b1d117f7-542c-4550-bfac-56a0195ab1b9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B25642', 'ksmy01020402@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('07c84847-8efe-4cad-be5d-046751950d6c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8B6B9B', 'bigsmile0624@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('a324c8f3-45b1-4155-8746-21eef437123a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8B8965', 'wasamon999@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('6d9ab73d-3e1c-469b-a344-6e96f2703f70', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DF623D', 'kyoko7oha@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('abdb9646-5a8e-4720-931c-3436a120b581', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FD9E4F', 'will0525y@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('8277f03e-26e4-4be8-bde9-0a8f5f28c13b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3F679F', 'mugi0619tako0606@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('3b513305-ab88-4dfc-8fcb-99d795384d82', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '047E33', 'kataokatakako91@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('22d1001f-f964-40fb-be99-51d26974b0be', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2380A3', 'oaiaiaio1226@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('4608d37c-9dab-4e94-a0f8-ce539a43b6a7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A4C3C8', '1985yaichi@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('9e84faeb-37bd-4d47-a874-35b1b1aa489c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AFE2FB', 'kiyomiiii8856@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('06691a14-4349-4bf7-b282-bd14825a8a6f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4C7F6C', 'enotaku0904@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('2c55cec2-903c-46e5-b9c6-6baf0618d249', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '80C48F', 'maikotake27@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('fd841a31-e251-4b5a-b4de-da7396bbbca0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FCB962', 'satobet95@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('3c9b0e58-1744-4f1b-958c-1c4ca1b921aa', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A50876', 'navyfukada@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('809b2882-a9d6-4c6f-a677-f7bc0ceec72d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '81B308', 'kazushigesomeya@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('2a26c99c-dd1b-48a0-b6b6-ebc8bca8bcc0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '880053', 'kmetaversek@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('793c83a4-9ff5-492c-86b2-5e297d6034f1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DEC31E', '358hanasakaa@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('f2ca9621-2e61-49d2-a0b3-684566c6755f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '040671', 'nancymoore0330@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('88ab3abb-db34-495e-aeec-447e6eaf5424', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A94B2B', 's2.mico.mico.s2@icloud.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('26531787-2e8f-451f-9afc-785bb5b820d5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DC9AEE', 'rie20100412@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('323c6f58-0e2f-4272-8fb1-ec39d8f84075', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B3B3A2', 'center.west.land@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('9c72190f-0860-4198-bda2-a9dd4df7093e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1CF795', 'arksakatti@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('43aec71f-fe8b-4838-bfca-47180a65262c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AC80D0', 'love.kitty0233@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('1b99c258-3be1-4b36-8213-81e2ac12b96c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4DF9A5', 'shinazhongxiong@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('e29125a9-e147-4cb0-863d-dadb31ee185e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A515A3', 'ogu.awgp@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('0d27a495-1df8-432c-818f-887d7718c35a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0B3BA6', '4m4m906z@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('88673af2-f1dd-4e74-a8c3-622eb05b05cb', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '79E96F', 'kazuya.d3251@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('ea449bac-fc67-45f5-bf2c-3d085c678179', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D866AD', 'mari.w.2929@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('86019df9-39e5-4831-ab31-91fe48eab62b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '59C23C', 'raita0083@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('55dd7467-77f0-4c75-a895-54aa6d1d5429', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8D01EC', 'investmentffg@gmail.com', 'pending', NULL, NULL, NULL, NULL, '2025-10-14 08:13:10.700335+00'),
+	('39163030-5fa5-49bc-b010-52a3bc4af92b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '356B74', 'ck73967396@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('7a8db46d-dc13-4201-824d-43a2bf2ef5e8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AC6649', 'tomotomogo@proton.me', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('92a78ff6-7bac-4738-a345-373f8b9307f6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '94A681', 'kazuny504@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4f1fe493-4afb-45bc-8593-4e5705f135a2', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '08C96C', 'sakurarin3949@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b848cf47-57ae-4c1a-8d72-51c2daefa35f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2EF243', 'happysmileneko@ezweb.ne.jp', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('ec9c21d8-d2f8-47a8-9898-99f41b973589', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E77AA7', 'keikoiwao1036@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('37edc69c-e69e-439d-b5ec-17ecd475099f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2D85C2', 'shushu.betty6186@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c15ed602-9a10-4d1c-a2c0-88eeaf5b2b30', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C0DAFF', 'tsuneko1957@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b6442ae0-f6bf-4d87-80a2-e474f6c58718', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '38A16C', 'milkyway6310@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e25ecd35-9dc2-4b0c-8ef0-96c37b2c1ca8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '177B83', 'witchmind0323@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('0b84016d-d630-4a19-b1c3-56a272f2190e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '069AFF', 'sakura5068m@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('ab061de4-8977-4be4-832e-72ab36e242d8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C0B2DD', 'sachiyo.s561202@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('9c564c7f-a552-43bc-87b5-2e411c6a6d0f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '12FE1D', 'i.b.karen.na.tow307@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('45a396f1-8cf4-46ee-9f3a-3091beecee2f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '27DAEA', 'junmingsongpu@gmail.com', 'sent', '2025-10-14 08:13:25.086+00', NULL, NULL, '216cdc5d-f703-4ce7-932e-6eac4b876510', '2025-10-14 08:13:10.700335+00'),
+	('e2383a04-4720-4f40-953c-7a73f6e88a65', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '764C02', 'yoppk.22@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('fa8b2f1e-250f-4021-8a0f-dd01357ea8f7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '935D26', 'riko039riko@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('5c7300fc-22d0-420d-9282-4a584005845a', '8e094b52-0092-4f96-aaa1-5d4063e68517', '232A2B', 'asukabe0916@gmail.com', 'sent', '2025-10-16 11:21:37.278+00', NULL, NULL, '89d8f654-5ac6-4ac9-9aea-e486d48aafba', '2025-10-16 11:18:22.773892+00'),
+	('0a9f6685-e45d-4956-9942-9d4e940527fe', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '274090', 'gaman.gaman.111@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('2e190ba8-28ba-4f72-af6b-85c4a4000ba7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3A6EDA', 'tomo322tomo@gmil.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1a5b42a0-f68e-4205-90d3-f24a8919641a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8676B0', 'porsche993.1004.999z@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('721a671a-5aa2-4974-8082-c86e2be1de96', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DF7EF1', 'shinagaichirou1111@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1d3880c4-b26f-43f6-a10d-66087b8d231c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EA6B5E', 'sp.izumi.3@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a9b43a69-e815-4186-9cfb-c94905f2031f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5D84C3', '358special.thanks@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('48039138-06b9-4df0-a515-c48a9e404e1d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '18DC9F', 'naomi19630928@gmail.com', 'sent', '2025-10-14 08:13:37.824+00', NULL, NULL, '9a7710a1-8f78-46be-a04d-af37b1d0728c', '2025-10-14 08:13:10.700335+00'),
+	('c4aa2a13-7337-4b0a-ad16-f2533f9c5524', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CD914B', 'sakai.hex@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c38cce52-51c1-42ef-970d-310dab4c0847', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C6B9E4', 'tomo322tomo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c4dff9fe-87f0-4eec-b349-c46617165a48', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EA7C20', 'mxwrkrosy@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('794375eb-6ccf-468e-8611-0fb91e798d8c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7B9F5B', 'ka.kimura555@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b8c0e902-fddf-4357-a6cb-5c17a2bb9e68', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '32B1F1', 'sion-norakuro@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('880ff84f-0131-4346-8535-0e3bbb86296d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '347ED5', 'rainbow.miyo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('36b8797c-bd95-42ad-9bb8-a53e53af953f', '8e094b52-0092-4f96-aaa1-5d4063e68517', 'CA7902', 'usui@tbas99.com', 'sent', '2025-10-16 11:21:38.991+00', NULL, NULL, '988ab82d-dbf4-41b9-b30b-f32a5593343d', '2025-10-16 11:18:22.773892+00'),
+	('c06c2152-4776-44ac-b164-b29128d3a375', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0338DC', 'eriiinn60@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('44110c9c-18a1-4ba4-8edc-4f972872f7ce', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '31B405', 'cibimi070@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('54ee67d9-2005-4f2c-9385-da1f7973ac70', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C819F7', 'rekisasaki44@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c6b41938-4b4b-4e4a-825b-f2ca7f8055ae', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DE17E8', 'huu6141221920@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a9b74b3b-0fe8-4622-afb7-983ab4b16ed3', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '375EE3', 'srjkzmining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e559a273-4b77-4674-833e-e76f7b203991', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '076D31', 'koma20171121@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e5205350-ef59-40de-87ae-960b730ed42a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DEB705', 'h.shibata.0926@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a7f6d24d-8666-4c42-bc46-23b7a58e77d1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7AFBEE', 'o9o4o3oxxxx@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b475d7b0-375b-48bf-bc61-ad87fbf4330e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '6BCCED', 'basarasystems@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('5a9d4dec-8a53-4dcd-a095-cc2860245566', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1D0200', 'yoshie1235t@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('d8450406-6df9-4104-87e1-56cd19cc957d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9493FE', 'monkado1117@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('07b236bc-67fd-45fc-84d4-3cdbf0dc216e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FC2F0B', 'sunmoon6811@gmail.com', 'sent', '2025-10-14 08:14:19.925+00', NULL, NULL, 'f11e1f84-eab1-4d3e-a782-13f36d28e91e', '2025-10-14 08:13:10.700335+00'),
+	('33f60c2c-4999-4118-b372-16fc23cc621a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E7ECDC', 'nakano@en-design.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('d32c2de0-7248-4858-a497-fa6442910455', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '2EAA6E', 'omachan080522@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('81c782c3-26bf-4102-a4b5-503b8c8ba582', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EC0A4D', 'kosama1022@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1922460d-1fda-4734-9e83-578744f83260', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A34F44', 'gladiator2000@au.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('77b7c87b-0d1e-4d0b-b3e4-df9193b56ad6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7A9637', 'masakuma1108@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('f44d1419-362f-4546-8890-2921855b665d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'FD9275', 'ref.y.yamaguchi@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('d70b1ffe-d7fc-4fdb-a61b-ccdc70654690', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '599EBC', 'yaga.gaga0805@icloud.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('55c98f03-cf18-4d6f-830c-bfbc40d0c41e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D3E589', '358hanasakae@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('eb70928e-00d1-48d2-af1d-0b9dc1b76318', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '571179', 'ikuyo.arakaki@gmail.com', 'sent', '2025-10-14 08:14:40.438+00', NULL, NULL, '82cdd5ec-061b-4196-b4b9-5425ad34a349', '2025-10-14 08:13:10.700335+00'),
+	('d8a6ee87-c02a-405c-8c8d-76757e4f6a05', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C2FDA7', 'dragon.hors71@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b31ee492-1c39-4811-bbce-71d57e0b5b8f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CBBF16', 'tomoriko0409@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('27867876-2966-456d-9611-ee2fe00ed5d9', '792fe399-0474-4511-83b1-ac89eccbcfec', '764C02', 'yoppk.22@gmail.com', 'sent', '2025-10-14 10:20:16.796+00', NULL, NULL, '2fb1f084-ae1b-4080-993b-24ae01bfc407', '2025-10-14 10:20:14.499221+00'),
+	('0697ac2f-a61f-498d-a398-8c8ff640bbf9', '0109f2d6-157d-4373-a429-30125c01d5ec', '858570', 'hisae03240320@gmail.com', 'sent', '2025-10-16 11:48:32.378+00', NULL, NULL, '1e19b992-bec8-437d-8fe0-6df18f75d091', '2025-10-16 11:48:29.294502+00'),
+	('9fb505cc-3674-4c3e-b975-15398477ec45', '0109f2d6-157d-4373-a429-30125c01d5ec', '9D9F83', 'ryuprince116@gmail.com', 'sent', '2025-10-16 11:48:33.291+00', NULL, NULL, '8f1bd0ce-7f99-4582-a0e3-d1b7afa238ba', '2025-10-16 11:48:29.294502+00'),
+	('7ace9f05-8b52-4d2f-b101-024737e0ce3b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B8D4D3', 'supremexyz0001+2@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('56132470-8c01-4e05-b765-fa77363ef9e8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'DAF07B', 'mama.yumi7853@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4f9965af-d218-4c05-b97f-4de9f5a98e59', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4C92F6', 'ugokazarukotoyamanogotoshi@gmail.com', 'sent', '2025-10-14 08:13:52.696+00', NULL, NULL, 'dfcf05cd-22de-45ac-b378-f6ee4099067b', '2025-10-14 08:13:10.700335+00'),
+	('acfaf13e-400e-4b8c-8575-a43c4d5fda06', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E460F1', 'guangbaoyanfu@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('3ae7dfd9-4329-4274-bbe2-b1761a90c922', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E275F2', 'monohonabe@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('00a8acb4-39b7-48da-ae5c-c7c9cb664c09', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B6D0D5', 'wakako.and.taka@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('059aff85-ac69-40d1-8037-1f9563e11b30', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '684AC6', '114514.2514.karushifa@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('7e5069de-27d8-4393-bbe1-dcae3cf3300e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7B703E', 'info@aikentiku.com', 'sent', '2025-10-14 08:14:03.129+00', NULL, NULL, '12387fe3-194d-4f62-b0eb-d2348ed91e3b', '2025-10-14 08:13:10.700335+00'),
+	('60b4eef9-75aa-47e1-9729-fe198229783d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '892576', 'wowcommunity2023@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c6921434-b2e1-4f32-b42b-30bf1c1892d9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4BBE5F', 'hakuryu333.net@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('2c339416-e15c-487c-9ec3-4ebb6816b288', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1757CC', 'momotoshi1446@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('78081a2d-b43a-4092-b445-8a9f03b6fe03', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8DDB99', 'inoakiko0820@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('0575a483-b9ee-4401-b667-bb83b20ed0e8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9BB49B', 'hitomi8579@gmail.com', 'sent', '2025-10-14 08:14:14.097+00', NULL, NULL, '1a9ce6f0-3002-4d79-b4e2-32123e3d1ec2', '2025-10-14 08:13:10.700335+00'),
+	('e2dfe35d-7833-4047-96be-c1a90da18680', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0BBAE0', 'kurashisociety@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e99d3e88-5ae1-42a1-9021-a8dfe592d97f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D834EA', 'balinaokomining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('27f6bd3e-83f1-457a-8a67-5f226e643ce6', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A5E3EA', 'rekisasaki@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('10aedc76-a460-4ce4-8183-99d86622303f', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D51B93', 'jeune.0515@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('024a4cea-c6dc-488f-b38a-c32ad2de22ea', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '975A87', 'yus77uke@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('9163f058-3aa8-4fd6-bd30-efea70daf6d9', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'OOCJ16', 'masashitakakuwa9@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('83a59888-fd92-47c8-a82b-e70a90944634', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0A051F', 'tkpuraimu@gmail.com', 'sent', '2025-10-14 08:14:28.251+00', NULL, NULL, '716e59bf-bf9d-4209-bf67-576511d45c58', '2025-10-14 08:13:10.700335+00'),
+	('18b7bca9-d778-4c44-afe2-f9d6ef76b2c5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '917123', 'yaman.yaman29290631@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('23e74655-60f9-4340-b423-c005fb4876be', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CEDC61', 'reo199359@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4e4635c6-f7f6-4acd-b9a6-5cbff5c573bd', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4BECF6', 'ogasawarachan@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e74bf3d6-235c-4367-a422-12d0ad8e0459', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0D4493', 'gyukotsuhorusoba@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('49370e0b-5ce1-4f14-b6f9-3f525b78206a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '62CED1', '39isara@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('014cf85c-81b5-4342-a041-024d4c048000', '0109f2d6-157d-4373-a429-30125c01d5ec', '0B2371', 'f222.k927@gmail.com', 'sent', '2025-10-16 11:48:37.058+00', NULL, NULL, '9ea8b37d-e422-47ac-8014-a2e7f18da821', '2025-10-16 11:48:29.294502+00'),
+	('3893863e-4a27-4ab9-9492-7596a24e87e4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'BC3409', 'whitenorse.17@gmail.com', 'read', '2025-10-14 08:14:20.33+00', '2025-11-02 10:46:35.368805+00', NULL, '2fc8a139-b1c2-4acb-9074-419005f136a3', '2025-10-14 08:13:10.700335+00'),
+	('632aecd9-799b-4362-b28b-079542bd0368', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CE4FF7', 'pchee41@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a0e530cd-c224-42cb-b04c-3b5800a17a5c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9DE96C', 'zero.one.world7@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e7bf69fd-416f-4f77-be76-d33449fb0b2e', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '328E04', 'extra.lunge@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('904c6e7b-f89b-4df4-a893-96b85f56f181', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B39333', 'tanaka1006hiroki@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('58d33863-9bce-45cc-ac96-9fe21a5b0f60', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C73F2D', 'knsteruyo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('9bb2ea3c-07d2-4b7f-930e-8468c49ca542', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '99024A', 'sugiura4735@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('890d6dc7-43c9-4cdf-9b11-152159e9bdf2', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4E9884', 'y-ono313@i.softbank.jp', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e693cdef-37c3-46a4-a08d-8130419cf04b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B51CA4', 'miraclestarys@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('3f10370f-2dcc-428b-acec-4fdf6a92e46b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D3A133', 'momokokomining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1c5002e4-4983-4b1a-a3e6-f6aa2653a53c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '54A4DE', 'n43mtced@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('b6bfb795-76b5-4c3f-aa24-c141b541825a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4517C9', 'nadeshiko25keiko@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('33ae3955-7e80-4a45-a1d9-edf8a2afc401', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '27DBE5', 'ask27ntm3339@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('aec4fab2-b7e9-4b3d-8311-e366cd0374a5', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C64AA2', 'kananana1012@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('7b33967c-d79c-4fa3-8224-364a1e4a5863', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D7D48D', 'pa.pi.copoppo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('0416ee7e-a9c5-4b32-b4c2-b40bc8278b01', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3C9E56', 'milk30519@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('5e8bd033-c3b6-4a1d-8af9-6c208fa8140b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9DCFD1', 'kazu83215@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e03ed62e-4a8e-406c-8a91-cfd817e13cf0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C17025', 'sachiko.prumeria@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('da451af1-ab29-4f01-a78e-722f2afe58aa', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CE4129', 'coubsgr10@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('0fbf598f-87d9-4d17-b0f6-7b140068d3f8', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B5FC85', 'omachan0805@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e23f47d9-7d0d-49f2-97c3-2cae55c74e1b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'CA7902', 'usui@tbas99.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a8c50070-c452-4a66-b192-93c1ee0f64ad', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '972738', 'minto5259@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c9c73a79-fce0-4d0d-8cb7-05b3770a71f7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C162DD', 't.mitsuko.1989@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('6220cf95-40b8-48dc-bf8a-87baffa9c46b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3B1E5E', 'supremexyz0001+3@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('000fc9fb-2262-4e97-b7e9-fc45c77cfd61', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A81A5E', 'sakanatsuri303@gmail.com', 'read', NULL, '2025-10-15 10:45:46.416727+00', '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e2a55b49-e58c-4536-822f-d901d529660c', '0109f2d6-157d-4373-a429-30125c01d5ec', 'A605F4', 'atsuhimekojima0208@gmail.com', 'sent', '2025-10-16 11:48:38.828+00', NULL, NULL, '1ede506b-5a52-4f5e-b26f-da1756213f1d', '2025-10-16 11:48:29.294502+00'),
+	('8bdfd24d-abd2-4a75-bae2-3ca964377798', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '063CE0', 'natuyosouka777@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('072f3d79-4a3b-4f5d-a61b-95cfd7ff4cfe', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '099358', 'chantillyrushe@yahoo.co.jp', 'sent', '2025-10-14 08:14:47.708+00', NULL, NULL, 'b2722d3d-9486-4d5f-a459-155cfec29a16', '2025-10-14 08:13:10.700335+00'),
+	('34849540-ba52-4745-8a01-ae2b40641c51', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'F2B03A', '109yamato@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('7ec07e9b-c585-44a8-8edc-d809ae7b7590', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7C7956', 'aero224.224@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4b359901-9ef7-4533-80d8-a7e212196b13', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A2A479', 'u.u.go.1014@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('49ee227b-1a20-4b78-9ee2-d2a53a7ede9b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'EF9073', 'wwhappyhappyww1@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4dfae42e-4452-4a23-a45a-9c3b044f721c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E9557E', 'tetsucorporation.co.ltd@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('47aa4895-5b64-4512-b56a-ed57ecf3e2a4', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '469E53', 'jin.luxe0414@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c929ca7a-db8b-4eae-b9e6-b01e3ef11157', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AE6C1C', 'tmtm0106526@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('4cca272b-de04-4ee0-9245-0a6598b85790', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '64342C', 'makikooishi@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('0fae66b5-b402-472b-a56b-7506a622448d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C1ADF2', 'sou30175@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('c105c292-c590-4613-8fb6-8e48eee6bad0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C69073', 'mihosevern@yahoo.co.jp', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a02fca7d-7e12-40cf-905d-9120dc5a89f1', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '4B98CC', '358destroyed@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('ce1bf3c5-0411-4696-8cfa-e60379b7aa1a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '1AF447', 'balineko9@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('2a13a6df-a6b3-4dea-b24c-cea70bad6510', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0E9C6C', 'kumhmry@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('2676926d-9af5-49e0-9383-79c9cc892b0d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '771730', 'marueri.t5@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('aac037e5-157e-42f6-bbc0-e82ac7cc0eff', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '23865D', 'kitagaki214@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('cb564b8f-a013-4ec4-bd08-3e949edf5870', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '07712F', 'math.kazino@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('dbd57313-6842-4058-9483-7a4a3313c9ea', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7041CD', 'fnishimura32@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('58bf0e99-0c93-4381-9eb4-84ec365fba64', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '232A2B', 'asukabe0916@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('bc05ca8b-abf7-4951-8c4c-0afcb1ae5935', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '899254', 'tuyako.kaji.10.19@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('3b94761d-a161-4f15-9224-ea8e14cc9c50', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '414A5E', '1996ki.04@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('cbab931e-ab0c-4c6f-be1d-ab01c97c858c', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '394CEC', 'kim06451207@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('0f9549e1-6437-43c3-8776-d40129407819', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0FAE8F', 'kayo.easygoing.0611@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('29c7030a-8a86-448d-be12-72eaee6f8e37', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '0F88DD', 'msic200906@yahoo.co.jp', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('db6b8470-3824-407b-a48f-b45a7cb6aa83', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'AE95A3', 'k9312021234@icloud.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('bf191173-35c1-4c68-8ef6-bf477ac74ff3', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D159A1', 'does3887@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('95bbe1e7-99d3-48f6-b0f1-c7aba74d2f85', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9E5315', 'downtheline1109@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('ffe478fa-9f6c-41e1-b4f0-3437bda3d423', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '5881AB', 'ahiahi16de@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('1565fb9f-8e4a-474a-959d-3ff45eae4527', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '19A5C8', 'breaking3of5limit8@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('ceb165a2-a0d9-435f-8aa6-ea40c2c85e5a', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E1A5D5', 'mie.exo.k@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('6c13533d-0b45-4817-8567-31c18e7c2072', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8EEC73', 'atsuko02081@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('edc2fc98-0d76-4577-87d6-f961a0e657ac', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C37E74', '990032ck@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('19916d3a-1de4-4043-a0ef-ae54dd7f4672', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '7DCFB7', 'muma.mieko@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a510d3c5-04be-4964-8c93-82db10c91c96', '09305467-66c5-40d6-84d9-60afb5db4240', 'B8D4D3', 'supremexyz0001+2@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('0cfcdf0e-4b29-4d05-b138-626abeef7015', '09305467-66c5-40d6-84d9-60afb5db4240', 'DAF07B', 'mama.yumi7853@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('450b76ca-c6ab-4b41-975f-8a9f11c277f9', '09305467-66c5-40d6-84d9-60afb5db4240', '4C92F6', 'ugokazarukotoyamanogotoshi@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('035dc98c-a984-42cb-a7d0-e4b9b4508768', '09305467-66c5-40d6-84d9-60afb5db4240', 'A827F5', 'riko1788riko@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('61cd2790-8d09-42ec-8176-be3d54cf0b54', '09305467-66c5-40d6-84d9-60afb5db4240', 'E460F1', 'guangbaoyanfu@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('d7532695-705a-4800-ada4-7824bc019799', '09305467-66c5-40d6-84d9-60afb5db4240', 'DF61A9', 'ugokazarukotoyamanogktoshi@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('f9d91855-26e6-401d-ac10-130dc040f95c', '09305467-66c5-40d6-84d9-60afb5db4240', '6E8123', 'torihjp09@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('4ea31ccf-8603-4ab4-82ae-b3c28f8ffa2c', '09305467-66c5-40d6-84d9-60afb5db4240', 'B6D0D5', 'wakako.and.taka@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('c2cd4679-a32b-49a9-9068-4cba43f092be', '09305467-66c5-40d6-84d9-60afb5db4240', '5452E7', 'hayhay7707@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('2f83abe4-54c6-40ae-b956-305b4170a360', '09305467-66c5-40d6-84d9-60afb5db4240', 'F69E81', 'tsutomu_watanabe@hotmail.co.jp', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('b44819da-3686-4184-a9f4-59a7679f91f9', '09305467-66c5-40d6-84d9-60afb5db4240', '892576', 'wowcommunity2023@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('dd6e700c-7f9b-4c3d-90ee-9cd2a430789f', '09305467-66c5-40d6-84d9-60afb5db4240', '1F85EE', 'wowcommunity2023+2@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('a14cd42b-91b8-49b7-ba17-6d9ebcb120b9', '09305467-66c5-40d6-84d9-60afb5db4240', '6022BA', 'iwanedenki@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('29086949-6c69-4f25-9fdd-6a28a22b8d87', '09305467-66c5-40d6-84d9-60afb5db4240', '412F6A', 'ritz.nov08@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('0a91a033-5bca-40d9-b483-2ae7b48fd273', '09305467-66c5-40d6-84d9-60afb5db4240', '6BCCED', 'basarasystems@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ef410715-0fb5-4fd8-9efc-9cf59b074f73', '09305467-66c5-40d6-84d9-60afb5db4240', '039483', 'mayumi.j0222ayc@ezweb.ne.jp', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e31f6ace-c9ba-482a-b7f1-0b52a213a0c3', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '840D16', 'quesodesoya@yahoo.co.jp', 'read', NULL, '2025-10-15 10:12:05.668577+00', '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('bba83c54-10e5-49cb-a77f-9b76ede30512', '0109f2d6-157d-4373-a429-30125c01d5ec', '225F87', 'akihiro.y.grant@gmail.com', 'sent', '2025-10-16 11:48:42.368+00', NULL, NULL, 'bfe8a92f-a870-4831-b8f6-30f1fc8ad4ea', '2025-10-16 11:48:29.294502+00'),
+	('076541e6-a280-4fa5-8250-55eeeccbc946', '0109f2d6-157d-4373-a429-30125c01d5ec', 'C37E74', '990032ck@gmail.com', 'sent', '2025-10-16 11:48:43.264+00', NULL, NULL, 'a71ecf7e-057b-44e7-961d-ef99be6945df', '2025-10-16 11:48:29.294502+00'),
+	('9aa98553-f702-4ea8-8370-8ac94e1bc4a7', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A815EA', 'tochimoto1969@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('a33c3823-485d-4a4d-8610-abaab50f15e1', '09305467-66c5-40d6-84d9-60afb5db4240', '31B405', 'cibimi070@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('9c5e2c5f-c348-41ae-9dde-1df27b6e4145', '09305467-66c5-40d6-84d9-60afb5db4240', '54B3DF', 'zhongmeixa@icloud.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('fa3f5c19-7f5a-4f57-9c9a-2e6be7706376', '09305467-66c5-40d6-84d9-60afb5db4240', 'C819F7', 'rekisasaki44@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('b08587a0-0baa-46b1-9250-aad659e5e729', '09305467-66c5-40d6-84d9-60afb5db4240', 'AA0CEA', 'sisyamakiri@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('887612f4-a164-4169-9659-4b40269c1d1b', '09305467-66c5-40d6-84d9-60afb5db4240', 'DFCE2F', 'da7.u3uk@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('d92fd395-73a9-4ee1-85df-a0de5c9f9565', '09305467-66c5-40d6-84d9-60afb5db4240', 'FCFB9B', 'kokuryu358.net@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('3dfd0a10-0145-449d-bbe8-fb1de52f4da1', '09305467-66c5-40d6-84d9-60afb5db4240', '076D31', 'koma20171121@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ab8cddfe-c9ce-496a-9456-4f3e11b6ae12', '09305467-66c5-40d6-84d9-60afb5db4240', '03D636', 'ayucororo59@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('5f9ddcbe-8079-4d32-a70d-59ced0cf2759', '09305467-66c5-40d6-84d9-60afb5db4240', 'F88096', 'madflippy7@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e91f61e7-b379-4802-b7a8-880fc42cc6f0', '09305467-66c5-40d6-84d9-60afb5db4240', '41F5B0', 'u_u.go.1014@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('f8923f3b-f31d-41d6-a5d7-b39083b8bf94', '09305467-66c5-40d6-84d9-60afb5db4240', 'A0535F', 'spaceleo105@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('c2cc8389-4d75-471f-bb96-ac4a74fc11e3', '09305467-66c5-40d6-84d9-60afb5db4240', '850BCC', 'julia.kb@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('be45bf05-769a-4ff7-ac66-454f5d423702', '09305467-66c5-40d6-84d9-60afb5db4240', 'B40CA6', 'cccmyyy_33310822@yahoo.ne.jp', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ad1aba3d-93b2-405f-b121-ed82e7a940a2', '09305467-66c5-40d6-84d9-60afb5db4240', '4BBE5F', 'hakuryu333.net@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('fc0a087c-5af9-467d-8a70-1e38883b5ddb', '09305467-66c5-40d6-84d9-60afb5db4240', 'DF427F', 'sakaeseki059@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('15474030-c4cd-4815-9b72-8749f0861023', '09305467-66c5-40d6-84d9-60afb5db4240', '1757CC', 'momotoshi1446@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('edc8d678-de5b-41f6-8ee2-a96c92a0c8df', '09305467-66c5-40d6-84d9-60afb5db4240', '1DEFED', 'yuki.shirai1949@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ef7724d7-deac-49f7-b62e-af9ad183caca', '09305467-66c5-40d6-84d9-60afb5db4240', 'DAD086', 'yoshi.naga525@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ddbad6dc-38bb-4542-b168-a66416fd533c', '09305467-66c5-40d6-84d9-60afb5db4240', '320D5E', 'yukarimama1984@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('eb0d676d-e2f5-4803-84e8-60c8fb8b9bcc', '09305467-66c5-40d6-84d9-60afb5db4240', 'D08E40', 'jiyuuliving@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('deeaf764-7ba0-496d-801c-05d42725d622', '09305467-66c5-40d6-84d9-60afb5db4240', 'BC3409', 'whitenorse.17@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('fc607538-79e9-4a25-b69e-c7d11341e8e4', '09305467-66c5-40d6-84d9-60afb5db4240', '7A49CB', 'teamgracis13@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('2cf2e655-bccc-4a90-a205-d107692f2a17', '09305467-66c5-40d6-84d9-60afb5db4240', 'F59081', 'yuuzenya.2.11@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('edbbb6a4-0954-4a77-86dc-412159b0cc58', '09305467-66c5-40d6-84d9-60afb5db4240', '5A708D', 'feel.me.yurie@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('7cea70b4-7036-43f3-b398-778595d68327', '09305467-66c5-40d6-84d9-60afb5db4240', '31C7CB', 'aggak8008@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('28b2333b-d56f-47d6-8c37-83e619dfea04', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '449AA2', 'kiwakiwa.kaeru@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('071a68ce-75a8-449e-87fa-9b7111eb3f88', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'E6FE4D', 'soukou.cha0224yukie@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('abb2eea6-4116-440f-addd-b6bbe58ca80b', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '9D9F83', 'ryuprince116@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('6d399c7c-07ef-419e-b1b2-bfc6c694dd5d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'C0E0E0', 'ikariko0510@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('790ebd4f-3176-4ef2-b626-84fe25a45f23', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'A605F4', 'atsuhimekojima0208@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('665aed80-fa8d-490d-b923-4b360ca2092d', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '225F87', 'akihiro.y.grant@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('ca8fa19b-fa41-49e7-9c20-c6a680d273bc', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '8F3D05', 'kazueyamazaki0518@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('41d515c7-3105-4ea2-b1c2-7b8c9782e488', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'D3FE28', 'masaemorisawa@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('96aad9af-b224-47aa-9156-394d2a5e6f11', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '351859', 'sanctuary.endo0311@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('392e1797-54b7-47e5-a2e7-915720ed0bd0', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', '3DE7BA', 'aki.yajima@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('653646d4-cd6f-455c-9a15-01271820a231', '7a1c6ec2-b3f1-4991-9c88-cf3f7b80e27d', 'B1BF1F', 'azuki.mumu3@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:13:10.700335+00'),
+	('e4026699-90be-4ecd-957e-f11f6e017265', '09305467-66c5-40d6-84d9-60afb5db4240', '40B221', 'mie123mie54321@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('1a40b0ff-9f4a-44da-ba7d-c4a6bcfca618', '09305467-66c5-40d6-84d9-60afb5db4240', '21721A', 'ken.atae727@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('929ded64-ef6b-46ca-bb82-197c45e9c58c', '09305467-66c5-40d6-84d9-60afb5db4240', '8A805A', 'kimonji0111@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('02083b45-df13-4abb-8af7-6bd1cea549d0', '09305467-66c5-40d6-84d9-60afb5db4240', '8F51C6', 'onenextmining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('4c3c4727-f7d8-45ed-aa90-8ad07720820c', '09305467-66c5-40d6-84d9-60afb5db4240', '7D5A07', 'minid708@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e7becba3-be5b-4a31-8ab8-0068ce72a01a', '09305467-66c5-40d6-84d9-60afb5db4240', 'FC2F0B', 'sunmoon6811@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('9371ea69-64f5-4786-a016-f4a2f988c7f8', '09305467-66c5-40d6-84d9-60afb5db4240', 'D51B93', 'jeune.0515@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('4d1a4055-cb00-4c9b-b072-8e302eccd165', '09305467-66c5-40d6-84d9-60afb5db4240', '975A87', 'yus77uke@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e53a77e0-35a1-4aff-9128-20c09dbd3aa2', '09305467-66c5-40d6-84d9-60afb5db4240', '5676B5', 'shinmisoo311@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('f015f5c6-14ff-490f-bc8c-1af5248bbc2b', '09305467-66c5-40d6-84d9-60afb5db4240', 'A34F44', 'gladiator2000@au.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('027eca46-d13d-459c-aa5f-a307d35779d8', '09305467-66c5-40d6-84d9-60afb5db4240', '9A3A16', 'sh5552493day@yahoo.co.jp', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('a88abd6e-a39d-476a-aeb5-d650916c4d84', '09305467-66c5-40d6-84d9-60afb5db4240', '7A9637', 'masakuma1108@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('6e80b02b-4d5c-4cb4-97fc-8d8d8b6a4be2', '09305467-66c5-40d6-84d9-60afb5db4240', 'EAA204', 'kosama1173@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('fc80bb07-ab86-40a5-b3c5-a97a1dd2e84c', '09305467-66c5-40d6-84d9-60afb5db4240', 'E16C9E', 'arato1007430ta@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('85b7c1c4-bec6-44b6-87f6-dc65e70df5ec', '09305467-66c5-40d6-84d9-60afb5db4240', 'FD9275', 'ref.y.yamaguchi@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('4a6d4bb0-c094-471d-94a0-e1de04ed553f', '09305467-66c5-40d6-84d9-60afb5db4240', '04FF0C', 'kawaguchi.t36@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ac1136aa-4570-427b-b830-08a26cc1ecba', '09305467-66c5-40d6-84d9-60afb5db4240', 'E83446', 'shinkansenboy752@gmail.com', 'read', NULL, '2025-10-15 06:18:11.514448+00', '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('c31330b9-f1f1-4207-93c4-f0018608394b', '0109f2d6-157d-4373-a429-30125c01d5ec', '351859', 'sanctuary.endo0311@gmail.com', 'sent', '2025-10-16 11:48:46.908+00', NULL, NULL, '797b597b-cfd8-4691-96d3-45eea0dd444f', '2025-10-16 11:48:29.294502+00'),
+	('e28c3cc3-7310-4755-bafe-da31b65809ef', '09305467-66c5-40d6-84d9-60afb5db4240', 'DC7A30', 'y.kazuki.1993@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('c945f81b-70cb-4778-ac0d-9315d323f3e7', '09305467-66c5-40d6-84d9-60afb5db4240', '4918B8', 'kinuko39369@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('53fba1e4-32fc-44dd-8c7a-833d9086e8a1', '09305467-66c5-40d6-84d9-60afb5db4240', '3D9C65', 'my0503ex@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ea564c44-b91f-4170-9b1c-e60d24f0bfe1', '09305467-66c5-40d6-84d9-60afb5db4240', 'EFD820', 'apprecieight@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('8fdd930c-a5cd-462f-b1ac-91623af697d2', '09305467-66c5-40d6-84d9-60afb5db4240', '2D85C2', 'shushu.betty6186@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('950ae0d0-6b69-4864-a335-95744b4f714a', '09305467-66c5-40d6-84d9-60afb5db4240', 'AEE591', 'ririri.717@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('2655699e-217e-4c9b-9fa0-6b12079df347', '09305467-66c5-40d6-84d9-60afb5db4240', 'C0DAFF', 'tsuneko1957@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('a03b029f-bc9a-429d-9ee7-c678cd275e5a', '09305467-66c5-40d6-84d9-60afb5db4240', '38A16C', 'milkyway6310@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('6645802f-9561-4c4d-bc0d-b8514c72c086', '09305467-66c5-40d6-84d9-60afb5db4240', '8C1259', '1903momo0707@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('87c8a685-df56-4d2d-b71f-1bfb108dfe49', '09305467-66c5-40d6-84d9-60afb5db4240', '177B83', 'witchmind0323@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('ecd60cf3-2753-45ae-af12-8ad476de2f33', '09305467-66c5-40d6-84d9-60afb5db4240', '069AFF', 'sakura5068m@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('c2c27cdc-f3af-4900-8d75-9e0888e4fd87', '09305467-66c5-40d6-84d9-60afb5db4240', '9092DF', 'yukorin.r21@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('38ce6e59-971f-4982-bfa2-4d43284817a5', '09305467-66c5-40d6-84d9-60afb5db4240', 'C0B2DD', 'sachiyo.s561202@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('40827a49-19e9-4bff-8213-11bfced2a2fd', '09305467-66c5-40d6-84d9-60afb5db4240', '12FE1D', 'i.b.karen.na.tow307@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('3cc6f107-953b-4f43-a1a2-837fa38c0898', '09305467-66c5-40d6-84d9-60afb5db4240', '764C02', 'yoppk.22@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('5ac1d033-45da-4517-a288-9369f8a112cc', '09305467-66c5-40d6-84d9-60afb5db4240', '935D26', 'riko039riko@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('eb1c9ae9-8a44-4422-a141-0578d284c6e0', '09305467-66c5-40d6-84d9-60afb5db4240', '440AB9', 'ca4.nn2005@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('b426e048-2100-4494-8b98-f65668b1481b', '09305467-66c5-40d6-84d9-60afb5db4240', 'D473AC', 'junnoheya@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('162b8798-cfe0-4c11-85ae-1993b3add26a', '09305467-66c5-40d6-84d9-60afb5db4240', '274090', 'gaman.gaman.111@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('a2a4707b-d490-4958-9fb7-f0db9a4e04c9', '09305467-66c5-40d6-84d9-60afb5db4240', '3A6EDA', 'tomo322tomo@gmil.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('5c241859-37a5-42bf-9e62-d0a79218e59d', '09305467-66c5-40d6-84d9-60afb5db4240', 'A54290', 'maru230023maru@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e1cd594d-5ea1-4d6b-bcb1-221cb5ff8e2c', '09305467-66c5-40d6-84d9-60afb5db4240', '8676B0', 'porsche993.1004.999z@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('9efef22f-e45d-4161-bbed-b956682e16cc', '09305467-66c5-40d6-84d9-60afb5db4240', 'DF7EF1', 'shinagaichirou1111@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('90654607-4ad3-4b96-8149-7bbe21a4e26c', '09305467-66c5-40d6-84d9-60afb5db4240', 'D23CC4', 'tetsuobitmining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('0fc14cc5-22de-4096-916e-dd1beb87f072', '09305467-66c5-40d6-84d9-60afb5db4240', 'EA6B5E', 'sp.izumi.3@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('3739cf2b-593e-4557-81cc-1eb0aaa5787b', '09305467-66c5-40d6-84d9-60afb5db4240', '5D84C3', '358special.thanks@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e45fc294-1de0-4100-8e8c-14d532ecdafb', '09305467-66c5-40d6-84d9-60afb5db4240', '76FA3B', 'y.jiki69@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('db1d577e-d6fd-4830-b54a-2b02c31904f7', '09305467-66c5-40d6-84d9-60afb5db4240', '7CB7E4', 'tokinaomining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e1e0749c-0765-44dc-82f6-6cd34b8e5533', '09305467-66c5-40d6-84d9-60afb5db4240', 'CD914B', 'sakai.hex@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('3bd5eb2d-a9fc-48ae-92a8-1648f3da84d1', '09305467-66c5-40d6-84d9-60afb5db4240', '8F7AD9', 'kyoka.koreeda@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e3e47d22-de81-4b67-a177-3ffc5beccbb1', '09305467-66c5-40d6-84d9-60afb5db4240', 'C6B9E4', 'tomo322tomo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('333b7526-8cac-4309-9625-7be4aa43478b', '09305467-66c5-40d6-84d9-60afb5db4240', '347ED5', 'rainbow.miyo@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('a82be534-c120-4384-96fa-fbdad52675b6', '09305467-66c5-40d6-84d9-60afb5db4240', 'D84FA9', 'k.hanauchi@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('8ec981fa-7989-4675-a7b7-da767fe92005', '09305467-66c5-40d6-84d9-60afb5db4240', '6DA8C7', 'cherry28sa@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('f1436836-f336-4047-9921-1e44d1f6b27d', '09305467-66c5-40d6-84d9-60afb5db4240', 'C035D7', 'nisekoamakara@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('99f574ee-a099-4b17-bdd2-e857bd9ecece', '09305467-66c5-40d6-84d9-60afb5db4240', '78D313', 'funita385b@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('45e6f841-24fb-4509-bafb-3f0703982af6', '09305467-66c5-40d6-84d9-60afb5db4240', 'E27F25', 'y.sakurai@teratomo.io', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('d117ba2e-00f6-4b2a-94bf-e54c95e32e36', '09305467-66c5-40d6-84d9-60afb5db4240', 'E783A2', 'minako.imanishi0126@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('cf70bf67-c565-423f-a3ad-1b7785b8154e', '09305467-66c5-40d6-84d9-60afb5db4240', 'F59D48', 'mokayuka130@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('1a06c7ca-8368-4275-9316-4d6f734dde9e', '09305467-66c5-40d6-84d9-60afb5db4240', '779902', 'wwhappyhappyww@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('1ecb6b87-3896-4e28-ac27-9c335d404f9f', '09305467-66c5-40d6-84d9-60afb5db4240', '2A8986', 'everblue.diving@gmai.com', 'failed', NULL, NULL, '{"statusCode":429,"name":"rate_limit_exceeded","message":"Too many requests. You can only make 2 requests per second. See rate limit response headers for more information. Or contact support to increase rate limit."}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('a20335f6-bd85-4043-9434-a6f7b2a684b8', '09305467-66c5-40d6-84d9-60afb5db4240', 'DE17E8', 'huu6141221920@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('174eb275-9759-46c8-a8ec-c05e10145a94', '0109f2d6-157d-4373-a429-30125c01d5ec', '94A681', 'kazuny504@gmail.com', 'sent', '2025-10-16 11:48:48.809+00', NULL, NULL, '28ecf1a9-8001-4222-9e00-23b372e8d455', '2025-10-16 11:48:29.294502+00'),
+	('9be616aa-a492-4d73-80b6-2e2e48c602e6', '09305467-66c5-40d6-84d9-60afb5db4240', 'EA7C20', 'mxwrkrosy@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('f8fd1df2-612c-4f6c-a83e-70f17bc17357', '09305467-66c5-40d6-84d9-60afb5db4240', 'D84C17', 'taekoko0715@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('7696afae-f49b-4c83-98a0-918c05ed0a40', '09305467-66c5-40d6-84d9-60afb5db4240', 'C31741', 'riebou311@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('f3740eeb-5dc9-4a06-a901-c0c71dba26c9', '09305467-66c5-40d6-84d9-60afb5db4240', '32B1F1', 'sion-norakuro@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('95f334d5-ca11-440b-9d25-b9573400ed08', '09305467-66c5-40d6-84d9-60afb5db4240', '1F7BF7', 'im8088tms@yahoo.ne.jp', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('c92aae62-b748-456e-b70b-2d6547f12441', '09305467-66c5-40d6-84d9-60afb5db4240', '7FDD29', 'everblue.diving@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('01498505-2bcd-4d1c-a91c-141198d60946', '09305467-66c5-40d6-84d9-60afb5db4240', 'CF7C52', 'kazuki2046@docomo.ne.jp', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('6a15f1bc-be2b-493c-8691-263a1fe1e218', '09305467-66c5-40d6-84d9-60afb5db4240', '375EE3', 'srjkzmining@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('e1345fd3-d622-47d1-a42e-f0bc8948b6f3', '09305467-66c5-40d6-84d9-60afb5db4240', 'E275F2', 'monohonabe@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('adf1983d-6585-4fd9-8c83-1d034802dd1f', '09305467-66c5-40d6-84d9-60afb5db4240', '154E00', 'fujita.sachiko1009@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('37b00801-00f9-4bb6-a700-adb2c942e324', '09305467-66c5-40d6-84d9-60afb5db4240', '1A1610', 'okapon.dsh@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('9b941bf6-9e8c-410a-adcd-b348e2072d27', '09305467-66c5-40d6-84d9-60afb5db4240', '24AECB', 'hanasaka8713g@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('eb340d91-10cb-4595-a2ad-597b22b1f9d5', '09305467-66c5-40d6-84d9-60afb5db4240', '0C65C2', 'masakoeco88@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('473eb5c4-7754-44c9-a242-9e124ce5c6d0', '09305467-66c5-40d6-84d9-60afb5db4240', 'DEB705', 'h.shibata.0926@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('0d91c8e3-9e81-4415-a3ad-673a66aff666', '09305467-66c5-40d6-84d9-60afb5db4240', '684AC6', '114514.2514.karushifa@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('241b612e-33fe-4a30-a50a-8c733db4577b', '09305467-66c5-40d6-84d9-60afb5db4240', 'A9A42D', 'elg.elg.bam@gmail.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
+	('fa0b6d88-1664-409b-af6d-a176e1ac9b11', '09305467-66c5-40d6-84d9-60afb5db4240', '7B703E', 'info@aikentiku.com', 'failed', NULL, NULL, '{"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_exceeded"}', NULL, '2025-10-14 08:17:22.684346+00'),
