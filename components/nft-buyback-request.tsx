@@ -63,22 +63,35 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
   const fetchNftData = async () => {
     try {
       const timestamp = Date.now()
-      const { data, error } = await supabase
-        .from("affiliate_cycle")
-        .select("manual_nft_count, auto_nft_count, total_nft_count")
-        .eq("user_id", userId)
-        .single()
 
-      if (error) throw error
+      // nft_masterテーブルから直接カウント（buyback_date IS NULLの買い取り前NFTのみ）
+      const { data: nftMasterData, error: nftError } = await supabase
+        .from("nft_master")
+        .select("nft_type")
+        .eq("user_id", userId)
+        .is("buyback_date", null)
+
+      if (nftError) throw nftError
+
+      // 手動購入NFTと自動購入NFTを集計
+      const manualCount = nftMasterData?.filter(nft => nft.nft_type === 'manual').length || 0
+      const autoCount = nftMasterData?.filter(nft => nft.nft_type === 'auto').length || 0
+      const totalCount = manualCount + autoCount
+
+      const data = {
+        manual_nft_count: manualCount,
+        auto_nft_count: autoCount,
+        total_nft_count: totalCount
+      }
 
       // デバッグ: 取得したデータをコンソールに出力
       console.log('🔍 NftBuybackRequest - Fetched data:', {
         userId,
         timestamp: new Date(timestamp).toISOString(),
         data,
-        manual_nft_count: data?.manual_nft_count,
-        auto_nft_count: data?.auto_nft_count,
-        total_nft_count: data?.total_nft_count
+        manual_nft_count: data.manual_nft_count,
+        auto_nft_count: data.auto_nft_count,
+        total_nft_count: data.total_nft_count
       })
 
       setNftData(data)
