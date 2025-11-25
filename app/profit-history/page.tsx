@@ -254,19 +254,20 @@ export default function ProfitHistoryPage() {
                         )}
                       </div>
 
-                    {/* 合計 */}
-                    <div className="bg-gray-900/50 rounded-lg p-4">
-                      <div className="text-xs text-gray-400 mb-2">合計利益</div>
-                      <div className={`text-2xl font-bold ${
-                        profit.totalProfit >= 0 ? "text-purple-400" : "text-red-400"
-                      }`}>
-                        ${profit.totalProfit.toFixed(3)}
+                      {/* 合計 */}
+                      <div className="bg-gray-900/50 rounded-lg p-4">
+                        <div className="text-xs text-gray-400 mb-2">合計利益</div>
+                        <div className={`text-2xl font-bold ${
+                          profit.totalProfit >= 0 ? "text-purple-400" : "text-red-400"
+                        }`}>
+                          ${profit.totalProfit.toFixed(3)}
+                        </div>
                       </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
