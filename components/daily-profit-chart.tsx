@@ -81,25 +81,16 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
       }
 
       if (dailyProfitData && dailyProfitData.length > 0) {
-        console.log('📊 Daily profit data sample:', dailyProfitData.slice(-5))
-
         // 実際のデータを使用
         const formattedData: DailyPNLData[] = dailyProfitData.map((item: DailyProfitRecord) => {
           const date = new Date(item.date)
-          const dateStr = item.date
-
-          // user_daily_profitビューからyield_rateを取得（既に小数形式）
-          const actualYieldRate = item.yield_rate || 0
 
           return {
             date: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
             pnl: parseFloat(item.daily_profit) || 0,
-            yieldRate: actualYieldRate,
             formattedDate: date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })
           }
         })
-
-        console.log('📈 Formatted chart data sample:', formattedData.slice(-5))
         
         setData(formattedData)
         
@@ -189,7 +180,7 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
           </span>
         </div>
         <div className="text-xs text-gray-400 mt-1">
-          過去30日間の日利実績（実線: $, 破線: %）
+          過去30日間の日利実績
         </div>
       </CardHeader>
       <CardContent className="pt-0">
@@ -198,23 +189,12 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
             <XAxis dataKey="date" stroke="#9CA3AF" fontSize={11} axisLine={false} tickLine={false} />
             <YAxis
-              yAxisId="left"
               stroke="#9CA3AF"
               fontSize={11}
               axisLine={false}
               tickLine={false}
               tickFormatter={(value) => `$${value.toFixed(0)}`}
               domain={['dataMin - 2', 'dataMax + 2']}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              stroke="#9CA3AF"
-              fontSize={11}
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(value) => `${(value * 100).toFixed(2)}%`}
-              domain={['auto', 'auto']}
             />
             <ReferenceLine 
               y={0} 
@@ -235,15 +215,11 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
                 if (name === "pnl") {
                   return [`$${value >= 0 ? "+" : ""}${value.toFixed(2)}`, "日利"]
                 }
-                if (name === "yieldRate") {
-                  return [`${(value * 100).toFixed(3)}%`, "日利"]
-                }
                 return [value, name]
               }}
               labelFormatter={(label) => `日付: ${label}`}
             />
             <Line
-              yAxisId="left"
               type="monotone"
               dataKey="pnl"
               stroke="url(#colorPnl)"
@@ -266,21 +242,6 @@ export function DailyProfitChart({ userId }: DailyProfitChartProps) {
                 fill: "#FCD34D",
                 stroke: "#1F2937",
                 strokeWidth: 2,
-              }}
-            />
-            <Line
-              yAxisId="right"
-              type="monotone"
-              dataKey="yieldRate"
-              stroke="#8B5CF6"
-              strokeWidth={1.5}
-              strokeDasharray="5 5"
-              dot={false}
-              activeDot={{
-                r: 3,
-                fill: "#8B5CF6",
-                stroke: "#1F2937",
-                strokeWidth: 1,
               }}
             />
             <defs>
