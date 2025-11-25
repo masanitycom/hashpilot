@@ -818,7 +818,8 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <CycleStatusCard userId={userData?.user_id || ""} />
         <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={currentInvestment} />
-        {!userData?.is_operation_only && (
+        {/* 紹介報酬カードは一時的に非表示（月次計算に移行中） */}
+        {false && !userData?.is_operation_only && (
           <ReferralProfitCard
             userId={userData?.user_id || ""}
             level1Investment={userStats?.level1_investment || 0}
