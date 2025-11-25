@@ -239,11 +239,24 @@ export function ReferralProfitCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* 月末集計後に表示されます */}
+        <div className="text-center py-8 space-y-3">
+          <div className="text-sm text-muted-foreground mb-2">
+            ※ 紹介報酬は月末の集計後に表示されます
+          </div>
+          <div className="text-4xl font-bold text-muted-foreground">
+            --
+          </div>
+          <div className="text-xs text-gray-500">
+            月末に自動で集計されます
+          </div>
+        </div>
+
+        {/* 旧コード（コメントアウト）
         <div className="text-xs text-gray-400 mb-3">
           Level1-3投資額: ${(totalLevel3Investment || 0).toLocaleString()}
         </div>
-        
-        {/* 昨日の紹介報酬 */}
+
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-400">昨日の報酬</span>
@@ -256,8 +269,7 @@ export function ReferralProfitCard({
               </span>
             </div>
           </div>
-          
-          {/* レベル別内訳（昨日） */}
+
           {profitData && totalLevel3Investment > 0 && (
             <div className="text-xs space-y-1 ml-4 opacity-75">
               {level1Investment > 0 && (
@@ -282,7 +294,6 @@ export function ReferralProfitCard({
           )}
         </div>
 
-        {/* 今月の累計紹介報酬 */}
         <div className="space-y-2 border-t border-gray-600 pt-3">
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-400">今月累計</span>
@@ -296,7 +307,6 @@ export function ReferralProfitCard({
             </div>
           </div>
 
-          {/* レベル別内訳（今月） */}
           {profitData && totalLevel3Investment > 0 && (
             <div className="text-xs space-y-1 ml-4 opacity-75">
               {level1Investment > 0 && (
@@ -324,6 +334,7 @@ export function ReferralProfitCard({
         {error && (
           <p className="text-xs text-red-400 mt-2">{error}</p>
         )}
+        */}
       </CardContent>
     </Card>
   )
