@@ -336,10 +336,13 @@ export default function AdminYieldPage() {
     // データ形式を自動判定して％値に変換
     const yieldVal = Number.parseFloat(item.yield_rate.toString())
     const marginVal = Number.parseFloat(item.margin_rate.toString())
+    const userRate = Number.parseFloat(item.user_rate.toString())
 
-    // 絶対値が1より大きい = 既に％値として保存されている
-    setYieldRate((Math.abs(yieldVal) > 1 ? yieldVal : yieldVal * 100).toFixed(3))
-    setMarginRate((marginVal > 1 ? marginVal : marginVal * 100).toFixed(0))
+    // user_rateで判定: 絶対値が1より小さい = 小数値形式（新形式）
+    const isDecimalFormat = Math.abs(userRate) < 1
+
+    setYieldRate((isDecimalFormat ? yieldVal * 100 : yieldVal).toFixed(3))
+    setMarginRate((isDecimalFormat ? marginVal * 100 : marginVal).toFixed(0))
 
     // ページ上部のフォームにスクロール
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -978,16 +981,20 @@ export default function AdminYieldPage() {
                           >
                             {(() => {
                               const val = Number.parseFloat(item.yield_rate.toString())
-                              // 絶対値が1より大きい = 既に％値として保存されている
-                              const displayVal = Math.abs(val) > 1 ? val : val * 100
+                              const userRate = Number.parseFloat(item.user_rate.toString())
+                              // user_rateで判定: 絶対値が1より小さい = 小数値形式
+                              const isDecimalFormat = Math.abs(userRate) < 1
+                              const displayVal = isDecimalFormat ? val * 100 : val
                               return displayVal.toFixed(3)
                             })()}%
                           </td>
                           <td className={`p-2 ${Number.parseFloat(item.margin_rate.toString()) > 1 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
                             {(() => {
                               const val = Number.parseFloat(item.margin_rate.toString())
-                              // 1より大きい = 既に％値として保存されている
-                              const displayVal = val > 1 ? val : val * 100
+                              const userRate = Number.parseFloat(item.user_rate.toString())
+                              // user_rateで判定: 絶対値が1より小さい = 小数値形式
+                              const isDecimalFormat = Math.abs(userRate) < 1
+                              const displayVal = isDecimalFormat ? val * 100 : val
                               return displayVal.toFixed(0)
                             })()}%
                             {Number.parseFloat(item.margin_rate.toString()) > 1 && (
@@ -999,8 +1006,9 @@ export default function AdminYieldPage() {
                           >
                             {(() => {
                               const val = Number.parseFloat(item.user_rate.toString())
-                              // 絶対値が1より大きい = 既に％値として保存されている
-                              const displayVal = Math.abs(val) > 1 ? val : val * 100
+                              // user_rateで判定: 絶対値が1より小さい = 小数値形式
+                              const isDecimalFormat = Math.abs(val) < 1
+                              const displayVal = isDecimalFormat ? val * 100 : val
                               return displayVal.toFixed(3)
                             })()}%
                           </td>
