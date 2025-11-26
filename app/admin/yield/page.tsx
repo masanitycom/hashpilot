@@ -170,7 +170,6 @@ export default function AdminYieldPage() {
         .from("daily_yield_log")
         .select("*")
         .order("date", { ascending: false })
-        .limit(10)
 
       if (error) throw error
       setHistory(data || [])
