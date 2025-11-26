@@ -332,9 +332,9 @@ export default function AdminYieldPage() {
   const handleEdit = (item: YieldHistory) => {
     // フォームに既存データをセット
     setDate(item.date)
-    // データベースには既に%として保存されているので100倍しない
-    setYieldRate(Number.parseFloat(item.yield_rate.toString()).toFixed(2))
-    setMarginRate(Number.parseFloat(item.margin_rate.toString()).toFixed(2))
+    // データベースの小数値を％値に変換（×100）
+    setYieldRate((Number.parseFloat(item.yield_rate.toString()) * 100).toFixed(3))
+    setMarginRate((Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0))
 
     // ページ上部のフォームにスクロール
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -969,20 +969,20 @@ export default function AdminYieldPage() {
                         <tr key={item.id} className="border-b border-gray-700">
                           <td className="p-2">{new Date(item.date).toLocaleDateString("ja-JP")}</td>
                           <td
-                            className={`p-2 font-medium ${Number.parseFloat(item.yield_rate) >= 0 ? "text-green-400" : "text-red-400"}`}
+                            className={`p-2 font-medium ${Number.parseFloat(item.yield_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {Number.parseFloat(item.yield_rate).toFixed(3)}%
+                            {(Number.parseFloat(item.yield_rate.toString()) * 100).toFixed(3)}%
                           </td>
-                          <td className={`p-2 ${Number.parseFloat(item.margin_rate) > 100 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
-                            {Number.parseFloat(item.margin_rate).toFixed(0)}%
-                            {Number.parseFloat(item.margin_rate) > 100 && (
+                          <td className={`p-2 ${Number.parseFloat(item.margin_rate.toString()) > 1 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
+                            {(Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0)}%
+                            {Number.parseFloat(item.margin_rate.toString()) > 1 && (
                               <span className="ml-1 text-xs">⚠️異常値</span>
                             )}
                           </td>
                           <td
-                            className={`p-2 font-medium ${Number.parseFloat(item.user_rate) >= 0 ? "text-green-400" : "text-red-400"}`}
+                            className={`p-2 font-medium ${Number.parseFloat(item.user_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(Number.parseFloat(item.user_rate) * 100).toFixed(3)}%
+                            {(Number.parseFloat(item.user_rate.toString()) * 100).toFixed(3)}%
                           </td>
                           <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
                           <td className="p-2 space-x-1">
