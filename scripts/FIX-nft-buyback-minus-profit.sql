@@ -28,23 +28,18 @@ BEGIN
 
     -- 買い取り額の計算
     -- プラスの場合: 基本額 - (個人収益 ÷ 2)
-    -- マイナスの場合: 基本額 - 個人収益（そのまま）
+    -- マイナスの場合: 基本額 + 個人収益（マイナスをそのまま足す = 実質引く）
     IF v_total_profit >= 0 THEN
         -- プラス収益: 半分を引く
         v_buyback_amount := v_base_value - (v_total_profit / 2);
     ELSE
-        -- マイナス収益: そのまま引く（÷2しない）
-        v_buyback_amount := v_base_value - v_total_profit;
+        -- マイナス収益: そのまま足す（マイナスなので実質引く）
+        v_buyback_amount := v_base_value + v_total_profit;
     END IF;
 
     -- 0以下にはならない
     IF v_buyback_amount < 0 THEN
         v_buyback_amount := 0;
-    END IF;
-
-    -- 基本額を超えないようにする
-    IF v_buyback_amount > v_base_value THEN
-        v_buyback_amount := v_base_value;
     END IF;
 
     RETURN v_buyback_amount;
@@ -61,15 +56,14 @@ $$ LANGUAGE plpgsql;
 
 -- テストケース2: マイナス収益の場合
 -- 例: 手動NFT、収益 -$9.12
--- 旧計算: $1,000 + (-$9.12) = $990.88
--- 新計算: $1,000 - (-$9.12) = $1,000 + $9.12 = $1,009.12 ← 上限適用で$1,000
+-- 計算: $1,000 + (-$9.12) = $990.88
 
 -- テストケース3: 大きなマイナス収益の場合
 -- 例: 手動NFT、収益 -$100
--- 新計算: $1,000 - (-$100) = $1,000 + $100 = $1,100 ← 上限適用で$1,000
+-- 計算: $1,000 + (-$100) = $900.00
 
 SELECT '✅ NFT買い取り金額計算関数を修正しました' as status;
 SELECT '📝 変更内容:' as info;
 SELECT '  - プラス収益: 基本額 - (収益 ÷ 2)' as change1;
-SELECT '  - マイナス収益: 基本額 - 収益（そのまま、÷2しない）' as change2;
-SELECT '  - 上限: 基本額を超えない（手動1000ドル、自動500ドル）' as change3;
+SELECT '  - マイナス収益: 基本額 + 収益（マイナスをそのまま足す = 実質引く）' as change2;
+SELECT '  - 下限: 0ドル以下にはならない' as change3;
