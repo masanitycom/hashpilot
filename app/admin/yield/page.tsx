@@ -332,9 +332,14 @@ export default function AdminYieldPage() {
   const handleEdit = (item: YieldHistory) => {
     // フォームに既存データをセット
     setDate(item.date)
-    // データベースの小数値を％値に変換（×100）
-    setYieldRate((Number.parseFloat(item.yield_rate.toString()) * 100).toFixed(3))
-    setMarginRate((Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0))
+
+    // データ形式を自動判定して％値に変換
+    const yieldVal = Number.parseFloat(item.yield_rate.toString())
+    const marginVal = Number.parseFloat(item.margin_rate.toString())
+
+    // 絶対値が1より大きい = 既に％値として保存されている
+    setYieldRate((Math.abs(yieldVal) > 1 ? yieldVal : yieldVal * 100).toFixed(3))
+    setMarginRate((marginVal > 1 ? marginVal : marginVal * 100).toFixed(0))
 
     // ページ上部のフォームにスクロール
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -971,10 +976,20 @@ export default function AdminYieldPage() {
                           <td
                             className={`p-2 font-medium ${Number.parseFloat(item.yield_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(Number.parseFloat(item.yield_rate.toString()) * 100).toFixed(3)}%
+                            {(() => {
+                              const val = Number.parseFloat(item.yield_rate.toString())
+                              // 絶対値が1より大きい = 既に％値として保存されている
+                              const displayVal = Math.abs(val) > 1 ? val : val * 100
+                              return displayVal.toFixed(3)
+                            })()}%
                           </td>
                           <td className={`p-2 ${Number.parseFloat(item.margin_rate.toString()) > 1 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
-                            {(Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0)}%
+                            {(() => {
+                              const val = Number.parseFloat(item.margin_rate.toString())
+                              // 1より大きい = 既に％値として保存されている
+                              const displayVal = val > 1 ? val : val * 100
+                              return displayVal.toFixed(0)
+                            })()}%
                             {Number.parseFloat(item.margin_rate.toString()) > 1 && (
                               <span className="ml-1 text-xs">⚠️異常値</span>
                             )}
@@ -982,7 +997,12 @@ export default function AdminYieldPage() {
                           <td
                             className={`p-2 font-medium ${Number.parseFloat(item.user_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(Number.parseFloat(item.user_rate.toString()) * 100).toFixed(3)}%
+                            {(() => {
+                              const val = Number.parseFloat(item.user_rate.toString())
+                              // 絶対値が1より大きい = 既に％値として保存されている
+                              const displayVal = Math.abs(val) > 1 ? val : val * 100
+                              return displayVal.toFixed(3)
+                            })()}%
                           </td>
                           <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
                           <td className="p-2 space-x-1">
