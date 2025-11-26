@@ -332,16 +332,9 @@ export default function AdminYieldPage() {
     // フォームに既存データをセット
     setDate(item.date)
 
-    // データ形式を自動判定して％値に変換
-    const yieldVal = Number.parseFloat(item.yield_rate.toString())
-    const marginVal = Number.parseFloat(item.margin_rate.toString())
-    const userRate = Number.parseFloat(item.user_rate.toString())
-
-    // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など、×100必要）
-    const isDecimalFormat = Math.abs(userRate) >= 1
-
-    setYieldRate((isDecimalFormat ? yieldVal * 100 : yieldVal).toFixed(3))
-    setMarginRate((isDecimalFormat ? marginVal * 100 : marginVal).toFixed(0))
+    // DBの値は全て％値として保存されているのでそのまま使用
+    setYieldRate(Number.parseFloat(item.yield_rate.toString()).toFixed(3))
+    setMarginRate(Number.parseFloat(item.margin_rate.toString()).toFixed(0))
 
     // ページ上部のフォームにスクロール
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -978,24 +971,10 @@ export default function AdminYieldPage() {
                           <td
                             className={`p-2 font-medium ${Number.parseFloat(item.yield_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(() => {
-                              const val = Number.parseFloat(item.yield_rate.toString())
-                              const userRate = Number.parseFloat(item.user_rate.toString())
-                              // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など）
-                              const isDecimalFormat = Math.abs(userRate) >= 1
-                              const displayVal = isDecimalFormat ? val * 100 : val
-                              return displayVal.toFixed(3)
-                            })()}%
+                            {Number.parseFloat(item.yield_rate.toString()).toFixed(3)}%
                           </td>
                           <td className={`p-2 ${Number.parseFloat(item.margin_rate.toString()) > 1 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
-                            {(() => {
-                              const val = Number.parseFloat(item.margin_rate.toString())
-                              const userRate = Number.parseFloat(item.user_rate.toString())
-                              // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など）
-                              const isDecimalFormat = Math.abs(userRate) >= 1
-                              const displayVal = isDecimalFormat ? val * 100 : val
-                              return displayVal.toFixed(0)
-                            })()}%
+                            {Number.parseFloat(item.margin_rate.toString()).toFixed(0)}%
                             {Number.parseFloat(item.margin_rate.toString()) > 1 && (
                               <span className="ml-1 text-xs">⚠️異常値</span>
                             )}
@@ -1003,13 +982,7 @@ export default function AdminYieldPage() {
                           <td
                             className={`p-2 font-medium ${Number.parseFloat(item.user_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
                           >
-                            {(() => {
-                              const val = Number.parseFloat(item.user_rate.toString())
-                              // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など）
-                              const isDecimalFormat = Math.abs(val) >= 1
-                              const displayVal = isDecimalFormat ? val * 100 : val
-                              return displayVal.toFixed(3)
-                            })()}%
+                            {Number.parseFloat(item.user_rate.toString()).toFixed(3)}%
                           </td>
                           <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
                           <td className="p-2 space-x-1">
