@@ -332,9 +332,9 @@ export default function AdminYieldPage() {
     // フォームに既存データをセット
     setDate(item.date)
 
-    // DBの値は既に％値として保存されているのでそのまま使用
+    // DBの値: yield_rate/user_rateは％値、margin_rateは小数値
     setYieldRate(Number.parseFloat(item.yield_rate.toString()).toFixed(3))
-    setMarginRate(Number.parseFloat(item.margin_rate.toString()).toFixed(0))
+    setMarginRate((Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0))
 
     // ページ上部のフォームにスクロール
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -974,7 +974,7 @@ export default function AdminYieldPage() {
                             {Number.parseFloat(item.yield_rate.toString()).toFixed(3)}%
                           </td>
                           <td className={`p-2 ${Number.parseFloat(item.margin_rate.toString()) > 1 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
-                            {Number.parseFloat(item.margin_rate.toString()).toFixed(0)}%
+                            {(Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0)}%
                             {Number.parseFloat(item.margin_rate.toString()) > 1 && (
                               <span className="ml-1 text-xs">⚠️異常値</span>
                             )}
