@@ -337,8 +337,8 @@ export default function AdminYieldPage() {
     const marginVal = Number.parseFloat(item.margin_rate.toString())
     const userRate = Number.parseFloat(item.user_rate.toString())
 
-    // user_rateで判定: 絶対値が1より小さい = 小数値形式（新形式）
-    const isDecimalFormat = Math.abs(userRate) < 1
+    // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など、×100必要）
+    const isDecimalFormat = Math.abs(userRate) >= 1
 
     setYieldRate((isDecimalFormat ? yieldVal * 100 : yieldVal).toFixed(3))
     setMarginRate((isDecimalFormat ? marginVal * 100 : marginVal).toFixed(0))
@@ -981,8 +981,8 @@ export default function AdminYieldPage() {
                             {(() => {
                               const val = Number.parseFloat(item.yield_rate.toString())
                               const userRate = Number.parseFloat(item.user_rate.toString())
-                              // user_rateで判定: 絶対値が1より小さい = 小数値形式
-                              const isDecimalFormat = Math.abs(userRate) < 1
+                              // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など）
+                              const isDecimalFormat = Math.abs(userRate) >= 1
                               const displayVal = isDecimalFormat ? val * 100 : val
                               return displayVal.toFixed(3)
                             })()}%
@@ -991,8 +991,8 @@ export default function AdminYieldPage() {
                             {(() => {
                               const val = Number.parseFloat(item.margin_rate.toString())
                               const userRate = Number.parseFloat(item.user_rate.toString())
-                              // user_rateで判定: 絶対値が1より小さい = 小数値形式
-                              const isDecimalFormat = Math.abs(userRate) < 1
+                              // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など）
+                              const isDecimalFormat = Math.abs(userRate) >= 1
                               const displayVal = isDecimalFormat ? val * 100 : val
                               return displayVal.toFixed(0)
                             })()}%
@@ -1005,8 +1005,8 @@ export default function AdminYieldPage() {
                           >
                             {(() => {
                               const val = Number.parseFloat(item.user_rate.toString())
-                              // user_rateで判定: 絶対値が1より小さい = 小数値形式
-                              const isDecimalFormat = Math.abs(val) < 1
+                              // user_rateで判定: 絶対値が1以上 = 小数値形式（0.00952など）
+                              const isDecimalFormat = Math.abs(val) >= 1
                               const displayVal = isDecimalFormat ? val * 100 : val
                               return displayVal.toFixed(3)
                             })()}%
