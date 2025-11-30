@@ -13,13 +13,19 @@ interface PendingWithdrawalCardProps {
   userId: string
 }
 
+interface WithdrawalRecord {
+  id: string
+  withdrawal_month: string
+  total_amount: number
+  status: string
+  task_completed: boolean
+  created_at: string
+}
+
 interface WithdrawalData {
-  amount: number
-  type: 'no_withdrawal' | 'pending_withdrawal'
-  status?: string
-  latest_month?: string | null
-  task_required?: boolean
-  task_completed?: boolean
+  pending_withdrawals: WithdrawalRecord[]
+  completed_withdrawals: WithdrawalRecord[]
+  has_data: boolean
 }
 
 export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
@@ -36,10 +42,13 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
 
   // タスク未完了の出金申請がある場合は自動的にポップアップ表示
   useEffect(() => {
-    if (withdrawalData?.type === 'pending_withdrawal' &&
-        withdrawalData?.task_required &&
-        !withdrawalData?.task_completed) {
-      setShowTaskPopup(true)
+    if (withdrawalData?.pending_withdrawals) {
+      const hasUncompletedTask = withdrawalData.pending_withdrawals.some(
+        w => w.status === 'on_hold' && !w.task_completed
+      )
+      if (hasUncompletedTask) {
+        setShowTaskPopup(true)
+      }
     }
   }, [withdrawalData])
 
@@ -48,40 +57,38 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       setLoading(true)
       setError("")
 
-      // 1. まず月次出金システムの保留中データを確認
-      const { data: pendingWithdrawals, error: withdrawalError } = await supabase
+      // 保留中の出金を取得（on_hold, pending）
+      const { data: pendingWithdrawals, error: pendingError } = await supabase
         .from("monthly_withdrawals")
         .select("*")
         .eq("user_id", userId)
         .in("status", ["pending", "on_hold"])
         .order("withdrawal_month", { ascending: false })
 
-      if (withdrawalError && withdrawalError.code !== "PGRST116") {
-        throw withdrawalError
+      if (pendingError && pendingError.code !== "PGRST116") {
+        throw pendingError
       }
 
-      // 保留中の出金がある場合はその金額を表示
-      if (pendingWithdrawals && pendingWithdrawals.length > 0) {
-        const totalPendingAmount = pendingWithdrawals.reduce((sum, w) => sum + Number(w.total_amount), 0)
-        const latestWithdrawal = pendingWithdrawals[0]
-        
-        setWithdrawalData({
-          amount: totalPendingAmount,
-          type: 'pending_withdrawal',
-          status: latestWithdrawal.status,
-          latest_month: latestWithdrawal.withdrawal_month,
-          task_required: latestWithdrawal.status === 'on_hold',
-          task_completed: latestWithdrawal.task_completed || false
-        })
-        return
+      // 完了済みの出金を取得（completed）
+      const { data: completedWithdrawals, error: completedError } = await supabase
+        .from("monthly_withdrawals")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("status", "completed")
+        .order("withdrawal_month", { ascending: false })
+        .limit(10) // 最新10件のみ
+
+      if (completedError && completedError.code !== "PGRST116") {
+        throw completedError
       }
 
-      // 2. 保留中の出金がない場合は「出金なし」を表示
+      const hasData = (pendingWithdrawals && pendingWithdrawals.length > 0) ||
+                      (completedWithdrawals && completedWithdrawals.length > 0)
+
       setWithdrawalData({
-        amount: 0,
-        type: 'no_withdrawal',
-        task_required: false,
-        task_completed: false
+        pending_withdrawals: pendingWithdrawals || [],
+        completed_withdrawals: completedWithdrawals || [],
+        has_data: hasData
       })
 
     } catch (err: any) {
@@ -123,14 +130,25 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
     )
   }
 
-  const displayAmount = withdrawalData?.amount || 0
-  const isPendingWithdrawal = withdrawalData?.type === 'pending_withdrawal'
-  const isNoWithdrawal = withdrawalData?.type === 'no_withdrawal'
-  const needsTask = withdrawalData?.task_required && !withdrawalData?.task_completed
-
   const handleTaskComplete = async () => {
     await fetchWithdrawalData() // Refresh data after task completion
     setShowTaskPopup(false) // タスク完了後にポップアップを閉じる
+  }
+
+  const getStatusBadge = (status: string, taskCompleted: boolean) => {
+    if (status === 'on_hold' && !taskCompleted) {
+      return <Badge className="bg-yellow-600 text-white text-xs">タスク待ち</Badge>
+    }
+    if (status === 'on_hold' && taskCompleted) {
+      return <Badge className="bg-blue-600 text-white text-xs">処理待ち</Badge>
+    }
+    if (status === 'pending') {
+      return <Badge className="bg-orange-600 text-white text-xs">送金処理中</Badge>
+    }
+    if (status === 'completed') {
+      return <Badge className="bg-green-600 text-white text-xs">完了</Badge>
+    }
+    return null
   }
 
   return (
@@ -142,45 +160,66 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       />
     <Card className="bg-gray-800 border-gray-700">
       <CardHeader className="p-3 pb-2">
-        <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
+        <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金履歴</CardTitle>
       </CardHeader>
       <CardContent className="p-3 pt-0">
-        {isPendingWithdrawal ? (
-          <>
-            <div className="flex items-center space-x-1">
-              <DollarSign className="h-4 w-4 flex-shrink-0 text-orange-400" />
-              <span className="text-base md:text-xl lg:text-2xl font-bold truncate text-orange-400">
-                ${displayAmount.toFixed(3)}
-              </span>
-            </div>
-            <div className="text-xs text-gray-500 mt-1">
-              <div>
-                {withdrawalData?.status === 'pending' && '送金処理中'}
-                {withdrawalData?.status === 'on_hold' && !withdrawalData?.task_completed && (
-                  <div className="flex items-center gap-1">
-                    <span>アンケートタスク待ち</span>
+        {!withdrawalData?.has_data ? (
+          <div className="text-center py-4">
+            <p className="text-gray-400 text-sm">出金履歴はありません</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {/* 保留中の出金 */}
+            {withdrawalData.pending_withdrawals.map((withdrawal) => (
+              <div key={withdrawal.id} className="border border-orange-500/30 bg-orange-900/20 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-orange-400" />
+                    <span className="text-lg font-bold text-orange-400">
+                      ${Number(withdrawal.total_amount).toFixed(2)}
+                    </span>
+                  </div>
+                  {getStatusBadge(withdrawal.status, withdrawal.task_completed)}
+                </div>
+                <div className="text-xs text-gray-400">
+                  <div>{formatMonth(withdrawal.withdrawal_month)}分</div>
+                  {withdrawal.status === 'on_hold' && !withdrawal.task_completed && (
                     <Button
                       onClick={() => setShowTaskPopup(true)}
                       size="sm"
-                      className="text-xs bg-yellow-600 hover:bg-yellow-700 px-2 py-1 h-auto"
+                      className="mt-2 text-xs bg-yellow-600 hover:bg-yellow-700 px-2 py-1 h-auto"
                     >
-                      開始
+                      タスクを開始
                     </Button>
-                  </div>
-                )}
-                {withdrawalData?.status === 'on_hold' && withdrawalData?.task_completed && (
-                  <div className="flex items-center gap-1 text-green-400">
-                    <CheckCircle className="h-3 w-3" />
-                    タスク完了済み・処理待ち
-                  </div>
-                )}
-                {withdrawalData?.latest_month && ` (${formatMonth(withdrawalData.latest_month)})`}
+                  )}
+                </div>
               </div>
-            </div>
-          </>
-        ) : (
-          <div className="text-center py-4">
-            <p className="text-gray-400 text-sm">現在、処理中の出金申請はありません</p>
+            ))}
+
+            {/* 完了済みの出金 */}
+            {withdrawalData.completed_withdrawals.length > 0 && (
+              <>
+                <div className="border-t border-gray-700 pt-3">
+                  <p className="text-xs text-gray-400 mb-2">完了済み</p>
+                </div>
+                {withdrawalData.completed_withdrawals.map((withdrawal) => (
+                  <div key={withdrawal.id} className="border border-green-500/30 bg-green-900/10 rounded-lg p-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-400" />
+                        <span className="text-base font-bold text-green-400">
+                          ${Number(withdrawal.total_amount).toFixed(2)}
+                        </span>
+                      </div>
+                      {getStatusBadge(withdrawal.status, withdrawal.task_completed)}
+                    </div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      {formatMonth(withdrawal.withdrawal_month)}分
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         )}
       </CardContent>
