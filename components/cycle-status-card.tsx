@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { DollarSign, Zap, Clock, Target, TrendingUp } from "lucide-react"
+import { DollarSign, Zap, Clock, Target } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
 interface CycleStatusCardProps {
@@ -13,7 +13,6 @@ interface CycleStatusCardProps {
 
 interface CycleData {
   next_action: string
-  available_usdt: number
   total_nft_count: number
   auto_nft_count: number
   manual_nft_count: number
@@ -40,7 +39,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       // affiliate_cycleから累積紹介報酬とNFTデータを取得
       const { data: cycleInfo, error: cycleError } = await supabase
         .from('affiliate_cycle')
-        .select('total_nft_count, manual_nft_count, auto_nft_count, cum_usdt, available_usdt')
+        .select('total_nft_count, manual_nft_count, auto_nft_count, cum_usdt')
         .eq('user_id', userId)
         .single()
 
@@ -63,7 +62,6 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       setCycleData({
         next_action: nextAction,
-        available_usdt: cycleInfo?.available_usdt || 0,
         total_nft_count: manualNfts + autoNfts,
         auto_nft_count: autoNfts,
         manual_nft_count: manualNfts,
@@ -212,17 +210,6 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
           </div>
         </div>
 
-        {/* 利用可能残高 */}
-        {cycleData.available_usdt > 0 && (
-          <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-green-400" />
-              <span className="text-green-400 text-sm font-medium">
-                受取可能: ${cycleData.available_usdt.toFixed(2)}
-              </span>
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   )
