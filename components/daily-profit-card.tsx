@@ -55,9 +55,9 @@ export function DailyProfitCard({ userId }: DailyProfitCardProps) {
       } else if (profitData) {
         const profitValue = parseFloat(profitData.daily_profit) || 0
         const userRate = parseFloat(profitData.user_rate) || 0
-        
+
         setProfit(profitValue)
-        setYieldRate(userRate * 100) // ユーザー利率をパーセント表示
+        setYieldRate(userRate) // user_rateは既に％値として保存されている
       } else {
         // データが存在しない場合
         setProfit(0)
