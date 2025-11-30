@@ -204,7 +204,7 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
                 </div>
                 {withdrawalData.completed_withdrawals.map((withdrawal) => (
                   <div key={withdrawal.id} className="border border-green-500/30 bg-green-900/10 rounded-lg p-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-400" />
                         <span className="text-base font-bold text-green-400">
@@ -213,8 +213,9 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
                       </div>
                       {getStatusBadge(withdrawal.status, withdrawal.task_completed)}
                     </div>
-                    <div className="text-xs text-gray-400 mt-1">
-                      {formatMonth(withdrawal.withdrawal_month)}分
+                    <div className="text-xs text-gray-400">
+                      <div>{formatMonth(withdrawal.withdrawal_month)}分</div>
+                      <div className="mt-1 text-gray-500">通常5日以内にCoinWに送金されます。</div>
                     </div>
                   </div>
                 ))}
