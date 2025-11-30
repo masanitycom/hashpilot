@@ -15,7 +15,7 @@ interface PendingWithdrawalCardProps {
 
 interface WithdrawalData {
   amount: number
-  type: 'monthly_profit' | 'pending_withdrawal'
+  type: 'no_withdrawal' | 'pending_withdrawal'
   status?: string
   latest_month?: string | null
   task_required?: boolean
@@ -42,53 +42,6 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       setShowTaskPopup(true)
     }
   }, [withdrawalData])
-
-  // 月間紹介報酬を取得する関数（DBから直接取得）
-  const getMonthlyReferralProfit = async (userId: string, monthStart: string, monthEnd: string, yearMonth: string): Promise<number> => {
-    try {
-      let totalReferralProfit = 0
-
-      // 日次紹介報酬を取得（user_referral_profit）
-      const { data: dailyReferralData, error: dailyError } = await supabase
-        .from('user_referral_profit')
-        .select('profit_amount')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
-
-      if (dailyError) {
-        console.log('user_referral_profit access error:', dailyError)
-        // テーブルが存在しない場合は0として続行
-        if (dailyError.code !== '42P01' && dailyError.code !== 'PGRST116') {
-          throw dailyError
-        }
-      } else if (dailyReferralData && dailyReferralData.length > 0) {
-        totalReferralProfit += dailyReferralData.reduce((sum, row) => sum + (parseFloat(row.profit_amount) || 0), 0)
-      }
-
-      // 月次紹介報酬を取得（monthly_referral_profit）
-      const { data: monthlyReferralData, error: monthlyError } = await supabase
-        .from('monthly_referral_profit')
-        .select('profit_amount')
-        .eq('user_id', userId)
-        .eq('year_month', yearMonth)
-
-      if (monthlyError) {
-        console.log('monthly_referral_profit access error:', monthlyError)
-        // テーブルが存在しない場合は0として続行
-        if (monthlyError.code !== '42P01' && monthlyError.code !== 'PGRST116') {
-          throw monthlyError
-        }
-      } else if (monthlyReferralData && monthlyReferralData.length > 0) {
-        totalReferralProfit += monthlyReferralData.reduce((sum, row) => sum + (parseFloat(row.profit_amount) || 0), 0)
-      }
-
-      return totalReferralProfit
-    } catch (error) {
-      console.error('紹介報酬取得エラー:', error)
-      return 0
-    }
-  }
 
   const fetchWithdrawalData = async () => {
     try {
@@ -123,51 +76,10 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
         return
       }
 
-      // 2. 保留中の出金がない場合は今月の累積利益を表示
-      const now = new Date()
-      const year = now.getFullYear()
-      const month = now.getMonth()
-      const monthStart = new Date(Date.UTC(year, month, 1)).toISOString().split('T')[0]
-      const monthEnd = new Date(Date.UTC(year, month + 1, 0)).toISOString().split('T')[0]
-      const yearMonth = `${year}-${String(month + 1).padStart(2, '0')}`
-
-      // 個人利益を取得（nft_daily_profit）
-      const { data: profitData, error: profitError } = await supabase
-        .from('nft_daily_profit')
-        .select('daily_profit')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
-
-      if (profitError) {
-        console.log('nft_daily_profit access error:', profitError)
-        // テーブルが存在しない場合は利益0として続行
-        if (profitError.code === '42P01' || profitError.code === 'PGRST116') {
-          // テーブル不存在またはデータなしの場合
-        } else {
-          throw profitError
-        }
-      }
-
-      // 個人利益を計算
-      let personalProfit = 0
-
-      if (profitData && profitData.length > 0) {
-        profitData.forEach(record => {
-          const dailyValue = parseFloat(record.daily_profit) || 0
-          personalProfit += dailyValue
-        })
-      }
-
-      // 紹介報酬を取得（user_referral_profit + monthly_referral_profit）
-      const referralProfit = await getMonthlyReferralProfit(userId, monthStart, monthEnd, yearMonth)
-
-      // 合計利益を計算
-      const monthlyProfit = personalProfit + referralProfit
-
+      // 2. 保留中の出金がない場合は「出金なし」を表示
       setWithdrawalData({
-        amount: monthlyProfit,
-        type: 'monthly_profit',
+        amount: 0,
+        type: 'no_withdrawal',
         task_required: false,
         task_completed: false
       })
@@ -213,7 +125,7 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
 
   const displayAmount = withdrawalData?.amount || 0
   const isPendingWithdrawal = withdrawalData?.type === 'pending_withdrawal'
-  const isMonthlyProfit = withdrawalData?.type === 'monthly_profit'
+  const isNoWithdrawal = withdrawalData?.type === 'no_withdrawal'
   const needsTask = withdrawalData?.task_required && !withdrawalData?.task_completed
 
   const handleTaskComplete = async () => {
@@ -233,48 +145,44 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
         <CardTitle className="text-gray-300 text-xs md:text-sm font-medium">出金状況</CardTitle>
       </CardHeader>
       <CardContent className="p-3 pt-0">
-        <div className="flex items-center space-x-1">
-          <DollarSign className={`h-4 w-4 flex-shrink-0 ${
-            isPendingWithdrawal ? 'text-orange-400' : 'text-purple-400'
-          }`} />
-          <span className={`text-base md:text-xl lg:text-2xl font-bold truncate ${
-            isPendingWithdrawal ? 'text-orange-400' : 'text-purple-400'
-          }`}>
-            ${displayAmount.toFixed(3)}
-          </span>
-        </div>
-        <div className="text-xs text-gray-500 mt-1">
-          {isPendingWithdrawal && (
-            <div>
-              {withdrawalData?.status === 'pending' && '送金処理中'}
-              {withdrawalData?.status === 'on_hold' && !withdrawalData?.task_completed && (
-                <div className="flex items-center gap-1">
-                  <span>アンケートタスク待ち</span>
-                  <Button
-                    onClick={() => setShowTaskPopup(true)}
-                    size="sm"
-                    className="text-xs bg-yellow-600 hover:bg-yellow-700 px-2 py-1 h-auto"
-                  >
-                    開始
-                  </Button>
-                </div>
-              )}
-              {withdrawalData?.status === 'on_hold' && withdrawalData?.task_completed && (
-                <div className="flex items-center gap-1 text-green-400">
-                  <CheckCircle className="h-3 w-3" />
-                  タスク完了済み・処理待ち
-                </div>
-              )}
-              {withdrawalData?.latest_month && ` (${formatMonth(withdrawalData.latest_month)})`}
+        {isPendingWithdrawal ? (
+          <>
+            <div className="flex items-center space-x-1">
+              <DollarSign className="h-4 w-4 flex-shrink-0 text-orange-400" />
+              <span className="text-base md:text-xl lg:text-2xl font-bold truncate text-orange-400">
+                ${displayAmount.toFixed(3)}
+              </span>
             </div>
-          )}
-          {isMonthlyProfit && (
-            <div>今月の累積利益（月末に出金処理）</div>
-          )}
-          {displayAmount === 0 && (
-            <div>出金なし</div>
-          )}
-        </div>
+            <div className="text-xs text-gray-500 mt-1">
+              <div>
+                {withdrawalData?.status === 'pending' && '送金処理中'}
+                {withdrawalData?.status === 'on_hold' && !withdrawalData?.task_completed && (
+                  <div className="flex items-center gap-1">
+                    <span>アンケートタスク待ち</span>
+                    <Button
+                      onClick={() => setShowTaskPopup(true)}
+                      size="sm"
+                      className="text-xs bg-yellow-600 hover:bg-yellow-700 px-2 py-1 h-auto"
+                    >
+                      開始
+                    </Button>
+                  </div>
+                )}
+                {withdrawalData?.status === 'on_hold' && withdrawalData?.task_completed && (
+                  <div className="flex items-center gap-1 text-green-400">
+                    <CheckCircle className="h-3 w-3" />
+                    タスク完了済み・処理待ち
+                  </div>
+                )}
+                {withdrawalData?.latest_month && ` (${formatMonth(withdrawalData.latest_month)})`}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-4">
+            <p className="text-gray-400 text-sm">現在、処理中の出金申請はありません</p>
+          </div>
+        )}
       </CardContent>
     </Card>
     </>
