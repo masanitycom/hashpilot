@@ -107,6 +107,7 @@ export default function OptimizedDashboardPage() {
   const [userHasCoinwUid, setUserHasCoinwUid] = useState(true)
   const [userHasNftAddress, setUserHasNftAddress] = useState(true)
   const [showRewardTaskPopup, setShowRewardTaskPopup] = useState(false)
+  const [showReferralRewardTaskPopup, setShowReferralRewardTaskPopup] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -207,7 +208,8 @@ export default function OptimizedDashboardPage() {
         calculateStatsOptimized(userRecord),
         fetchLatestApprovalDate(userRecord.user_id),
         fetchCurrentNftCount(userRecord.user_id),
-        checkPendingRewardTask(userRecord.user_id)
+        checkPendingRewardTask(userRecord.user_id),
+        checkPendingReferralRewardTask(userRecord.user_id)
       ])
       
     } catch (error) {
@@ -396,6 +398,30 @@ export default function OptimizedDashboardPage() {
       }
     } catch (error) {
       console.error("[RewardTask] Error in checkPendingRewardTask:", error)
+    }
+  }
+
+  const checkPendingReferralRewardTask = async (userId: string) => {
+    try {
+      console.log('[ReferralRewardTask] Checking for userId:', userId)
+
+      const { data, error } = await supabase.rpc('get_referral_reward_task_status', {
+        p_user_id: userId
+      })
+
+      if (error) {
+        console.error("[ReferralRewardTask] Error fetching task status:", error)
+        return
+      }
+
+      if (data && data.length > 0 && data[0].has_pending_task) {
+        console.log("[ReferralRewardTask] Pending task found:", data[0])
+        setShowReferralRewardTaskPopup(true)
+      } else {
+        console.log("[ReferralRewardTask] No pending tasks found")
+      }
+    } catch (error) {
+      console.error("[ReferralRewardTask] Error in checkPendingReferralRewardTask:", error)
     }
   }
 
@@ -1048,13 +1074,25 @@ const CoinWAlert = ({ onClose }: { onClose: () => void }) => (
       </CardContent>
     </Card>
 
-    {/* 月末報酬タスクポップアップ */}
+    {/* 月末報酬タスクポップアップ（月末自動出金用） */}
     {userData && (
       <RewardTaskPopup
         userId={userData.user_id}
         isOpen={showRewardTaskPopup}
         onComplete={() => {
           setShowRewardTaskPopup(false)
+          window.location.reload()
+        }}
+      />
+    )}
+
+    {/* 紹介報酬計算完了タスクポップアップ */}
+    {userData && (
+      <RewardTaskPopup
+        userId={userData.user_id}
+        isOpen={showReferralRewardTaskPopup}
+        onComplete={() => {
+          setShowReferralRewardTaskPopup(false)
           window.location.reload()
         }}
       />

@@ -307,7 +307,12 @@ BEGIN
   DROP TABLE temp_monthly_profit;
 
   -- ========================================
-  -- STEP 7: 結果を返す
+  -- STEP 7: タスクポップアップ用のフラグを設定
+  -- ========================================
+  PERFORM mark_referral_reward_calculated(p_year, p_month);
+
+  -- ========================================
+  -- STEP 8: 結果を返す
   -- ========================================
   RETURN QUERY SELECT
     'SUCCESS'::TEXT,
