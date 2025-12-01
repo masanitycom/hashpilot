@@ -1,5 +1,22 @@
 # HASHPILOT システム管理ガイド
 
+## 📁 ファイル保存ルール
+
+**重要:** SQLスクリプトやドキュメントを作成する際は、必ず以下のディレクトリに保存すること：
+
+- **SQLスクリプト**: `scripts/` ディレクトリ（例: `scripts/CHECK-xxx.sql`）
+- **ドキュメント**: プロジェクトルート（例: `CLAUDE.md`, `FIX-XXX.md`）
+- **一時ファイル禁止**: `/tmp/` に保存しない
+
+**命名規則:**
+- 確認系: `CHECK-xxx.sql`
+- 修正系: `FIX-xxx.sql`
+- 削除系: `DELETE-xxx.sql`
+- 調査系: `INVESTIGATE-xxx.sql`
+- 緊急系: `URGENT-xxx.sql`
+
+---
+
 ## 🚀 システム運用開始手順
 
 ### 環境変数の設定
