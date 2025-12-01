@@ -1094,7 +1094,7 @@ const NFTAddressAlert = ({ onClose }: { onClose: () => void }) => (
         </div>
       </CardContent>
     </Card>
-  </div>
+
     {/* 月末報酬タスクポップアップ */}
     {userData && (
       <RewardTaskPopup
