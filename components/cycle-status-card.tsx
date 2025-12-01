@@ -45,8 +45,8 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
       if (cycleError) throw cycleError
 
-      // ⭐ 紹介報酬は月末集計のため、cum_usdtを$0として扱う
-      const cumUsdt = 0  // 常に$0
+      // affiliate_cycleから累積紹介報酬を取得
+      const cumUsdt = parseFloat(cycleInfo?.cum_usdt || '0')
 
       // affiliate_cycleから正確なNFT数を取得
       const totalNfts = cycleInfo?.total_nft_count || 0
