@@ -371,25 +371,31 @@ export default function OptimizedDashboardPage() {
 
   const checkPendingRewardTask = async (userId: string) => {
     try {
+      console.log('[RewardTask] Checking for userId:', userId)
+
       const { data, error } = await supabase
         .from("monthly_withdrawals")
-        .select("id, task_completed")
+        .select("id, task_completed, status")
         .eq("user_id", userId)
         .eq("status", "on_hold")
         .eq("task_completed", false)
         .limit(1)
 
+      console.log('[RewardTask] Query result:', { data, error })
+
       if (error && error.code !== 'PGRST116') {
-        console.error("Error checking pending reward task:", error)
+        console.error("[RewardTask] Error checking pending reward task:", error)
         return
       }
 
       if (data && data.length > 0) {
-        console.log("Pending reward task found, showing popup")
+        console.log("[RewardTask] Pending reward task found, showing popup:", data)
         setShowRewardTaskPopup(true)
+      } else {
+        console.log("[RewardTask] No pending tasks found")
       }
     } catch (error) {
-      console.error("Error in checkPendingRewardTask:", error)
+      console.error("[RewardTask] Error in checkPendingRewardTask:", error)
     }
   }
 
