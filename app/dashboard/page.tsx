@@ -1106,5 +1106,5 @@ const NFTAddressAlert = ({ onClose }: { onClose: () => void }) => (
         </div>
       </CardContent>
     </Card>
-
+  </div>
 )
