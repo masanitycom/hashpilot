@@ -37,6 +37,7 @@ export interface UnifiedUser {
   total_purchases: number
   referrer_user_id: string | null
   created_at: string
+  is_pegasus_exchange: boolean
   // その他必要なフィールド
 }
 
@@ -57,13 +58,13 @@ export class UnifiedReferralCalculator {
   async loadAllUsers(): Promise<void> {
     const { data, error } = await supabase
       .from('users')
-      .select('user_id, email, total_purchases, referrer_user_id, created_at')
+      .select('user_id, email, total_purchases, referrer_user_id, created_at, is_pegasus_exchange')
       .order('created_at', { ascending: true })
-    
+
     if (error) {
       throw new Error(`ユーザーデータ取得エラー: ${error.message}`)
     }
-    
+
     this.allUsers = data || []
   }
   
@@ -141,13 +142,22 @@ export class UnifiedReferralCalculator {
    */
   private calculateLevelBreakdown(tree: Map<number, UnifiedUser[]>) {
     const breakdown: UnifiedReferralStats['levelBreakdown'] = []
-    
+
+    // ペガサス交換ユーザーの例外リスト（この3名は通常ユーザーとして扱う）
+    const SPECIAL_PEGASUS_USERS = ['5A708D', '20248A', '225F87']
+
     for (const [level, users] of tree) {
       const purchasedUsers = users.filter(u => u.total_purchases > 0)
-      const investment = purchasedUsers.reduce((sum, u) => 
+
+      // ペガサス交換ユーザーを除外（例外の3名は含める）
+      const validPurchasedUsers = purchasedUsers.filter(u =>
+        !u.is_pegasus_exchange || SPECIAL_PEGASUS_USERS.includes(u.user_id)
+      )
+
+      const investment = validPurchasedUsers.reduce((sum, u) =>
         sum + Math.floor(u.total_purchases / 1100) * 1000, 0
       )
-      
+
       breakdown.push({
         level,
         totalCount: users.length,
@@ -155,7 +165,7 @@ export class UnifiedReferralCalculator {
         investment
       })
     }
-    
+
     return breakdown.sort((a, b) => a.level - b.level)
   }
   
