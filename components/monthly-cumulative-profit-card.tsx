@@ -190,8 +190,8 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-400">紹介報酬:</span>
-              <span className="text-gray-400 text-xs">
-                月末集計後に表示
+              <span className="text-yellow-400 text-xs">
+                集計中...
               </span>
             </div>
           </div>

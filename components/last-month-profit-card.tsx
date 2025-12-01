@@ -18,6 +18,7 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [lastMonth, setLastMonth] = useState("")
+  const [isCalculating, setIsCalculating] = useState(false) // 集計中フラグ
 
   useEffect(() => {
     if (userId) {
@@ -79,11 +80,12 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
           throw checkError
         }
 
-        // 前月の最終日の日利が未設定の場合は非表示
+        // 前月の最終日の日利が未設定の場合は「集計中」表示
         if (!lastDayProfit || lastDayProfit.length === 0) {
-          console.log('[LastMonthProfit] 前月最終日のデータなし - カード非表示')
+          console.log('[LastMonthProfit] 前月最終日のデータなし - 集計中表示')
+          setIsCalculating(true)
           setLoading(false)
-          return // データ取得をスキップして非表示
+          return // データ取得をスキップして集計中表示
         }
         console.log('[LastMonthProfit] 前月最終日のデータあり - カード表示')
       }
@@ -146,6 +148,35 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
           <div className="flex items-center space-x-2">
             <Loader2 className="h-5 w-5 text-blue-400 animate-spin" />
             <span className="text-sm text-gray-400">読み込み中...</span>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // 集計中の場合
+  if (isCalculating) {
+    return (
+      <Card className="bg-gray-800 border-gray-700">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-gray-300 text-sm font-medium flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-yellow-400" />
+            前月の確定利益
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-yellow-400">
+              集計中...
+            </div>
+            <div className="text-xs text-gray-400 mt-2">
+              {lastMonth}の利益を集計しています
+            </div>
+            <div className="mt-3 pt-3 border-t border-gray-700">
+              <p className="text-xs text-gray-400">
+                月末の日利設定後に確定利益が表示されます
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
