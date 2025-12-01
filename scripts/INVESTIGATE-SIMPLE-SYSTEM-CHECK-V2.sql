@@ -52,19 +52,18 @@ LIMIT 20;
 -- 11月15日運用開始の日利履歴（サンプル3名）
 SELECT '========== 11月15日運用開始の日利履歴（サンプル3名） ==========' as section;
 
-SELECT 
+SELECT
     udp.user_id,
     udp.date,
-    udp.daily_profit,
-    udp.nft_count
+    udp.daily_profit
 FROM user_daily_profit udp
 INNER JOIN users u ON udp.user_id = u.user_id
 WHERE u.operation_start_date = '2025-11-15'
     AND udp.date >= '2025-11-15'
     AND udp.date <= '2025-11-30'
     AND u.user_id IN (
-        SELECT user_id 
-        FROM users 
+        SELECT user_id
+        FROM users
         WHERE operation_start_date = '2025-11-15'
             AND has_approved_nft = true
         ORDER BY user_id
