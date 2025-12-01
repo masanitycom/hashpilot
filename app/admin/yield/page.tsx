@@ -397,18 +397,37 @@ export default function AdminYieldPage() {
       const lastDayOfMonth = new Date(year, month, 0).getDate()
       const currentDay = targetDate.getDate()
 
-      // 月末でない場合はスキップ
-      if (currentDay !== lastDayOfMonth) {
-        console.log(`📅 ${settingDate}は月末ではありません（${month}月の最終日は${lastDayOfMonth}日）`)
+      // 月末の日利設定か、月初1日（前月分の設定）かをチェック
+      const isMonthEnd = currentDay === lastDayOfMonth
+      const isFirstDayOfMonth = currentDay === 1
+
+      // 月末でも月初1日でもない場合はスキップ
+      if (!isMonthEnd && !isFirstDayOfMonth) {
+        console.log(`📅 ${settingDate}は月末でも月初でもありません`)
         return
       }
 
-      console.log(`📅 ${settingDate}は月末です。紹介報酬を自動計算します...`)
+      // 月初1日の場合は、前月分の紹介報酬を計算
+      let targetYear = year
+      let targetMonth = month
 
-      // 月次紹介報酬を計算
+      if (isFirstDayOfMonth) {
+        // 前月を計算
+        if (month === 1) {
+          targetYear = year - 1
+          targetMonth = 12
+        } else {
+          targetMonth = month - 1
+        }
+        console.log(`📅 ${settingDate}は月初1日です。前月（${targetYear}年${targetMonth}月）の紹介報酬を自動計算します...`)
+      } else {
+        console.log(`📅 ${settingDate}は月末です。紹介報酬を自動計算します...`)
+      }
+
+      // 月次紹介報酬を計算（targetYear/targetMonthを使用）
       const { data: monthlyResult, error: monthlyError } = await supabase.rpc('process_monthly_referral_reward', {
-        p_year: year,
-        p_month: month,
+        p_year: targetYear,
+        p_month: targetMonth,
         p_overwrite: false
       })
 
