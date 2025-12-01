@@ -46,17 +46,17 @@ interface MonthlyStats {
   on_hold_count: number
 }
 
+// デフォルトで前月を表示（月末出金は前月分のため）
+const getDefaultMonth = () => {
+  const now = new Date()
+  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+  return lastMonth.toISOString().slice(0, 7) // YYYY-MM format
+}
+
 export default function AdminWithdrawalsPage() {
   const [user, setUser] = useState<any>(null)
   const [withdrawals, setWithdrawals] = useState<WithdrawalRecord[]>([])
   const [stats, setStats] = useState<MonthlyStats | null>(null)
-  // デフォルトで前月を表示（月末出金は前月分のため）
-  const getDefaultMonth = () => {
-    const now = new Date()
-    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-    return lastMonth.toISOString().slice(0, 7) // YYYY-MM format
-  }
-
   const [selectedMonth, setSelectedMonth] = useState<string>(getDefaultMonth())
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState("")
