@@ -38,6 +38,15 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       const monthStart = new Date(year, lastMonthDate.getMonth(), 1).toISOString().split('T')[0]
       const monthEnd = new Date(year, lastMonthDate.getMonth() + 1, 0).toISOString().split('T')[0]
 
+      console.log('[LastMonthProfit] 日付計算:', {
+        now: now.toISOString(),
+        lastMonthDate: lastMonthDate.toISOString(),
+        year,
+        month,
+        monthStart,
+        monthEnd
+      })
+
       // 月の表示用（例: 2025年10月）
       setLastMonth(`${year}年${month}月`)
 
@@ -45,11 +54,14 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       const today = now.getDate()
       if (today <= 3) {
         // 前月の最終日の日利が設定されているか確認（全ユーザーで1件でもあればOK）
+        console.log('[LastMonthProfit] チェック対象日付:', monthEnd)
         const { data: lastDayProfit, error: checkError } = await supabase
           .from('user_daily_profit')
           .select('date')
           .eq('date', monthEnd)
           .limit(1)
+
+        console.log('[LastMonthProfit] クエリ結果:', { lastDayProfit, checkError })
 
         if (checkError && checkError.code !== 'PGRST116') {
           throw checkError

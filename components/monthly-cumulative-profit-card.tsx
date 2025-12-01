@@ -35,6 +35,14 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
       let monthStart = new Date(year, now.getMonth(), 1).toISOString().split('T')[0]
       let monthEnd = new Date(year, now.getMonth() + 1, 0).toISOString().split('T')[0]
 
+      console.log('[MonthlyCumulative] 初期日付計算:', {
+        now: now.toISOString(),
+        year,
+        month,
+        monthStart,
+        monthEnd
+      })
+
       // 月初（1日～3日）の場合、前月の最終日の日利が設定されているか確認
       const today = now.getDate()
       if (today <= 3) {
@@ -42,12 +50,20 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
         const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1)
         const lastMonthEnd = new Date(lastMonthDate.getFullYear(), lastMonthDate.getMonth() + 1, 0).toISOString().split('T')[0]
 
+        console.log('[MonthlyCumulative] 前月最終日計算:', {
+          lastMonthDate: lastMonthDate.toISOString(),
+          lastMonthEnd
+        })
+
         // 前月の最終日の日利が設定されているか確認（全ユーザーで1件でもあればOK）
+        console.log('[MonthlyCumulative] チェック対象日付:', lastMonthEnd)
         const { data: lastDayProfit, error: checkError } = await supabase
           .from('user_daily_profit')
           .select('date')
           .eq('date', lastMonthEnd)
           .limit(1)
+
+        console.log('[MonthlyCumulative] クエリ結果:', { lastDayProfit, checkError })
 
         if (checkError && checkError.code !== 'PGRST116') {
           throw checkError
