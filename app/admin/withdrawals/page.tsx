@@ -50,12 +50,14 @@ export default function AdminWithdrawalsPage() {
   const [user, setUser] = useState<any>(null)
   const [withdrawals, setWithdrawals] = useState<WithdrawalRecord[]>([])
   const [stats, setStats] = useState<MonthlyStats | null>(null)
-  const [selectedMonth, setSelectedMonth] = useState<string>(() => {
-    // デフォルトで前月を表示（月末出金は前月分のため）
+  // デフォルトで前月を表示（月末出金は前月分のため）
+  const getDefaultMonth = () => {
     const now = new Date()
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
     return lastMonth.toISOString().slice(0, 7) // YYYY-MM format
-  })
+  }
+
+  const [selectedMonth, setSelectedMonth] = useState<string>(getDefaultMonth())
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(true)
@@ -286,7 +288,14 @@ export default function AdminWithdrawalsPage() {
                 </Button>
               </Link>
               <div>
-                <h1 className="text-xl font-bold text-white">月末出金管理</h1>
+                <h1 className="text-xl font-bold text-white">
+                  月末出金管理
+                  {selectedMonth && (
+                    <span className="text-blue-400 ml-2">
+                      ({new Date(selectedMonth + '-01').toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' })})
+                    </span>
+                  )}
+                </h1>
                 <p className="text-sm text-gray-400">月末自動出金の処理と管理</p>
               </div>
             </div>
