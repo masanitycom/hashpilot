@@ -60,8 +60,8 @@ export default function AdminYieldPage() {
   const [error, setError] = useState("")
   const router = useRouter()
 
-  // V2システム切り替え
-  const useV2 = process.env.NEXT_PUBLIC_USE_YIELD_V2 === 'true'
+  // V2システム切り替え（常にV2を使用）
+  const useV2 = true
 
   // 月次紹介報酬計算用のstate
   const [monthlyYearMonth, setMonthlyYearMonth] = useState(new Date().toISOString().slice(0, 7)) // YYYY-MM
