@@ -1,10 +1,9 @@
 -- 11月15日運用開始ユーザーのnft_daily_profitを確認
-SELECT 
+SELECT
     ndp.user_id,
     ndp.date,
     ndp.nft_id,
     ndp.daily_profit,
-    ndp.profit_type,
     u.operation_start_date
 FROM nft_daily_profit ndp
 INNER JOIN users u ON ndp.user_id = u.user_id
