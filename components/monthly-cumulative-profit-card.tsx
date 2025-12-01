@@ -30,10 +30,38 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
 
       // 今月の開始日と終了日を取得
       const now = new Date()
-      const year = now.getFullYear()
-      const month = now.getMonth() + 1
-      const monthStart = new Date(year, now.getMonth(), 1).toISOString().split('T')[0]
-      const monthEnd = new Date(year, now.getMonth() + 1, 0).toISOString().split('T')[0]
+      let year = now.getFullYear()
+      let month = now.getMonth() + 1
+      let monthStart = new Date(year, now.getMonth(), 1).toISOString().split('T')[0]
+      let monthEnd = new Date(year, now.getMonth() + 1, 0).toISOString().split('T')[0]
+
+      // 月初（1日～3日）の場合、前月の最終日の日利が設定されているか確認
+      const today = now.getDate()
+      if (today <= 3) {
+        // 前月の最終日を計算
+        const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+        const lastMonthEnd = new Date(lastMonthDate.getFullYear(), lastMonthDate.getMonth() + 1, 0).toISOString().split('T')[0]
+
+        // 前月の最終日の日利が設定されているか確認
+        const { data: lastDayProfit, error: checkError } = await supabase
+          .from('user_daily_profit')
+          .select('date')
+          .gte('date', lastMonthEnd)
+          .lte('date', lastMonthEnd)
+          .limit(1)
+
+        if (checkError && checkError.code !== 'PGRST116') {
+          throw checkError
+        }
+
+        // 前月の最終日の日利が未設定の場合は、前月のデータを表示
+        if (!lastDayProfit || lastDayProfit.length === 0) {
+          year = lastMonthDate.getFullYear()
+          month = lastMonthDate.getMonth() + 1
+          monthStart = new Date(year, lastMonthDate.getMonth(), 1).toISOString().split('T')[0]
+          monthEnd = lastMonthEnd
+        }
+      }
 
       // 月の表示用（例: 2025年11月）
       setCurrentMonth(`${year}年${month}月`)
