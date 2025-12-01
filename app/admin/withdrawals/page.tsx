@@ -98,38 +98,88 @@ export default function AdminWithdrawalsPage() {
 
       console.log('=== Fetching withdrawals for:', targetDate)
 
-      // 月間出金記録を取得（シンプルに）
+      // STEP 1: available_usdt > 0 の全ユーザーを取得
+      const { data: eligibleUsers, error: eligibleError } = await supabase
+        .from("affiliate_cycle")
+        .select(`
+          user_id,
+          available_usdt,
+          cum_usdt,
+          phase,
+          total_nft_count
+        `)
+        .gt("available_usdt", 0)
+        .order("available_usdt", { ascending: false })
+
+      if (eligibleError) throw eligibleError
+
+      // STEP 2: ユーザー情報を取得
+      const userIds = eligibleUsers?.map(u => u.user_id) || []
+      const { data: usersData, error: usersError } = await supabase
+        .from("users")
+        .select("user_id, email, coinw_uid, nft_receive_address, is_pegasus_exchange, pegasus_withdrawal_unlock_date")
+        .in("user_id", userIds)
+
+      if (usersError) throw usersError
+
+      // STEP 3: 月間出金記録を取得
       const { data: withdrawalData, error: withdrawalError } = await supabase
         .from("monthly_withdrawals")
         .select("*")
         .eq("withdrawal_month", targetDate)
-        .order("created_at", { ascending: false })
 
-      console.log('=== Withdrawal data:', withdrawalData)
-      console.log('=== Withdrawal error:', withdrawalError)
+      if (withdrawalError) throw withdrawalError
 
-      if (withdrawalError) {
-        console.error('=== Error fetching withdrawals:', withdrawalError)
-        throw withdrawalError
-      }
+      // STEP 4: データを結合
+      const formattedData = (eligibleUsers || []).map((cycle: any) => {
+        const user = usersData?.find(u => u.user_id === cycle.user_id)
+        const withdrawal = withdrawalData?.find(w => w.user_id === cycle.user_id)
 
-      // ペガサス情報はとりあえずデフォルト値を設定
-      const formattedData = (withdrawalData || []).map((item: any) => ({
-        ...item,
-        is_pegasus_exchange: false,
-        pegasus_exchange_date: null,
-        pegasus_withdrawal_unlock_date: null,
-      }))
+        // CoinW UIDまたはBEP20アドレスを判定
+        let withdrawalMethod = null
+        let withdrawalAddress = null
+        if (user?.coinw_uid) {
+          withdrawalMethod = 'coinw'
+          withdrawalAddress = user.coinw_uid
+        } else if (user?.nft_receive_address) {
+          withdrawalMethod = 'bep20'
+          withdrawalAddress = user.nft_receive_address
+        }
+
+        // 出金レコードがあればそのデータを使用、なければデフォルト値
+        return {
+          id: withdrawal?.id || `temp-${cycle.user_id}`,
+          user_id: cycle.user_id,
+          email: user?.email || '',
+          withdrawal_month: targetDate,
+          total_amount: withdrawal?.total_amount || cycle.available_usdt,
+          withdrawal_address: withdrawalAddress,
+          withdrawal_method: withdrawalMethod,
+          status: withdrawal?.status || 'not_created',
+          created_at: withdrawal?.created_at || new Date().toISOString(),
+          completed_at: withdrawal?.completed_at || null,
+          notes: withdrawal?.notes || null,
+          task_completed: withdrawal?.task_completed || false,
+          task_completed_at: withdrawal?.task_completed_at || null,
+          is_pegasus_exchange: user?.is_pegasus_exchange || false,
+          pegasus_withdrawal_unlock_date: user?.pegasus_withdrawal_unlock_date || null,
+          // 追加情報
+          cum_usdt: cycle.cum_usdt,
+          phase: cycle.phase,
+          total_nft_count: cycle.total_nft_count,
+        }
+      })
 
       console.log('=== Formatted data count:', formattedData.length)
       setWithdrawals(formattedData)
 
-      // 統計情報を計算
+      // 統計情報を計算（$10以上のユーザーのみ）
+      const eligibleForWithdrawal = formattedData.filter(w => w.total_amount >= 10)
       const stats: MonthlyStats = {
-        total_amount: withdrawalData?.reduce((sum, w) => sum + Number(w.total_amount), 0) || 0,
-        pending_count: withdrawalData?.filter(w => w.status === 'pending').length || 0,
-        completed_count: withdrawalData?.filter(w => w.status === 'completed').length || 0,
-        on_hold_count: withdrawalData?.filter(w => w.status === 'on_hold').length || 0,
+        total_amount: eligibleForWithdrawal.reduce((sum, w) => sum + Number(w.total_amount), 0),
+        pending_count: eligibleForWithdrawal.filter(w => w.status === 'pending').length,
+        completed_count: eligibleForWithdrawal.filter(w => w.status === 'completed').length,
+        on_hold_count: eligibleForWithdrawal.filter(w => w.status === 'on_hold').length,
       }
       setStats(stats)
 
@@ -221,6 +271,8 @@ export default function AdminWithdrawalsPage() {
         return <Badge className="bg-green-600 text-white">送金完了</Badge>
       case 'on_hold':
         return <Badge className="bg-red-600 text-white">保留中</Badge>
+      case 'not_created':
+        return <Badge className="bg-gray-600 text-white">未作成</Badge>
       default:
         return <Badge className="bg-gray-600 text-white">{status}</Badge>
     }
@@ -268,9 +320,12 @@ export default function AdminWithdrawalsPage() {
                 <div className="flex items-center space-x-3">
                   <DollarSign className="h-8 w-8 text-blue-400" />
                   <div>
-                    <p className="text-sm text-blue-300">総出金額</p>
+                    <p className="text-sm text-blue-300">総出金額（$10以上）</p>
                     <p className="text-2xl font-bold text-blue-400">
                       ${stats.total_amount.toFixed(2)}
+                    </p>
+                    <p className="text-xs text-blue-300 mt-1">
+                      全ユーザー: {withdrawals.length}人
                     </p>
                   </div>
                 </div>
@@ -394,15 +449,16 @@ export default function AdminWithdrawalsPage() {
                       />
                     </th>
                     <th className="text-left py-3 px-2 text-gray-300">ユーザー</th>
-                    <th className="text-left py-3 px-2 text-gray-300">報酬額</th>
+                    <th className="text-right py-3 px-2 text-gray-300">出金可能額</th>
+                    <th className="text-right py-3 px-2 text-gray-300">紹介報酬累積</th>
+                    <th className="text-center py-3 px-2 text-gray-300">NFT数</th>
                     <th className="text-left py-3 px-2 text-gray-300">CoinW UID/送金先</th>
                     <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
                     <th className="text-left py-3 px-2 text-gray-300">タスク状況</th>
-                    <th className="text-left py-3 px-2 text-gray-300">作成日</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredWithdrawals.map((withdrawal) => (
+                  {filteredWithdrawals.map((withdrawal: any) => (
                     <tr key={withdrawal.id} className="border-b border-gray-700/50 hover:bg-gray-700/20">
                       <td className="py-3 px-2">
                         <Checkbox
@@ -416,6 +472,7 @@ export default function AdminWithdrawalsPage() {
                             }
                             setSelectedIds(newSet)
                           }}
+                          disabled={withdrawal.status === 'not_created'}
                         />
                       </td>
                       <td className="py-3 px-2">
@@ -429,9 +486,21 @@ export default function AdminWithdrawalsPage() {
                           )}
                         </div>
                       </td>
-                      <td className="py-3 px-2">
-                        <span className="font-bold text-green-400">
+                      <td className="py-3 px-2 text-right">
+                        <span className={`font-bold ${
+                          withdrawal.total_amount >= 10 ? 'text-green-400' : 'text-gray-400'
+                        }`}>
                           ${withdrawal.total_amount.toFixed(2)}
+                        </span>
+                      </td>
+                      <td className="py-3 px-2 text-right">
+                        <span className="text-orange-400">
+                          ${withdrawal.cum_usdt?.toFixed(2) || '0.00'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-2 text-center">
+                        <span className="text-blue-400">
+                          {withdrawal.total_nft_count || 0}
                         </span>
                       </td>
                       <td className="py-3 px-2">
@@ -447,16 +516,24 @@ export default function AdminWithdrawalsPage() {
                               <div className="truncate max-w-32">{withdrawal.withdrawal_address}</div>
                             </div>
                           ) : (
-                            <span className="text-red-400">未設定</span>
+                            <span className="text-red-400">❌ 未設定</span>
                           )}
                         </div>
                       </td>
                       <td className="py-3 px-2">
                         {getStatusBadge(withdrawal.status)}
+                        {withdrawal.status === 'not_created' && withdrawal.total_amount < 10 && (
+                          <div className="text-xs text-gray-500 mt-1">$10未満のため未作成</div>
+                        )}
+                        {withdrawal.status === 'not_created' && withdrawal.total_amount >= 10 && !withdrawal.withdrawal_method && (
+                          <div className="text-xs text-red-400 mt-1">送金先未設定</div>
+                        )}
                       </td>
                       <td className="py-3 px-2">
                         {withdrawal.task_completed ? (
                           <Badge className="bg-green-600 text-white">完了済み</Badge>
+                        ) : withdrawal.status === 'not_created' ? (
+                          <Badge className="bg-gray-600 text-white">-</Badge>
                         ) : (
                           <Badge className="bg-yellow-600 text-white">未完了</Badge>
                         )}
@@ -465,9 +542,6 @@ export default function AdminWithdrawalsPage() {
                             {new Date(withdrawal.task_completed_at).toLocaleDateString('ja-JP')}
                           </div>
                         )}
-                      </td>
-                      <td className="py-3 px-2 text-gray-300">
-                        {new Date(withdrawal.created_at).toLocaleDateString('ja-JP')}
                       </td>
                     </tr>
                   ))}
