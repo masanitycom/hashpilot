@@ -122,41 +122,40 @@ export function ReferralProfitCard({
     }
   }
 
-  // user_referral_profitテーブルから実際の紹介報酬を取得
+  // user_referral_profit_monthlyテーブルから月次紹介報酬を取得
   const getActualReferralProfits = async (userId: string, level: number, monthStart: string, monthEnd: string, yesterdayStr: string) => {
     console.log(`📊 Fetching actual referral profits for level ${level}...`)
 
-    const { data, error } = await supabase
-      .from('user_referral_profit')
-      .select('date, profit_amount')
+    // 現在の年月を取得
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const currentMonth = now.getMonth() + 1
+
+    // user_referral_profit_monthlyから月次データを取得
+    const { data: monthlyData, error: monthlyError } = await supabase
+      .from('user_referral_profit_monthly')
+      .select('profit_amount')
       .eq('user_id', userId)
       .eq('referral_level', level)
-      .gte('date', monthStart)
-      .lte('date', monthEnd)
+      .eq('year', currentYear)
+      .eq('month', currentMonth)
 
-    if (error) {
-      console.error(`❌ Error fetching level ${level} referral profits:`, error)
+    if (monthlyError) {
+      console.error(`❌ Error fetching level ${level} monthly referral profits:`, monthlyError)
       return { yesterday: 0, monthly: 0 }
     }
 
-    console.log(`✅ Level ${level} referral profit records:`, data)
+    console.log(`✅ Level ${level} monthly referral profit records:`, monthlyData)
 
-    let yesterday = 0
     let monthly = 0
-
-    if (data && data.length > 0) {
-      data.forEach(row => {
-        const profit = parseFloat(row.profit_amount) || 0
-
-        // 昨日の利益
-        if (row.date === yesterdayStr) {
-          yesterday += profit
-        }
-
-        // 月間累計利益
-        monthly += profit
+    if (monthlyData && monthlyData.length > 0) {
+      monthlyData.forEach(row => {
+        monthly += parseFloat(row.profit_amount) || 0
       })
     }
+
+    // 昨日の紹介報酬は月次計算なので0（日次データはもう使わない）
+    const yesterday = 0
 
     return { yesterday, monthly }
   }
