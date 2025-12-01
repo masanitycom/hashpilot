@@ -35,22 +35,25 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       const jstOffset = 9 * 60 // 日本時間は UTC+9
       const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
 
-      const lastMonthDate = new Date(jstNow.getUTCFullYear(), jstNow.getUTCMonth() - 1, 1)
-      const year = lastMonthDate.getUTCFullYear()
-      const month = lastMonthDate.getUTCMonth() + 1
+      const year = jstNow.getUTCFullYear()
+      const currentMonth = jstNow.getUTCMonth() // 0-indexed (11 = 12月)
+      const lastMonth = currentMonth - 1 // 10 = 11月
+      const month = lastMonth + 1 // 11（表示用）
 
       // 月初（1日）
-      const monthStartDate = new Date(Date.UTC(year, lastMonthDate.getUTCMonth(), 1))
+      const monthStartDate = new Date(Date.UTC(year, lastMonth, 1))
       const monthStart = monthStartDate.toISOString().split('T')[0]
 
       // 月末（翌月の0日 = 当月の最終日）
-      const monthEndDate = new Date(Date.UTC(year, lastMonthDate.getUTCMonth() + 1, 0))
+      const monthEndDate = new Date(Date.UTC(year, lastMonth + 1, 0))
       const monthEnd = monthEndDate.toISOString().split('T')[0]
 
       console.log('[LastMonthProfit] 日付計算:', {
         now: now.toISOString(),
         jstNow: jstNow.toISOString(),
         year,
+        currentMonth,
+        lastMonth,
         month,
         monthStart,
         monthEnd

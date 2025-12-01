@@ -34,20 +34,22 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
       const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
 
       let year = jstNow.getUTCFullYear()
-      let month = jstNow.getUTCMonth() + 1
+      let currentMonth = jstNow.getUTCMonth() // 0-indexed (11 = 12月)
+      let month = currentMonth + 1 // 12（表示用）
 
       // 月初（1日）
-      let monthStartDate = new Date(Date.UTC(year, jstNow.getUTCMonth(), 1))
+      let monthStartDate = new Date(Date.UTC(year, currentMonth, 1))
       let monthStart = monthStartDate.toISOString().split('T')[0]
 
       // 月末（翌月の0日 = 当月の最終日）
-      let monthEndDate = new Date(Date.UTC(year, jstNow.getUTCMonth() + 1, 0))
+      let monthEndDate = new Date(Date.UTC(year, currentMonth + 1, 0))
       let monthEnd = monthEndDate.toISOString().split('T')[0]
 
       console.log('[MonthlyCumulative] 初期日付計算:', {
         now: now.toISOString(),
         jstNow: jstNow.toISOString(),
         year,
+        currentMonth,
         month,
         monthStart,
         monthEnd
@@ -57,12 +59,12 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
       const today = jstNow.getUTCDate()
       if (today <= 3) {
         // 前月の最終日を計算（日本時間基準）
-        const lastMonthDate = new Date(jstNow.getUTCFullYear(), jstNow.getUTCMonth() - 1, 1)
-        const lastMonthEndDate = new Date(Date.UTC(lastMonthDate.getUTCFullYear(), lastMonthDate.getUTCMonth() + 1, 0))
+        const lastMonth = currentMonth - 1 // 10 = 11月
+        const lastMonthEndDate = new Date(Date.UTC(year, lastMonth + 1, 0))
         const lastMonthEnd = lastMonthEndDate.toISOString().split('T')[0]
 
         console.log('[MonthlyCumulative] 前月最終日計算:', {
-          lastMonthDate: lastMonthDate.toISOString(),
+          lastMonth,
           lastMonthEnd
         })
 
@@ -83,9 +85,8 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
         // 前月の最終日の日利が未設定の場合は、前月のデータを表示
         if (!lastDayProfit || lastDayProfit.length === 0) {
           console.log('[MonthlyCumulative] 前月最終日のデータなし - 前月データを表示')
-          year = lastMonthDate.getUTCFullYear()
-          month = lastMonthDate.getUTCMonth() + 1
-          monthStartDate = new Date(Date.UTC(year, lastMonthDate.getUTCMonth(), 1))
+          month = lastMonth + 1 // 11（表示用）
+          monthStartDate = new Date(Date.UTC(year, lastMonth, 1))
           monthStart = monthStartDate.toISOString().split('T')[0]
           monthEnd = lastMonthEnd
         } else {
