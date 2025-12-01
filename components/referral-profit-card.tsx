@@ -131,8 +131,8 @@ export function ReferralProfitCard({
     const currentYear = now.getFullYear()
     const currentMonth = now.getMonth() + 1
 
-    // user_referral_profit_monthlyから月次データを取得
-    const { data: monthlyData, error: monthlyError } = await supabase
+    // 今月のデータ（月末処理済みの場合）
+    const { data: currentMonthData, error: currentMonthError } = await supabase
       .from('user_referral_profit_monthly')
       .select('profit_amount')
       .eq('user_id', userId)
@@ -140,16 +140,33 @@ export function ReferralProfitCard({
       .eq('year', currentYear)
       .eq('month', currentMonth)
 
-    if (monthlyError) {
-      console.error(`❌ Error fetching level ${level} monthly referral profits:`, monthlyError)
+    // 先月のデータ（今月がまだ月末処理されていない場合のフォールバック）
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1
+    const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear
+
+    const { data: lastMonthData, error: lastMonthError } = await supabase
+      .from('user_referral_profit_monthly')
+      .select('profit_amount')
+      .eq('user_id', userId)
+      .eq('referral_level', level)
+      .eq('year', lastMonthYear)
+      .eq('month', lastMonth)
+
+    if (currentMonthError && lastMonthError) {
+      console.error(`❌ Error fetching level ${level} monthly referral profits`)
       return { yesterday: 0, monthly: 0 }
     }
 
-    console.log(`✅ Level ${level} monthly referral profit records:`, monthlyData)
+    console.log(`✅ Level ${level} current month data:`, currentMonthData)
+    console.log(`✅ Level ${level} last month data:`, lastMonthData)
 
     let monthly = 0
-    if (monthlyData && monthlyData.length > 0) {
-      monthlyData.forEach(row => {
+
+    // 今月のデータがあればそれを使う、なければ先月のデータを使う
+    const dataToUse = (currentMonthData && currentMonthData.length > 0) ? currentMonthData : lastMonthData
+
+    if (dataToUse && dataToUse.length > 0) {
+      dataToUse.forEach(row => {
         monthly += parseFloat(row.profit_amount) || 0
       })
     }
