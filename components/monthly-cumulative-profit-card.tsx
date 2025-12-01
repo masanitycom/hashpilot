@@ -42,12 +42,11 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
         const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1)
         const lastMonthEnd = new Date(lastMonthDate.getFullYear(), lastMonthDate.getMonth() + 1, 0).toISOString().split('T')[0]
 
-        // 前月の最終日の日利が設定されているか確認
+        // 前月の最終日の日利が設定されているか確認（全ユーザーで1件でもあればOK）
         const { data: lastDayProfit, error: checkError } = await supabase
           .from('user_daily_profit')
           .select('date')
-          .gte('date', lastMonthEnd)
-          .lte('date', lastMonthEnd)
+          .eq('date', lastMonthEnd)
           .limit(1)
 
         if (checkError && checkError.code !== 'PGRST116') {

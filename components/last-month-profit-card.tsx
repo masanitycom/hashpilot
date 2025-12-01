@@ -44,12 +44,11 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       // 月初（1日～3日）の場合、前月の最終日の日利が設定されているか確認
       const today = now.getDate()
       if (today <= 3) {
-        // 前月の最終日の日利が設定されているか確認
+        // 前月の最終日の日利が設定されているか確認（全ユーザーで1件でもあればOK）
         const { data: lastDayProfit, error: checkError } = await supabase
           .from('user_daily_profit')
           .select('date')
-          .gte('date', monthEnd)
-          .lte('date', monthEnd)
+          .eq('date', monthEnd)
           .limit(1)
 
         if (checkError && checkError.code !== 'PGRST116') {
