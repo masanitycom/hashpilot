@@ -21,6 +21,7 @@ import { MonthlyCumulativeProfitCard } from "@/components/monthly-cumulative-pro
 import { LastMonthProfitCard } from "@/components/last-month-profit-card"
 import { OperationStatus } from "@/components/operation-status"
 import { AnnouncementsBanner } from "@/components/announcements-banner"
+import { RewardTaskPopup } from "@/components/reward-task-popup"
 import Link from "next/link"
 import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
 
@@ -105,6 +106,7 @@ export default function OptimizedDashboardPage() {
   const [showNftAddressAlert, setShowNftAddressAlert] = useState(false)
   const [userHasCoinwUid, setUserHasCoinwUid] = useState(true)
   const [userHasNftAddress, setUserHasNftAddress] = useState(true)
+  const [showRewardTaskPopup, setShowRewardTaskPopup] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -204,7 +206,8 @@ export default function OptimizedDashboardPage() {
       await Promise.all([
         calculateStatsOptimized(userRecord),
         fetchLatestApprovalDate(userRecord.user_id),
-        fetchCurrentNftCount(userRecord.user_id)
+        fetchCurrentNftCount(userRecord.user_id),
+        checkPendingRewardTask(userRecord.user_id)
       ])
       
     } catch (error) {
@@ -363,6 +366,30 @@ export default function OptimizedDashboardPage() {
       setCurrentInvestment(investment)
     } catch (error) {
       console.error("Error fetching current NFT count:", error)
+    }
+  }
+
+  const checkPendingRewardTask = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("monthly_withdrawals")
+        .select("id, task_completed")
+        .eq("user_id", userId)
+        .eq("status", "on_hold")
+        .eq("task_completed", false)
+        .limit(1)
+
+      if (error && error.code !== 'PGRST116') {
+        console.error("Error checking pending reward task:", error)
+        return
+      }
+
+      if (data && data.length > 0) {
+        console.log("Pending reward task found, showing popup")
+        setShowRewardTaskPopup(true)
+      }
+    } catch (error) {
+      console.error("Error in checkPendingRewardTask:", error)
     }
   }
 
@@ -1067,5 +1094,17 @@ const NFTAddressAlert = ({ onClose }: { onClose: () => void }) => (
         </div>
       </CardContent>
     </Card>
+  </div>
+    {/* 月末報酬タスクポップアップ */}
+    {userData && (
+      <RewardTaskPopup
+        userId={userData.user_id}
+        isOpen={showRewardTaskPopup}
+        onComplete={() => {
+          setShowRewardTaskPopup(false)
+          window.location.reload()
+        }}
+      />
+    )}
   </div>
 )
