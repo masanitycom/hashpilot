@@ -41,6 +41,28 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       // 月の表示用（例: 2025年10月）
       setLastMonth(`${year}年${month}月`)
 
+      // 月初（1日～3日）の場合、前月の最終日の日利が設定されているか確認
+      const today = now.getDate()
+      if (today <= 3) {
+        // 前月の最終日の日利が設定されているか確認
+        const { data: lastDayProfit, error: checkError } = await supabase
+          .from('user_daily_profit')
+          .select('date')
+          .gte('date', monthEnd)
+          .lte('date', monthEnd)
+          .limit(1)
+
+        if (checkError && checkError.code !== 'PGRST116') {
+          throw checkError
+        }
+
+        // 前月の最終日の日利が未設定の場合は非表示
+        if (!lastDayProfit || lastDayProfit.length === 0) {
+          setLoading(false)
+          return // データ取得をスキップして非表示
+        }
+      }
+
       // 個人利益（user_daily_profit）
       const { data: dailyProfitData, error: dailyError } = await supabase
         .from('user_daily_profit')
@@ -103,6 +125,11 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
         </CardContent>
       </Card>
     )
+  }
+
+  // 前月の利益データが存在しない場合は非表示
+  if (totalProfit === 0 && personalProfit === 0 && referralProfit === 0) {
+    return null
   }
 
   return (
