@@ -28,15 +28,25 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
       setLoading(true)
       setError("")
 
-      // 今月の開始日と終了日を取得
+      // 今月の開始日と終了日を取得（日本時間基準）
       const now = new Date()
-      let year = now.getFullYear()
-      let month = now.getMonth() + 1
-      let monthStart = new Date(year, now.getMonth(), 1).toISOString().split('T')[0]
-      let monthEnd = new Date(year, now.getMonth() + 1, 0).toISOString().split('T')[0]
+      const jstOffset = 9 * 60 // 日本時間は UTC+9
+      const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
+
+      let year = jstNow.getUTCFullYear()
+      let month = jstNow.getUTCMonth() + 1
+
+      // 月初（1日）
+      let monthStartDate = new Date(Date.UTC(year, jstNow.getUTCMonth(), 1))
+      let monthStart = monthStartDate.toISOString().split('T')[0]
+
+      // 月末（翌月の0日 = 当月の最終日）
+      let monthEndDate = new Date(Date.UTC(year, jstNow.getUTCMonth() + 1, 0))
+      let monthEnd = monthEndDate.toISOString().split('T')[0]
 
       console.log('[MonthlyCumulative] 初期日付計算:', {
         now: now.toISOString(),
+        jstNow: jstNow.toISOString(),
         year,
         month,
         monthStart,
@@ -44,11 +54,12 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
       })
 
       // 月初（1日～3日）の場合、前月の最終日の日利が設定されているか確認
-      const today = now.getDate()
+      const today = jstNow.getUTCDate()
       if (today <= 3) {
-        // 前月の最終日を計算
-        const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-        const lastMonthEnd = new Date(lastMonthDate.getFullYear(), lastMonthDate.getMonth() + 1, 0).toISOString().split('T')[0]
+        // 前月の最終日を計算（日本時間基準）
+        const lastMonthDate = new Date(jstNow.getUTCFullYear(), jstNow.getUTCMonth() - 1, 1)
+        const lastMonthEndDate = new Date(Date.UTC(lastMonthDate.getUTCFullYear(), lastMonthDate.getUTCMonth() + 1, 0))
+        const lastMonthEnd = lastMonthEndDate.toISOString().split('T')[0]
 
         console.log('[MonthlyCumulative] 前月最終日計算:', {
           lastMonthDate: lastMonthDate.toISOString(),
@@ -72,9 +83,10 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
         // 前月の最終日の日利が未設定の場合は、前月のデータを表示
         if (!lastDayProfit || lastDayProfit.length === 0) {
           console.log('[MonthlyCumulative] 前月最終日のデータなし - 前月データを表示')
-          year = lastMonthDate.getFullYear()
-          month = lastMonthDate.getMonth() + 1
-          monthStart = new Date(year, lastMonthDate.getMonth(), 1).toISOString().split('T')[0]
+          year = lastMonthDate.getUTCFullYear()
+          month = lastMonthDate.getUTCMonth() + 1
+          monthStartDate = new Date(Date.UTC(year, lastMonthDate.getUTCMonth(), 1))
+          monthStart = monthStartDate.toISOString().split('T')[0]
           monthEnd = lastMonthEnd
         } else {
           console.log('[MonthlyCumulative] 前月最終日のデータあり - 今月データを表示')

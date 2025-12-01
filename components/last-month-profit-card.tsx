@@ -30,17 +30,26 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       setLoading(true)
       setError("")
 
-      // 先月の開始日と終了日を取得
+      // 先月の開始日と終了日を取得（日本時間基準）
       const now = new Date()
-      const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-      const year = lastMonthDate.getFullYear()
-      const month = lastMonthDate.getMonth() + 1
-      const monthStart = new Date(year, lastMonthDate.getMonth(), 1).toISOString().split('T')[0]
-      const monthEnd = new Date(year, lastMonthDate.getMonth() + 1, 0).toISOString().split('T')[0]
+      const jstOffset = 9 * 60 // 日本時間は UTC+9
+      const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
+
+      const lastMonthDate = new Date(jstNow.getUTCFullYear(), jstNow.getUTCMonth() - 1, 1)
+      const year = lastMonthDate.getUTCFullYear()
+      const month = lastMonthDate.getUTCMonth() + 1
+
+      // 月初（1日）
+      const monthStartDate = new Date(Date.UTC(year, lastMonthDate.getUTCMonth(), 1))
+      const monthStart = monthStartDate.toISOString().split('T')[0]
+
+      // 月末（翌月の0日 = 当月の最終日）
+      const monthEndDate = new Date(Date.UTC(year, lastMonthDate.getUTCMonth() + 1, 0))
+      const monthEnd = monthEndDate.toISOString().split('T')[0]
 
       console.log('[LastMonthProfit] 日付計算:', {
         now: now.toISOString(),
-        lastMonthDate: lastMonthDate.toISOString(),
+        jstNow: jstNow.toISOString(),
         year,
         month,
         monthStart,
@@ -51,7 +60,7 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       setLastMonth(`${year}年${month}月`)
 
       // 月初（1日～3日）の場合、前月の最終日の日利が設定されているか確認
-      const today = now.getDate()
+      const today = jstNow.getUTCDate()
       if (today <= 3) {
         // 前月の最終日の日利が設定されているか確認（全ユーザーで1件でもあればOK）
         console.log('[LastMonthProfit] チェック対象日付:', monthEnd)
