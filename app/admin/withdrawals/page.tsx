@@ -48,9 +48,25 @@ interface MonthlyStats {
 
 // デフォルトで前月を表示（月末出金は前月分のため）
 const getDefaultMonth = () => {
+  // 日本時間で現在の日付を取得
   const now = new Date()
-  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  return lastMonth.toISOString().slice(0, 7) // YYYY-MM format
+  const jstDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
+
+  // 前月を計算
+  const year = jstDate.getFullYear()
+  const month = jstDate.getMonth() // 0-indexed (0=1月, 11=12月)
+
+  // 前月の年と月を計算
+  let lastYear = year
+  let lastMonth = month - 1
+  if (lastMonth < 0) {
+    lastMonth = 11
+    lastYear = year - 1
+  }
+
+  // YYYY-MM形式で返す
+  const monthStr = String(lastMonth + 1).padStart(2, '0')
+  return `${lastYear}-${monthStr}`
 }
 
 export default function AdminWithdrawalsPage() {
