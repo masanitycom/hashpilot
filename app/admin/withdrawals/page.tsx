@@ -98,23 +98,25 @@ export default function AdminWithdrawalsPage() {
 
       console.log('=== Fetching withdrawals for:', targetDate)
 
-      // STEP 1: available_usdt > 0 の全ユーザーを取得
-      const { data: eligibleUsers, error: eligibleError } = await supabase
-        .from("affiliate_cycle")
-        .select(`
-          user_id,
-          available_usdt,
-          cum_usdt,
-          phase,
-          total_nft_count
-        `)
-        .gt("available_usdt", 0)
-        .order("available_usdt", { ascending: false })
+      // STEP 1: 月間出金記録を取得（この月のレコードのみ）
+      const { data: withdrawalData, error: withdrawalError } = await supabase
+        .from("monthly_withdrawals")
+        .select("*")
+        .eq("withdrawal_month", targetDate)
+        .order("total_amount", { ascending: false })
 
-      if (eligibleError) throw eligibleError
+      if (withdrawalError) throw withdrawalError
+
+      if (!withdrawalData || withdrawalData.length === 0) {
+        console.log('=== No withdrawal records for this month')
+        setWithdrawals([])
+        setStats({ total_amount: 0, pending_count: 0, completed_count: 0, on_hold_count: 0 })
+        setLoading(false)
+        return
+      }
 
       // STEP 2: ユーザー情報を取得
-      const userIds = eligibleUsers?.map(u => u.user_id) || []
+      const userIds = withdrawalData.map(w => w.user_id)
       const { data: usersData, error: usersError } = await supabase
         .from("users")
         .select("user_id, email, coinw_uid, nft_receive_address, is_pegasus_exchange, pegasus_withdrawal_unlock_date")
@@ -122,64 +124,43 @@ export default function AdminWithdrawalsPage() {
 
       if (usersError) throw usersError
 
-      // STEP 3: 月間出金記録を取得
-      const { data: withdrawalData, error: withdrawalError } = await supabase
-        .from("monthly_withdrawals")
-        .select("*")
-        .eq("withdrawal_month", targetDate)
+      // STEP 3: 現在の残高を取得（参考情報）
+      const { data: currentCycle, error: cycleError } = await supabase
+        .from("affiliate_cycle")
+        .select("user_id, available_usdt, cum_usdt, phase, total_nft_count")
+        .in("user_id", userIds)
 
-      if (withdrawalError) throw withdrawalError
+      if (cycleError) throw cycleError
 
       // STEP 4: データを結合
-      const formattedData = (eligibleUsers || []).map((cycle: any) => {
-        const user = usersData?.find(u => u.user_id === cycle.user_id)
-        const withdrawal = withdrawalData?.find(w => w.user_id === cycle.user_id)
+      const formattedData = withdrawalData.map((withdrawal: any) => {
+        const user = usersData?.find(u => u.user_id === withdrawal.user_id)
+        const cycle = currentCycle?.find(c => c.user_id === withdrawal.user_id)
 
-        // CoinW UIDまたはBEP20アドレスを判定
-        let withdrawalMethod = null
-        let withdrawalAddress = null
-        if (user?.coinw_uid) {
-          withdrawalMethod = 'coinw'
-          withdrawalAddress = user.coinw_uid
-        } else if (user?.nft_receive_address) {
-          withdrawalMethod = 'bep20'
-          withdrawalAddress = user.nft_receive_address
-        }
-
-        // 出金レコードがあればそのデータを使用、なければデフォルト値
         return {
-          id: withdrawal?.id || `temp-${cycle.user_id}`,
-          user_id: cycle.user_id,
+          ...withdrawal,
           email: user?.email || '',
-          withdrawal_month: targetDate,
-          total_amount: withdrawal?.total_amount || cycle.available_usdt,
-          withdrawal_address: withdrawalAddress,
-          withdrawal_method: withdrawalMethod,
-          status: withdrawal?.status || 'not_created',
-          created_at: withdrawal?.created_at || new Date().toISOString(),
-          completed_at: withdrawal?.completed_at || null,
-          notes: withdrawal?.notes || null,
-          task_completed: withdrawal?.task_completed || false,
-          task_completed_at: withdrawal?.task_completed_at || null,
+          withdrawal_address: withdrawal.withdrawal_address || user?.coinw_uid || user?.nft_receive_address || null,
+          withdrawal_method: withdrawal.withdrawal_method || (user?.coinw_uid ? 'coinw' : user?.nft_receive_address ? 'bep20' : null),
           is_pegasus_exchange: user?.is_pegasus_exchange || false,
           pegasus_withdrawal_unlock_date: user?.pegasus_withdrawal_unlock_date || null,
-          // 追加情報
-          cum_usdt: cycle.cum_usdt,
-          phase: cycle.phase,
-          total_nft_count: cycle.total_nft_count,
+          // 参考情報: 現在の残高
+          current_available_usdt: cycle?.available_usdt || 0,
+          cum_usdt: cycle?.cum_usdt || 0,
+          phase: cycle?.phase || '',
+          total_nft_count: cycle?.total_nft_count || 0,
         }
       })
 
       console.log('=== Formatted data count:', formattedData.length)
       setWithdrawals(formattedData)
 
-      // 統計情報を計算（$10以上のユーザーのみ）
-      const eligibleForWithdrawal = formattedData.filter(w => w.total_amount >= 10)
+      // 統計情報を計算
       const stats: MonthlyStats = {
-        total_amount: eligibleForWithdrawal.reduce((sum, w) => sum + Number(w.total_amount), 0),
-        pending_count: eligibleForWithdrawal.filter(w => w.status === 'pending').length,
-        completed_count: eligibleForWithdrawal.filter(w => w.status === 'completed').length,
-        on_hold_count: eligibleForWithdrawal.filter(w => w.status === 'on_hold').length,
+        total_amount: formattedData.reduce((sum, w) => sum + Number(w.total_amount), 0),
+        pending_count: formattedData.filter(w => w.status === 'pending').length,
+        completed_count: formattedData.filter(w => w.status === 'completed').length,
+        on_hold_count: formattedData.filter(w => w.status === 'on_hold').length,
       }
       setStats(stats)
 
@@ -258,10 +239,12 @@ export default function AdminWithdrawalsPage() {
     link.click()
   }
 
-  const filteredWithdrawals = withdrawals.filter(w => 
-    w.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    w.email.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredWithdrawals = withdrawals
+    .filter(w =>
+      w.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      w.email.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => Number(b.total_amount) - Number(a.total_amount))
 
   const getStatusBadge = (status: string) => {
     switch (status) {
