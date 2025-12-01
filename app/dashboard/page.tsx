@@ -1041,6 +1041,18 @@ const CoinWAlert = ({ onClose }: { onClose: () => void }) => (
         </div>
       </CardContent>
     </Card>
+
+    {/* 月末報酬タスクポップアップ */}
+    {userData && (
+      <RewardTaskPopup
+        userId={userData.user_id}
+        isOpen={showRewardTaskPopup}
+        onComplete={() => {
+          setShowRewardTaskPopup(false)
+          window.location.reload()
+        }}
+      />
+    )}
   </div>
 )
 
@@ -1095,16 +1107,4 @@ const NFTAddressAlert = ({ onClose }: { onClose: () => void }) => (
       </CardContent>
     </Card>
 
-    {/* 月末報酬タスクポップアップ */}
-    {userData && (
-      <RewardTaskPopup
-        userId={userData.user_id}
-        isOpen={showRewardTaskPopup}
-        onComplete={() => {
-          setShowRewardTaskPopup(false)
-          window.location.reload()
-        }}
-      />
-    )}
-  </div>
 )
