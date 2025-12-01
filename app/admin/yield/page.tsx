@@ -371,6 +371,9 @@ export default function AdminYieldPage() {
         setDate(new Date().toISOString().split("T")[0])
         fetchHistory()
         fetchStats()
+
+        // 月末かチェックして自動的に紹介報酬を計算
+        await checkAndProcessMonthlyReferral(date)
       }
     } catch (error: any) {
       console.error('❌ 日利設定エラー:', error)
@@ -380,6 +383,66 @@ export default function AdminYieldPage() {
       })
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  // 月末チェック＆自動紹介報酬計算
+  const checkAndProcessMonthlyReferral = async (settingDate: string) => {
+    try {
+      const targetDate = new Date(settingDate)
+      const year = targetDate.getFullYear()
+      const month = targetDate.getMonth() + 1
+
+      // 月末日を取得
+      const lastDayOfMonth = new Date(year, month, 0).getDate()
+      const currentDay = targetDate.getDate()
+
+      // 月末でない場合はスキップ
+      if (currentDay !== lastDayOfMonth) {
+        console.log(`📅 ${settingDate}は月末ではありません（${month}月の最終日は${lastDayOfMonth}日）`)
+        return
+      }
+
+      console.log(`📅 ${settingDate}は月末です。紹介報酬を自動計算します...`)
+
+      // 月次紹介報酬を計算
+      const { data: monthlyResult, error: monthlyError } = await supabase.rpc('process_monthly_referral_reward', {
+        p_year: year,
+        p_month: month,
+        p_overwrite: false
+      })
+
+      if (monthlyError) {
+        console.error('❌ 月次紹介報酬計算エラー:', monthlyError)
+        // エラーでも日利設定は成功しているので、警告のみ表示
+        setMessage(prev => ({
+          type: "warning",
+          text: (prev?.text || '') + `\n\n⚠️ 月次紹介報酬の自動計算に失敗しました: ${monthlyError.message}\n手動で実行してください: SELECT * FROM process_monthly_referral_reward(${year}, ${month});`
+        }))
+        return
+      }
+
+      const monthlyData = Array.isArray(monthlyResult) ? monthlyResult[0] : monthlyResult
+
+      if (monthlyData.status === 'ERROR') {
+        console.error('❌ 月次紹介報酬計算エラー:', monthlyData.message)
+        setMessage(prev => ({
+          type: "warning",
+          text: (prev?.text || '') + `\n\n⚠️ ${monthlyData.message}`
+        }))
+        return
+      }
+
+      console.log('✅ 月次紹介報酬計算成功:', monthlyData)
+
+      // 成功メッセージに追記
+      setMessage(prev => ({
+        type: "success",
+        text: (prev?.text || '') + `\n\n🎉 月末処理完了！\n月次紹介報酬: ${monthlyData.details?.total_users || 0}名に$${monthlyData.details?.total_amount || 0}配布`
+      }))
+
+    } catch (error: any) {
+      console.error('月末チェックエラー:', error)
     }
   }
 
