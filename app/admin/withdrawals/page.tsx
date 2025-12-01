@@ -57,13 +57,20 @@ export default function AdminWithdrawalsPage() {
   const [user, setUser] = useState<any>(null)
   const [withdrawals, setWithdrawals] = useState<WithdrawalRecord[]>([])
   const [stats, setStats] = useState<MonthlyStats | null>(null)
-  const [selectedMonth, setSelectedMonth] = useState<string>(getDefaultMonth())
+  const [selectedMonth, setSelectedMonth] = useState<string>("")
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
+
+  // 強制的に前月を設定
+  useEffect(() => {
+    const defaultMonth = getDefaultMonth()
+    console.log('Force setting month to:', defaultMonth)
+    setSelectedMonth(defaultMonth)
+  }, [])
 
   useEffect(() => {
     checkAuth()
