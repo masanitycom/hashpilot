@@ -57,9 +57,11 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
 
         // 前月の最終日の日利が未設定の場合は非表示
         if (!lastDayProfit || lastDayProfit.length === 0) {
+          console.log('[LastMonthProfit] 前月最終日のデータなし - カード非表示')
           setLoading(false)
           return // データ取得をスキップして非表示
         }
+        console.log('[LastMonthProfit] 前月最終日のデータあり - カード表示')
       }
 
       // 個人利益（user_daily_profit）

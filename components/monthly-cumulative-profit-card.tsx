@@ -55,10 +55,13 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
 
         // 前月の最終日の日利が未設定の場合は、前月のデータを表示
         if (!lastDayProfit || lastDayProfit.length === 0) {
+          console.log('[MonthlyCumulative] 前月最終日のデータなし - 前月データを表示')
           year = lastMonthDate.getFullYear()
           month = lastMonthDate.getMonth() + 1
           monthStart = new Date(year, lastMonthDate.getMonth(), 1).toISOString().split('T')[0]
           monthEnd = lastMonthEnd
+        } else {
+          console.log('[MonthlyCumulative] 前月最終日のデータあり - 今月データを表示')
         }
       }
 
