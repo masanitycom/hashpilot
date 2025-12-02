@@ -250,22 +250,30 @@ export default function AdminWithdrawalsPage() {
 
   const exportCSV = () => {
     const headers = [
-      "ユーザーID", "メールアドレス", "報酬額", "送金方法", "CoinW UID/送金先", 
+      "ユーザーID", "メールアドレス", "個人利益", "紹介報酬", "合計額", "送金方法", "CoinW UID/送金先",
       "ステータス", "タスク状況", "作成日", "完了日", "備考"
     ]
-    
-    const csvData = filteredWithdrawals.map(w => [
-      w.user_id,
-      w.email,
-      w.total_amount,
-      w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
-      w.withdrawal_address || "未設定",
-      w.status,
-      w.task_completed ? "完了" : "未完了",
-      new Date(w.created_at).toLocaleDateString('ja-JP'),
-      w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
-      w.notes || ""
-    ])
+
+    const csvData = filteredWithdrawals.map(w => {
+      const dailyProfit = Number(w.daily_profit || 0)
+      const referralProfit = Number(w.level1_reward || 0) + Number(w.level2_reward || 0) +
+                            Number(w.level3_reward || 0) + Number(w.level4_plus_reward || 0)
+
+      return [
+        w.user_id,
+        w.email,
+        dailyProfit.toFixed(3),
+        referralProfit.toFixed(3),
+        w.total_amount,
+        w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
+        w.withdrawal_address || "未設定",
+        w.status,
+        w.task_completed ? "完了" : "未完了",
+        new Date(w.created_at).toLocaleDateString('ja-JP'),
+        w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
+        w.notes || ""
+      ]
+    })
 
     const csvContent = [headers, ...csvData]
       .map(row => row.map(field => `"${field}"`).join(","))
