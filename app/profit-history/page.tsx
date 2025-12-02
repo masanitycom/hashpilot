@@ -77,12 +77,12 @@ export default function ProfitHistoryPage() {
         throw dailyError
       }
 
-      // 紹介報酬（user_referral_profit）- 月別集計
+      // 紹介報酬（monthly_referral_profit）- V2システム対応
       const { data: referralProfitData, error: referralError } = await supabase
-        .from('user_referral_profit')
-        .select('date, profit_amount')
+        .from('monthly_referral_profit')
+        .select('year_month, profit_amount')
         .eq('user_id', uid)
-        .order('date', { ascending: true })
+        .order('year_month', { ascending: true })
 
       if (referralError && referralError.code !== 'PGRST116') {
         throw referralError
@@ -112,11 +112,12 @@ export default function ProfitHistoryPage() {
         monthData.personalProfit += record.daily_profit
       })
 
-      // 紹介報酬を集計
+      // 紹介報酬を集計（V2: monthly_referral_profit）
       referralProfitData?.forEach(record => {
-        const date = new Date(record.date)
-        const year = date.getFullYear()
-        const month = date.getMonth() + 1
+        // year_month形式: "2025-11"
+        const [yearStr, monthStr] = record.year_month.split('-')
+        const year = parseInt(yearStr)
+        const month = parseInt(monthStr)
         const key = `${year}-${month}`
 
         if (!monthlyMap.has(key)) {
