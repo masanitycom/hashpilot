@@ -33,6 +33,11 @@ interface YieldHistory {
   user_rate: number
   total_users: number
   created_at: string
+  system?: 'V1' | 'V2'
+  // V2専用フィールド
+  total_profit_amount?: number
+  total_nft_count?: number
+  profit_per_nft?: number
 }
 
 interface YieldStats {
@@ -175,13 +180,52 @@ export default function AdminYieldPage() {
 
   const fetchHistory = async () => {
     try {
-      const { data, error } = await supabase
+      // V1履歴（11月、利率％）
+      const { data: v1Data, error: v1Error } = await supabase
         .from("daily_yield_log")
         .select("*")
         .order("date", { ascending: false })
 
-      if (error) throw error
-      setHistory(data || [])
+      if (v1Error) throw v1Error
+
+      // V2履歴（12月、金額$）
+      const { data: v2Data, error: v2Error } = await supabase
+        .from("daily_yield_log_v2")
+        .select("*")
+        .order("date", { ascending: false })
+
+      if (v2Error) {
+        console.warn("V2履歴取得エラー:", v2Error)
+      }
+
+      // V1データを変換（既存形式を維持）
+      const v1History = (v1Data || []).map(item => ({
+        ...item,
+        system: 'V1' as const,
+      }))
+
+      // V2データを変換（V1形式に合わせる）
+      const v2History = (v2Data || []).map(item => ({
+        id: item.id.toString(),
+        date: item.date,
+        yield_rate: (item.daily_pnl / item.total_nft_count / 10) || 0,  // 概算の利率
+        margin_rate: item.fee_rate || 0.30,
+        user_rate: (item.daily_pnl / item.total_nft_count / 10 * 0.7 * 0.6) || 0,  // 概算
+        total_users: 0,
+        created_at: item.created_at,
+        system: 'V2' as const,
+        // V2専用データ
+        total_profit_amount: item.total_profit_amount,
+        total_nft_count: item.total_nft_count,
+        profit_per_nft: item.profit_per_nft,
+      }))
+
+      // 統合して日付順にソート
+      const allHistory = [...v1History, ...v2History].sort((a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      )
+
+      setHistory(allHistory)
     } catch (error) {
       console.error("履歴取得エラー:", error)
     }
@@ -1258,63 +1302,100 @@ export default function AdminYieldPage() {
             {history.length === 0 ? (
                 <p className="text-gray-400">履歴がありません</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-white">
-                    <thead>
-                      <tr className="border-b border-gray-600">
-                        <th className="text-left p-2">日付</th>
-                        <th className="text-left p-2">日利率</th>
-                        <th className="text-left p-2">マージン率</th>
-                        <th className="text-left p-2">ユーザー利率</th>
-                        <th className="text-left p-2">設定日時</th>
-                        <th className="text-left p-2">操作</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {history.map((item) => (
-                        <tr key={item.id} className="border-b border-gray-700">
-                          <td className="p-2">{new Date(item.date).toLocaleDateString("ja-JP")}</td>
-                          <td
-                            className={`p-2 font-medium ${Number.parseFloat(item.yield_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
-                          >
-                            {Number.parseFloat(item.yield_rate.toString()).toFixed(3)}%
-                          </td>
-                          <td className={`p-2 ${Number.parseFloat(item.margin_rate.toString()) > 1 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
-                            {(Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0)}%
-                            {Number.parseFloat(item.margin_rate.toString()) > 1 && (
-                              <span className="ml-1 text-xs">⚠️異常値</span>
-                            )}
-                          </td>
-                          <td
-                            className={`p-2 font-medium ${Number.parseFloat(item.user_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}
-                          >
-                            {Number.parseFloat(item.user_rate.toString()).toFixed(3)}%
-                          </td>
-                          <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
-                          <td className="p-2 space-x-1">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleEdit(item)}
-                              className="h-8 px-2 bg-blue-600 hover:bg-blue-700 text-white border-blue-500"
-                            >
-                              <Edit className="h-3 w-3 mr-1" />
-                              修正
-                            </Button>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => handleForceDelete(item.id, item.date)}
-                              className="h-8 px-2 bg-red-600 hover:bg-red-700 text-white"
-                            >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              削除
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="space-y-6">
+                  {/* 月別にグループ化 */}
+                  {Object.entries(
+                    history.reduce((acc, item) => {
+                      const month = item.date.substring(0, 7) // YYYY-MM
+                      if (!acc[month]) acc[month] = []
+                      acc[month].push(item)
+                      return acc
+                    }, {} as Record<string, typeof history>)
+                  ).map(([month, items]) => (
+                    <div key={month}>
+                      <h3 className="text-lg font-bold text-blue-400 mb-2">
+                        {month} ({items[0].system === 'V2' ? '金額入力' : '利率入力'})
+                      </h3>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-white">
+                          <thead>
+                            <tr className="border-b border-gray-600">
+                              <th className="text-left p-2">日付</th>
+                              {items[0].system === 'V2' ? (
+                                <>
+                                  <th className="text-left p-2">運用利益</th>
+                                  <th className="text-left p-2">NFT数</th>
+                                  <th className="text-left p-2">単価利益</th>
+                                </>
+                              ) : (
+                                <>
+                                  <th className="text-left p-2">日利率</th>
+                                  <th className="text-left p-2">マージン率</th>
+                                  <th className="text-left p-2">ユーザー利率</th>
+                                </>
+                              )}
+                              <th className="text-left p-2">設定日時</th>
+                              <th className="text-left p-2">操作</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {items.map((item) => (
+                              <tr key={item.id} className="border-b border-gray-700">
+                                <td className="p-2">{new Date(item.date).toLocaleDateString("ja-JP")}</td>
+                                {item.system === 'V2' ? (
+                                  <>
+                                    <td className={`p-2 font-medium ${item.total_profit_amount >= 0 ? "text-green-400" : "text-red-400"}`}>
+                                      ${item.total_profit_amount?.toLocaleString()}
+                                    </td>
+                                    <td className="p-2">{item.total_nft_count}個</td>
+                                    <td className={`p-2 font-medium ${item.profit_per_nft >= 0 ? "text-green-400" : "text-red-400"}`}>
+                                      ${item.profit_per_nft?.toFixed(3)}
+                                    </td>
+                                  </>
+                                ) : (
+                                  <>
+                                    <td className={`p-2 font-medium ${Number.parseFloat(item.yield_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}>
+                                      {Number.parseFloat(item.yield_rate.toString()).toFixed(3)}%
+                                    </td>
+                                    <td className={`p-2 ${Number.parseFloat(item.margin_rate.toString()) > 1 ? "bg-red-900 text-red-300 font-bold" : ""}`}>
+                                      {(Number.parseFloat(item.margin_rate.toString()) * 100).toFixed(0)}%
+                                      {Number.parseFloat(item.margin_rate.toString()) > 1 && (
+                                        <span className="ml-1 text-xs">⚠️異常値</span>
+                                      )}
+                                    </td>
+                                    <td className={`p-2 font-medium ${Number.parseFloat(item.user_rate.toString()) >= 0 ? "text-green-400" : "text-red-400"}`}>
+                                      {Number.parseFloat(item.user_rate.toString()).toFixed(3)}%
+                                    </td>
+                                  </>
+                                )}
+                                <td className="p-2">{new Date(item.created_at).toLocaleString("ja-JP")}</td>
+                                <td className="p-2 space-x-1">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleEdit(item)}
+                                    className="h-8 px-2 bg-blue-600 hover:bg-blue-700 text-white border-blue-500"
+                                  >
+                                    <Edit className="h-3 w-3 mr-1" />
+                                    修正
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => handleForceDelete(item.id, item.date)}
+                                    className="h-8 px-2 bg-red-600 hover:bg-red-700 text-white"
+                                  >
+                                    <Trash2 className="h-3 w-3 mr-1" />
+                                    削除
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
           </CardContent>
