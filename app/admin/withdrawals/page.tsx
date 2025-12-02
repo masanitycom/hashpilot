@@ -41,6 +41,8 @@ interface WithdrawalRecord {
 
 interface MonthlyStats {
   total_amount: number
+  personal_profit_total: number
+  referral_profit_total: number
   pending_count: number
   completed_count: number
   on_hold_count: number
@@ -135,7 +137,14 @@ export default function AdminWithdrawalsPage() {
       if (!withdrawalData || withdrawalData.length === 0) {
         console.log('=== No withdrawal records for this month')
         setWithdrawals([])
-        setStats({ total_amount: 0, pending_count: 0, completed_count: 0, on_hold_count: 0 })
+        setStats({
+          total_amount: 0,
+          personal_profit_total: 0,
+          referral_profit_total: 0,
+          pending_count: 0,
+          completed_count: 0,
+          on_hold_count: 0
+        })
         setLoading(false)
         return
       }
@@ -181,11 +190,13 @@ export default function AdminWithdrawalsPage() {
       setWithdrawals(formattedData)
 
       // 統計情報を計算
-      // total_amount = available_usdt + cum_usdt（個人利益 + 紹介報酬）
+      const personalProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.total_amount), 0)
+      const referralProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.cum_usdt || 0), 0)
+
       const stats: MonthlyStats = {
-        total_amount: formattedData.reduce((sum, w) =>
-          sum + Number(w.total_amount) + Number(w.cum_usdt || 0), 0
-        ),
+        total_amount: personalProfitTotal + referralProfitTotal,
+        personal_profit_total: personalProfitTotal,
+        referral_profit_total: referralProfitTotal,
         pending_count: formattedData.filter(w => w.status === 'pending').length,
         completed_count: formattedData.filter(w => w.status === 'completed').length,
         on_hold_count: formattedData.filter(w => w.status === 'on_hold').length,
@@ -332,55 +343,89 @@ export default function AdminWithdrawalsPage() {
       <div className="container mx-auto px-4 py-8">
         {/* 統計セクション */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card className="bg-blue-900/20 border-blue-700/50">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <DollarSign className="h-8 w-8 text-blue-400" />
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
+            {/* 個人利益合計 */}
+            <Card className="bg-green-900/20 border-green-700/50">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="h-6 w-6 text-green-400" />
                   <div>
-                    <p className="text-sm text-blue-300">総出金額（$10以上）</p>
-                    <p className="text-2xl font-bold text-blue-400">
+                    <p className="text-xs text-green-300">個人利益合計</p>
+                    <p className="text-xl font-bold text-green-400">
+                      ${stats.personal_profit_total.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 紹介報酬合計 */}
+            <Card className="bg-orange-900/20 border-orange-700/50">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="h-6 w-6 text-orange-400" />
+                  <div>
+                    <p className="text-xs text-orange-300">紹介報酬合計</p>
+                    <p className="text-xl font-bold text-orange-400">
+                      ${stats.referral_profit_total.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 総出金額 */}
+            <Card className="bg-blue-900/20 border-blue-700/50">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="h-6 w-6 text-blue-400" />
+                  <div>
+                    <p className="text-xs text-blue-300">総出金額（$10以上）</p>
+                    <p className="text-xl font-bold text-blue-400">
                       ${stats.total_amount.toFixed(2)}
                     </p>
                     <p className="text-xs text-blue-300 mt-1">
-                      全ユーザー: {withdrawals.length}人
+                      {withdrawals.length}人
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
+            {/* 送金待ち */}
             <Card className="bg-yellow-900/20 border-yellow-700/50">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <Clock className="h-8 w-8 text-yellow-400" />
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-6 w-6 text-yellow-400" />
                   <div>
-                    <p className="text-sm text-yellow-300">送金待ち</p>
-                    <p className="text-2xl font-bold text-yellow-400">{stats.pending_count}</p>
+                    <p className="text-xs text-yellow-300">送金待ち</p>
+                    <p className="text-xl font-bold text-yellow-400">{stats.pending_count}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-green-900/20 border-green-700/50">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-8 w-8 text-green-400" />
+            {/* 送金完了 */}
+            <Card className="bg-emerald-900/20 border-emerald-700/50">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-6 w-6 text-emerald-400" />
                   <div>
-                    <p className="text-sm text-green-300">送金完了</p>
-                    <p className="text-2xl font-bold text-green-400">{stats.completed_count}</p>
+                    <p className="text-xs text-emerald-300">送金完了</p>
+                    <p className="text-xl font-bold text-emerald-400">{stats.completed_count}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
+            {/* 保留中 */}
             <Card className="bg-red-900/20 border-red-700/50">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3">
-                  <AlertCircle className="h-8 w-8 text-red-400" />
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="h-6 w-6 text-red-400" />
                   <div>
-                    <p className="text-sm text-red-300">保留中</p>
-                    <p className="text-2xl font-bold text-red-400">{stats.on_hold_count}</p>
+                    <p className="text-xs text-red-300">保留中</p>
+                    <p className="text-xl font-bold text-red-400">{stats.on_hold_count}</p>
                   </div>
                 </div>
               </CardContent>
