@@ -262,7 +262,7 @@ export function ReferralProfitCard({
 
         <div className="space-y-2 border-t border-gray-600 pt-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400">今月累計</span>
+            <span className="text-xs text-gray-400">前月累計</span>
             <div className="flex items-center space-x-1">
               <TrendingUp className="h-3 w-3 text-orange-400" />
               <span className={`text-lg font-bold ${

@@ -188,12 +188,6 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
                 ${personalProfit.toFixed(3)}
               </span>
             </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-gray-400">紹介報酬:</span>
-              <span className="text-yellow-400 text-xs">
-                集計中...
-              </span>
-            </div>
           </div>
         </div>
 
