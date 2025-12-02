@@ -181,8 +181,11 @@ export default function AdminWithdrawalsPage() {
       setWithdrawals(formattedData)
 
       // 統計情報を計算
+      // total_amount = available_usdt + cum_usdt（個人利益 + 紹介報酬）
       const stats: MonthlyStats = {
-        total_amount: formattedData.reduce((sum, w) => sum + Number(w.total_amount), 0),
+        total_amount: formattedData.reduce((sum, w) =>
+          sum + Number(w.total_amount) + Number(w.cum_usdt || 0), 0
+        ),
         pending_count: formattedData.filter(w => w.status === 'pending').length,
         completed_count: formattedData.filter(w => w.status === 'completed').length,
         on_hold_count: formattedData.filter(w => w.status === 'on_hold').length,
