@@ -73,6 +73,9 @@ export default function AdminYieldPage() {
   const [monthlyLoading, setMonthlyLoading] = useState(false)
   const [monthlyMessage, setMonthlyMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
 
+  // 履歴表示用の月選択
+  const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)) // YYYY-MM
+
   // ユーザー受取率を計算
   useEffect(() => {
     const yield_rate = Number.parseFloat(yieldRate) || 0
@@ -1302,26 +1305,45 @@ export default function AdminYieldPage() {
             {history.length === 0 ? (
                 <p className="text-gray-400">履歴がありません</p>
               ) : (
-                <div className="space-y-6">
-                  {/* 月別にグループ化 */}
-                  {Object.entries(
-                    history.reduce((acc, item) => {
-                      const month = item.date.substring(0, 7) // YYYY-MM
-                      if (!acc[month]) acc[month] = []
-                      acc[month].push(item)
-                      return acc
-                    }, {} as Record<string, typeof history>)
-                  ).map(([month, items]) => (
-                    <div key={month}>
-                      <h3 className="text-lg font-bold text-blue-400 mb-2">
-                        {month} ({items[0].system === 'V2' ? '金額入力' : '利率入力'})
-                      </h3>
+                <div>
+                  {/* 月選択ドロップダウン */}
+                  <div className="mb-4 flex items-center gap-4">
+                    <Label className="text-white">表示月:</Label>
+                    <select
+                      value={selectedMonth}
+                      onChange={(e) => setSelectedMonth(e.target.value)}
+                      className="bg-gray-700 text-white border border-gray-600 rounded px-3 py-2"
+                    >
+                      {Array.from(new Set(history.map(item => item.date.substring(0, 7))))
+                        .sort()
+                        .reverse()
+                        .map(month => {
+                          const isV2 = history.find(item => item.date.startsWith(month))?.system === 'V2'
+                          return (
+                            <option key={month} value={month}>
+                              {month} ({isV2 ? '金額入力' : '利率入力'})
+                            </option>
+                          )
+                        })}
+                    </select>
+                  </div>
+
+                  {/* 選択された月の履歴 */}
+                  {(() => {
+                    const filteredHistory = history.filter(item => item.date.startsWith(selectedMonth))
+                    const isV2 = filteredHistory[0]?.system === 'V2'
+
+                    if (filteredHistory.length === 0) {
+                      return <p className="text-gray-400">この月のデータはありません</p>
+                    }
+
+                    return (
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm text-white">
                           <thead>
                             <tr className="border-b border-gray-600">
                               <th className="text-left p-2">日付</th>
-                              {items[0].system === 'V2' ? (
+                              {isV2 ? (
                                 <>
                                   <th className="text-left p-2">運用利益</th>
                                   <th className="text-left p-2">NFT数</th>
@@ -1339,10 +1361,10 @@ export default function AdminYieldPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {items.map((item) => (
+                            {filteredHistory.map((item) => (
                               <tr key={item.id} className="border-b border-gray-700">
                                 <td className="p-2">{new Date(item.date).toLocaleDateString("ja-JP")}</td>
-                                {item.system === 'V2' ? (
+                                {isV2 ? (
                                   <>
                                     <td className={`p-2 font-medium ${item.total_profit_amount >= 0 ? "text-green-400" : "text-red-400"}`}>
                                       ${item.total_profit_amount?.toLocaleString()}
@@ -1394,8 +1416,8 @@ export default function AdminYieldPage() {
                           </tbody>
                         </table>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })()}
                 </div>
               )}
           </CardContent>
