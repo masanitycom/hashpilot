@@ -269,7 +269,7 @@ export default function AdminWithdrawalsPage() {
 
     const csvContent = [headers, ...csvData]
       .map(row => row.map(field => `"${field}"`).join(","))
-      .join("\\n")
+      .join("\n")
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
     const link = document.createElement("a")
