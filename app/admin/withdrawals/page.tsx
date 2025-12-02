@@ -248,32 +248,59 @@ export default function AdminWithdrawalsPage() {
     }
   }
 
-  const exportCSV = () => {
+  const exportCSV = async () => {
     const headers = [
       "ユーザーID", "メールアドレス", "個人利益", "紹介報酬", "合計額", "送金方法", "CoinW UID/送金先",
       "ステータス", "タスク状況", "作成日", "完了日", "備考"
     ]
 
-    const csvData = filteredWithdrawals.map(w => {
-      const dailyProfit = Number(w.daily_profit || 0)
-      const referralProfit = Number(w.level1_reward || 0) + Number(w.level2_reward || 0) +
-                            Number(w.level3_reward || 0) + Number(w.level4_plus_reward || 0)
+    // 月の範囲を計算
+    const monthStart = `${selectedMonth}-01`
+    const monthEnd = new Date(selectedMonth + '-01')
+    monthEnd.setMonth(monthEnd.getMonth() + 1)
+    const monthEndStr = monthEnd.toISOString().split('T')[0]
 
-      return [
-        w.user_id,
-        w.email,
-        dailyProfit.toFixed(3),
-        referralProfit.toFixed(3),
-        w.total_amount,
-        w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
-        w.withdrawal_address || "未設定",
-        w.status,
-        w.task_completed ? "完了" : "未完了",
-        new Date(w.created_at).toLocaleDateString('ja-JP'),
-        w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
-        w.notes || ""
-      ]
-    })
+    const csvData = await Promise.all(
+      filteredWithdrawals.map(async (w) => {
+        // 個人利益を取得
+        const { data: dailyProfitData } = await supabase
+          .from('user_daily_profit')
+          .select('daily_profit')
+          .eq('user_id', w.user_id)
+          .gte('date', monthStart)
+          .lt('date', monthEndStr)
+
+        const personalProfit = dailyProfitData
+          ? dailyProfitData.reduce((sum, r) => sum + r.daily_profit, 0)
+          : 0
+
+        // 紹介報酬を取得
+        const { data: referralData } = await supabase
+          .from('monthly_referral_profit')
+          .select('profit_amount')
+          .eq('user_id', w.user_id)
+          .eq('year_month', selectedMonth)
+
+        const referralProfit = referralData
+          ? referralData.reduce((sum, r) => sum + parseFloat(r.profit_amount), 0)
+          : 0
+
+        return [
+          w.user_id,
+          w.email,
+          personalProfit.toFixed(3),
+          referralProfit.toFixed(3),
+          w.total_amount,
+          w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
+          w.withdrawal_address || "未設定",
+          w.status,
+          w.task_completed ? "完了" : "未完了",
+          new Date(w.created_at).toLocaleDateString('ja-JP'),
+          w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
+          w.notes || ""
+        ]
+      })
+    )
 
     const csvContent = [headers, ...csvData]
       .map(row => row.map(field => `"${field}"`).join(","))
