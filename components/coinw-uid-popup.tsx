@@ -118,8 +118,7 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
 
               <Button
                 onClick={handleConfirm}
-                variant="outline"
-                className="w-full border-white/30 text-white hover:bg-white/10 font-medium"
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white border border-gray-500 font-medium"
               >
                 確認しました
               </Button>
