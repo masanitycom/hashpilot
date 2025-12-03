@@ -12,11 +12,14 @@ interface CoinwUidPopupProps {
 }
 
 export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
+  console.log('[CoinwUidPopup] Component rendered with props:', { userId, coinwUid })
+
   const [isVisible, setIsVisible] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [dontShowAgain, setDontShowAgain] = useState(false)
 
   useEffect(() => {
+    console.log('[CoinwUidPopup] useEffect triggered')
     setIsMounted(true)
 
     // クライアントサイドでのみlocalStorageにアクセス
