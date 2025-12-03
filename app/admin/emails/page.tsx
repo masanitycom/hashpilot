@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info } from "lucide-react"
+import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info, RotateCcw } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { AVAILABLE_TEMPLATE_VARIABLES } from "@/lib/email-template"
 
@@ -24,6 +24,7 @@ interface EmailHistory {
   sent_count: number
   failed_count: number
   read_count: number
+  pending_count: number
 }
 
 interface UserSearchResult {
@@ -285,6 +286,56 @@ export default function AdminEmailsPage() {
     } catch (error: any) {
       console.error("Email send error:", error)
       alert(`メール送信エラー: ${error.message}`)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  // 未送信メールの再送信
+  const resendPendingEmails = async (emailId: string, pendingCount: number) => {
+    if (!confirm(`未送信の${pendingCount}件にメールを再送信しますか？`)) {
+      return
+    }
+
+    setActionLoading(true)
+    try {
+      const BATCH_SIZE = 50
+      let totalSent = 0
+      let totalFailed = 0
+      let batchNumber = 1
+      const totalBatches = Math.ceil(pendingCount / BATCH_SIZE)
+
+      while (true) {
+        console.log(`再送信バッチ ${batchNumber}/${totalBatches} 送信中...`)
+
+        const { data: sendResult, error: sendError } = await supabase.functions.invoke("send-system-email", {
+          body: { email_id: emailId, batch_size: BATCH_SIZE },
+        })
+
+        if (sendError) {
+          console.error(`バッチ ${batchNumber} エラー:`, sendError)
+          break
+        }
+
+        totalSent += sendResult.sent_count || 0
+        totalFailed += sendResult.failed_count || 0
+
+        if (sendResult.sent_count === 0 && sendResult.failed_count === 0) {
+          break
+        }
+
+        batchNumber++
+
+        if (sendResult.sent_count > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+      }
+
+      alert(`再送信完了\n${totalSent}件送信成功、${totalFailed}件失敗`)
+      fetchEmailHistory(currentUser.email)
+    } catch (error: any) {
+      console.error("Resend error:", error)
+      alert(`再送信エラー: ${error.message}`)
     } finally {
       setActionLoading(false)
     }
@@ -622,6 +673,21 @@ export default function AdminEmailsPage() {
                                 <div className="text-xs text-gray-400 mt-1">
                                   送信: {email.sent_count} / 失敗: {email.failed_count} / 既読: {email.read_count}
                                 </div>
+                                {/* 未送信がある場合は再送信ボタンを表示 */}
+                                {(email.pending_count > 0 || email.total_recipients - email.sent_count - email.failed_count > 0) && (
+                                  <Button
+                                    onClick={() => resendPendingEmails(
+                                      email.email_id,
+                                      email.pending_count || (email.total_recipients - email.sent_count - email.failed_count)
+                                    )}
+                                    disabled={actionLoading}
+                                    size="sm"
+                                    className="mt-2 bg-orange-600 hover:bg-orange-700 text-white"
+                                  >
+                                    <RotateCcw className="w-3 h-3 mr-1" />
+                                    未送信 {email.pending_count || (email.total_recipients - email.sent_count - email.failed_count)}件 再送信
+                                  </Button>
+                                )}
                               </div>
                             </div>
                           </CardContent>
