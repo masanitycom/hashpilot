@@ -93,12 +93,6 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
             </div>
 
             <div className="space-y-3">
-              <Link href="/profile">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 text-base">
-                  プロフィール編集画面へ
-                </Button>
-              </Link>
-
               {/* 次回から表示しないチェックボックス */}
               <div className="flex items-center gap-2 px-2 py-1">
                 <input
@@ -115,6 +109,15 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
                   次回から表示しない
                 </label>
               </div>
+
+              <Link href="/profile">
+                <Button
+                  onClick={handleConfirm}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 text-base"
+                >
+                  プロフィール編集画面へ
+                </Button>
+              </Link>
 
               <Button
                 onClick={handleConfirm}
