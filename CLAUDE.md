@@ -239,7 +239,7 @@ node comprehensive_referral_verification.js
 
 ---
 
-## 🔄 NFTサイクルシステム（2025年10月7日更新）
+## 🔄 NFTサイクルシステム（2025年12月3日更新）
 
 ### 基本仕様
 - **サイクル計算対象**: 紹介報酬のみ（個人利益は含めない）
@@ -269,6 +269,63 @@ node comprehensive_referral_verification.js
 - `affiliate_cycle.phase`: 現在のフェーズ（USDT/HOLD）
 - `affiliate_cycle.auto_nft_count`: 自動付与されたNFT数
 - `affiliate_cycle.manual_nft_count`: 手動購入したNFT数
+
+### ⚠️ 紹介報酬のデータソース（重要）
+
+**日次紹介報酬は廃止。全て月次紹介報酬を使用する。**
+
+| テーブル | 用途 | 備考 |
+|----------|------|------|
+| `monthly_referral_profit` | ✅ 正しいデータソース | 月次紹介報酬（現在使用中） |
+| `user_referral_profit` | ❌ 使用しない | 旧・日次紹介報酬（廃止） |
+
+### cum_usdtの同期ルール
+
+`affiliate_cycle.cum_usdt`は`monthly_referral_profit`の合計と一致させる必要がある。
+
+**同期が必要な場合のSQL:**
+```sql
+-- cum_usdtをmonthly_referral_profitの合計で更新
+UPDATE affiliate_cycle ac
+SET cum_usdt = COALESCE(mrp.total_referral, 0)
+FROM (
+  SELECT user_id, SUM(profit_amount) as total_referral
+  FROM monthly_referral_profit
+  GROUP BY user_id
+) mrp
+WHERE ac.user_id = mrp.user_id;
+
+-- phaseを再計算
+UPDATE affiliate_cycle
+SET phase = CASE
+  WHEN (FLOOR(cum_usdt / 1100)::int % 2) = 0 THEN 'USDT'
+  ELSE 'HOLD'
+END
+WHERE cum_usdt >= 0;
+```
+
+**確認用SQL:**
+```sql
+-- 不整合チェック
+SELECT
+  ac.user_id,
+  ac.cum_usdt,
+  COALESCE(mrp.total, 0) as monthly_referral_total,
+  ac.cum_usdt - COALESCE(mrp.total, 0) as difference
+FROM affiliate_cycle ac
+LEFT JOIN (
+  SELECT user_id, SUM(profit_amount) as total
+  FROM monthly_referral_profit
+  GROUP BY user_id
+) mrp ON ac.user_id = mrp.user_id
+WHERE ABS(ac.cum_usdt - COALESCE(mrp.total, 0)) > 0.01
+ORDER BY ABS(ac.cum_usdt - COALESCE(mrp.total, 0)) DESC;
+```
+
+### 2025年12月3日の修正
+- `cum_usdt`が`monthly_referral_profit`と不一致だったため同期実施
+- 全ユーザーの`cum_usdt`を`monthly_referral_profit`の合計で上書き
+- `phase`を再計算
 
 ---
 
