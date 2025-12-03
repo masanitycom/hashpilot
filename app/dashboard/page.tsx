@@ -668,11 +668,11 @@ export default function OptimizedDashboardPage() {
             <CardContent className="p-4">
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    📱 Hash Pilot公式Telegramが開設されました！
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2 leading-relaxed">
+                    📱 Hash Pilot公式<br className="sm:hidden" />Telegramが開設されました！
                   </h3>
                   <p className="text-white text-sm sm:text-base font-semibold">
-                    各種お得なキャンペーン情報、イベント情報等を発信します
+                    各種お得なキャンペーン情報、<br className="sm:hidden" />イベント情報等を発信します
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 w-full sm:w-auto">
