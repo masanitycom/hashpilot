@@ -8,6 +8,7 @@ const corsHeaders = {
 
 interface SendEmailRequest {
   email_id: string
+  batch_size?: number  // バッチサイズ（デフォルト50）
 }
 
 serve(async (req) => {
@@ -17,11 +18,14 @@ serve(async (req) => {
   }
 
   try {
-    const { email_id }: SendEmailRequest = await req.json()
+    const { email_id, batch_size = 50 }: SendEmailRequest = await req.json()
 
     if (!email_id) {
       throw new Error('email_id is required')
     }
+
+    // バッチサイズの上限を設定（最大100）
+    const effectiveBatchSize = Math.min(batch_size, 100)
 
     // Supabase Admin client
     const supabaseAdmin = createClient(
@@ -47,12 +51,13 @@ serve(async (req) => {
       throw new Error(`Email not found: ${emailError?.message}`)
     }
 
-    // 送信先リストを取得（status = 'pending'のもののみ）
+    // 送信先リストを取得（status = 'pending'のもののみ、バッチサイズで制限）
     const { data: recipients, error: recipientsError } = await supabaseAdmin
       .from('email_recipients')
       .select('id, user_id, to_email')
       .eq('email_id', email_id)
       .eq('status', 'pending')
+      .limit(effectiveBatchSize)
 
     if (recipientsError) {
       throw new Error(`Failed to fetch recipients: ${recipientsError.message}`)

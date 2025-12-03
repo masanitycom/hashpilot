@@ -143,15 +143,45 @@ export default function AdminEmailsPage() {
       if (createError) throw createError
 
       const emailId = createResult.email_id
+      const totalRecipients = createResult.recipient_count || 0
 
-      // メール送信（Edge Function呼び出し）
-      const { data: sendResult, error: sendError } = await supabase.functions.invoke("send-system-email", {
-        body: { email_id: emailId },
-      })
+      // バッチ処理でメール送信（50件ずつ）
+      const BATCH_SIZE = 50
+      let totalSent = 0
+      let totalFailed = 0
+      let batchNumber = 1
+      const totalBatches = Math.ceil(totalRecipients / BATCH_SIZE)
 
-      if (sendError) throw sendError
+      while (true) {
+        console.log(`バッチ ${batchNumber}/${totalBatches} 送信中...`)
 
-      alert(`メール送信完了\n${sendResult.sent_count}件送信成功、${sendResult.failed_count}件失敗`)
+        const { data: sendResult, error: sendError } = await supabase.functions.invoke("send-system-email", {
+          body: { email_id: emailId, batch_size: BATCH_SIZE },
+        })
+
+        if (sendError) {
+          console.error(`バッチ ${batchNumber} エラー:`, sendError)
+          // エラーでも続行（次のバッチを試す）
+          break
+        }
+
+        totalSent += sendResult.sent_count || 0
+        totalFailed += sendResult.failed_count || 0
+
+        // 送信するものがなくなったら終了
+        if (sendResult.sent_count === 0 && sendResult.failed_count === 0) {
+          break
+        }
+
+        batchNumber++
+
+        // 次のバッチまで少し待機（レート制限対策）
+        if (sendResult.sent_count > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+      }
+
+      alert(`メール送信完了\n${totalSent}件送信成功、${totalFailed}件失敗`)
 
       // フォームクリア
       setSubject("")
