@@ -225,16 +225,20 @@ export default function OptimizedDashboardPage() {
   // 統一システムによる統計計算
   const calculateStatsOptimized = useCallback(async (userRecord: UserData) => {
     try {
+      console.log('[Dashboard] calculateStatsOptimized started for user:', userRecord.user_id)
       setLoadingStage(3)
-      
+
       if (!supabase) throw new Error("Supabase client not available")
 
       // 個人投資額
       const totalInvestment = Math.floor((userRecord.total_purchases || 0) / 1100) * 1000
-      
+      console.log('[Dashboard] totalInvestment calculated:', totalInvestment)
+
       // 統一計算システムを使用
       const calculator = new UnifiedReferralCalculator()
+      console.log('[Dashboard] Starting unified stats calculation...')
       const unifiedStats = await calculator.calculateCompleteStats(userRecord.user_id)
+      console.log('[Dashboard] Unified stats completed:', unifiedStats)
       
       // ダッシュボード用にフォーマット
       setUserStats({
@@ -1133,7 +1137,6 @@ const CoinWAlert = ({ onClose }: { onClose: () => void }) => (
     )}
 
     {/* CoinW UID確認ポップアップ（初回ログイン時） */}
-    {console.log('[Dashboard] CoinW popup render check:', { hasUserData: !!userData, userId: userData?.user_id })}
     {userData && (
       <CoinwUidPopup
         userId={userData.user_id}
