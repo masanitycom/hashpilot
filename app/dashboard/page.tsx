@@ -22,6 +22,7 @@ import { LastMonthProfitCard } from "@/components/last-month-profit-card"
 import { OperationStatus } from "@/components/operation-status"
 import { AnnouncementsBanner } from "@/components/announcements-banner"
 import { RewardTaskPopup } from "@/components/reward-task-popup"
+import { CoinwUidPopup } from "@/components/coinw-uid-popup"
 import Link from "next/link"
 import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
 
@@ -530,13 +531,22 @@ export default function OptimizedDashboardPage() {
 
             {/* デスクトップメニュー */}
             <div className="hidden md:flex items-center space-x-3">
-              <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer">
+              <Link href="https://t.me/+49d-9_1CXXc4MjQ1" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-blue-500 text-blue-400 hover:bg-blue-600 bg-transparent"
+                >
+                  📱 公式Telegram
+                </Button>
+              </Link>
+              <Link href="https://lin.ee/nacHdfq" target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   size="sm"
                   className="border-green-500 text-green-400 hover:bg-green-600 bg-transparent"
                 >
-                  📱 公式LINE
+                  個別サポート
                 </Button>
               </Link>
               <Link href="/nft">
@@ -575,14 +585,24 @@ export default function OptimizedDashboardPage() {
           {/* モバイルメニュー */}
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 pb-4 space-y-2">
-              <Link href="https://lin.ee/GHcn4pN" target="_blank" rel="noopener noreferrer">
+              <Link href="https://t.me/+49d-9_1CXXc4MjQ1" target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-blue-500 text-blue-400 hover:bg-blue-600 bg-transparent justify-start"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  📱 公式Telegram
+                </Button>
+              </Link>
+              <Link href="https://lin.ee/nacHdfq" target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   size="sm"
                   className="w-full border-green-500 text-green-400 hover:bg-green-600 bg-transparent justify-start"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  📱 公式LINE
+                  個別サポート（LINE）
                 </Button>
               </Link>
               <Link href="/nft">
@@ -642,33 +662,47 @@ export default function OptimizedDashboardPage() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* LINE登録促進バナー */}
+        {/* Telegram登録促進バナー */}
         <div className="mb-6">
-          <Card className="bg-gradient-to-r from-green-700 to-green-600 border-green-500">
+          <Card className="bg-gradient-to-r from-blue-700 to-cyan-600 border-blue-500 shadow-xl">
             <CardContent className="p-4">
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-lg font-bold text-white mb-1">📢 【必読】公式LINE登録のお願い</h3>
-                  <p className="text-white text-sm sm:text-base mb-2">
-                    <strong>※必ず登録してください</strong> - 重要な運用情報・出金案内・システムアップデート等を配信します
-                  </p>
-                  <p className="text-white/90 text-xs sm:text-sm">
-                    公式LINEに登録していない場合、重要なお知らせが届かず、サービスを正しく利用できない可能性があります
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    📱 Hash Pilot公式Telegramが開設されました！
+                  </h3>
+                  <p className="text-white text-sm sm:text-base font-semibold">
+                    各種お得なキャンペーン情報、イベント情報等を発信します
                   </p>
                 </div>
-                <a
-                  href="https://lin.ee/nacHdfq"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto"
-                >
-                  <Button className="w-full sm:w-auto bg-white hover:bg-gray-100 text-green-700 font-bold px-6 py-3 shadow-lg animate-pulse">
-                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
-                    </svg>
-                    今すぐ登録する
-                  </Button>
-                </a>
+                <div className="flex flex-col gap-2 w-full sm:w-auto">
+                  <a
+                    href="https://t.me/+49d-9_1CXXc4MjQ1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto"
+                  >
+                    <Button className="w-full sm:w-auto bg-white hover:bg-gray-100 text-blue-700 font-bold px-6 py-3 shadow-lg animate-pulse">
+                      <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                      </svg>
+                      公式Telegramに登録する
+                    </Button>
+                  </a>
+                  <a
+                    href="https://lin.ee/nacHdfq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto"
+                  >
+                    <Button className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 border-2 border-green-400">
+                      <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+                      </svg>
+                      個別サポートLINE
+                    </Button>
+                  </a>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -1095,6 +1129,14 @@ const CoinWAlert = ({ onClose }: { onClose: () => void }) => (
           setShowReferralRewardTaskPopup(false)
           window.location.reload()
         }}
+      />
+    )}
+
+    {/* CoinW UID確認ポップアップ（初回ログイン時） */}
+    {userData && (
+      <CoinwUidPopup
+        userId={userData.user_id}
+        coinwUid={userData.coinw_uid}
       />
     )}
   </div>
