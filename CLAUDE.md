@@ -1062,4 +1062,127 @@ WHERE u.has_approved_nft = true
 
 ---
 
-最終更新: 2025年11月15日
+## 📧 システムメール送信の改善（2025年12月3日）
+
+### バッチ送信機能
+
+**問題:**
+- 大量のメール（499件など）を一度に送信するとEdge Functionがタイムアウト（504エラー）
+- 一部のメールしか送信されない
+
+**解決策:**
+- 50件ずつのバッチ処理を実装
+- Edge Function側で`batch_size`パラメータをサポート（最大100件）
+- フロントエンドで自動的にバッチを繰り返し送信
+
+### 実装詳細
+
+**Edge Function (`supabase/functions/send-system-email/index.ts`):**
+```typescript
+const { email_id, batch_size = 50 }: SendEmailRequest = await req.json()
+const effectiveBatchSize = Math.min(batch_size, 100)
+
+// pendingのみを取得（バッチサイズで制限）
+.eq('email_id', email_id)
+.eq('status', 'pending')
+.limit(effectiveBatchSize)
+```
+
+**フロントエンド (`app/admin/emails/page.tsx`):**
+```typescript
+const resendPendingEmails = async (emailId: string, pendingCount: number) => {
+  const BATCH_SIZE = 50
+  while (true) {
+    const { data: sendResult } = await supabase.functions.invoke("send-system-email", {
+      body: { email_id: emailId, batch_size: BATCH_SIZE },
+    })
+    if (sendResult.sent_count === 0) break
+    await new Promise(resolve => setTimeout(resolve, 1000)) // 1秒待機
+  }
+}
+```
+
+### 緊急停止方法
+
+メール送信を緊急停止する場合：
+
+```sql
+-- 全ての未送信を停止
+UPDATE email_recipients
+SET status = 'failed',
+    error_message = 'manually cancelled'
+WHERE status = 'pending';
+```
+
+**注意:** `status`カラムは`pending`, `sent`, `failed`, `read`のみ許可。`cancelled`は使用不可。
+
+### 再送信手順
+
+停止した後に再送信したい場合：
+
+```sql
+-- 特定のメールの手動停止分をpendingに戻す
+UPDATE email_recipients
+SET status = 'pending',
+    error_message = NULL
+WHERE email_id = 'メールのUUID'
+  AND status = 'failed'
+  AND error_message = 'manually cancelled';
+```
+
+### 管理画面の再送信ボタン
+
+- 各メールの履歴に「未送信 X件 再送信」ボタンを表示
+- 選択したメールのみが黄色でハイライト表示（他は影響なし）
+- 送信中はアイコンが回転し「送信中...」と表示
+- 全てのボタンは送信中はdisabled（誤操作防止）
+
+### RPC関数の修正
+
+`get_email_history`関数で`pending_count`を追加：
+
+```sql
+-- scripts/FIX-get-email-history-correct-column.sql
+CREATE OR REPLACE FUNCTION get_email_history(
+  p_admin_email TEXT,
+  p_limit INTEGER DEFAULT 50
+)
+RETURNS TABLE(
+  email_id UUID,
+  subject TEXT,
+  email_type TEXT,
+  target_group TEXT,
+  created_at TIMESTAMPTZ,
+  total_recipients BIGINT,
+  sent_count BIGINT,
+  failed_count BIGINT,
+  read_count BIGINT,
+  pending_count BIGINT  -- 追加
+)
+...
+WHERE se.sent_by = p_admin_email  -- created_byではなくsent_by
+   OR p_admin_email IN ('basarasystems@gmail.com', 'support@dshsupport.biz')
+```
+
+**注意:** `system_emails`テーブルには`created_by`カラムは存在せず、`sent_by`を使用する。
+
+---
+
+## 🔔 CoinW UIDポップアップ（2025年12月3日）
+
+### 機能
+- ダッシュボード表示時にCoinW UIDの確認を促すポップアップを表示
+- 「次回から表示しない」チェックボックスで非表示設定可能
+- `localStorage`に確認状態を保存（`coinw_uid_confirmed_{userId}`）
+
+### 実装ファイル
+- `components/coinw-uid-popup.tsx`
+- `app/dashboard/page.tsx`（ポップアップの呼び出し）
+
+### 注意事項
+- ポップアップは`userData`スコープ内で呼び出す必要がある
+- `CoinWAlert`コンポーネント内ではなく、メインの`OptimizedDashboardPage`内に配置
+
+---
+
+最終更新: 2025年12月3日
