@@ -38,6 +38,7 @@ export default function AdminEmailsPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
+  const [resendingEmailId, setResendingEmailId] = useState<string | null>(null)
   const router = useRouter()
 
   // 一斉メール送信フォーム
@@ -293,11 +294,11 @@ export default function AdminEmailsPage() {
 
   // 未送信メールの再送信
   const resendPendingEmails = async (emailId: string, pendingCount: number) => {
-    if (!confirm(`未送信の${pendingCount}件にメールを再送信しますか？`)) {
+    if (!confirm(`このメールの未送信${pendingCount}件を再送信しますか？\n\n※50件ずつ送信されます`)) {
       return
     }
 
-    setActionLoading(true)
+    setResendingEmailId(emailId)
     try {
       const BATCH_SIZE = 50
       let totalSent = 0
@@ -337,7 +338,7 @@ export default function AdminEmailsPage() {
       console.error("Resend error:", error)
       alert(`再送信エラー: ${error.message}`)
     } finally {
-      setActionLoading(false)
+      setResendingEmailId(null)
     }
   }
 
@@ -680,12 +681,19 @@ export default function AdminEmailsPage() {
                                       email.email_id,
                                       email.pending_count || (email.total_recipients - email.sent_count - email.failed_count)
                                     )}
-                                    disabled={actionLoading}
+                                    disabled={resendingEmailId !== null}
                                     size="sm"
-                                    className="mt-2 bg-orange-600 hover:bg-orange-700 text-white"
+                                    className={`mt-2 text-white ${
+                                      resendingEmailId === email.email_id
+                                        ? "bg-yellow-600 animate-pulse"
+                                        : "bg-orange-600 hover:bg-orange-700"
+                                    }`}
                                   >
-                                    <RotateCcw className="w-3 h-3 mr-1" />
-                                    未送信 {email.pending_count || (email.total_recipients - email.sent_count - email.failed_count)}件 再送信
+                                    <RotateCcw className={`w-3 h-3 mr-1 ${resendingEmailId === email.email_id ? "animate-spin" : ""}`} />
+                                    {resendingEmailId === email.email_id
+                                      ? "送信中..."
+                                      : `未送信 ${email.pending_count || (email.total_recipients - email.sent_count - email.failed_count)}件 再送信`
+                                    }
                                   </Button>
                                 )}
                               </div>
