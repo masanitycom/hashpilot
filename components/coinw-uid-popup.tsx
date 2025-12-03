@@ -21,9 +21,14 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
 
     // クライアントサイドでのみlocalStorageにアクセス
     if (typeof window !== 'undefined') {
-      const confirmed = localStorage.getItem(`coinw_uid_confirmed_${userId}`)
+      const storageKey = `coinw_uid_confirmed_${userId}`
+      const confirmed = localStorage.getItem(storageKey)
+      console.log('[CoinwUidPopup] Storage check:', { userId, storageKey, confirmed, shouldShow: !confirmed })
       if (!confirmed) {
+        console.log('[CoinwUidPopup] Showing popup')
         setIsVisible(true)
+      } else {
+        console.log('[CoinwUidPopup] Already confirmed, not showing')
       }
     }
   }, [userId])
