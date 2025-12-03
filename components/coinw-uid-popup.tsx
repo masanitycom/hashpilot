@@ -14,6 +14,7 @@ interface CoinwUidPopupProps {
 export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
   const [isVisible, setIsVisible] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [dontShowAgain, setDontShowAgain] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
@@ -28,7 +29,7 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
   }, [userId])
 
   const handleConfirm = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && dontShowAgain) {
       localStorage.setItem(`coinw_uid_confirmed_${userId}`, 'true')
     }
     setIsVisible(false)
@@ -89,6 +90,24 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
                   プロフィール編集画面へ
                 </Button>
               </Link>
+
+              {/* 次回から表示しないチェックボックス */}
+              <div className="flex items-center gap-2 px-2 py-1">
+                <input
+                  type="checkbox"
+                  id="dontShowAgain"
+                  checked={dontShowAgain}
+                  onChange={(e) => setDontShowAgain(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <label
+                  htmlFor="dontShowAgain"
+                  className="text-gray-300 text-sm cursor-pointer select-none"
+                >
+                  次回から表示しない
+                </label>
+              </div>
+
               <Button
                 onClick={handleConfirm}
                 variant="outline"
@@ -97,10 +116,6 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
                 確認しました
               </Button>
             </div>
-
-            <p className="text-gray-300 text-xs text-center mt-4">
-              このメッセージは初回ログイン時のみ表示されます
-            </p>
           </CardContent>
         </Card>
       </div>
