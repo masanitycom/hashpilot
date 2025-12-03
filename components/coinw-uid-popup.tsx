@@ -40,7 +40,7 @@ export function CoinwUidPopup({ userId, coinwUid }: CoinwUidPopupProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <Card className="bg-gradient-to-br from-red-900 to-orange-900 border-red-500 border-2 shadow-2xl">
           <CardContent className="p-6">
