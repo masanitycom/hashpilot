@@ -1133,6 +1133,7 @@ const CoinWAlert = ({ onClose }: { onClose: () => void }) => (
     )}
 
     {/* CoinW UID確認ポップアップ（初回ログイン時） */}
+    {console.log('[Dashboard] CoinW popup render check:', { hasUserData: !!userData, userId: userData?.user_id })}
     {userData && (
       <CoinwUidPopup
         userId={userData.user_id}
