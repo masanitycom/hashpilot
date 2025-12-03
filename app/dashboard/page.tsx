@@ -103,9 +103,7 @@ export default function OptimizedDashboardPage() {
   const [authChecked, setAuthChecked] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [latestApprovalDate, setLatestApprovalDate] = useState<string | null>(null)
-  const [showCoinwAlert, setShowCoinwAlert] = useState(false)
   const [showNftAddressAlert, setShowNftAddressAlert] = useState(false)
-  const [userHasCoinwUid, setUserHasCoinwUid] = useState(true)
   const [userHasNftAddress, setUserHasNftAddress] = useState(true)
   const [showRewardTaskPopup, setShowRewardTaskPopup] = useState(false)
   const [showReferralRewardTaskPopup, setShowReferralRewardTaskPopup] = useState(false)
@@ -199,9 +197,8 @@ export default function OptimizedDashboardPage() {
       }
       
       setUserData(userRecord)
-      
-      // CoinW UIDとNFTアドレスの確認（空文字も false として扱う）
-      setUserHasCoinwUid(!!userRecord.coinw_uid && userRecord.coinw_uid.trim() !== '')
+
+      // NFTアドレスの確認（空文字も false として扱う）
       setUserHasNftAddress(!!userRecord.nft_receive_address && typeof userRecord.nft_receive_address === 'string' && userRecord.nft_receive_address.trim() !== '')
       
       // 並列でデータ取得を開始
@@ -454,35 +451,21 @@ export default function OptimizedDashboardPage() {
     router.push("/")
   }
 
-  const handleCoinwAlertClose = () => {
-    setShowCoinwAlert(false)
-    
-    // CoinW UIDアラートを閉じた後、NFTアドレスが設定されていない場合はNFTアドレスアラートを表示
-    if (!userHasNftAddress) {
-      setTimeout(() => setShowNftAddressAlert(true), 300) // 少し遅延して表示
-    }
-  }
-
   const handleNftAddressAlertClose = () => {
     setShowNftAddressAlert(false)
   }
 
-  // アラート表示の判定（毎回表示）
+  // アラート表示の判定（NFTアドレスのみ - CoinW UIDは新しいポップアップシステムで管理）
   useEffect(() => {
     if (userData && !loading) {
-      // CoinW UIDアラートを優先表示
-      if (!userHasCoinwUid) {
-        setShowCoinwAlert(true)
-        setShowNftAddressAlert(false)
-      } else if (!userHasNftAddress) {
-        setShowNftAddressAlert(true)  
-        setShowCoinwAlert(false)
+      // NFTアドレスが未設定の場合のみアラート表示
+      if (!userHasNftAddress) {
+        setShowNftAddressAlert(true)
       } else {
-        setShowCoinwAlert(false)
         setShowNftAddressAlert(false)
       }
     }
-  }, [userData, loading, userHasCoinwUid, userHasNftAddress])
+  }, [userData, loading, userHasNftAddress])
 
   // 段階的ローディング表示
   if (loading) {
@@ -784,14 +767,42 @@ export default function OptimizedDashboardPage() {
         <LazyLoadedContent userData={userData} userStats={userStats} currentInvestment={currentInvestment} currentNftCount={currentNftCount} />
         
         {/* アラート類 */}
-        {showCoinwAlert && (
-          <CoinWAlert onClose={handleCoinwAlertClose} />
-        )}
-        
         {showNftAddressAlert && (
           <NFTAddressAlert onClose={handleNftAddressAlertClose} />
         )}
       </div>
+
+      {/* 月末報酬タスクポップアップ（月末自動出金用） */}
+      {userData && (
+        <RewardTaskPopup
+          userId={userData.user_id}
+          isOpen={showRewardTaskPopup}
+          onComplete={() => {
+            setShowRewardTaskPopup(false)
+            window.location.reload()
+          }}
+        />
+      )}
+
+      {/* 紹介報酬計算完了タスクポップアップ */}
+      {userData && (
+        <RewardTaskPopup
+          userId={userData.user_id}
+          isOpen={showReferralRewardTaskPopup}
+          onComplete={() => {
+            setShowReferralRewardTaskPopup(false)
+            window.location.reload()
+          }}
+        />
+      )}
+
+      {/* CoinW UID確認ポップアップ（初回ログイン時、localStorageで管理、z-index=100で最優先） */}
+      {userData && (
+        <CoinwUidPopup
+          userId={userData.user_id}
+          coinwUid={userData.coinw_uid}
+        />
+      )}
     </div>
   )
 }
@@ -1111,38 +1122,6 @@ const CoinWAlert = ({ onClose }: { onClose: () => void }) => (
         </div>
       </CardContent>
     </Card>
-
-    {/* 月末報酬タスクポップアップ（月末自動出金用） */}
-    {userData && (
-      <RewardTaskPopup
-        userId={userData.user_id}
-        isOpen={showRewardTaskPopup}
-        onComplete={() => {
-          setShowRewardTaskPopup(false)
-          window.location.reload()
-        }}
-      />
-    )}
-
-    {/* 紹介報酬計算完了タスクポップアップ */}
-    {userData && (
-      <RewardTaskPopup
-        userId={userData.user_id}
-        isOpen={showReferralRewardTaskPopup}
-        onComplete={() => {
-          setShowReferralRewardTaskPopup(false)
-          window.location.reload()
-        }}
-      />
-    )}
-
-    {/* CoinW UID確認ポップアップ（初回ログイン時） */}
-    {userData && (
-      <CoinwUidPopup
-        userId={userData.user_id}
-        coinwUid={userData.coinw_uid}
-      />
-    )}
   </div>
 )
 
