@@ -70,12 +70,13 @@ serve(async (req) => {
     }
 
     // V1データを整形
+    // V1のuser_rateは既に%表示（例：0.099 = 0.099%）なのでそのまま使用
     const v1Formatted = (v1Data || []).map(item => ({
       date: item.date,
       yield_rate: parseFloat(item.yield_rate || '0'),
       user_rate: parseFloat(item.user_rate || '0'),
       margin_rate: parseFloat(item.margin_rate || '0'),
-      profit_percentage: (parseFloat(item.user_rate || '0') * 100).toFixed(3), // ユーザー受取率を%表示
+      profit_percentage: parseFloat(item.user_rate || '0').toFixed(3), // そのまま%表示
       created_at: item.created_at,
       source: 'v1'
     }))
