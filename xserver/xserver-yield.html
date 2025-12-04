@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASH PILOT 運用実績</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 60px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: #666666;
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+        .month-selector {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .month-selector select {
+            padding: 12px 24px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+            min-width: 200px;
+        }
+        .month-selector select:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .month-selector select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #1a1a1a;
+            text-align: center;
+        }
+        .stat-card h3 {
+            color: #666666;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .stat-card .value {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #ffffff;
+        }
+        .stat-card .positive {
+            color: #ffffff;
+        }
+        .stat-card .negative {
+            color: #888888;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
+            border-radius: 12px;
+            border: 1px solid #1a1a1a;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        th, td {
+            padding: 18px 24px;
+            text-align: left;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 0.95rem;
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .positive-value {
+            color: #ffffff;
+            font-weight: 400;
+        }
+        .negative-value {
+            color: #888888;
+            font-weight: 400;
+        }
+        .date-cell {
+            font-weight: 400;
+            color: #999999;
+        }
+        .loading, .error {
+            text-align: center;
+            padding: 60px 40px;
+            font-size: 1rem;
+            color: #666666;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HASH PILOT 運用実績</h1>
+        <div class="subtitle">2025年11月1日 正式運用開始</div>
+
+        <div class="month-selector">
+            <select id="monthSelector">
+                <option value="all">全期間（11/1〜）</option>
+            </select>
+        </div>
+
+        <div class="stats" id="stats"></div>
+        <div id="loading" class="loading">データを読み込み中...</div>
+        <div id="error" class="error" style="display: none;">データの取得に失敗しました</div>
+        <div class="table-wrapper">
+            <table id="yieldTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>日付</th>
+                        <th>ユーザー受取率 (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const API_URL = 'https://soghqozaxfswtxxbgeer.supabase.co/functions/v1/get-daily-yields';
+        let allData = [];
+        let currentMonth = 'all';
+
+        async function loadYieldData() {
+            try {
+                const response = await fetch(API_URL + '?limit=1000');
+
+                if (!response.ok) {
+                    console.warn('API Error:', response.status);
+                    showNoData();
+                    return;
+                }
+
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    showNoData();
+                    return;
+                }
+
+                allData = result.data;
+
+                // 月のリストを作成
+                createMonthSelector();
+
+                // 初期表示
+                filterAndDisplayData();
+
+            } catch (error) {
+                console.error('Error:', error);
+                showNoData();
+            }
+        }
+
+        function createMonthSelector() {
+            const selector = document.getElementById('monthSelector');
+
+            // 月のリストを作成（ユニークな年月を取得）
+            const months = [...new Set(allData.map(item => {
+                const date = new Date(item.date);
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            }))].sort().reverse();
+
+            // オプションを追加
+            months.forEach(month => {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = formatMonthLabel(month);
+                selector.appendChild(option);
+            });
+
+            // イベントリスナー
+            selector.addEventListener('change', (e) => {
+                currentMonth = e.target.value;
+                filterAndDisplayData();
+            });
+        }
+
+        function formatMonthLabel(monthStr) {
+            const [year, month] = monthStr.split('-');
+            return `${year}年${parseInt(month)}月`;
+        }
+
+        function filterAndDisplayData() {
+            let filteredData;
+
+            if (currentMonth === 'all') {
+                // 全期間（11/1以降）
+                const startDate = new Date('2025-11-01');
+                filteredData = allData.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= startDate;
+                });
+            } else {
+                // 特定の月
+                filteredData = allData.filter(item => {
+                    const date = new Date(item.date);
+                    const itemMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    return itemMonth === currentMonth;
+                });
+            }
+
+            displayData(filteredData);
+            displayStats(filteredData);
+        }
+
+        function displayStats(data) {
+            const statsDiv = document.getElementById('stats');
+            const totalRecords = data.length;
+
+            // profit_percentageを使用（V1/V2共通）
+            const positiveCount = data.filter(d => parseFloat(d.profit_percentage) > 0).length;
+            const negativeCount = data.filter(d => parseFloat(d.profit_percentage) < 0).length;
+
+            // 選択期間の合計
+            const periodTotal = data.reduce((sum, d) => sum + parseFloat(d.profit_percentage || 0), 0).toFixed(3);
+
+            // 11/1からの累積（常に全期間）
+            const allTimeTotal = calculateAllTimeTotal();
+
+            // 期間ラベル
+            const periodLabel = currentMonth === 'all' ? '全期間合計' : `${formatMonthLabel(currentMonth)}合計`;
+
+            statsDiv.innerHTML = `
+                <div class="stat-card">
+                    <h3>総レコード数</h3>
+                    <div class="value">${totalRecords}日</div>
+                </div>
+                <div class="stat-card">
+                    <h3>プラス日数</h3>
+                    <div class="value positive">${positiveCount}日</div>
+                </div>
+                <div class="stat-card">
+                    <h3>マイナス日数</h3>
+                    <div class="value negative">${negativeCount}日</div>
+                </div>
+                <div class="stat-card">
+                    <h3>${periodLabel}</h3>
+                    <div class="value ${periodTotal > 0 ? 'positive' : 'negative'}">${periodTotal > 0 ? '+' : ''}${periodTotal}%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>TOTAL (11/1~)</h3>
+                    <div class="value ${allTimeTotal > 0 ? 'positive' : 'negative'}">${allTimeTotal > 0 ? '+' : ''}${allTimeTotal}%</div>
+                </div>
+            `;
+        }
+
+        function calculateAllTimeTotal() {
+            // 11/1以降のデータのみを対象
+            const startDate = new Date('2025-11-01');
+            const filteredData = allData.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= startDate;
+            });
+
+            return filteredData.reduce((sum, d) => sum + parseFloat(d.profit_percentage || 0), 0).toFixed(3);
+        }
+
+        function displayData(data) {
+            const tableBody = document.getElementById('tableBody');
+            const loading = document.getElementById('loading');
+            const table = document.getElementById('yieldTable');
+
+            loading.style.display = 'none';
+            table.style.display = 'table';
+
+            tableBody.innerHTML = data.map(item => {
+                // profit_percentageを使用（V1/V2共通）
+                const userRateValue = parseFloat(item.profit_percentage || 0).toFixed(3);
+                const userRateClass = parseFloat(item.profit_percentage) > 0 ? 'positive-value' : 'negative-value';
+                const userRateSign = parseFloat(item.profit_percentage) > 0 ? '+' : '';
+
+                return `
+                    <tr>
+                        <td class="date-cell">${formatDate(item.date)}</td>
+                        <td class="${userRateClass}">${userRateSign}${userRateValue}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        function showNoData() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+        }
+
+        // ページ読み込み時にデータを取得
+        loadYieldData();
+    </script>
+</body>
+</html>

@@ -1185,4 +1185,64 @@ WHERE se.sent_by = p_admin_email  -- created_byではなくsent_by
 
 ---
 
-最終更新: 2025年12月3日
+## 📊 運用実績サイト（yield.hashpilot.info）（2025年12月4日更新）
+
+### 概要
+外部公開用の運用実績表示サイト。Xserverでホスティング。
+
+### ファイル構成
+```
+xserver/
+├── xserver-yield.html       # 運用実績ページ（メイン）
+├── xserver-faq.html         # FAQ
+├── xserver-faq-redesign.html
+├── xserver-guide.html       # ガイド
+├── xserver-manual.html      # マニュアル
+└── xserver-manual-redesign.html
+```
+
+### データ取得の仕組み
+1. **Edge Function**: `get-daily-yields`
+   - V1テーブル（`daily_yield_log`）: 11月のデータ（利率%）
+   - V2テーブル（`daily_yield_log_v2`）: 12月以降のデータ（金額$）
+   - 両方を統合して`profit_percentage`（ユーザー受取率%）を返す
+
+2. **HTMLフロントエンド**: `xserver-yield.html`
+   - 月選択プルダウン（全期間 / 月別）
+   - 統計カード（レコード数、プラス/マイナス日数、期間合計、累積）
+   - 日別テーブル（日付、ユーザー受取率%）
+
+### V2データの計算方法
+```javascript
+// V2: profit_per_nft（1NFTあたりの利益$）から%を計算
+// 1NFT = $1000として計算
+userRatePercent = (profit_per_nft / 1000) * 100
+
+// 例: profit_per_nft = $18.24
+// → 18.24 / 1000 * 100 = 1.824%
+```
+
+### デプロイ手順
+
+**Edge Functionの更新:**
+```bash
+npx supabase functions deploy get-daily-yields
+```
+
+**HTMLの更新:**
+1. `xserver/xserver-yield.html`を編集
+2. FTPでyield.hashpilot.infoにアップロード
+
+### 機能
+- **月選択プルダウン**: 全期間（11/1〜）/ 2025年12月 / 2025年11月...
+- **統計カード**:
+  - 総レコード数
+  - プラス日数
+  - マイナス日数
+  - 選択期間合計（月別選択時はその月の合計）
+  - TOTAL（11/1〜）（常に全期間の累積）
+- **テーブル**: 日付とユーザー受取率(%)を表示
+
+---
+
+最終更新: 2025年12月4日

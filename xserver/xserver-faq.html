@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>よくある質問 | HASH PILOT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #aaaaaa;
+            margin-bottom: 50px;
+        }
+        .faq-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        .faq-question {
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            transition: background 0.3s ease;
+        }
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            transition: transform 0.3s ease;
+        }
+        .faq-question.active::after {
+            content: '−';
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 25px;
+        }
+        .faq-answer.active {
+            max-height: 1000px;
+            padding: 0 25px 20px 25px;
+        }
+        .faq-answer p {
+            color: #cccccc;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin: 0;
+            white-space: pre-line;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .back-link a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .back-link a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .faq-question {
+                padding: 15px 20px;
+                font-size: 1rem;
+            }
+            .faq-answer.active {
+                padding: 0 20px 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>よくある質問</h1>
+        <div class="subtitle">HASH PILOT NFTに関するよくある質問</div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Q1. Hash Pilotの通常Botの毎月の使用料金はいくらですか？
+            </div>
+            <div class="faq-answer">
+                <p>Hash Pilotは毎月Hash Pilotによって出た利益の30%が使用料金として引かれます。
+その為取引所にではなく、まずHash Pilotの通常Botのダッシュボード内にあるウォレットに運用額の10%をデポジットしておく必要があります。</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Q2. CoinW以外の取引所でもAPI接続できますか？
+            </div>
+            <div class="faq-answer">
+                <p>こちら取引所はCoinWのみの使用でお願いいたします。</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Q3. 運用する通貨は何になりますか？日本円でもできますか？
+            </div>
+            <div class="faq-answer">
+                <p>暗号資産取引所への入金になりますので通貨はUSDTのみになります。</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Q4. NFTの買取について
+            </div>
+            <div class="faq-answer">
+                <p>Hash PilotNFTはユーザー様からのご希望でNFTを返却される際には累積の利益の半額をNFT運用額（1000ドル）から差し引いた額で買取をさせていただきます。
+
+例としては
+NFT1枚保有のユーザー様が累積で1000ドルのUSDTを受け取っている場合には
+1000ドル−累積受取USDTの半分（500ドル）＝500ドルで買取が可能です。
+【累積受取1000USDT＋買取500USDT＝1500USDT】</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Q5. 万が一全てのシステムがデフォルトをおこした場合は保証はありますか？
+            </div>
+            <div class="faq-answer">
+                <p>これまでの実績では通常bot、superVIPbot共にロスカットはおこしていませんが万が一デフォルトを起こした場合に保証等はございませんのでご理解をいただいた方のみご購入ください。
+
+【デフォルトのリスクとしては取引所OKXの破産、ビットコインが30分で80%以上の下落をおこす等、暗号資産全てが危機に晒される等相当大きな事象になります。
+2022年FTXが破産し、暗号資産全体が大きく下落しましたがこれ程大きなショックでも問題はありませんでした。
+余程のショックがない限りは運用は安全にされます】
+
+つまりはデフォルトは現実的に考えにくいという事になります。</p>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="/">← トップページに戻る</a>
+        </div>
+    </div>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const isActive = answer.classList.contains('active');
+
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.classList.remove('active');
+                });
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    q.classList.remove('active');
+                });
+
+                // Toggle current answer
+                if (!isActive) {
+                    answer.classList.add('active');
+                    question.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
