@@ -1212,22 +1212,47 @@ xserver/
    - 統計カード（レコード数、プラス/マイナス日数、期間合計、累積）
    - 日別テーブル（日付、ユーザー受取率%）
 
-### V2データの計算方法
-```javascript
-// V2: profit_per_nft（1NFTあたりの利益$）から%を計算
-// 1NFT = $1000として計算
-userRatePercent = (profit_per_nft / 1000) * 100
+### データ形式の違い
 
-// 例: profit_per_nft = $18.24
-// → 18.24 / 1000 * 100 = 1.824%
+**V1（11月、`daily_yield_log`）:**
+- `user_rate`は既に%表示（例：0.099 = 0.099%）
+- そのまま`profit_percentage`として使用
+
+**V2（12月、`daily_yield_log_v2`）:**
+- `profit_per_nft`（1NFTあたりの利益$）から計算
+- `userRatePercent = (profit_per_nft / 1000) * 100`
+- 例: profit_per_nft = $18.24 → 1.824%
+
+### APIレスポンス例
+```json
+{
+  "date": "2025-12-03",
+  "profit_percentage": "1.824",
+  "source": "v2"
+},
+{
+  "date": "2025-11-30",
+  "profit_percentage": "0.099",
+  "source": "v1"
+}
 ```
 
 ### デプロイ手順
 
-**Edge Functionの更新:**
+**Edge Functionの更新（Supabase Dashboard）:**
+1. https://supabase.com/dashboard にログイン
+2. プロジェクト選択 → Edge Functions → `get-daily-yields`
+3. コードを編集（`supabase/functions/get-daily-yields/index.ts`の内容をコピペ）
+4. **Deploy**ボタンをクリック
+
+**Edge Functionの更新（CLI）:**
 ```bash
+npx supabase login
+npx supabase link --project-ref soghqozaxfswtxxbgeer
 npx supabase functions deploy get-daily-yields
 ```
+
+**注意:** GitHubへのプッシュだけではEdge Functionはデプロイされない。手動でデプロイが必要。
 
 **HTMLの更新:**
 1. `xserver/xserver-yield.html`を編集
