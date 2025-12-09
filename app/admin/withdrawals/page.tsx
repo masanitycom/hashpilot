@@ -225,14 +225,14 @@ export default function AdminWithdrawalsPage() {
         throw error
       }
 
-      // 結果を確認
+      // 結果を確認（RPC関数の戻り値はout_プレフィックス付き）
       const results = data || []
-      const successCount = results.filter((r: any) => r.success).length
-      const failCount = results.filter((r: any) => !r.success).length
+      const successCount = results.filter((r: any) => r.out_success).length
+      const failCount = results.filter((r: any) => !r.out_success).length
 
       if (failCount > 0) {
-        const errors = results.filter((r: any) => !r.success).map((r: any) =>
-          `ID ${r.withdrawal_id}: ${r.error_message}`
+        const errors = results.filter((r: any) => !r.out_success).map((r: any) =>
+          `ID ${r.out_withdrawal_id}: ${r.out_error_message}`
         ).join('\n')
         alert(`出金完了処理結果:\n成功: ${successCount}件\n失敗: ${failCount}件\n\nエラー詳細:\n${errors}`)
       } else {
