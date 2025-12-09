@@ -231,9 +231,12 @@ export default function AdminWithdrawalsPage() {
       const failCount = results.filter((r: any) => !r.out_success).length
 
       if (failCount > 0) {
-        const errors = results.filter((r: any) => !r.out_success).map((r: any) =>
-          `ID ${r.out_withdrawal_id}: ${r.out_error_message}`
-        ).join('\n')
+        // 失敗したユーザーIDとエラーメッセージを表示
+        const errors = results.filter((r: any) => !r.out_success).map((r: any) => {
+          // out_user_idがある場合はそれを使用、なければwithdrawalsからユーザーIDを取得
+          const userId = r.out_user_id || withdrawals.find(w => w.id === r.out_withdrawal_id)?.user_id || '不明'
+          return `ユーザー ${userId}: ${r.out_error_message}`
+        }).join('\n')
         alert(`出金完了処理結果:\n成功: ${successCount}件\n失敗: ${failCount}件\n\nエラー詳細:\n${errors}`)
       } else {
         alert(`${successCount}件の出金を完了済みにしました（available_usdtから減算済み）`)
