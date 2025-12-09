@@ -216,8 +216,9 @@ export default function AdminWithdrawalsPage() {
       setProcessing(true)
 
       // 新しいRPC関数を使用して出金完了処理（available_usdtも減算）
+      // p_withdrawal_idsはUUID[]型なので文字列配列をそのまま渡す
       const { data, error } = await supabase.rpc("complete_withdrawals_batch", {
-        p_withdrawal_ids: ids.map(id => parseInt(id))
+        p_withdrawal_ids: ids
       })
 
       if (error) {
@@ -544,6 +545,7 @@ export default function AdminWithdrawalsPage() {
                             setSelectedIds(new Set())
                           }
                         }}
+                        className="border-2 border-white/70 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 h-5 w-5"
                       />
                     </th>
                     <th className="text-left py-3 px-2 text-gray-300">ユーザー</th>
@@ -571,6 +573,7 @@ export default function AdminWithdrawalsPage() {
                             setSelectedIds(newSet)
                           }}
                           disabled={withdrawal.status === 'not_created'}
+                          className="border-2 border-white/70 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 h-5 w-5 disabled:border-gray-600"
                         />
                       </td>
                       <td className="py-3 px-2">
