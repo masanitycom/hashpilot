@@ -1270,4 +1270,120 @@ npx supabase functions deploy get-daily-yields
 
 ---
 
-最終更新: 2025年12月4日
+## 🔧 運用開始日の安全な変更機能（2025年12月6日実装）
+
+### 背景
+運用開始日を変更すると、その日付より前に配布された日利・紹介報酬データと不整合が発生する問題があった。
+
+**例: D2C1F9のケース**
+- 運用開始日を12/15に変更
+- しかし12/1〜12/5の日利が既に配布済み
+- 不整合データが残ったままになる
+
+### 解決策
+運用開始日を変更した際に、自動的に不整合データを削除するRPC関数を実装。
+
+### RPC関数: `update_operation_start_date_safe`
+
+**ファイル:** `scripts/CREATE-update-operation-start-date-safe.sql`
+
+**機能:**
+1. 新しい運用開始日より前の`nft_daily_profit`を削除
+2. 新しい運用開始日より前の`user_referral_profit`を削除
+3. `affiliate_cycle`の`available_usdt`と`cum_usdt`を自動調整
+4. 削除した件数と金額をログとして返却
+
+**パラメータ:**
+```sql
+p_user_id VARCHAR,           -- ユーザーID（6桁）
+p_new_operation_start_date DATE,  -- 新しい運用開始日
+p_admin_email VARCHAR        -- 管理者メールアドレス
+```
+
+**戻り値:**
+```json
+{
+  "status": "SUCCESS",
+  "message": "運用開始日を 2025-12-15 に変更しました",
+  "details": {
+    "user_id": "D2C1F9",
+    "old_operation_start_date": null,
+    "new_operation_start_date": "2025-12-15",
+    "deleted_profit": { "count": 5, "sum": -0.774 },
+    "deleted_referral": { "count": 0, "sum": 0 }
+  }
+}
+```
+
+### 管理画面での使用
+
+**1. ユーザー管理画面 (`/admin/users`)**
+- 編集モーダルに「運用開始日」フィールドを追加
+- 日付を変更して保存すると自動的に不整合データを削除
+- 削除されたデータがある場合はアラートで通知
+
+**2. 購入管理画面 (`/admin/purchases`)**
+- 「承認日編集」ボタンで承認日を変更
+- 運用開始日が再計算され、自動的に不整合データを削除
+
+### 影響範囲
+
+**この関数が呼ばれるタイミング:**
+- 管理者が明示的に運用開始日または承認日を変更した場合のみ
+
+**影響なし:**
+- 日利処理 (`process_daily_yield_v2`)
+- 月次処理
+- ダッシュボード表示
+- NFT購入承認 (`approve_user_nft`)
+
+### 関連ファイル
+- `scripts/CREATE-update-operation-start-date-safe.sql` - RPC関数定義
+- `app/admin/users/page.tsx` - ユーザー管理画面（運用開始日編集）
+- `app/admin/purchases/page.tsx` - 購入管理画面（承認日編集）
+
+---
+
+## 🚧 未対応タスク
+
+### 月末出金に紹介報酬を含める修正
+
+**詳細:** `TODO-WITHDRAWAL-REFERRAL-FIX.md` を参照
+
+**概要:**
+- 現在の月末出金は個人利益（日利）のみが対象
+- USDTフェーズのユーザーは紹介報酬も出金できるべき
+- `affiliate_cycle`テーブルに`withdrawn_referral_usdt`カラムを追加して対応予定
+
+**手動対応履歴:**
+- 2025年11月分: 手動で紹介報酬を計算し、個人利益と合算して送金済み
+
+**対応期限:** 2025年12月分の月末出金（2026年1月初旬処理）までに修正
+
+### 休眠（解約）ユーザーのUI対応
+
+**詳細:** `TODO-DORMANT-USER-UI.md` を参照
+
+**概要:**
+- 全NFT売却ユーザー（`is_active_investor = FALSE`）への対応
+- ダッシュボードに解約バナー表示
+- NFT購入ページをアクセス不可に
+- 紹介リンクを無効化
+
+**判定フィールド:** `users.is_active_investor`（トリガーで自動更新）
+
+---
+
+最終更新: 2025年12月12日
+
+---
+
+## 🔒 外部プロジェクト使用テーブル（編集禁止）
+
+以下のテーブルは外部プロジェクト（hashokx）で使用しています。HASHPILOTでは一切触らないでください。
+
+| テーブル名 | 使用プロジェクト | 用途 |
+|------------|------------------|------|
+| user_api_keys | hashokx | ユーザーのOKX APIキー管理 |
+
+**注意:** これらのテーブルはHASHPILOTの機能とは無関係です。誤って編集・削除しないでください。

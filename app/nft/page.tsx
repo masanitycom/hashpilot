@@ -17,6 +17,7 @@ interface UserData {
   coinw_uid: string | null
   total_purchases: number
   nft_address: string | null
+  is_active_investor: boolean
 }
 
 export default function NFTPage() {
@@ -150,6 +151,29 @@ export default function NFTPage() {
             <div className="text-center text-red-400">
               <p className="mb-4">{error}</p>
               <Button onClick={() => router.push("/dashboard")} variant="outline">
+                ダッシュボードに戻る
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // 解約ユーザー（is_active_investor = false）はNFT購入不可
+  if (userData && userData.is_active_investor === false) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+        <Card className="w-full max-w-md bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
+            <div className="text-center">
+              <AlertCircle className="h-16 w-16 text-red-400 mx-auto mb-4" />
+              <h2 className="text-xl font-bold text-white mb-4">NFT購入不可</h2>
+              <p className="text-gray-300 mb-6">このアカウントではNFTの購入は出来ません。</p>
+              <p className="text-sm text-gray-400 mb-6">
+                投資を再開するには、新しい紹介リンクから新規アカウントを作成してください。
+              </p>
+              <Button onClick={() => router.push("/dashboard")} className="bg-blue-600 hover:bg-blue-700 text-white">
                 ダッシュボードに戻る
               </Button>
             </div>

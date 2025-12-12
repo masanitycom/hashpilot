@@ -21,6 +21,7 @@ import { MonthlyCumulativeProfitCard } from "@/components/monthly-cumulative-pro
 import { LastMonthProfitCard } from "@/components/last-month-profit-card"
 import { OperationStatus } from "@/components/operation-status"
 import { AnnouncementsBanner } from "@/components/announcements-banner"
+import { DormantUserBanner } from "@/components/dormant-user-banner"
 import { RewardTaskPopup } from "@/components/reward-task-popup"
 import { CoinwUidPopup } from "@/components/coinw-uid-popup"
 import Link from "next/link"
@@ -38,6 +39,7 @@ interface UserData {
   created_at: string
   operation_start_date: string | null
   is_operation_only: boolean
+  is_active_investor: boolean
 }
 
 interface UserStats {
@@ -753,6 +755,9 @@ export default function OptimizedDashboardPage() {
           </div>
         </div>
 
+        {/* 解約ユーザーバナー */}
+        <DormantUserBanner isActive={userData?.is_active_investor ?? true} />
+
         {/* お知らせバナー */}
         <AnnouncementsBanner />
 
@@ -926,7 +931,7 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <CycleStatusCard userId={userData?.user_id || ""} />
         <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={currentInvestment} />
-        {!userData?.is_operation_only && (
+        {!userData?.is_operation_only && userData?.is_active_investor !== false && (
           <ReferralProfitCard
             userId={userData?.user_id || ""}
             level1Investment={userStats?.level1_investment || 0}
@@ -936,8 +941,8 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
         )}
       </div>
 
-      {/* 組織図 */}
-      {!userData?.is_operation_only && (
+      {/* 組織図（解約ユーザーは非表示） */}
+      {!userData?.is_operation_only && userData?.is_active_investor !== false && (
         <div className="mb-6">
           <ReferralTreeOptimized userId={userData?.user_id || ""} />
         </div>
@@ -969,13 +974,13 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
       {/* 自動NFT購入履歴 */}
       <AutoPurchaseHistory userId={userData?.user_id || ""} />
 
-      {/* レベル別統計 */}
-      {!userData?.is_operation_only && (
+      {/* レベル別統計（解約ユーザーは非表示） */}
+      {!userData?.is_operation_only && userData?.is_active_investor !== false && (
         <LevelStats userStats={userStats} />
       )}
 
-      {/* Level4以降の統計 */}
-      {!userData?.is_operation_only && (
+      {/* Level4以降の統計（解約ユーザーは非表示） */}
+      {!userData?.is_operation_only && userData?.is_active_investor !== false && (
         <Level4PlusStats userStats={userStats} />
       )}
     </>
