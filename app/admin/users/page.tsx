@@ -33,6 +33,8 @@ interface User {
   pegasus_withdrawal_unlock_date?: string | null
   first_purchase_date?: string | null
   email_blacklisted?: boolean
+  operation_start_date?: string | null
+  is_active_investor?: boolean
 }
 
 export default function AdminUsersPage() {
@@ -53,6 +55,7 @@ export default function AdminUsersPage() {
     is_operation_only: false,
     is_pegasus_exchange: false,
     email_blacklisted: false,
+    operation_start_date: "",
   })
   const [saving, setSaving] = useState(false)
   const [updatingDistribution, setUpdatingDistribution] = useState<string | null>(null)
@@ -206,6 +209,7 @@ export default function AdminUsersPage() {
       is_operation_only: user.is_operation_only || false,
       is_pegasus_exchange: user.is_pegasus_exchange || false,
       email_blacklisted: user.email_blacklisted || false,
+      operation_start_date: user.operation_start_date || "",
     })
   }
 
@@ -216,6 +220,44 @@ export default function AdminUsersPage() {
       setSaving(true)
       setError("")
 
+      // 運用開始日が変更された場合は安全な更新関数を使用
+      const oldOperationDate = editingUser.operation_start_date || ""
+      const newOperationDate = editForm.operation_start_date || ""
+
+      if (oldOperationDate !== newOperationDate) {
+        // 運用開始日が変更された場合、不整合データを自動削除
+        const { data: result, error: rpcError } = await supabase.rpc(
+          "update_operation_start_date_safe",
+          {
+            p_user_id: editingUser.user_id,
+            p_new_operation_start_date: newOperationDate || null,
+            p_admin_email: currentUser?.email || "unknown"
+          }
+        )
+
+        if (rpcError) {
+          throw rpcError
+        }
+
+        if (result && result[0]) {
+          if (result[0].status === "ERROR") {
+            throw new Error(result[0].message)
+          }
+          // 削除されたデータがある場合は通知
+          const details = result[0].details
+          if (details?.deleted_profit?.count > 0 || details?.deleted_referral?.count > 0) {
+            const profitInfo = details.deleted_profit?.count > 0
+              ? `日利: ${details.deleted_profit.count}件 (${details.deleted_profit.sum})`
+              : ""
+            const referralInfo = details.deleted_referral?.count > 0
+              ? `紹介報酬: ${details.deleted_referral.count}件 (${details.deleted_referral.sum})`
+              : ""
+            alert(`運用開始日変更に伴い、以下のデータを自動削除しました:\n${profitInfo}\n${referralInfo}`)
+          }
+        }
+      }
+
+      // その他のフィールドを更新
       const { error: updateError } = await supabase
         .from("users")
         .update({
@@ -505,6 +547,7 @@ export default function AdminUsersPage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-4 mb-2">
                         <Badge className="bg-blue-600">{user.user_id}</Badge>
+                        {user.is_active_investor === false && <Badge className="bg-red-600 text-white font-semibold">解約済み</Badge>}
                         {user.is_pegasus_exchange && <Badge className="bg-yellow-600 text-white font-semibold">ペガサス</Badge>}
                         {user.coinw_uid && <Badge className="bg-green-600">CoinW: {user.coinw_uid}</Badge>}
                         {!user.is_active && <Badge variant="destructive">非アクティブ</Badge>}
@@ -688,6 +731,19 @@ export default function AdminUsersPage() {
                   <p className="text-xs text-gray-400 mt-2">
                     チェックすると、ダッシュボードから紹介関連のUIを全て非表示にします<br />
                     （紹介報酬の計算は通常通り行われます）
+                  </p>
+                </div>
+
+                <div className="bg-green-900/20 border border-green-600/30 rounded-lg p-3">
+                  <Label className="text-green-300 text-sm font-medium">運用開始日</Label>
+                  <Input
+                    type="date"
+                    value={editForm.operation_start_date}
+                    onChange={(e) => setEditForm({ ...editForm, operation_start_date: e.target.value })}
+                    className="bg-gray-700 border-gray-600 text-white mt-2"
+                  />
+                  <p className="text-xs text-gray-400 mt-2">
+                    ⚠️ 運用開始日を変更すると、新しい日付より前の日利・紹介報酬データは自動削除されます
                   </p>
                 </div>
 
