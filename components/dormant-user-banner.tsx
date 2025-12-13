@@ -5,11 +5,13 @@ import { AlertTriangle } from "lucide-react"
 
 interface DormantUserBannerProps {
   isActive: boolean
+  hasApprovedNft: boolean
 }
 
-export function DormantUserBanner({ isActive }: DormantUserBannerProps) {
+export function DormantUserBanner({ isActive, hasApprovedNft }: DormantUserBannerProps) {
   // アクティブユーザーの場合は何も表示しない
-  if (isActive) {
+  // 新規ユーザー（hasApprovedNft = false）の場合も表示しない
+  if (isActive || !hasApprovedNft) {
     return null
   }
 

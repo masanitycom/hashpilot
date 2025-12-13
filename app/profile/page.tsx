@@ -25,6 +25,7 @@ interface UserProfile {
   referral_count: number
   is_operation_only: boolean
   is_active_investor: boolean
+  has_approved_nft: boolean
 }
 
 export default function ProfilePage() {
@@ -86,7 +87,8 @@ export default function ProfilePage() {
           created_at,
           total_purchases,
           is_operation_only,
-          is_active_investor
+          is_active_investor,
+          has_approved_nft
         `)
         .eq("id", user.id)
         .single()
@@ -475,8 +477,8 @@ export default function ProfilePage() {
             </Card>
           </div>
 
-          {/* 紹介リンク & QRコード（運用専用ユーザーと解約ユーザーは非表示） */}
-          {!profile?.is_operation_only && profile?.is_active_investor !== false && (
+          {/* 紹介リンク & QRコード（運用専用ユーザーと解約ユーザーは非表示、新規ユーザーは表示） */}
+          {!profile?.is_operation_only && !(profile?.is_active_investor === false && profile?.has_approved_nft === true) && (
             <div className="space-y-6">
               <Card className="bg-gray-900/80 border-gray-700/50 backdrop-blur-sm">
                 <CardHeader className="pb-4">

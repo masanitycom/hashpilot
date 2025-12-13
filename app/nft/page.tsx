@@ -18,6 +18,7 @@ interface UserData {
   total_purchases: number
   nft_address: string | null
   is_active_investor: boolean
+  has_approved_nft: boolean
 }
 
 export default function NFTPage() {
@@ -160,8 +161,9 @@ export default function NFTPage() {
     )
   }
 
-  // 解約ユーザー（is_active_investor = false）はNFT購入不可
-  if (userData && userData.is_active_investor === false) {
+  // 解約ユーザー（過去にNFT承認済みで、is_active_investor = false）はNFT購入不可
+  // 新規ユーザー（has_approved_nft = false）は購入可能
+  if (userData && userData.is_active_investor === false && userData.has_approved_nft === true) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700">

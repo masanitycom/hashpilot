@@ -40,6 +40,7 @@ interface UserData {
   operation_start_date: string | null
   is_operation_only: boolean
   is_active_investor: boolean
+  has_approved_nft: boolean
 }
 
 interface UserStats {
@@ -755,8 +756,11 @@ export default function OptimizedDashboardPage() {
           </div>
         </div>
 
-        {/* 解約ユーザーバナー */}
-        <DormantUserBanner isActive={userData?.is_active_investor ?? true} />
+        {/* 解約ユーザーバナー（新規ユーザーには表示しない） */}
+        <DormantUserBanner
+          isActive={userData?.is_active_investor ?? true}
+          hasApprovedNft={userData?.has_approved_nft ?? false}
+        />
 
         {/* お知らせバナー */}
         <AnnouncementsBanner />
@@ -931,7 +935,7 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <CycleStatusCard userId={userData?.user_id || ""} />
         <PersonalProfitCard userId={userData?.user_id || ""} totalInvestment={currentInvestment} />
-        {!userData?.is_operation_only && userData?.is_active_investor !== false && (
+        {!userData?.is_operation_only && !(userData?.is_active_investor === false && userData?.has_approved_nft === true) && (
           <ReferralProfitCard
             userId={userData?.user_id || ""}
             level1Investment={userStats?.level1_investment || 0}
@@ -941,8 +945,8 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
         )}
       </div>
 
-      {/* 組織図（解約ユーザーは非表示） */}
-      {!userData?.is_operation_only && userData?.is_active_investor !== false && (
+      {/* 組織図（解約ユーザーは非表示、新規ユーザーは表示） */}
+      {!userData?.is_operation_only && !(userData?.is_active_investor === false && userData?.has_approved_nft === true) && (
         <div className="mb-6">
           <ReferralTreeOptimized userId={userData?.user_id || ""} />
         </div>
@@ -974,13 +978,13 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
       {/* 自動NFT購入履歴 */}
       <AutoPurchaseHistory userId={userData?.user_id || ""} />
 
-      {/* レベル別統計（解約ユーザーは非表示） */}
-      {!userData?.is_operation_only && userData?.is_active_investor !== false && (
+      {/* レベル別統計（解約ユーザーは非表示、新規ユーザーは表示） */}
+      {!userData?.is_operation_only && !(userData?.is_active_investor === false && userData?.has_approved_nft === true) && (
         <LevelStats userStats={userStats} />
       )}
 
-      {/* Level4以降の統計（解約ユーザーは非表示） */}
-      {!userData?.is_operation_only && userData?.is_active_investor !== false && (
+      {/* Level4以降の統計（解約ユーザーは非表示、新規ユーザーは表示） */}
+      {!userData?.is_operation_only && !(userData?.is_active_investor === false && userData?.has_approved_nft === true) && (
         <Level4PlusStats userStats={userStats} />
       )}
     </>
