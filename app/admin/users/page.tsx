@@ -547,7 +547,7 @@ export default function AdminUsersPage() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-4 mb-2">
                         <Badge className="bg-blue-600">{user.user_id}</Badge>
-                        {user.is_active_investor === false && <Badge className="bg-red-600 text-white font-semibold">解約済み</Badge>}
+                        {user.is_active_investor === false && user.total_purchases > 0 && <Badge className="bg-red-600 text-white font-semibold">解約済み</Badge>}
                         {user.is_pegasus_exchange && <Badge className="bg-yellow-600 text-white font-semibold">ペガサス</Badge>}
                         {user.coinw_uid && <Badge className="bg-green-600">CoinW: {user.coinw_uid}</Badge>}
                         {!user.is_active && <Badge variant="destructive">非アクティブ</Badge>}
