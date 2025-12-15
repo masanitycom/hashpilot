@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "HASH PILOT NFT",
-  description: "HASH PILOT紹介システムのダッシュボード",
+  description: "HASH PILOT NFTダッシュボード",
     generator: 'v0.dev'
 }
 
