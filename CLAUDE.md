@@ -866,6 +866,33 @@ GROUP BY u.user_id, u.email, u.has_approved_nft, u.operation_start_date;
 
 ---
 
+### approve_user_nft関数で運用開始日が未設定になる問題（2025年12月17日修正）
+
+**問題:**
+- 12/15運用開始のユーザーが運用益0のまま
+- 日利設定は12/16まで設定済みなのに配布されていない
+
+**原因:**
+- `approve_user_nft`関数がNFT承認時に以下を設定していなかった：
+  - `has_approved_nft = true`
+  - `operation_start_date = calculate_operation_start_date(承認日)`
+- これにより`process_daily_yield_v2`の対象外になっていた
+
+**修正内容:**
+- `approve_user_nft`関数を修正
+- `users`テーブル更新時に`has_approved_nft`と`operation_start_date`を設定
+
+**補填処理:**
+- 12/15と12/16の日利を手動でバックフィル
+- `nft_daily_profit`テーブルに直接挿入（user_daily_profitはビューのため）
+- `affiliate_cycle.available_usdt`も更新
+
+**関連スクリプト:**
+- `scripts/FIX-approve-user-nft-add-operation-start-date.sql` - 関数修正
+- `scripts/FIX-1215-backfill-simple.sql` - 日利補填
+
+---
+
 ### V2日利システム完成（2025年11月13日）
 
 **背景:**
@@ -1059,6 +1086,59 @@ WHERE u.has_approved_nft = true
    - 定期的に誤配布がないかチェックするスクリプトを実行
    - `has_approved_nft = false` だがNFTが存在するユーザーを検出
    - `operation_start_date = NULL` だがNFTが存在するユーザーを検出
+
+---
+
+### approve_user_nft関数の運用開始日設定漏れ（2025年12月17日修正）
+
+**問題:**
+- `approve_user_nft`関数でNFTを承認した際に、`users.has_approved_nft`と`users.operation_start_date`が設定されなかった
+- そのため、承認済みNFTがあるユーザーでも日利配布の対象外になっていた
+- 12/15運用開始予定のユーザーが日利を受け取れない状態だった
+
+**原因:**
+```sql
+-- 修正前：has_approved_nftとoperation_start_dateが設定されていなかった
+UPDATE users u
+SET
+    total_purchases = u.total_purchases + v_purchase.amount_usd,
+    updated_at = NOW()
+WHERE u.user_id = v_target_user_id;
+```
+
+**修正内容:**
+```sql
+-- 修正後：has_approved_nftとoperation_start_dateを設定
+UPDATE users u
+SET
+    total_purchases = u.total_purchases + v_purchase.amount_usd,
+    has_approved_nft = true,
+    operation_start_date = CASE
+        WHEN u.operation_start_date IS NULL THEN calculate_operation_start_date(NOW())
+        WHEN u.operation_start_date > calculate_operation_start_date(NOW()) THEN calculate_operation_start_date(NOW())
+        ELSE u.operation_start_date
+    END,
+    updated_at = NOW()
+WHERE u.user_id = v_target_user_id;
+```
+
+**関連スクリプト:**
+- `scripts/FIX-approve-user-nft-add-operation-start-date.sql` - 関数修正
+- `scripts/FIX-missing-operation-start-date-users.sql` - 既存ユーザーの一括修正
+- `scripts/CHECK-1215-operation-start-users.sql` - 問題確認用
+
+**修正後の動作:**
+- NFT承認時に`has_approved_nft = true`が自動設定される
+- NFT承認時に`operation_start_date`が自動計算・設定される
+- 既にoperation_start_dateが設定されている場合は、早い方を維持
+
+**日利配布の条件（再確認）:**
+```sql
+WHERE u.has_approved_nft = true
+  AND u.operation_start_date IS NOT NULL
+  AND u.operation_start_date <= p_date
+  AND (u.is_pegasus_exchange = false OR u.is_pegasus_exchange IS NULL)
+```
 
 ---
 
@@ -1346,35 +1426,39 @@ p_admin_email VARCHAR        -- 管理者メールアドレス
 
 ## 🚧 未対応タスク
 
-### 月末出金に紹介報酬を含める修正
+### 月末出金に紹介報酬を含める修正 ✅ 完了
 
-**詳細:** `TODO-WITHDRAWAL-REFERRAL-FIX.md` を参照
+**実装済み（2025年12月17日）:**
+- ✅ `affiliate_cycle.withdrawn_referral_usdt`カラム追加
+- ✅ `monthly_withdrawals.personal_amount`/`referral_amount`カラム追加
+- ✅ `process_monthly_withdrawals`関数修正（USDTフェーズなら紹介報酬も含める）
+- ✅ `complete_withdrawals_batch`関数修正（withdrawn_referral_usdtも更新）
+- ✅ 管理画面にフェーズ（USDT/HOLD）表示追加
 
-**概要:**
-- 現在の月末出金は個人利益（日利）のみが対象
-- USDTフェーズのユーザーは紹介報酬も出金できるべき
-- `affiliate_cycle`テーブルに`withdrawn_referral_usdt`カラムを追加して対応予定
+**SQLスクリプト:** `scripts/FIX-withdrawal-include-referral.sql`
+
+**仕様:**
+- USDTフェーズ: 個人利益 + 紹介報酬を出金可能
+- HOLDフェーズ: 個人利益のみ出金可能（紹介報酬は次のNFT付与待ち）
+- 出金可能な紹介報酬 = `cum_usdt - withdrawn_referral_usdt`
 
 **手動対応履歴:**
 - 2025年11月分: 手動で紹介報酬を計算し、個人利益と合算して送金済み
 
-**対応期限:** 2025年12月分の月末出金（2026年1月初旬処理）までに修正
+### 休眠（解約）ユーザーのUI対応 ✅ 完了
 
-### 休眠（解約）ユーザーのUI対応
+**実装済み（2025年12月）:**
+- ✅ ダッシュボードに解約バナー表示（`DormantUserBanner`コンポーネント）
+- ✅ NFT購入ページをアクセス不可に（`app/nft/page.tsx`）
+- ✅ 紹介リンクを無効化（`app/profile/page.tsx`）
+- ✅ 紹介報酬カード・組織図・レベル別統計を非表示（`app/dashboard/page.tsx`）
+- ✅ 管理画面に「解約済み」バッジ表示（`app/admin/users/page.tsx`）
 
-**詳細:** `TODO-DORMANT-USER-UI.md` を参照
-
-**概要:**
-- 全NFT売却ユーザー（`is_active_investor = FALSE`）への対応
-- ダッシュボードに解約バナー表示
-- NFT購入ページをアクセス不可に
-- 紹介リンクを無効化
-
-**判定フィールド:** `users.is_active_investor`（トリガーで自動更新）
+**判定条件:** `is_active_investor === false && has_approved_nft === true`
 
 ---
 
-最終更新: 2025年12月12日
+最終更新: 2025年12月17日
 
 ---
 

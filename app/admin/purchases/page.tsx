@@ -405,22 +405,30 @@ export default function AdminPurchasesPage() {
 
       if (updateError) throw updateError
 
-      // operation_start_dateを再計算して更新
-      const { error: operationDateError } = await supabase.rpc('calculate_operation_start_date', {
+      // operation_start_dateを再計算して、安全な更新関数で不整合データも削除
+      const { data: calcResult } = await supabase.rpc('calculate_operation_start_date', {
         p_approved_at: newDate
-      }).then(async (result) => {
-        if (result.data) {
-          // usersテーブルのoperation_start_dateを更新
-          return await supabase
-            .from('users')
-            .update({ operation_start_date: result.data })
-            .eq('user_id', purchaseData.user_id)
-        }
-        return { error: null }
       })
 
-      if (operationDateError) {
-        console.warn('operation_start_date更新エラー:', operationDateError)
+      if (calcResult) {
+        // 安全な更新関数を使用（不整合データも自動削除）
+        const { data: updateResult, error: updateOpError } = await supabase.rpc(
+          'update_operation_start_date_safe',
+          {
+            p_user_id: purchaseData.user_id,
+            p_new_operation_start_date: calcResult,
+            p_admin_email: currentUser.email
+          }
+        )
+
+        if (updateOpError) {
+          console.warn('operation_start_date更新エラー:', updateOpError)
+        } else if (updateResult && updateResult[0]?.details) {
+          const details = updateResult[0].details
+          if (details.deleted_profit?.count > 0 || details.deleted_referral?.count > 0) {
+            console.log('不整合データを自動削除:', details)
+          }
+        }
       }
 
       // システムログに記録

@@ -26,6 +26,8 @@ interface WithdrawalRecord {
   email: string
   withdrawal_month: string
   total_amount: number
+  personal_amount: number
+  referral_amount: number
   withdrawal_address: string | null
   withdrawal_method: string | null
   status: string
@@ -37,6 +39,12 @@ interface WithdrawalRecord {
   is_pegasus_exchange?: boolean
   pegasus_exchange_date?: string | null
   pegasus_withdrawal_unlock_date?: string | null
+  // affiliate_cycleから取得
+  phase?: string
+  cum_usdt?: number
+  withdrawn_referral_usdt?: number
+  current_available_usdt?: number
+  total_nft_count?: number
 }
 
 interface MonthlyStats {
@@ -161,7 +169,7 @@ export default function AdminWithdrawalsPage() {
       // STEP 3: 現在の残高を取得（参考情報）
       const { data: currentCycle, error: cycleError } = await supabase
         .from("affiliate_cycle")
-        .select("user_id, available_usdt, cum_usdt, phase, total_nft_count")
+        .select("user_id, available_usdt, cum_usdt, phase, total_nft_count, withdrawn_referral_usdt")
         .in("user_id", userIds)
 
       if (cycleError) throw cycleError
@@ -170,6 +178,12 @@ export default function AdminWithdrawalsPage() {
       const formattedData = withdrawalData.map((withdrawal: any) => {
         const user = usersData?.find(u => u.user_id === withdrawal.user_id)
         const cycle = currentCycle?.find(c => c.user_id === withdrawal.user_id)
+
+        // 出金可能な紹介報酬を計算（USDTフェーズのみ）
+        const cumUsdt = cycle?.cum_usdt || 0
+        const withdrawnReferral = cycle?.withdrawn_referral_usdt || 0
+        const phase = cycle?.phase || 'USDT'
+        const withdrawableReferral = phase === 'USDT' ? Math.max(0, cumUsdt - withdrawnReferral) : 0
 
         return {
           ...withdrawal,
@@ -180,21 +194,28 @@ export default function AdminWithdrawalsPage() {
           pegasus_withdrawal_unlock_date: user?.pegasus_withdrawal_unlock_date || null,
           // 参考情報: 現在の残高
           current_available_usdt: cycle?.available_usdt || 0,
-          cum_usdt: cycle?.cum_usdt || 0,
-          phase: cycle?.phase || '',
+          cum_usdt: cumUsdt,
+          withdrawn_referral_usdt: withdrawnReferral,
+          phase: phase,
           total_nft_count: cycle?.total_nft_count || 0,
+          // 出金レコードの個人利益・紹介報酬を使う（なければ後方互換）
+          personal_amount: withdrawal.personal_amount ?? withdrawal.total_amount,
+          referral_amount: withdrawal.referral_amount ?? 0,
+          // 出金可能な紹介報酬（参考表示用）
+          withdrawable_referral: withdrawableReferral,
         }
       })
 
       console.log('=== Formatted data count:', formattedData.length)
       setWithdrawals(formattedData)
 
-      // 統計情報を計算
-      const personalProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.total_amount), 0)
-      const referralProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.cum_usdt || 0), 0)
+      // 統計情報を計算（出金レコードの personal_amount と referral_amount を使用）
+      const personalProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.personal_amount || 0), 0)
+      const referralProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.referral_amount || 0), 0)
+      const totalAmount = formattedData.reduce((sum, w) => sum + Number(w.total_amount || 0), 0)
 
       const stats: MonthlyStats = {
-        total_amount: personalProfitTotal + referralProfitTotal,
+        total_amount: totalAmount,
         personal_profit_total: personalProfitTotal,
         referral_profit_total: referralProfitTotal,
         pending_count: formattedData.filter(w => w.status === 'pending').length,
@@ -252,49 +273,21 @@ export default function AdminWithdrawalsPage() {
     }
   }
 
-  const exportCSV = async () => {
+  const exportCSV = () => {
     const headers = [
-      "ユーザーID", "メールアドレス", "個人利益", "紹介報酬", "合計額", "送金方法", "CoinW UID/送金先",
+      "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計", "送金方法", "CoinW UID/送金先",
       "ステータス", "タスク状況", "作成日", "完了日", "備考"
     ]
 
-    // 月の範囲を計算
-    const monthStart = `${selectedMonth}-01`
-    const monthEnd = new Date(selectedMonth + '-01')
-    monthEnd.setMonth(monthEnd.getMonth() + 1)
-    const monthEndStr = monthEnd.toISOString().split('T')[0]
-
-    const csvData = await Promise.all(
-      filteredWithdrawals.map(async (w) => {
-        // 個人利益を取得
-        const { data: dailyProfitData } = await supabase
-          .from('user_daily_profit')
-          .select('daily_profit')
-          .eq('user_id', w.user_id)
-          .gte('date', monthStart)
-          .lt('date', monthEndStr)
-
-        const personalProfit = dailyProfitData
-          ? dailyProfitData.reduce((sum, r) => sum + r.daily_profit, 0)
-          : 0
-
-        // 紹介報酬を取得
-        const { data: referralData } = await supabase
-          .from('monthly_referral_profit')
-          .select('profit_amount')
-          .eq('user_id', w.user_id)
-          .eq('year_month', selectedMonth)
-
-        const referralProfit = referralData
-          ? referralData.reduce((sum, r) => sum + parseFloat(r.profit_amount), 0)
-          : 0
-
+    // 出金レコードに保存されている個人利益・紹介報酬を使用
+    const csvData = filteredWithdrawals.map((w: any) => {
         return [
           w.user_id,
           w.email,
-          personalProfit.toFixed(3),
-          referralProfit.toFixed(3),
-          w.total_amount,
+          w.phase || '-',
+          (w.personal_amount || 0).toFixed(3),
+          (w.referral_amount || 0).toFixed(3),
+          w.total_amount.toFixed(3),
           w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
           w.withdrawal_address || "未設定",
           w.status,
@@ -304,7 +297,6 @@ export default function AdminWithdrawalsPage() {
           w.notes || ""
         ]
       })
-    )
 
     const csvContent = [headers, ...csvData]
       .map(row => row.map(field => `"${field}"`).join(","))
@@ -552,8 +544,10 @@ export default function AdminWithdrawalsPage() {
                       />
                     </th>
                     <th className="text-left py-3 px-2 text-gray-300">ユーザー</th>
-                    <th className="text-right py-3 px-2 text-gray-300">出金可能額</th>
-                    <th className="text-right py-3 px-2 text-gray-300">紹介報酬累積</th>
+                    <th className="text-center py-3 px-2 text-gray-300">フェーズ</th>
+                    <th className="text-right py-3 px-2 text-gray-300">個人利益</th>
+                    <th className="text-right py-3 px-2 text-gray-300">紹介報酬</th>
+                    <th className="text-right py-3 px-2 text-gray-300">出金合計</th>
                     <th className="text-center py-3 px-2 text-gray-300">NFT数</th>
                     <th className="text-left py-3 px-2 text-gray-300">CoinW UID/送金先</th>
                     <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
@@ -590,16 +584,39 @@ export default function AdminWithdrawalsPage() {
                           )}
                         </div>
                       </td>
+                      {/* フェーズ表示 */}
+                      <td className="py-3 px-2 text-center">
+                        {withdrawal.phase === 'USDT' ? (
+                          <Badge className="bg-green-600 text-white">💰 USDT</Badge>
+                        ) : withdrawal.phase === 'HOLD' ? (
+                          <Badge className="bg-orange-600 text-white">🔒 HOLD</Badge>
+                        ) : (
+                          <Badge className="bg-gray-600 text-white">-</Badge>
+                        )}
+                      </td>
+                      {/* 個人利益 */}
                       <td className="py-3 px-2 text-right">
-                        <span className={`font-bold ${
-                          withdrawal.total_amount >= 10 ? 'text-green-400' : 'text-gray-400'
-                        }`}>
-                          ${withdrawal.total_amount.toFixed(2)}
+                        <span className="text-green-400">
+                          ${(withdrawal.personal_amount || 0).toFixed(2)}
                         </span>
                       </td>
+                      {/* 紹介報酬 */}
                       <td className="py-3 px-2 text-right">
-                        <span className="text-orange-400">
-                          ${withdrawal.cum_usdt?.toFixed(2) || '0.00'}
+                        <span className={`${
+                          withdrawal.phase === 'USDT' ? 'text-orange-400' : 'text-gray-500'
+                        }`}>
+                          ${(withdrawal.referral_amount || 0).toFixed(2)}
+                          {withdrawal.phase === 'HOLD' && (
+                            <div className="text-xs text-gray-500">🔒</div>
+                          )}
+                        </span>
+                      </td>
+                      {/* 出金合計 */}
+                      <td className="py-3 px-2 text-right">
+                        <span className={`font-bold ${
+                          withdrawal.total_amount >= 10 ? 'text-blue-400' : 'text-gray-400'
+                        }`}>
+                          ${withdrawal.total_amount.toFixed(2)}
                         </span>
                       </td>
                       <td className="py-3 px-2 text-center">
