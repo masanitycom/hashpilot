@@ -17,6 +17,8 @@ interface WithdrawalRecord {
   id: string
   withdrawal_month: string
   total_amount: number
+  personal_amount: number
+  referral_amount: number
   status: string
   task_completed: boolean
   created_at: string
@@ -181,8 +183,16 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
                   </div>
                   {getStatusBadge(withdrawal.status, withdrawal.task_completed)}
                 </div>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-gray-400 space-y-1">
                   <div>{formatMonth(withdrawal.withdrawal_month)}分</div>
+                  <div className="flex justify-between">
+                    <span>個人利益:</span>
+                    <span className="text-green-400">${Number(withdrawal.personal_amount || 0).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>紹介報酬:</span>
+                    <span className="text-blue-400">${Number(withdrawal.referral_amount || 0).toFixed(2)}</span>
+                  </div>
                   {withdrawal.status === 'on_hold' && !withdrawal.task_completed && (
                     <Button
                       onClick={() => setShowTaskPopup(true)}
@@ -213,9 +223,16 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
                       </div>
                       {getStatusBadge(withdrawal.status, withdrawal.task_completed)}
                     </div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-gray-400 space-y-1">
                       <div>{formatMonth(withdrawal.withdrawal_month)}分</div>
-                      <div className="mt-1 text-gray-500">通常5日以内にCoinWに送金されます。</div>
+                      <div className="flex justify-between">
+                        <span>個人利益:</span>
+                        <span className="text-green-400">${Number(withdrawal.personal_amount || 0).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>紹介報酬:</span>
+                        <span className="text-blue-400">${Number(withdrawal.referral_amount || 0).toFixed(2)}</span>
+                      </div>
                     </div>
                   </div>
                 ))}
