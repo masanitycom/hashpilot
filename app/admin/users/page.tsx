@@ -47,6 +47,7 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const [distributionFilter, setDistributionFilter] = useState<"all" | "distributed" | "not_distributed">("all")
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [editForm, setEditForm] = useState({
     coinw_uid: "",
@@ -68,7 +69,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     filterUsers()
-  }, [users, searchTerm])
+  }, [users, searchTerm, distributionFilter])
 
   const checkAdminAuth = async () => {
     try {
@@ -185,18 +186,26 @@ export default function AdminUsersPage() {
   }
 
   const filterUsers = () => {
-    if (!searchTerm) {
-      setFilteredUsers(users)
-      return
+    let filtered = users
+
+    // NFT配布状況フィルター
+    if (distributionFilter === "distributed") {
+      filtered = filtered.filter(user => user.nft_distributed === true)
+    } else if (distributionFilter === "not_distributed") {
+      filtered = filtered.filter(user => user.nft_distributed !== true)
     }
 
-    const filtered = users.filter(
-      (user) =>
-        user.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (user.coinw_uid && user.coinw_uid.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.full_name && user.full_name.toLowerCase().includes(searchTerm.toLowerCase())),
-    )
+    // 検索フィルター
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (user) =>
+          user.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (user.coinw_uid && user.coinw_uid.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (user.full_name && user.full_name.toLowerCase().includes(searchTerm.toLowerCase())),
+      )
+    }
+
     setFilteredUsers(filtered)
   }
 
@@ -424,15 +433,60 @@ export default function AdminUsersPage() {
   }
 
   const exportUsers = () => {
-    const csvContent = [
-      ["ユーザーID", "メール", "CoinW UID", "投資額", "紹介者", "作成日"].join(","),
+    // BOM付きUTF-8でExcelでも文字化けしないように
+    const BOM = '\uFEFF'
+
+    // CSVエスケープ関数
+    const escapeCSV = (value: string | null | undefined): string => {
+      if (value === null || value === undefined) return ""
+      const str = String(value)
+      // カンマ、ダブルクォート、改行が含まれる場合はダブルクォートで囲む
+      if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+        return `"${str.replace(/"/g, '""')}"`
+      }
+      return str
+    }
+
+    const headers = [
+      "ユーザーID",
+      "メール",
+      "氏名",
+      "CoinW UID",
+      "NFT受取アドレス",
+      "投資額",
+      "紹介者ID",
+      "NFT配布状況",
+      "NFT配布日",
+      "NFT配布者",
+      "運用開始日",
+      "ペガサス交換",
+      "運用専用",
+      "メール除外",
+      "アクティブ投資家",
+      "アカウント状態",
+      "作成日",
+    ]
+
+    const csvContent = BOM + [
+      headers.join(","),
       ...filteredUsers.map((user) =>
         [
-          user.user_id,
-          user.email,
-          user.coinw_uid || "",
+          escapeCSV(user.user_id),
+          escapeCSV(user.email),
+          escapeCSV(user.full_name),
+          escapeCSV(user.coinw_uid),
+          escapeCSV(user.nft_receive_address),
           user.total_purchases,
-          user.referrer_user_id || "",
+          escapeCSV(user.referrer_user_id),
+          user.nft_distributed ? "配布済み" : "未配布",
+          user.nft_distributed_at ? new Date(user.nft_distributed_at).toLocaleDateString("ja-JP") : "",
+          escapeCSV(user.nft_distributed_by),
+          user.operation_start_date ? new Date(user.operation_start_date).toLocaleDateString("ja-JP") : "",
+          user.is_pegasus_exchange ? "はい" : "いいえ",
+          user.is_operation_only ? "はい" : "いいえ",
+          user.email_blacklisted ? "はい" : "いいえ",
+          user.is_active_investor === false ? "解約済み" : "アクティブ",
+          user.is_active ? "有効" : "無効",
           new Date(user.created_at).toLocaleDateString("ja-JP"),
         ].join(","),
       ),
@@ -522,6 +576,17 @@ export default function AdminUsersPage() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
+              </div>
+              <div>
+                <select
+                  value={distributionFilter}
+                  onChange={(e) => setDistributionFilter(e.target.value as "all" | "distributed" | "not_distributed")}
+                  className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="all">NFT配布: 全て</option>
+                  <option value="distributed">配布済み</option>
+                  <option value="not_distributed">未配布</option>
+                </select>
               </div>
               <Badge variant="outline" className="text-gray-300">
                 {filteredUsers.length} / {users.length} ユーザー
