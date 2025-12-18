@@ -5,7 +5,8 @@
       "Bash(npm run build:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nfix: ユーザー出金ページに個人利益・紹介報酬の内訳表示を追加\n\n- PendingWithdrawalCardに個人利益・紹介報酬の内訳表示\n- 保留中・完了済み両方の出金履歴で内訳を表示\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(cat:*)"
     ],
     "deny": []
   },

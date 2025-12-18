@@ -1458,7 +1458,83 @@ p_admin_email VARCHAR        -- 管理者メールアドレス
 
 ---
 
-最終更新: 2025年12月17日
+最終更新: 2025年12月18日
+
+---
+
+## 💸 月末出金システムの改善（2025年12月18日）
+
+### 概要
+11月分の月末出金データに個人利益・紹介報酬の内訳を追加し、出金済み紹介報酬を正しく追跡するように修正。
+
+### データベース変更
+
+**`monthly_withdrawals`テーブル:**
+- `personal_amount`: 個人利益（日利合計）
+- `referral_amount`: 紹介報酬
+- `total_amount`: 出金合計（personal_amount + referral_amount）
+
+**`affiliate_cycle`テーブル:**
+- `withdrawn_referral_usdt`: 出金済み紹介報酬の累積額（新規追加）
+
+### 11月データの修正内容
+
+1. **personal_amountの設定**
+   - `nft_daily_profit`テーブルから11月の日利合計を取得
+   - `scripts/FIX-november-withdrawal-personal-amount.sql`
+
+2. **referral_amountの設定**
+   - `monthly_referral_profit`テーブルから11月の紹介報酬合計を取得
+   - `scripts/FIX-november-withdrawal-referral-amounts.sql`
+
+3. **withdrawn_referral_usdtの設定**
+   - 11月に紹介報酬を出金した150名のユーザーに対して設定
+   - 合計$7,608.97の出金済み紹介報酬を記録
+   - `scripts/FIX-all-november-withdrawn-referral.sql`
+
+4. **金額の丸め処理**
+   - 全ての金額を小数点第二位で丸め
+   - 微小なマイナス値（-0.004など）は0に修正
+
+### 管理画面の変更（`/admin/withdrawals`）
+
+**表示項目:**
+- フェーズ（USDT/HOLD）
+- 個人利益
+- 紹介報酬
+- 出金合計
+
+**CSVエクスポート:**
+- フェーズ、個人利益、紹介報酬、出金合計を含む
+
+### ユーザー画面の変更（`/withdrawal`）
+
+**`components/pending-withdrawal-card.tsx`:**
+- 保留中・完了済み両方の出金履歴で内訳を表示
+- 個人利益: 緑色で表示
+- 紹介報酬: 青色で表示
+
+### 関連スクリプト
+
+| スクリプト | 用途 |
+|------------|------|
+| `scripts/FIX-november-withdrawal-personal-amount.sql` | 11月のpersonal_amount設定 |
+| `scripts/FIX-november-withdrawal-referral-amounts.sql` | 11月のreferral_amount設定 |
+| `scripts/FIX-all-november-withdrawn-referral.sql` | withdrawn_referral_usdt一括設定 |
+| `scripts/CHECK-all-november-referral-withdrawals.sql` | 修正が必要なユーザーの確認 |
+| `scripts/CHECK-59C23C-withdrawal-data.sql` | 個別ユーザーの確認 |
+
+### 二重払い防止の仕組み
+
+今後の月末出金処理では、以下の計算で出金可能な紹介報酬を算出：
+
+```sql
+出金可能な紹介報酬 = cum_usdt - withdrawn_referral_usdt
+```
+
+**注意:**
+- HOLDフェーズのユーザーは紹介報酬を出金不可（次のNFT購入に使用予定）
+- USDTフェーズのユーザーのみ紹介報酬を出金可能
 
 ---
 
