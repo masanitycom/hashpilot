@@ -39,6 +39,7 @@ interface WithdrawalRecord {
   is_pegasus_exchange?: boolean
   pegasus_exchange_date?: string | null
   pegasus_withdrawal_unlock_date?: string | null
+  channel_linked_confirmed?: boolean
   // affiliate_cycleから取得
   phase?: string
   cum_usdt?: number
@@ -161,7 +162,7 @@ export default function AdminWithdrawalsPage() {
       const userIds = withdrawalData.map(w => w.user_id)
       const { data: usersData, error: usersError } = await supabase
         .from("users")
-        .select("user_id, email, coinw_uid, nft_receive_address, is_pegasus_exchange, pegasus_withdrawal_unlock_date")
+        .select("user_id, email, coinw_uid, nft_receive_address, is_pegasus_exchange, pegasus_withdrawal_unlock_date, channel_linked_confirmed")
         .in("user_id", userIds)
 
       if (usersError) throw usersError
@@ -192,6 +193,7 @@ export default function AdminWithdrawalsPage() {
           withdrawal_method: withdrawal.withdrawal_method || (user?.coinw_uid ? 'coinw' : user?.nft_receive_address ? 'bep20' : null),
           is_pegasus_exchange: user?.is_pegasus_exchange || false,
           pegasus_withdrawal_unlock_date: user?.pegasus_withdrawal_unlock_date || null,
+          channel_linked_confirmed: user?.channel_linked_confirmed || false,
           // 参考情報: 現在の残高
           current_available_usdt: cycle?.available_usdt || 0,
           cum_usdt: cumUsdt,
@@ -276,7 +278,7 @@ export default function AdminWithdrawalsPage() {
   const exportCSV = () => {
     const headers = [
       "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計", "送金方法", "CoinW UID/送金先",
-      "ステータス", "タスク状況", "作成日", "完了日", "備考"
+      "CH紐付け", "ステータス", "タスク状況", "作成日", "完了日", "備考"
     ]
 
     // 出金レコードに保存されている個人利益・紹介報酬を使用
@@ -290,6 +292,7 @@ export default function AdminWithdrawalsPage() {
           w.total_amount.toFixed(3),
           w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
           w.withdrawal_address || "未設定",
+          w.channel_linked_confirmed ? "確認済み" : "未確認",
           w.status,
           w.task_completed ? "完了" : "未完了",
           new Date(w.created_at).toLocaleDateString('ja-JP'),
@@ -550,6 +553,7 @@ export default function AdminWithdrawalsPage() {
                     <th className="text-right py-3 px-2 text-gray-300">出金合計</th>
                     <th className="text-center py-3 px-2 text-gray-300">NFT数</th>
                     <th className="text-left py-3 px-2 text-gray-300">CoinW UID/送金先</th>
+                    <th className="text-center py-3 px-2 text-gray-300">CH紐付け</th>
                     <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
                     <th className="text-left py-3 px-2 text-gray-300">タスク状況</th>
                   </tr>
@@ -640,6 +644,13 @@ export default function AdminWithdrawalsPage() {
                             <span className="text-red-400">❌ 未設定</span>
                           )}
                         </div>
+                      </td>
+                      <td className="py-3 px-2 text-center">
+                        {withdrawal.channel_linked_confirmed ? (
+                          <Badge className="bg-cyan-600 text-white">確認済</Badge>
+                        ) : (
+                          <Badge className="bg-gray-600 text-white">未確認</Badge>
+                        )}
                       </td>
                       <td className="py-3 px-2">
                         {getStatusBadge(withdrawal.status)}
