@@ -35,6 +35,7 @@ interface User {
   email_blacklisted?: boolean
   operation_start_date?: string | null
   is_active_investor?: boolean
+  channel_linked_confirmed?: boolean
 }
 
 export default function AdminUsersPage() {
@@ -57,6 +58,7 @@ export default function AdminUsersPage() {
     is_pegasus_exchange: false,
     email_blacklisted: false,
     operation_start_date: "",
+    channel_linked_confirmed: false,
   })
   const [saving, setSaving] = useState(false)
   const [updatingDistribution, setUpdatingDistribution] = useState<string | null>(null)
@@ -219,6 +221,7 @@ export default function AdminUsersPage() {
       is_pegasus_exchange: user.is_pegasus_exchange || false,
       email_blacklisted: user.email_blacklisted || false,
       operation_start_date: user.operation_start_date || "",
+      channel_linked_confirmed: user.channel_linked_confirmed || false,
     })
   }
 
@@ -277,6 +280,7 @@ export default function AdminUsersPage() {
           is_pegasus_exchange: editForm.is_pegasus_exchange,
           pegasus_withdrawal_unlock_date: null,  // 常にnull（出金解禁日は使わない）
           email_blacklisted: editForm.email_blacklisted,
+          channel_linked_confirmed: editForm.channel_linked_confirmed,
           updated_at: new Date().toISOString(),
         })
         .eq("id", editingUser.id)
@@ -459,6 +463,7 @@ export default function AdminUsersPage() {
       "NFT配布日",
       "NFT配布者",
       "運用開始日",
+      "チャンネル紐付け",
       "ペガサス交換",
       "運用専用",
       "メール除外",
@@ -482,6 +487,7 @@ export default function AdminUsersPage() {
           user.nft_distributed_at ? new Date(user.nft_distributed_at).toLocaleDateString("ja-JP") : "",
           escapeCSV(user.nft_distributed_by),
           user.operation_start_date ? new Date(user.operation_start_date).toLocaleDateString("ja-JP") : "",
+          user.channel_linked_confirmed ? "確認済み" : "未確認",
           user.is_pegasus_exchange ? "はい" : "いいえ",
           user.is_operation_only ? "はい" : "いいえ",
           user.email_blacklisted ? "はい" : "いいえ",
@@ -615,6 +621,7 @@ export default function AdminUsersPage() {
                         {user.is_active_investor === false && user.total_purchases > 0 && <Badge className="bg-red-600 text-white font-semibold">解約済み</Badge>}
                         {user.is_pegasus_exchange && <Badge className="bg-yellow-600 text-white font-semibold">ペガサス</Badge>}
                         {user.coinw_uid && <Badge className="bg-green-600">CoinW: {user.coinw_uid}</Badge>}
+                        {user.channel_linked_confirmed && <Badge className="bg-cyan-600 text-white">CH確認済</Badge>}
                         {!user.is_active && <Badge variant="destructive">非アクティブ</Badge>}
                       </div>
 
@@ -873,6 +880,25 @@ export default function AdminUsersPage() {
                       </div>
                     )}
                   </div>
+                </div>
+
+                <div className="bg-cyan-900/20 border border-cyan-600/30 rounded-lg p-3">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="channel_linked_confirmed"
+                      checked={editForm.channel_linked_confirmed}
+                      onChange={(e) => setEditForm({ ...editForm, channel_linked_confirmed: e.target.checked })}
+                      className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-cyan-600 focus:ring-cyan-600"
+                    />
+                    <Label htmlFor="channel_linked_confirmed" className="text-gray-300 cursor-pointer">
+                      チャンネル紐付け確認済み
+                    </Label>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    チェックすると一覧に「CH確認済」バッジを表示します<br />
+                    （報酬等には一切影響しません）
+                  </p>
                 </div>
 
                 <div className="bg-red-900/20 border border-red-600/30 rounded-lg p-3">
