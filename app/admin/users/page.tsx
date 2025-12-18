@@ -747,13 +747,13 @@ export default function AdminUsersPage() {
 
         {/* 編集モーダル */}
         {editingUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <Card className="w-full max-w-md bg-gray-800 border-gray-700">
-              <CardHeader>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md bg-gray-800 border-gray-700 max-h-[90vh] flex flex-col">
+              <CardHeader className="flex-shrink-0">
                 <CardTitle className="text-white">ユーザー編集</CardTitle>
                 <CardDescription className="text-gray-400">{editingUser.user_id} の情報を編集</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 overflow-y-auto flex-1">
                 <div>
                   <Label className="text-gray-300">CoinW UID</Label>
                   <Input
@@ -920,26 +920,26 @@ export default function AdminUsersPage() {
                   </p>
                 </div>
 
-                <div className="flex justify-end space-x-2 pt-4">
-                  <Button
-                    onClick={() => setEditingUser(null)}
-                    variant="outline"
-                    className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
-                  >
-                    キャンセル
-                  </Button>
-                  <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white">
-                    {saving ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        保存中...
-                      </>
-                    ) : (
-                      "保存"
-                    )}
-                  </Button>
-                </div>
               </CardContent>
+              <div className="flex justify-end space-x-2 p-4 border-t border-gray-700 flex-shrink-0 bg-gray-800">
+                <Button
+                  onClick={() => setEditingUser(null)}
+                  variant="outline"
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+                >
+                  キャンセル
+                </Button>
+                <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white">
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      保存中...
+                    </>
+                  ) : (
+                    "保存"
+                  )}
+                </Button>
+              </div>
             </Card>
           </div>
         )}
