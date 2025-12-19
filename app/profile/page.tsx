@@ -29,11 +29,13 @@ interface UserProfile {
   channel_linked_confirmed: boolean
 }
 
-interface PendingCoinwChange {
+interface CoinwChangeRequest {
   id: string
   new_coinw_uid: string
   status: string
   created_at: string
+  rejection_reason: string | null
+  reviewed_at: string | null
 }
 
 export default function ProfilePage() {
@@ -50,7 +52,8 @@ export default function ProfilePage() {
   })
   const [showQR, setShowQR] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [pendingCoinwChange, setPendingCoinwChange] = useState<PendingCoinwChange | null>(null)
+  const [pendingCoinwChange, setPendingCoinwChange] = useState<CoinwChangeRequest | null>(null)
+  const [rejectedCoinwChange, setRejectedCoinwChange] = useState<CoinwChangeRequest | null>(null)
 
   useEffect(() => {
     fetchProfile()
@@ -108,7 +111,7 @@ export default function ProfilePage() {
       // 保留中のCoinW UID変更申請があるかチェック
       const { data: pendingChange } = await supabase
         .from("coinw_uid_changes")
-        .select("id, new_coinw_uid, status, created_at")
+        .select("id, new_coinw_uid, status, created_at, rejection_reason, reviewed_at")
         .eq("user_id", userData.user_id)
         .eq("status", "pending")
         .order("created_at", { ascending: false })
@@ -117,8 +120,29 @@ export default function ProfilePage() {
 
       if (pendingChange) {
         setPendingCoinwChange(pendingChange)
+        setRejectedCoinwChange(null)
       } else {
         setPendingCoinwChange(null)
+
+        // 却下された最新の申請をチェック（過去7日以内）
+        const sevenDaysAgo = new Date()
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+
+        const { data: rejectedChange } = await supabase
+          .from("coinw_uid_changes")
+          .select("id, new_coinw_uid, status, created_at, rejection_reason, reviewed_at")
+          .eq("user_id", userData.user_id)
+          .eq("status", "rejected")
+          .gte("reviewed_at", sevenDaysAgo.toISOString())
+          .order("reviewed_at", { ascending: false })
+          .limit(1)
+          .single()
+
+        if (rejectedChange) {
+          setRejectedCoinwChange(rejectedChange)
+        } else {
+          setRejectedCoinwChange(null)
+        }
       }
 
       // NFT購入チェック
@@ -459,6 +483,27 @@ export default function ProfilePage() {
                           <span className="text-gray-400 ml-2">
                             ({new Date(pendingCoinwChange.created_at).toLocaleDateString('ja-JP')})
                           </span>
+                        </p>
+                      </div>
+                    )}
+                    {rejectedCoinwChange && !pendingCoinwChange && (
+                      <div className="bg-red-900/20 border border-red-600/30 rounded-lg p-3">
+                        <p className="text-sm text-red-400 font-medium mb-1">
+                          CoinW UID変更申請が却下されました
+                        </p>
+                        <p className="text-xs text-gray-300">
+                          申請内容: {rejectedCoinwChange.new_coinw_uid}
+                        </p>
+                        {rejectedCoinwChange.rejection_reason && (
+                          <p className="text-xs text-red-300 mt-1">
+                            却下理由: {rejectedCoinwChange.rejection_reason}
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-400 mt-2">
+                          却下日: {rejectedCoinwChange.reviewed_at ? new Date(rejectedCoinwChange.reviewed_at).toLocaleDateString('ja-JP') : ''}
+                        </p>
+                        <p className="text-xs text-blue-400 mt-2">
+                          正しいCoinW UIDを確認の上、再度申請してください。
                         </p>
                       </div>
                     )}
