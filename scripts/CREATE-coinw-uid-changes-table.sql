@@ -43,7 +43,7 @@ CREATE POLICY "Admins can manage coinw_uid_changes" ON coinw_uid_changes
     EXISTS (
       SELECT 1 FROM users
       WHERE id = auth.uid()
-      AND (is_admin = true OR email IN ('basarasystems@gmail.com', 'support@dshsupport.biz'))
+      AND email IN ('basarasystems@gmail.com', 'support@dshsupport.biz')
     )
   );
 
