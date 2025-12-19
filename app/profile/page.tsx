@@ -26,6 +26,14 @@ interface UserProfile {
   is_operation_only: boolean
   is_active_investor: boolean
   has_approved_nft: boolean
+  channel_linked_confirmed: boolean
+}
+
+interface PendingCoinwChange {
+  id: string
+  new_coinw_uid: string
+  status: string
+  created_at: string
 }
 
 export default function ProfilePage() {
@@ -42,6 +50,7 @@ export default function ProfilePage() {
   })
   const [showQR, setShowQR] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [pendingCoinwChange, setPendingCoinwChange] = useState<PendingCoinwChange | null>(null)
 
   useEffect(() => {
     fetchProfile()
@@ -88,12 +97,29 @@ export default function ProfilePage() {
           total_purchases,
           is_operation_only,
           is_active_investor,
-          has_approved_nft
+          has_approved_nft,
+          channel_linked_confirmed
         `)
         .eq("id", user.id)
         .single()
 
       if (userError) throw userError
+
+      // 保留中のCoinW UID変更申請があるかチェック
+      const { data: pendingChange } = await supabase
+        .from("coinw_uid_changes")
+        .select("id, new_coinw_uid, status, created_at")
+        .eq("user_id", userData.user_id)
+        .eq("status", "pending")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single()
+
+      if (pendingChange) {
+        setPendingCoinwChange(pendingChange)
+      } else {
+        setPendingCoinwChange(null)
+      }
 
       // NFT購入チェック
       const { hasApprovedPurchase } = await checkUserNFTPurchase(userData.user_id)
@@ -141,17 +167,38 @@ export default function ProfilePage() {
         return
       }
 
+      // CoinW UIDが変更された場合は変更申請を送信
+      const coinwUidChanged = editForm.coinw_uid !== (profile?.coinw_uid || "")
+
+      if (coinwUidChanged && editForm.coinw_uid) {
+        // 変更申請を作成
+        const { error: changeError } = await supabase
+          .from("coinw_uid_changes")
+          .insert({
+            user_id: profile?.user_id,
+            old_coinw_uid: profile?.coinw_uid || null,
+            new_coinw_uid: editForm.coinw_uid,
+            status: "pending"
+          })
+
+        if (changeError) throw changeError
+      }
+
+      // NFT受取アドレスは直接更新可能
       const { error: updateError } = await supabase
         .from("users")
         .update({
-          coinw_uid: editForm.coinw_uid,
           nft_receive_address: editForm.nft_receive_address,
         })
         .eq("id", user.id)
 
       if (updateError) throw updateError
 
-      setSuccess("プロフィールを更新しました")
+      if (coinwUidChanged && editForm.coinw_uid) {
+        setSuccess("CoinW UIDの変更申請を送信しました。管理者の承認後に反映されます。")
+      } else {
+        setSuccess("プロフィールを更新しました")
+      }
       setEditing(false)
       await fetchProfile()
     } catch (error: any) {
@@ -378,15 +425,43 @@ export default function ProfilePage() {
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-gray-300">CoinW UID</Label>
                 {editing ? (
-                  <Input
-                    value={editForm.coinw_uid}
-                    onChange={(e) => setEditForm({ ...editForm, coinw_uid: e.target.value })}
-                    className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500/20"
-                    placeholder="CoinW UIDを入力"
-                  />
+                  <>
+                    <Input
+                      value={editForm.coinw_uid}
+                      onChange={(e) => setEditForm({ ...editForm, coinw_uid: e.target.value })}
+                      className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500/20"
+                      placeholder="CoinW UIDを入力"
+                      disabled={!!pendingCoinwChange}
+                    />
+                    {pendingCoinwChange && (
+                      <p className="text-xs text-yellow-400">
+                        ※ 現在「{pendingCoinwChange.new_coinw_uid}」への変更申請が承認待ちです
+                      </p>
+                    )}
+                    {!pendingCoinwChange && editForm.coinw_uid !== (profile?.coinw_uid || "") && (
+                      <p className="text-xs text-blue-400">
+                        ※ CoinW UIDの変更は管理者の承認が必要です
+                      </p>
+                    )}
+                  </>
                 ) : (
-                  <div className="bg-gray-800/50 border border-gray-600/50 rounded-lg p-3 text-white">
-                    {profile?.coinw_uid || "未設定"}
+                  <div className="space-y-2">
+                    <div className="bg-gray-800/50 border border-gray-600/50 rounded-lg p-3 text-white">
+                      {profile?.coinw_uid || "未設定"}
+                      {profile?.channel_linked_confirmed && (
+                        <Badge className="ml-2 bg-cyan-600 text-white text-xs">確認済</Badge>
+                      )}
+                    </div>
+                    {pendingCoinwChange && (
+                      <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-2">
+                        <p className="text-xs text-yellow-400">
+                          変更申請中: {pendingCoinwChange.new_coinw_uid}
+                          <span className="text-gray-400 ml-2">
+                            ({new Date(pendingCoinwChange.created_at).toLocaleDateString('ja-JP')})
+                          </span>
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

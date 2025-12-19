@@ -438,6 +438,24 @@ export default function AdminDashboard() {
             </Card>
           </Link>
 
+          {/* CoinW UID承認 */}
+          <Link href="/admin/coinw-approvals">
+            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-cyan-600 rounded-lg group-hover:bg-cyan-700 transition-colors">
+                    <CreditCard className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold">CoinW UID承認</h3>
+                    <p className="text-gray-400 text-sm">UID変更申請の承認</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
           {/* NFT買い取り管理 */}
           <Link href="/admin/buyback">
             <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
