@@ -165,6 +165,12 @@ export default function CoinwApprovalsPage() {
       setProcessing(changeId)
       setError("")
 
+      // 申請情報を取得（メール送信用）
+      const changeData = changes.find(c => c.id === changeId)
+      if (!changeData) {
+        throw new Error("申請データが見つかりません")
+      }
+
       const { data, error } = await supabase.rpc("reject_coinw_uid_change", {
         p_change_id: changeId,
         p_admin_email: currentUser?.email,
@@ -175,7 +181,25 @@ export default function CoinwApprovalsPage() {
 
       if (data && data[0]) {
         if (data[0].success) {
-          alert(`却下完了: ${data[0].user_id}のCoinW UID変更申請を却下しました。`)
+          // 却下メールを送信
+          if (changeData.email) {
+            try {
+              await supabase.functions.invoke("send-coinw-rejection-email", {
+                body: {
+                  to_email: changeData.email,
+                  user_id: changeData.user_id,
+                  old_coinw_uid: changeData.old_coinw_uid,
+                  new_coinw_uid: changeData.new_coinw_uid,
+                  rejection_reason: reason || null
+                }
+              })
+            } catch (emailErr) {
+              console.error("Email sending failed:", emailErr)
+              // メール送信失敗は致命的エラーではないので続行
+            }
+          }
+
+          alert(`却下完了: ${data[0].user_id}のCoinW UID変更申請を却下しました。${changeData.email ? '\n却下通知メールを送信しました。' : ''}`)
           fetchChanges()
         } else {
           throw new Error(data[0].message)
