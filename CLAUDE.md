@@ -1458,7 +1458,71 @@ p_admin_email VARCHAR        -- 管理者メールアドレス
 
 ---
 
-最終更新: 2025年12月18日
+## 🔐 CoinW UID変更承認機能（2025年12月20日実装）
+
+### 概要
+ユーザーがプロフィールページでCoinW UIDを変更する際、管理者の承認が必要になる機能。
+承認されると自動的に`channel_linked_confirmed = true`に設定される。
+
+### データベース
+
+**`coinw_uid_changes`テーブル:**
+```sql
+CREATE TABLE coinw_uid_changes (
+  id UUID PRIMARY KEY,
+  user_id VARCHAR(6) NOT NULL,
+  old_coinw_uid VARCHAR(255),
+  new_coinw_uid VARCHAR(255) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending',  -- pending/approved/rejected
+  created_at TIMESTAMPTZ,
+  reviewed_at TIMESTAMPTZ,
+  reviewed_by VARCHAR(255),
+  rejection_reason TEXT
+);
+```
+
+**`users`テーブルに追加:**
+- `channel_linked_confirmed` BOOLEAN - チャンネル紐付け確認済みフラグ
+
+### RPC関数
+- `approve_coinw_uid_change(p_change_id, p_admin_email)` - 承認処理
+- `reject_coinw_uid_change(p_change_id, p_admin_email, p_reason)` - 却下処理
+
+### Edge Function
+- `send-coinw-rejection-email` - 却下時にメール送信
+
+### 画面
+- `/admin/coinw-approvals` - 管理者用承認画面
+- `/profile` - ユーザーの申請・却下理由表示
+
+### セットアップSQL
+```bash
+scripts/ADD-channel-linked-confirmed-column.sql
+scripts/CREATE-coinw-uid-changes-table.sql
+```
+
+### Edge Functionデプロイ
+```bash
+npx supabase functions deploy send-coinw-rejection-email
+```
+
+### 🚧 未対応: 却下メールの文言修正
+
+**ファイル:** `supabase/functions/send-coinw-rejection-email/index.ts`
+
+**現在の文言:**
+- 件名: 【HASHPILOT】CoinW UID変更申請が却下されました
+- ヘッダー: CoinW UID変更申請が却下されました / 申請内容をご確認の上、再度お申し込みください。
+- 申請内容: ユーザーID、変更前/申請したCoinW UID、却下日時
+- 却下理由: （管理者入力時のみ表示）
+- 再申請案内: 正しいCoinW UIDをご確認の上、プロフィールページから再度申請してください。
+- ボタン: プロフィールページで再申請 / サポートLINE
+
+**修正依頼が来たら:** Edge Functionを更新してデプロイする必要あり
+
+---
+
+最終更新: 2025年12月20日
 
 ---
 
