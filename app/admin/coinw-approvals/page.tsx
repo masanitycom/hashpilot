@@ -159,7 +159,11 @@ export default function CoinwApprovalsPage() {
   }
 
   const handleReject = async (changeId: string) => {
-    const reason = prompt("却下理由を入力してください（任意）:")
+    if (!confirm("このCoinW UID変更申請を却下しますか？\n\n却下通知メールが送信されます。")) {
+      return
+    }
+
+    const fixedReason = "CoinW UIDの紐付けが確認出来ませんでした"
 
     try {
       setProcessing(changeId)
@@ -174,7 +178,7 @@ export default function CoinwApprovalsPage() {
       const { data, error } = await supabase.rpc("reject_coinw_uid_change", {
         p_change_id: changeId,
         p_admin_email: currentUser?.email,
-        p_reason: reason || null
+        p_reason: fixedReason
       })
 
       if (error) throw error
@@ -190,7 +194,7 @@ export default function CoinwApprovalsPage() {
                   user_id: changeData.user_id,
                   old_coinw_uid: changeData.old_coinw_uid,
                   new_coinw_uid: changeData.new_coinw_uid,
-                  rejection_reason: reason || null
+                  rejection_reason: fixedReason
                 }
               })
             } catch (emailErr) {

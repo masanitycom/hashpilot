@@ -1522,7 +1522,7 @@ npx supabase functions deploy send-coinw-rejection-email
 
 ---
 
-最終更新: 2025年12月20日
+最終更新: 2025年12月23日
 
 ---
 
@@ -1599,6 +1599,63 @@ npx supabase functions deploy send-coinw-rejection-email
 **注意:**
 - HOLDフェーズのユーザーは紹介報酬を出金不可（次のNFT購入に使用予定）
 - USDTフェーズのユーザーのみ紹介報酬を出金可能
+
+---
+
+## 🔄 解約（全NFT売却）時の自動フラグ更新（2025年12月23日実装）
+
+### 概要
+ユーザーが全NFTを売却（buyback）した際に、自動的に解約済みフラグを設定するトリガー。
+
+### 自動更新される項目
+
+**`users`テーブル:**
+- `is_active_investor = false`
+- `has_approved_nft = false`
+- `total_purchases = 0`
+
+**`affiliate_cycle`テーブル:**
+- `manual_nft_count = 0`
+- `total_nft_count = 0`
+
+### トリガーの動作条件
+- `nft_master.buyback_date`が`NULL`から日付に更新された時
+- かつ、そのユーザーの残りNFT数が0になった時
+
+### 実装
+
+**トリガー関数:** `update_user_active_status()`
+
+**トリガー:** `trigger_update_active_status`
+- テーブル: `nft_master`
+- イベント: `AFTER UPDATE OF buyback_date`
+- 条件: `NEW.buyback_date IS NOT NULL AND OLD.buyback_date IS NULL`
+
+### セットアップSQL
+```bash
+scripts/FIX-dormant-trigger-complete.sql
+```
+
+### 関連機能
+- 解約ユーザーのUI対応（ダッシュボードにバナー表示、NFT購入不可など）
+- 解約ユーザーの紹介報酬は会社アカウント（7A9637）に入る設定
+
+### NFT重複・不整合の修正履歴（2025年12月23日）
+
+**修正対象ユーザー:**
+| ユーザーID | 問題 | 修正内容 |
+|------------|------|----------|
+| CA7902 | NFT2枚（購入は1枚） | 重複NFT削除 |
+| 0E0171 | NFT2枚（購入は1枚） | 重複NFT削除 |
+| 3194C4 | 解約済みだがtotal_purchases残存 | フラグ修正 |
+| 4CE189 | テストアカウント | 完全削除 |
+| 794682 | NFT1枚（購入記録なし） | NFT削除・フラグ修正 |
+
+**原因:** 2025年10月7日のマイグレーション時にNFTが重複作成された
+
+**関連スクリプト:**
+- `scripts/CHECK-nft-mismatch-users.sql` - 不整合調査
+- `scripts/FIX-nft-mismatch-users.sql` - 不整合修正
 
 ---
 

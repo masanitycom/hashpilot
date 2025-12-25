@@ -72,22 +72,25 @@ serve(async (req) => {
                 </ul>
             </div>
 
-            ${rejection_reason ? `
             <div class="reason-box">
                 <h3>却下理由</h3>
-                <p>${rejection_reason}</p>
+                <p>CoinW UIDの紐付けが確認出来ませんでした</p>
             </div>
-            ` : ''}
 
             <div style="background: #e8f4fd; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                <h3>再申請について</h3>
-                <p>正しいCoinW UIDをご確認の上、プロフィールページから再度申請してください。</p>
-                <p>CoinW UIDは、CoinWアプリまたはWebサイトのアカウント設定画面でご確認いただけます。</p>
+                <h3>ご対応のお願い</h3>
+                <p>当社規定に基づき、現在のUIDでは紐付けの確認が取れていない状況です。</p>
+                <p>恐れ入りますが、下記のリンクよりCoinWの口座開設のお手続きをお願いいたします。</p>
+                <p style="text-align: center; margin: 20px 0;">
+                    <a href="https://www.coinw.com/ja_JP/register?r=3722480" style="color: #3498db; font-weight: bold;">https://www.coinw.com/ja_JP/register?r=3722480</a>
+                </p>
+                <p>その後新規アカウントのCoinW UIDをプロフィールからご入力お願いします。</p>
+                <p style="color: #e74c3c; font-weight: bold;">こちらが確認できるまで報酬のお支払いが出来ませんのでご注意ください。</p>
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
                 <a href="https://hashpilot.net/profile" class="btn">プロフィールページで再申請</a>
-                <a href="https://lin.ee/GHcn4pN" class="btn btn-line">サポートLINE</a>
+                <a href="https://lin.ee/nacHdfq" class="btn btn-line">個別サポートLINE</a>
             </div>
         </div>
 
