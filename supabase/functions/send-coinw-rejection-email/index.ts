@@ -50,8 +50,8 @@ serve(async (req) => {
         .info-box { background: #fdecea; border-left: 4px solid #e74c3c; padding: 15px; margin: 20px 0; }
         .reason-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
         .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-        .btn { display: inline-block; background: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 5px; }
-        .btn-line { background: #06c755; }
+        .btn { display: inline-block; background: #3498db; color: #ffffff !important; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 10px 5px; font-weight: bold; }
+        .btn-line { background: #06c755; color: #ffffff !important; }
     </style>
 </head>
 <body>

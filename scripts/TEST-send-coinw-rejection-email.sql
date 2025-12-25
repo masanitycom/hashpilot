@@ -1,0 +1,17 @@
+-- ========================================
+-- Edge Functionを直接呼び出してテストメール送信
+-- ※ これはSQLではなく、curlで呼び出す必要があります
+-- ========================================
+
+-- 以下のcurlコマンドをターミナルで実行してください:
+-- 
+-- curl -X POST 'https://soghqozaxfswtxxbgeer.supabase.co/functions/v1/send-coinw-rejection-email' \
+--   -H 'Authorization: Bearer YOUR_ANON_KEY' \
+--   -H 'Content-Type: application/json' \
+--   -d '{
+--     "to_email": "masataka.tak@gmail.com",
+--     "user_id": "TEST01",
+--     "old_coinw_uid": "OLD123",
+--     "new_coinw_uid": "NEW456",
+--     "rejection_reason": "テスト"
+--   }'
