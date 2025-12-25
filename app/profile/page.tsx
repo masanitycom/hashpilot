@@ -487,24 +487,63 @@ export default function ProfilePage() {
                       </div>
                     )}
                     {rejectedCoinwChange && !pendingCoinwChange && (
-                      <div className="bg-red-900/20 border border-red-600/30 rounded-lg p-3">
-                        <p className="text-sm text-red-400 font-medium mb-1">
-                          CoinW UID変更申請が却下されました
-                        </p>
-                        <p className="text-xs text-gray-300">
-                          申請内容: {rejectedCoinwChange.new_coinw_uid}
-                        </p>
-                        {rejectedCoinwChange.rejection_reason && (
-                          <p className="text-xs text-red-300 mt-1">
-                            却下理由: {rejectedCoinwChange.rejection_reason}
+                      <div className="bg-red-900/20 border border-red-600/30 rounded-lg p-4">
+                        <div className="flex items-center space-x-2 mb-3">
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                          <p className="text-sm text-red-400 font-bold">
+                            CoinW UID変更申請が却下されました
                           </p>
-                        )}
-                        <p className="text-xs text-gray-400 mt-2">
-                          却下日: {rejectedCoinwChange.reviewed_at ? new Date(rejectedCoinwChange.reviewed_at).toLocaleDateString('ja-JP') : ''}
-                        </p>
-                        <p className="text-xs text-blue-400 mt-2">
-                          正しいCoinW UIDを確認の上、再度申請してください。
-                        </p>
+                        </div>
+
+                        <div className="space-y-2 mb-3">
+                          <p className="text-xs text-gray-300">
+                            <span className="text-gray-500">申請内容:</span> {rejectedCoinwChange.new_coinw_uid}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            <span className="text-gray-500">却下日:</span> {rejectedCoinwChange.reviewed_at ? new Date(rejectedCoinwChange.reviewed_at).toLocaleDateString('ja-JP') : ''}
+                          </p>
+                        </div>
+
+                        <div className="bg-yellow-900/30 border border-yellow-600/30 rounded p-3 mb-3">
+                          <p className="text-xs text-yellow-400 font-medium mb-1">却下理由</p>
+                          <p className="text-sm text-yellow-200">
+                            CoinW UIDの紐付けが確認出来ませんでした
+                          </p>
+                        </div>
+
+                        <div className="bg-blue-900/30 border border-blue-600/30 rounded p-3">
+                          <p className="text-xs text-blue-400 font-medium mb-2">ご対応のお願い</p>
+                          <p className="text-xs text-gray-300 leading-relaxed">
+                            当社規定に基づき、現在のUIDでは紐付けの確認が取れていない状況です。
+                          </p>
+                          <p className="text-xs text-gray-300 mt-2 leading-relaxed">
+                            恐れ入りますが、下記のリンクよりCoinWの口座開設のお手続きをお願いいたします。
+                          </p>
+                          <a
+                            href="https://www.coinw.com/ja_JP/register?r=3722480"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block text-center text-blue-400 hover:text-blue-300 underline text-sm mt-3 font-medium"
+                          >
+                            https://www.coinw.com/ja_JP/register?r=3722480
+                          </a>
+                          <p className="text-xs text-gray-300 mt-3 leading-relaxed">
+                            その後新規アカウントのCoinW UIDを上記「編集」ボタンからご入力お願いします。
+                          </p>
+                          <p className="text-xs text-red-400 mt-3 font-medium">
+                            こちらが確認できるまで報酬のお支払いが出来ませんのでご注意ください。
+                          </p>
+                          <div className="mt-3 pt-3 border-t border-blue-600/30">
+                            <a
+                              href="https://lin.ee/nacHdfq"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center w-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded transition-colors"
+                            >
+                              個別サポートLINE
+                            </a>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
