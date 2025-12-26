@@ -79,7 +79,7 @@ export default function FixRLSPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="min-h-screen bg-black text-white p-6">
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="p-6">
             <p className="text-red-400">管理者権限が必要です</p>
@@ -90,7 +90,7 @@ export default function FixRLSPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen bg-black text-white p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>

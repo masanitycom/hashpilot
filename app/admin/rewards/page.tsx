@@ -189,7 +189,7 @@ export default function AdminRewardsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-500" />
           <p className="text-white">管理者権限を確認中...</p>
@@ -200,7 +200,7 @@ export default function AdminRewardsPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700">
           <CardContent className="text-center p-6">
             <p className="text-red-400 mb-4">管理者権限が必要です</p>
@@ -214,7 +214,7 @@ export default function AdminRewardsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-black">
       <header className="bg-gray-800 shadow-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

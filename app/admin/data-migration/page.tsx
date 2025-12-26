@@ -383,7 +383,7 @@ export default function DataMigrationPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700">
           <CardContent className="p-6 text-center text-white">
             <Shield className="w-12 h-12 mx-auto mb-4 text-red-400" />
@@ -395,7 +395,7 @@ export default function DataMigrationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-black p-4">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">

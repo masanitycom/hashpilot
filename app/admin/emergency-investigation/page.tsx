@@ -283,7 +283,7 @@ export default function EmergencyInvestigationPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="text-red-400 flex items-center">
@@ -309,7 +309,7 @@ export default function EmergencyInvestigationPage() {
   const normalLogs = dailyYieldLogs.filter(log => log.margin_rate <= 100)
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto p-4 space-y-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">

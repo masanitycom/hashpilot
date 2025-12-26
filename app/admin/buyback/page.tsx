@@ -266,7 +266,7 @@ export default function AdminBuybackPage() {
 
         {/* 統計情報 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gray-900/50 border-gray-700">
+          <Card className="bg-black/50 border-gray-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -278,7 +278,7 @@ export default function AdminBuybackPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700">
+          <Card className="bg-black/50 border-gray-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -292,7 +292,7 @@ export default function AdminBuybackPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700">
+          <Card className="bg-black/50 border-gray-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -337,7 +337,7 @@ export default function AdminBuybackPage() {
         )}
 
         {/* 申請一覧 */}
-        <Card className="bg-gray-900/50 border-gray-700">
+        <Card className="bg-black/50 border-gray-700">
           <CardHeader>
             <CardTitle className="text-white">買い取り申請一覧</CardTitle>
           </CardHeader>
@@ -489,7 +489,7 @@ export default function AdminBuybackPage() {
         {/* 処理モーダル */}
         {selectedRequest && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="bg-gray-900 border-gray-700 max-w-lg w-full">
+            <Card className="bg-black border-gray-700 max-w-lg w-full">
               <CardHeader>
                 <CardTitle className="text-white">買い取り申請処理</CardTitle>
               </CardHeader>

@@ -250,7 +250,7 @@ export default function ExchangeReportPage() {
 
   if (!isAdmin || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white text-xl">読み込み中...</div>
       </div>
     )
@@ -346,9 +346,9 @@ export default function ExchangeReportPage() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div className="min-h-screen bg-black">
       {/* ヘッダー */}
-      <header className="bg-gray-900 border-b border-gray-700 sticky top-0 z-50">
+      <header className="bg-black border-b border-gray-700 sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">

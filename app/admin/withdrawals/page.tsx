@@ -336,7 +336,7 @@ export default function AdminWithdrawalsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex items-center space-x-2 text-white">
           <Loader2 className="h-6 w-6 animate-spin" />
           <span>読み込み中...</span>
@@ -346,7 +346,7 @@ export default function AdminWithdrawalsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
+    <div className="min-h-screen bg-black">
       {/* ヘッダー */}
       <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">

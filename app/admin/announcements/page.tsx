@@ -198,7 +198,7 @@ export default function AnnouncementsAdminPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white">読み込み中...</div>
       </div>
     )
@@ -209,7 +209,7 @@ export default function AnnouncementsAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen bg-black text-white p-6">
       <div className="max-w-6xl mx-auto">
         {/* ヘッダー */}
         <div className="flex items-center justify-between mb-6">

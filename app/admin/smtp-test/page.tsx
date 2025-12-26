@@ -151,7 +151,7 @@ export default function SMTPTestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-black p-4">
       <div className="max-w-4xl mx-auto space-y-6">
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>

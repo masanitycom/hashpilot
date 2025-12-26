@@ -128,7 +128,7 @@ export default function AdminAutoNFTGrantsPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl">アクセス権限を確認しています...</p>
         </div>
@@ -137,7 +137,7 @@ export default function AdminAutoNFTGrantsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
+    <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">

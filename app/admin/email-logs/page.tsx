@@ -53,14 +53,14 @@ export default function EmailLogsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white">読み込み中...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-black p-4">
       <div className="max-w-6xl mx-auto">
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>

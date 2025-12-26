@@ -121,7 +121,7 @@ GRANT EXECUTE ON FUNCTION fix_user_daily_profit_rls() TO authenticated;`
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="min-h-screen bg-black text-white p-6">
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="p-6">
             <p className="text-red-400">管理者権限が必要です</p>
@@ -132,7 +132,7 @@ GRANT EXECUTE ON FUNCTION fix_user_daily_profit_rls() TO authenticated;`
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen bg-black text-white p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
@@ -153,7 +153,7 @@ GRANT EXECUTE ON FUNCTION fix_user_daily_profit_rls() TO authenticated;`
 
             {result && (
               <div className="space-y-4">
-                <pre className="text-xs text-gray-300 bg-gray-900 p-4 rounded overflow-auto whitespace-pre-wrap">
+                <pre className="text-xs text-gray-300 bg-black p-4 rounded overflow-auto whitespace-pre-wrap">
                   {result}
                 </pre>
               </div>

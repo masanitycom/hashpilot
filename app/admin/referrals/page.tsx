@@ -259,7 +259,7 @@ export default function AdminReferralsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-white">管理者権限を確認中...</p>
@@ -270,7 +270,7 @@ export default function AdminReferralsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="text-red-400">エラー</CardTitle>
@@ -297,7 +297,7 @@ export default function AdminReferralsPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <Card className="w-full max-w-md bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="text-red-400 flex items-center">
@@ -320,7 +320,7 @@ export default function AdminReferralsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
+    <div className="min-h-screen bg-black p-4">
       <div className="max-w-7xl mx-auto">
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
