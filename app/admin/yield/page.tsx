@@ -564,12 +564,45 @@ export default function AdminYieldPage() {
 
       // RPC関数が失敗した場合の直接削除
       const { data: { user } } = await supabase.auth.getUser()
-      
+
       if (!user) {
         throw new Error("ユーザー認証が必要です")
       }
 
-      // まず削除対象データの存在確認
+      // V2テーブルから削除（V2を優先）
+      const { data: existingDataV2, error: checkExistErrorV2 } = await supabase
+        .from("daily_yield_log_v2")
+        .select("*")
+        .eq("date", cancelDate)
+
+      console.log("V2削除対象データ:", existingDataV2)
+
+      if (existingDataV2 && existingDataV2.length > 0) {
+        // V2テーブルの関連データを削除
+        const [deleteV2Log, deleteNftProfit, deleteReferralProfit] = await Promise.all([
+          supabase.from("daily_yield_log_v2").delete().eq("date", cancelDate),
+          supabase.from("nft_daily_profit").delete().eq("date", cancelDate),
+          supabase.from("user_referral_profit").delete().eq("date", cancelDate)
+        ])
+
+        console.log("V2削除結果:", { deleteV2Log, deleteNftProfit, deleteReferralProfit })
+
+        if (!deleteV2Log.error) {
+          setMessage({
+            type: "success",
+            text: `${cancelDate}の日利設定をキャンセルしました（V2）`,
+          })
+          setTimeout(() => {
+            fetchHistory()
+            fetchStats()
+          }, 500)
+          return
+        } else {
+          console.error("V2削除エラー:", deleteV2Log.error)
+        }
+      }
+
+      // V1テーブルからも削除を試みる（フォールバック）
       const { data: existingData, error: checkExistError } = await supabase
         .from("daily_yield_log")
         .select("*")
