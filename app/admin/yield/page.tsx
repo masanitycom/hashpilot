@@ -1380,7 +1380,7 @@ export default function AdminYieldPage() {
                                 <>
                                   <th className="text-left p-2">運用利益</th>
                                   <th className="text-left p-2">NFT数</th>
-                                  <th className="text-left p-2">単価利益</th>
+                                  <th className="text-left p-2">NFT単価(税引後)</th>
                                 </>
                               ) : (
                                 <>
@@ -1404,7 +1404,7 @@ export default function AdminYieldPage() {
                                     </td>
                                     <td className="p-2">{item.total_nft_count}個</td>
                                     <td className={`p-2 font-medium ${item.profit_per_nft >= 0 ? "text-green-400" : "text-red-400"}`}>
-                                      ${item.profit_per_nft?.toFixed(3)}
+                                      ${((item.profit_per_nft || 0) * 0.7 * 0.6).toFixed(3)}
                                     </td>
                                   </>
                                 ) : (
