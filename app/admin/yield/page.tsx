@@ -1384,7 +1384,7 @@ export default function AdminYieldPage() {
                         <div className="mb-4 p-4 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg border border-blue-700/50">
                           <div className="flex flex-wrap gap-6">
                             <div>
-                              <p className="text-xs text-gray-400 mb-1">月間合計 (NFT単価税引後)</p>
+                              <p className="text-xs text-gray-400 mb-1">月間合計 (NFT単価)</p>
                               <p className={`text-2xl font-bold ${monthlyTotalProfitPerNft >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                 {isV2 ? `$${monthlyTotalProfitPerNft.toFixed(3)}` : `${monthlyTotalProfitPerNft.toFixed(3)}%`}
                               </p>
@@ -1411,7 +1411,7 @@ export default function AdminYieldPage() {
                                 <>
                                   <th className="text-left p-2">運用利益</th>
                                   <th className="text-left p-2">NFT数</th>
-                                  <th className="text-left p-2">NFT単価(税引後)</th>
+                                  <th className="text-left p-2">NFT単価</th>
                                 </>
                               ) : (
                                 <>
