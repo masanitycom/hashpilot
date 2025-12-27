@@ -1370,8 +1370,39 @@ export default function AdminYieldPage() {
                       return <p className="text-gray-400">この月のデータはありません</p>
                     }
 
+                    // 月間合計計算
+                    const monthlyTotalProfitPerNft = isV2
+                      ? filteredHistory.reduce((sum, item) => sum + ((item.profit_per_nft || 0) * 0.7 * 0.6), 0)
+                      : filteredHistory.reduce((sum, item) => sum + Number.parseFloat(item.user_rate?.toString() || '0'), 0)
+                    const monthlyTotalProfit = isV2
+                      ? filteredHistory.reduce((sum, item) => sum + (item.total_profit_amount || 0), 0)
+                      : 0
+
                     return (
                       <div className="overflow-x-auto">
+                        {/* 月間サマリー */}
+                        <div className="mb-4 p-4 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-lg border border-blue-700/50">
+                          <div className="flex flex-wrap gap-6">
+                            <div>
+                              <p className="text-xs text-gray-400 mb-1">月間合計 (NFT単価税引後)</p>
+                              <p className={`text-2xl font-bold ${monthlyTotalProfitPerNft >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                {isV2 ? `$${monthlyTotalProfitPerNft.toFixed(3)}` : `${monthlyTotalProfitPerNft.toFixed(3)}%`}
+                              </p>
+                            </div>
+                            {isV2 && (
+                              <div>
+                                <p className="text-xs text-gray-400 mb-1">月間運用利益合計</p>
+                                <p className={`text-2xl font-bold ${monthlyTotalProfit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                  ${monthlyTotalProfit.toLocaleString()}
+                                </p>
+                              </div>
+                            )}
+                            <div>
+                              <p className="text-xs text-gray-400 mb-1">設定日数</p>
+                              <p className="text-2xl font-bold text-white">{filteredHistory.length}日</p>
+                            </div>
+                          </div>
+                        </div>
                         <table className="w-full text-sm text-white">
                           <thead>
                             <tr className="border-b border-gray-600">
