@@ -501,10 +501,34 @@ export default function AdminYieldPage() {
 
       console.log('✅ 月次紹介報酬計算成功:', monthlyData)
 
+      // ========================================
+      // 月末出金処理を自動実行
+      // ========================================
+      console.log('💰 月末出金処理を開始...')
+
+      // 対象月の月初日を作成（process_monthly_withdrawalsの引数用）
+      const targetMonthDate = `${targetYear}-${String(targetMonth).padStart(2, '0')}-01`
+
+      const { data: withdrawalResult, error: withdrawalError } = await supabase.rpc('process_monthly_withdrawals', {
+        p_target_month: targetMonthDate
+      })
+
+      let withdrawalMessage = ''
+      if (withdrawalError) {
+        console.error('❌ 月末出金処理エラー:', withdrawalError)
+        withdrawalMessage = `\n⚠️ 月末出金処理でエラー: ${withdrawalError.message}`
+      } else if (withdrawalResult && withdrawalResult.length > 0) {
+        const wdData = withdrawalResult[0]
+        console.log('✅ 月末出金処理成功:', wdData)
+        withdrawalMessage = `\n💰 月末出金: ${wdData.processed_count}件（総額$${wdData.total_amount}）`
+      } else {
+        withdrawalMessage = '\n💰 月末出金: 対象者なし'
+      }
+
       // 成功メッセージに追記
       setMessage(prev => ({
         type: "success",
-        text: (prev?.text || '') + `\n\n🎉 月末処理完了！\n月次紹介報酬: ${monthlyData.details?.total_users || 0}名に$${monthlyData.details?.total_amount || 0}配布`
+        text: (prev?.text || '') + `\n\n🎉 月末処理完了！\n月次紹介報酬: ${monthlyData.details?.total_users || 0}名に$${monthlyData.details?.total_amount || 0}配布${withdrawalMessage}`
       }))
 
     } catch (error: any) {
