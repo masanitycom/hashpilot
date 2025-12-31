@@ -114,44 +114,9 @@ export function TotalProfitCard({
     }
   }
 
-  // user_referral_profitテーブルから実際の紹介報酬を取得
-  const calculateReferralProfits = async (userId: string, monthStart: string, monthEnd: string, yesterdayStr: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('user_referral_profit')
-        .select('date, profit_amount')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
-
-      if (error) {
-        console.error('紹介報酬取得エラー:', error)
-        return { yesterday: 0, monthly: 0 }
-      }
-
-      if (!data || data.length === 0) {
-        return { yesterday: 0, monthly: 0 }
-      }
-
-      let yesterday = 0
-      let monthly = 0
-
-      data.forEach(row => {
-        const profit = parseFloat(row.profit_amount) || 0
-
-        if (row.date === yesterdayStr) {
-          yesterday += profit
-        }
-
-        monthly += profit
-      })
-
-      return { yesterday, monthly }
-    } catch (error) {
-      console.error('Referral profit calculation error:', error)
-      return { yesterday: 0, monthly: 0 }
-    }
-  }
+  // 注: 紹介報酬は月末集計のため、当月中は$0で表示
+  // 月末にprocess_monthly_referral_rewardで計算され、user_referral_profit_monthlyテーブルに保存される
+  // 前月の確定紹介報酬はlast-month-profit-card.tsxで表示される
 
   if (loading) {
     return (

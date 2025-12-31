@@ -22,31 +22,8 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
     }
   }, [userId])
 
-  // user_referral_profitテーブルから実際の紹介報酬を取得
-  const calculateReferralProfit = async (userId: string, monthStart: string, monthEnd: string): Promise<number> => {
-    try {
-      const { data, error } = await supabase
-        .from('user_referral_profit')
-        .select('profit_amount')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
-
-      if (error) {
-        console.error('紹介報酬取得エラー:', error)
-        return 0
-      }
-
-      if (!data || data.length === 0) {
-        return 0
-      }
-
-      return data.reduce((sum, row) => sum + (parseFloat(row.profit_amount) || 0), 0)
-    } catch (error) {
-      console.error('紹介報酬計算エラー:', error)
-      return 0
-    }
-  }
+  // 注: 紹介報酬は月末集計のため、当月中は$0で表示
+  // 月末にprocess_monthly_referral_rewardで計算され、user_referral_profit_monthlyテーブルに保存される
 
   const fetchMonthlyProfit = async () => {
     try {
@@ -87,10 +64,10 @@ export function MonthlyProfitCard({ userId }: MonthlyProfitCardProps) {
         }
       }
 
-      // 紹介報酬を計算するための紹介者データを取得
-      const referralProfit = await calculateReferralProfit(userId, monthStart, monthEnd)
+      // 紹介報酬は月末集計のため当月は$0（個人利益のみ表示）
+      const referralProfit = 0
 
-      // 個人利益+紹介報酬と平均受取率を計算
+      // 個人利益と平均受取率を計算
       let personalProfit = 0
       let totalYieldRate = 0
       let validDays = 0

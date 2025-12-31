@@ -109,32 +109,17 @@ export function MonthlyCumulativeProfitCard({ userId }: MonthlyCumulativeProfitC
         throw dailyError
       }
 
-      // 紹介報酬（user_referral_profit）
-      const { data: referralProfitData, error: referralError } = await supabase
-        .from('user_referral_profit')
-        .select('profit_amount')
-        .eq('user_id', userId)
-        .gte('date', monthStart)
-        .lte('date', monthEnd)
-
-      if (referralError && referralError.code !== 'PGRST116') {
-        throw referralError
-      }
-
       // 個人利益の合計
       const personalTotal = dailyProfitData
         ? dailyProfitData.reduce((sum, record) => sum + record.daily_profit, 0)
         : 0
 
-      // 紹介報酬の合計
-      const referralTotal = referralProfitData
-        ? referralProfitData.reduce((sum, record) => sum + parseFloat(record.profit_amount), 0)
-        : 0
-
-      // 合計（紹介報酬は月末集計のため$0で表示）
+      // 紹介報酬は月末集計のため、当月は$0で表示
+      // 注: 紹介報酬は月末にprocess_monthly_referral_rewardで計算され
+      //     user_referral_profit_monthlyテーブルに保存される
       const total = personalTotal
       setPersonalProfit(personalTotal)
-      setReferralProfit(0)  // 紹介報酬は$0表示
+      setReferralProfit(0)  // 紹介報酬は月末集計後に確定
       setMonthlyProfit(total)
 
     } catch (err: any) {
