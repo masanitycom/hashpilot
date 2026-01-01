@@ -36,32 +36,34 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
       const jstOffset = 9 * 60 // 日本時間は UTC+9
       const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
 
-      const year = jstNow.getUTCFullYear()
-      const currentMonth = jstNow.getUTCMonth() // 0-indexed (11 = 12月)
-      const lastMonth = currentMonth - 1 // 10 = 11月
-      const month = lastMonth + 1 // 11（表示用）
+      const currentYear = jstNow.getUTCFullYear()
+      const currentMonth = jstNow.getUTCMonth() + 1 // 1-indexed (1 = 1月, 12 = 12月)
 
-      // 月初（1日）
-      const monthStartDate = new Date(Date.UTC(year, lastMonth, 1))
+      // 先月の年月を計算（年跨ぎ対応）
+      const lastMonthNum = currentMonth === 1 ? 12 : currentMonth - 1
+      const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear
+
+      // 月初（1日）- JavaScriptのDate.UTCは0-indexedなので-1する
+      const monthStartDate = new Date(Date.UTC(lastMonthYear, lastMonthNum - 1, 1))
       const monthStart = monthStartDate.toISOString().split('T')[0]
 
       // 月末（翌月の0日 = 当月の最終日）
-      const monthEndDate = new Date(Date.UTC(year, lastMonth + 1, 0))
+      const monthEndDate = new Date(Date.UTC(lastMonthYear, lastMonthNum, 0))
       const monthEnd = monthEndDate.toISOString().split('T')[0]
 
       console.log('[LastMonthProfit] 日付計算:', {
         now: now.toISOString(),
         jstNow: jstNow.toISOString(),
-        year,
+        currentYear,
         currentMonth,
-        lastMonth,
-        month,
+        lastMonthNum,
+        lastMonthYear,
         monthStart,
         monthEnd
       })
 
-      // 月の表示用（例: 2025年10月）
-      setLastMonth(`${year}年${month}月`)
+      // 月の表示用（例: 2025年12月）
+      setLastMonth(`${lastMonthYear}年${lastMonthNum}月`)
 
       // 月初（1日～3日）の場合、前月の最終日の日利が設定されているか確認
       const today = jstNow.getUTCDate()
@@ -107,8 +109,8 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
         .from('user_referral_profit_monthly')
         .select('profit_amount')
         .eq('user_id', userId)
-        .eq('year', year)
-        .eq('month', month)
+        .eq('year', lastMonthYear)
+        .eq('month', lastMonthNum)
 
       if (referralError && referralError.code !== 'PGRST116') {
         throw referralError

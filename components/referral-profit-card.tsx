@@ -25,15 +25,17 @@ interface ReferralProfitData {
   }
 }
 
-export function ReferralProfitCard({ 
-  userId, 
-  level1Investment, 
-  level2Investment, 
-  level3Investment 
+export function ReferralProfitCard({
+  userId,
+  level1Investment,
+  level2Investment,
+  level3Investment
 }: ReferralProfitCardProps) {
   const [profitData, setProfitData] = useState<ReferralProfitData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [isCalculating, setIsCalculating] = useState(false)
+  const [displayMonth, setDisplayMonth] = useState("")
 
   useEffect(() => {
     if (userId) {
@@ -45,16 +47,56 @@ export function ReferralProfitCard({
     try {
       setLoading(true)
       setError("")
+      setIsCalculating(false)
       console.log('🚀 ReferralProfitCard: fetchReferralProfit started for userId:', userId)
 
-      // 昨日の日付を取得（7/16）
+      // 日本時間で現在日時を取得
+      const now = new Date()
+      const jstOffset = 9 * 60
+      const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
+      const today = jstNow.getUTCDate()
+
+      // 先月の年月を計算
+      const currentYear = jstNow.getUTCFullYear()
+      const currentMonth = jstNow.getUTCMonth() + 1
+      const lastMonthNum = currentMonth === 1 ? 12 : currentMonth - 1
+      const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear
+
+      // 先月の最終日を計算
+      const lastMonthEndDate = new Date(Date.UTC(lastMonthYear, lastMonthNum, 0))
+      const lastMonthEnd = lastMonthEndDate.toISOString().split('T')[0]
+
+      // 表示用の月を設定
+      setDisplayMonth(`${lastMonthYear}年${lastMonthNum}月`)
+
+      // 月初（1日～3日）の場合、先月の最終日の日利が設定されているか確認
+      if (today <= 3) {
+        const { data: lastDayProfit, error: checkError } = await supabase
+          .from('user_daily_profit')
+          .select('date')
+          .eq('date', lastMonthEnd)
+          .limit(1)
+
+        if (checkError && checkError.code !== 'PGRST116') {
+          throw checkError
+        }
+
+        // 先月の最終日の日利が未設定の場合は「集計中」表示
+        if (!lastDayProfit || lastDayProfit.length === 0) {
+          console.log('[ReferralProfitCard] 先月最終日のデータなし - 集計中表示')
+          setIsCalculating(true)
+          setLoading(false)
+          return
+        }
+      }
+
+      // 昨日の日付を取得
       const yesterday = new Date()
       yesterday.setDate(yesterday.getDate() - 1)
       const yesterdayStr = yesterday.toISOString().split('T')[0]
       console.log('📅 Target date - Yesterday:', yesterdayStr)
 
       // 今月の開始日と終了日を取得
-      const now = new Date()
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
       const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
       console.log('📅 Month range:', monthStart, 'to', monthEnd)
@@ -246,6 +288,38 @@ export function ReferralProfitCard({
   }
 
   const totalLevel3Investment = level1Investment + level2Investment + level3Investment
+
+  // 集計中の場合
+  if (isCalculating) {
+    return (
+      <Card className="bg-gray-800 border-gray-700">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-gray-300 text-sm font-medium flex items-center gap-2">
+            <Users className="h-4 w-4 text-yellow-400" />
+            Level3紹介報酬
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="text-xs text-gray-400 mb-3">
+            Level1-3投資額: ${(totalLevel3Investment || 0).toLocaleString()}
+          </div>
+          <div className="space-y-2 border-t border-gray-600 pt-3">
+            <div className="text-center">
+              <div className="text-lg font-bold text-yellow-400">集計中...</div>
+              <div className="text-xs text-gray-400 mt-2">
+                {displayMonth}の紹介報酬を集計しています
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-700">
+                <p className="text-xs text-gray-400">
+                  月末の日利設定後に確定紹介報酬が表示されます
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card className="bg-gray-800 border-gray-700">
