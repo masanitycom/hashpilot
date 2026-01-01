@@ -277,12 +277,20 @@ export default function AdminWithdrawalsPage() {
 
   const exportCSV = () => {
     const headers = [
-      "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計", "送金方法", "CoinW UID/送金先",
+      "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計",
+      "累計紹介報酬", "ロック額", "既払い紹介報酬", "払い出し可能額",
+      "送金方法", "CoinW UID/送金先",
       "CH紐付け", "ステータス", "タスク状況", "作成日", "完了日", "備考"
     ]
 
     // 出金レコードに保存されている個人利益・紹介報酬を使用
     const csvData = filteredWithdrawals.map((w: any) => {
+        // HOLDユーザーの払い出し可能額を計算
+        const cumUsdt = w.cum_usdt || 0
+        const withdrawnReferral = w.withdrawn_referral_usdt || 0
+        const lockAmount = w.phase === 'HOLD' ? 1100 : 0
+        const withdrawableFromHold = w.phase === 'HOLD' ? Math.max(0, 1100 - withdrawnReferral) : 0
+
         return [
           w.user_id,
           w.email,
@@ -290,6 +298,10 @@ export default function AdminWithdrawalsPage() {
           (w.personal_amount || 0).toFixed(3),
           (w.referral_amount || 0).toFixed(3),
           w.total_amount.toFixed(3),
+          cumUsdt.toFixed(3),
+          lockAmount.toFixed(3),
+          withdrawnReferral.toFixed(3),
+          withdrawableFromHold.toFixed(3),
           w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
           w.withdrawal_address || "未設定",
           w.channel_linked_confirmed ? "確認済み" : "未確認",
@@ -610,10 +622,21 @@ export default function AdminWithdrawalsPage() {
                           withdrawal.phase === 'USDT' ? 'text-orange-400' : 'text-gray-500'
                         }`}>
                           ${(withdrawal.referral_amount || 0).toFixed(2)}
-                          {withdrawal.phase === 'HOLD' && (
-                            <div className="text-xs text-gray-500">🔒</div>
-                          )}
                         </span>
+                        {/* HOLDユーザーの詳細表示 */}
+                        {withdrawal.phase === 'HOLD' && withdrawal.cum_usdt >= 1100 && (
+                          <div className="text-xs mt-1 space-y-0.5">
+                            <div className="text-orange-400">
+                              🔒 ロック: $1,100.00
+                            </div>
+                            <div className="text-gray-400">
+                              既払: ${(withdrawal.withdrawn_referral_usdt || 0).toFixed(2)}
+                            </div>
+                            <div className="text-green-400 font-medium">
+                              払出可: ${Math.max(0, 1100 - (withdrawal.withdrawn_referral_usdt || 0)).toFixed(2)}
+                            </div>
+                          </div>
+                        )}
                       </td>
                       {/* 出金合計 */}
                       <td className="py-3 px-2 text-right">

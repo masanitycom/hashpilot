@@ -24,9 +24,16 @@ interface WithdrawalRecord {
   created_at: string
 }
 
+interface CycleData {
+  phase: string
+  cum_usdt: number
+  withdrawn_referral_usdt: number
+}
+
 interface WithdrawalData {
   pending_withdrawals: WithdrawalRecord[]
   completed_withdrawals: WithdrawalRecord[]
+  cycle_data: CycleData | null
   has_data: boolean
 }
 
@@ -84,12 +91,24 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
         throw completedError
       }
 
+      // affiliate_cycleからフェーズ情報を取得
+      const { data: cycleData, error: cycleError } = await supabase
+        .from("affiliate_cycle")
+        .select("phase, cum_usdt, withdrawn_referral_usdt")
+        .eq("user_id", userId)
+        .single()
+
+      if (cycleError && cycleError.code !== "PGRST116") {
+        console.error("Error fetching cycle data:", cycleError)
+      }
+
       const hasData = (pendingWithdrawals && pendingWithdrawals.length > 0) ||
                       (completedWithdrawals && completedWithdrawals.length > 0)
 
       setWithdrawalData({
         pending_withdrawals: pendingWithdrawals || [],
         completed_withdrawals: completedWithdrawals || [],
+        cycle_data: cycleData || null,
         has_data: hasData
       })
 
@@ -177,6 +196,28 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
           </div>
         ) : (
           <div className="space-y-3">
+            {/* HOLDフェーズの場合の情報表示 */}
+            {withdrawalData.cycle_data?.phase === 'HOLD' && withdrawalData.cycle_data.cum_usdt >= 1100 && (
+              <div className="border border-orange-500/50 bg-orange-900/30 rounded-lg p-3 mb-3">
+                <div className="text-sm font-medium text-orange-400 mb-2">🔒 HOLDフェーズ</div>
+                <div className="text-xs text-gray-300 space-y-1">
+                  <div className="flex justify-between">
+                    <span>ロック中:</span>
+                    <span className="text-orange-400">$1,100.00</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>既払い出し:</span>
+                    <span className="text-gray-400">${(withdrawalData.cycle_data.withdrawn_referral_usdt || 0).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between border-t border-gray-700 pt-1 mt-1">
+                    <span className="font-medium">払い出し可能:</span>
+                    <span className="text-green-400 font-bold">${Math.max(0, 1100 - (withdrawalData.cycle_data.withdrawn_referral_usdt || 0)).toFixed(2)}</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">※次のNFT購入のため$1,100がロックされています</p>
+              </div>
+            )}
+
             {/* 保留中の出金 */}
             {withdrawalData.pending_withdrawals.map((withdrawal) => (
               <div key={withdrawal.id} className="border border-orange-500/30 bg-orange-900/20 rounded-lg p-3">
