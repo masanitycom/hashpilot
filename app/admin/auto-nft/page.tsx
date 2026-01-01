@@ -27,12 +27,11 @@ interface AutoNftRecord {
   acquired_date: string
   created_at: string
   cycle_number: number | null
-  cum_usdt_at_grant: number | null
   // affiliate_cycleから
   current_auto_nft_count: number
   current_manual_nft_count: number
   current_total_nft_count: number
-  current_cum_usdt: number
+  referral_total: number  // 紹介報酬累計
   phase: string
 }
 
@@ -144,11 +143,10 @@ export default function AdminAutoNftPage() {
           ...nft,
           email: user?.email || "",
           cycle_number: purchase?.cycle_number_at_purchase || null,
-          cum_usdt_at_grant: null, // 付与時点のcum_usdtは記録していないため不明
           current_auto_nft_count: cycle?.auto_nft_count || 0,
           current_manual_nft_count: cycle?.manual_nft_count || 0,
           current_total_nft_count: cycle?.total_nft_count || 0,
-          current_cum_usdt: cycle?.cum_usdt || 0,
+          referral_total: cycle?.cum_usdt || 0,
           phase: cycle?.phase || "-"
         }
       })
@@ -188,21 +186,27 @@ export default function AdminAutoNftPage() {
   const exportCSV = () => {
     const headers = [
       "付与日", "ユーザーID", "メールアドレス", "サイクル番号",
-      "現在の自動NFT数", "現在の手動NFT数", "合計NFT数",
-      "現在のcum_usdt", "フェーズ"
+      "自動NFT数", "手動NFT数", "合計NFT数",
+      "紹介報酬累計", "次のNFTまで", "フェーズ"
     ]
 
-    const csvData = filteredRecords.map(r => [
-      r.acquired_date,
-      r.user_id,
-      r.email,
-      r.cycle_number || "-",
-      r.current_auto_nft_count,
-      r.current_manual_nft_count,
-      r.current_total_nft_count,
-      r.current_cum_usdt.toFixed(2),
-      r.phase
-    ])
+    const csvData = filteredRecords.map(r => {
+      const nextNftRemaining = r.referral_total >= 1100
+        ? 2200 - r.referral_total
+        : 2200 - r.referral_total
+      return [
+        r.acquired_date,
+        r.user_id,
+        r.email,
+        r.cycle_number || "-",
+        r.current_auto_nft_count,
+        r.current_manual_nft_count,
+        r.current_total_nft_count,
+        "$" + r.referral_total.toFixed(2),
+        "$" + Math.max(0, 2200 - r.referral_total).toFixed(2),
+        r.phase === 'HOLD' ? 'ロック中' : r.phase === 'USDT' ? '払出可能' : r.phase
+      ]
+    })
 
     const bom = new Uint8Array([0xEF, 0xBB, 0xBF])
     const csvContent = [headers, ...csvData]
@@ -363,8 +367,9 @@ export default function AdminAutoNftPage() {
                     <th className="text-left py-3 px-2 text-gray-300">ユーザー</th>
                     <th className="text-center py-3 px-2 text-gray-300">サイクル</th>
                     <th className="text-center py-3 px-2 text-gray-300">NFT内訳</th>
-                    <th className="text-right py-3 px-2 text-gray-300">現在のcum_usdt</th>
-                    <th className="text-center py-3 px-2 text-gray-300">フェーズ</th>
+                    <th className="text-right py-3 px-2 text-gray-300">紹介報酬累計</th>
+                    <th className="text-right py-3 px-2 text-gray-300">次のNFTまで</th>
+                    <th className="text-center py-3 px-2 text-gray-300">状態</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -401,15 +406,25 @@ export default function AdminAutoNftPage() {
                         </div>
                       </td>
                       <td className="py-3 px-2 text-right">
-                        <span className="text-orange-400">
-                          ${record.current_cum_usdt.toFixed(2)}
+                        <span className="text-orange-400 font-medium">
+                          ${record.referral_total.toFixed(2)}
                         </span>
+                      </td>
+                      <td className="py-3 px-2 text-right">
+                        <span className={`font-medium ${
+                          2200 - record.referral_total <= 500 ? 'text-green-400' : 'text-gray-400'
+                        }`}>
+                          ${Math.max(0, 2200 - record.referral_total).toFixed(2)}
+                        </span>
+                        {2200 - record.referral_total <= 500 && record.referral_total < 2200 && (
+                          <div className="text-xs text-green-400">もうすぐ!</div>
+                        )}
                       </td>
                       <td className="py-3 px-2 text-center">
                         {record.phase === 'USDT' ? (
-                          <Badge className="bg-green-600 text-white">💰 USDT</Badge>
+                          <Badge className="bg-green-600 text-white">💰 払出可能</Badge>
                         ) : record.phase === 'HOLD' ? (
-                          <Badge className="bg-orange-600 text-white">🔒 HOLD</Badge>
+                          <Badge className="bg-orange-600 text-white">🔒 ロック中</Badge>
                         ) : (
                           <Badge className="bg-gray-600 text-white">-</Badge>
                         )}
