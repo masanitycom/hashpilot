@@ -68,10 +68,6 @@ export default function AdminYieldPage() {
   // V2システム切り替え（常にV2を使用）
   const useV2 = true
 
-  // 月次紹介報酬計算用のstate
-  const [monthlyYearMonth, setMonthlyYearMonth] = useState(new Date().toISOString().slice(0, 7)) // YYYY-MM
-  const [monthlyLoading, setMonthlyLoading] = useState(false)
-  const [monthlyMessage, setMonthlyMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
 
   // 履歴表示用の月選択（データがある最新月を自動選択するため空文字で初期化）
   const [selectedMonth, setSelectedMonth] = useState("")
@@ -866,58 +862,6 @@ export default function AdminYieldPage() {
     }
   }
 
-  // 月次紹介報酬計算ハンドラー
-  const handleMonthlyReferralCalculation = async () => {
-    if (!confirm(`${monthlyYearMonth}の月次紹介報酬を計算しますか？\n\nこの処理により：\n- 指定月の個人利益を集計\n- 紹介報酬を計算（Level 1-3）\n- cum_usdtとavailable_usdtに加算\n- NFT自動付与（$2,200以上）\n\n実行しますか？`)) {
-      return
-    }
-
-    setMonthlyLoading(true)
-    setMonthlyMessage(null)
-
-    try {
-      const { data: rpcResult, error: rpcError } = await supabase.rpc('process_monthly_referral_profit', {
-        p_year_month: monthlyYearMonth,
-        p_is_test_mode: false
-      })
-
-      if (rpcError) {
-        console.error('❌ 月次計算エラー:', rpcError)
-        throw new Error(`月次計算エラー: ${rpcError.message}`)
-      }
-
-      const result = Array.isArray(rpcResult) ? rpcResult[0] : rpcResult
-
-      console.log('✅ 月次計算成功:', result)
-
-      if (result.status === 'ERROR') {
-        throw new Error(result.message)
-      }
-
-      setMonthlyMessage({
-        type: "success",
-        text: `✅ ${result.message || '月次紹介報酬計算完了'}
-
-処理詳細:
-• 総紹介報酬: $${(result.details.total_referral_profit || 0).toFixed(2)}
-• 紹介報酬レコード数: ${result.details.referral_count || 0}件
-• 対象ユーザー数: ${result.details.user_count || 0}名
-• NFT自動付与: ${result.details.auto_nft_count || 0}名`,
-      })
-
-      fetchHistory()
-      fetchStats()
-    } catch (error: any) {
-      console.error('❌ 月次計算エラー:', error)
-      setMonthlyMessage({
-        type: "error",
-        text: `エラー: ${error.message}`,
-      })
-    } finally {
-      setMonthlyLoading(false)
-    }
-  }
-
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -1059,75 +1003,6 @@ export default function AdminYieldPage() {
             </Card>
           </div>
         )}
-
-        {/* 月次紹介報酬計算 */}
-        <Card className="bg-gradient-to-r from-purple-900 to-indigo-900 border-purple-700">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
-              <UsersIcon className="h-5 w-5" />
-              月次紹介報酬計算
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {monthlyMessage && (
-              <Alert className={monthlyMessage.type === "success" ? "bg-green-900/50 border-green-500" : "bg-red-900/50 border-red-500"}>
-                {monthlyMessage.type === "success" ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
-                <AlertDescription className="whitespace-pre-line text-white">
-                  {monthlyMessage.text}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <div className="space-y-4">
-              <div className="bg-purple-800/30 p-4 rounded-lg">
-                <h3 className="text-white font-medium mb-2">📋 月次紹介報酬とは？</h3>
-                <ul className="text-sm text-purple-100 space-y-1 list-disc list-inside">
-                  <li>指定月の個人利益を集計</li>
-                  <li>紹介報酬を計算（Level 1: 20%, Level 2: 10%, Level 3: 5%）</li>
-                  <li>cum_usdtとavailable_usdtに加算</li>
-                  <li>NFT自動付与（$2,200以上）</li>
-                </ul>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="monthly-year-month" className="text-white">
-                  対象年月（YYYY-MM）
-                </Label>
-                <Input
-                  id="monthly-year-month"
-                  type="month"
-                  value={monthlyYearMonth}
-                  onChange={(e) => setMonthlyYearMonth(e.target.value)}
-                  className="bg-gray-700 text-white border-gray-600"
-                />
-              </div>
-
-              <Button
-                onClick={handleMonthlyReferralCalculation}
-                disabled={monthlyLoading || !monthlyYearMonth}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-              >
-                {monthlyLoading ? (
-                  <>
-                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                    計算中...
-                  </>
-                ) : (
-                  <>
-                    <UsersIcon className="mr-2 h-4 w-4" />
-                    月次紹介報酬を計算
-                  </>
-                )}
-              </Button>
-
-              <div className="bg-yellow-900/30 p-3 rounded-lg">
-                <p className="text-xs text-yellow-200">
-                  ⚠️ 注意: この処理は通常、月末に実行します。同じ月の計算を2回実行することはできません。
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* 日利設定フォーム */}
         <Card className="bg-gray-800 border-gray-700">
