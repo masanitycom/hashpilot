@@ -102,8 +102,14 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   }
 
   const formatMonth = (dateString: string) => {
-    const date = new Date(dateString)
-    return `${date.getFullYear()}年${date.getMonth() + 1}月`
+    // YYYY-MM形式の場合はそのまま解析
+    if (dateString.length === 7) {
+      const [year, month] = dateString.split('-')
+      return `${year}年${parseInt(month)}月`
+    }
+    // YYYY-MM-DD形式の場合はUTCとして解析
+    const date = new Date(dateString + 'T00:00:00Z')
+    return `${date.getUTCFullYear()}年${date.getUTCMonth() + 1}月`
   }
 
   if (loading) {

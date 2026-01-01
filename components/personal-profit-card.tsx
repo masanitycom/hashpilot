@@ -31,15 +31,21 @@ export function PersonalProfitCard({ userId, totalInvestment }: PersonalProfitCa
       setLoading(true)
       setError("")
 
-      // 昨日の日付を取得
-      const yesterday = new Date()
-      yesterday.setDate(yesterday.getDate() - 1)
-      const yesterdayStr = yesterday.toISOString().split('T')[0]
-
-      // 今月の開始日と終了日を取得
+      // 日本時間で現在日時を取得
       const now = new Date()
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
-      const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
+      const jstOffset = 9 * 60 // 日本時間は UTC+9
+      const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
+
+      // 昨日の日付を取得（日本時間基準）
+      const jstYesterday = new Date(jstNow)
+      jstYesterday.setUTCDate(jstYesterday.getUTCDate() - 1)
+      const yesterdayStr = jstYesterday.toISOString().split('T')[0]
+
+      // 今月の開始日と終了日を取得（日本時間基準）
+      const currentYear = jstNow.getUTCFullYear()
+      const currentMonth = jstNow.getUTCMonth() // 0-indexed
+      const monthStart = new Date(Date.UTC(currentYear, currentMonth, 1)).toISOString().split('T')[0]
+      const monthEnd = new Date(Date.UTC(currentYear, currentMonth + 1, 0)).toISOString().split('T')[0]
 
       // 昨日の個人利益を取得（daily_profitは既に個人投資額に対する利益）
       const { data: yesterdayData, error: yesterdayError } = await supabase

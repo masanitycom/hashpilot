@@ -94,9 +94,10 @@ export default function ProfitHistoryPage() {
 
       // 個人利益を集計
       dailyProfitData?.forEach(record => {
-        const date = new Date(record.date)
-        const year = date.getFullYear()
-        const month = date.getMonth() + 1
+        // 日付文字列（YYYY-MM-DD）から直接年月を抽出（タイムゾーン問題を回避）
+        const [yearStr, monthStr] = record.date.split('-')
+        const year = parseInt(yearStr)
+        const month = parseInt(monthStr)
         const key = `${year}-${month}`
 
         if (!monthlyMap.has(key)) {
@@ -145,9 +146,12 @@ export default function ProfitHistoryPage() {
       })
 
       // 当月のデータは紹介報酬を0にする（月末まで確定しないため）
+      // 日本時間で現在の年月を取得
       const now = new Date()
-      const currentYear = now.getFullYear()
-      const currentMonth = now.getMonth() + 1
+      const jstOffset = 9 * 60 // 日本時間は UTC+9
+      const jstNow = new Date(now.getTime() + jstOffset * 60 * 1000)
+      const currentYear = jstNow.getUTCFullYear()
+      const currentMonth = jstNow.getUTCMonth() + 1
 
       monthlyArray.forEach(monthData => {
         if (monthData.year === currentYear && monthData.month === currentMonth) {
