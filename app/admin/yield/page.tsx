@@ -73,8 +73,8 @@ export default function AdminYieldPage() {
   const [monthlyLoading, setMonthlyLoading] = useState(false)
   const [monthlyMessage, setMonthlyMessage] = useState<{ type: "success" | "error" | "warning"; text: string } | null>(null)
 
-  // 履歴表示用の月選択
-  const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)) // YYYY-MM
+  // 履歴表示用の月選択（データがある最新月を自動選択するため空文字で初期化）
+  const [selectedMonth, setSelectedMonth] = useState("")
 
   // ユーザー受取率を計算
   useEffect(() => {
@@ -229,6 +229,12 @@ export default function AdminYieldPage() {
       )
 
       setHistory(allHistory)
+
+      // データがある最新月を自動選択（初回のみ）
+      if (allHistory.length > 0 && !selectedMonth) {
+        const latestMonth = allHistory[0].date.substring(0, 7)
+        setSelectedMonth(latestMonth)
+      }
     } catch (error) {
       console.error("履歴取得エラー:", error)
     }
