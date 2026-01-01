@@ -373,6 +373,9 @@ export default function AdminYieldPage() {
         fetchHistory()
         fetchStats()
 
+        // V2でも月末かチェックして自動的に紹介報酬を計算
+        await checkAndProcessMonthlyReferral(date)
+
       } else {
         // ========== V1システム（利率入力） ==========
         const yieldValue = Number.parseFloat(yieldRate) / 100  // パーセント→小数に変換
