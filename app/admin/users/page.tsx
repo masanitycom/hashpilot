@@ -36,6 +36,12 @@ interface User {
   operation_start_date?: string | null
   is_active_investor?: boolean
   channel_linked_confirmed?: boolean
+  // affiliate_cycleから取得
+  auto_nft_count?: number
+  manual_nft_count?: number
+  total_nft_count?: number
+  cum_usdt?: number
+  phase?: string
 }
 
 export default function AdminUsersPage() {
@@ -172,11 +178,32 @@ export default function AdminUsersPage() {
         })
       }
 
-      // ユーザーデータに購入日を追加
-      const enrichedUsers = (usersData || []).map(user => ({
-        ...user,
-        first_purchase_date: firstPurchaseMap.get(user.user_id) || null
-      }))
+      // affiliate_cycleからNFT情報を取得
+      const { data: cycleData } = await supabase
+        .from("affiliate_cycle")
+        .select("user_id, auto_nft_count, manual_nft_count, total_nft_count, cum_usdt, phase")
+
+      // ユーザーIDでマップ化
+      const cycleMap = new Map<string, any>()
+      if (cycleData) {
+        cycleData.forEach(c => {
+          cycleMap.set(c.user_id, c)
+        })
+      }
+
+      // ユーザーデータに購入日とNFT情報を追加
+      const enrichedUsers = (usersData || []).map(user => {
+        const cycle = cycleMap.get(user.user_id)
+        return {
+          ...user,
+          first_purchase_date: firstPurchaseMap.get(user.user_id) || null,
+          auto_nft_count: cycle?.auto_nft_count || 0,
+          manual_nft_count: cycle?.manual_nft_count || 0,
+          total_nft_count: cycle?.total_nft_count || 0,
+          cum_usdt: cycle?.cum_usdt || 0,
+          phase: cycle?.phase || null,
+        }
+      })
 
       setUsers(enrichedUsers)
     } catch (error: any) {
@@ -635,6 +662,13 @@ export default function AdminUsersPage() {
                         <div>
                           <span className="text-gray-400">投資額: </span>
                           <span className="text-green-400">${user.total_purchases.toLocaleString()}</span>
+                          {/* NFT数表示（手動+自動） */}
+                          <span className="text-gray-500 ml-2">
+                            ({user.manual_nft_count || Math.floor(user.total_purchases / 1100)}NFT
+                            {(user.auto_nft_count || 0) > 0 && (
+                              <span className="text-cyan-400"> +{user.auto_nft_count}自動</span>
+                            )})
+                          </span>
                         </div>
                         {user.referrer_user_id && (
                           <div>
