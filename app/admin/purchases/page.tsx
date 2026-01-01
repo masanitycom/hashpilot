@@ -499,7 +499,7 @@ export default function AdminPurchasesPage() {
   const exportToCSV = () => {
     const csvHeaders = [
       "購入ID",
-      "ユーザーID", 
+      "ユーザーID",
       "メールアドレス",
       "フルネーム",
       "CoinW UID",
@@ -537,15 +537,15 @@ export default function AdminPurchasesPage() {
       purchase.admin_approved_by || ""
     ])
 
+    // 全フィールドをダブルクォートで囲む（改行・カンマ・ダブルクォート対策）
+    const escapeField = (field: any) => {
+      const str = String(field ?? "")
+      return `"${str.replace(/"/g, '""')}"`
+    }
+
     const csvContent = [
-      csvHeaders.join(","),
-      ...csvData.map(row => 
-        row.map(field => 
-          typeof field === 'string' && field.includes(',') 
-            ? `"${field.replace(/"/g, '""')}"` 
-            : field
-        ).join(",")
-      )
+      csvHeaders.map(h => escapeField(h)).join(","),
+      ...csvData.map(row => row.map(field => escapeField(field)).join(","))
     ].join("\n")
 
     const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" })
