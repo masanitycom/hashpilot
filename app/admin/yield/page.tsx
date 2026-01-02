@@ -364,7 +364,7 @@ export default function AdminYieldPage() {
 処理詳細:
 • 運用利益: $${profitAmount.toFixed(2)}
 • NFT総数: ${result.details?.input?.total_nft_count || 0}個
-• NFT単価利益: $${(result.details?.input?.profit_per_nft || 0).toFixed(3)}
+• NFT単価利益: $${((result.details?.input?.profit_per_nft || 0) * 0.7 * 0.6).toFixed(3)}
 • 個人利益配布: $${(result.details?.distribution?.total_distributed || 0).toFixed(2)}
 • 紹介報酬配布: $${(result.details?.distribution?.total_referral || 0).toFixed(2)}（${result.details?.distribution?.referral_count || 0}件）
 • NFT自動付与: ${result.details?.distribution?.auto_nft_count || 0}件`,
