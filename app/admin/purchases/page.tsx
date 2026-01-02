@@ -37,6 +37,15 @@ interface Purchase {
   has_approved_nft: boolean
 }
 
+interface NftDetail {
+  id: string
+  nft_type: 'manual' | 'auto'
+  nft_value: number
+  acquired_date: string
+  operation_start_date: string | null
+  nft_sequence: number
+}
+
 export default function AdminPurchasesPage() {
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [loading, setLoading] = useState(true)
@@ -58,6 +67,8 @@ export default function AdminPurchasesPage() {
   const [newApprovalDate, setNewApprovalDate] = useState("")
   const [approvalChangeReason, setApprovalChangeReason] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const [userNfts, setUserNfts] = useState<NftDetail[]>([])
+  const [loadingNfts, setLoadingNfts] = useState(false)
 
   useEffect(() => {
     checkAdminAccess()
@@ -157,6 +168,44 @@ export default function AdminPurchasesPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const fetchUserNfts = async (userId: string) => {
+    try {
+      setLoadingNfts(true)
+      const { data, error } = await supabase
+        .from("nft_master")
+        .select("id, nft_type, nft_value, acquired_date, operation_start_date, nft_sequence")
+        .eq("user_id", userId)
+        .is("buyback_date", null)
+        .order("acquired_date", { ascending: true })
+
+      if (error) throw error
+      setUserNfts(data || [])
+    } catch (error) {
+      console.error("Error fetching user NFTs:", error)
+      setUserNfts([])
+    } finally {
+      setLoadingNfts(false)
+    }
+  }
+
+  const formatNftDate = (dateString: string | null) => {
+    if (!dateString) return "未設定"
+    return new Date(dateString).toLocaleDateString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    })
+  }
+
+  const isNftOperating = (operationStartDate: string | null) => {
+    if (!operationStartDate) return false
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const startDate = new Date(operationStartDate)
+    startDate.setHours(0, 0, 0, 0)
+    return startDate <= today
   }
 
   const confirmPayment = async (purchaseId: string) => {
@@ -856,6 +905,7 @@ export default function AdminPurchasesPage() {
                                 onClick={() => {
                                   setSelectedPurchase(purchase)
                                   setAdminNotes(purchase.admin_notes || "")
+                                  fetchUserNfts(purchase.user_id)
                                 }}
                               >
                                 <Eye className="w-4 h-4 mr-1 text-white" />
@@ -926,6 +976,70 @@ export default function AdminPurchasesPage() {
                                       </div>
                                     ) : (
                                       <p className="text-gray-400 italic">直接登録（紹介者なし）</p>
+                                    )}
+                                  </div>
+
+                                  {/* NFT詳細セクション */}
+                                  <div className="bg-purple-900/20 border border-purple-700 rounded-lg p-4">
+                                    <Label className="text-purple-300 flex items-center mb-3">
+                                      <Users className="w-4 h-4 mr-2" />
+                                      保有NFT詳細（運用開始日）
+                                    </Label>
+                                    {loadingNfts ? (
+                                      <div className="flex items-center justify-center py-4">
+                                        <RefreshCw className="h-5 w-5 animate-spin text-purple-400" />
+                                        <span className="ml-2 text-gray-400">読み込み中...</span>
+                                      </div>
+                                    ) : userNfts.length === 0 ? (
+                                      <p className="text-gray-400 italic">NFTなし</p>
+                                    ) : (
+                                      <div className="overflow-x-auto">
+                                        <table className="w-full text-sm">
+                                          <thead>
+                                            <tr className="border-b border-gray-600">
+                                              <th className="text-left p-2 text-gray-400">#</th>
+                                              <th className="text-left p-2 text-gray-400">種類</th>
+                                              <th className="text-left p-2 text-gray-400">取得日</th>
+                                              <th className="text-left p-2 text-gray-400">運用開始日</th>
+                                              <th className="text-left p-2 text-gray-400">状態</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {userNfts.map((nft, index) => {
+                                              const operating = isNftOperating(nft.operation_start_date)
+                                              return (
+                                                <tr key={nft.id} className="border-b border-gray-700">
+                                                  <td className="p-2 text-gray-400">{index + 1}</td>
+                                                  <td className="p-2">
+                                                    <Badge
+                                                      variant="secondary"
+                                                      className={nft.nft_type === 'manual'
+                                                        ? "bg-blue-900/30 text-blue-300 text-xs"
+                                                        : "bg-purple-900/30 text-purple-300 text-xs"
+                                                      }
+                                                    >
+                                                      {nft.nft_type === 'manual' ? '手動' : '自動'}
+                                                    </Badge>
+                                                  </td>
+                                                  <td className="p-2 text-gray-300">{formatNftDate(nft.acquired_date)}</td>
+                                                  <td className="p-2 text-gray-300">{formatNftDate(nft.operation_start_date)}</td>
+                                                  <td className="p-2">
+                                                    {operating ? (
+                                                      <Badge className="bg-green-600 text-white text-xs">運用中</Badge>
+                                                    ) : (
+                                                      <Badge variant="secondary" className="bg-yellow-900/30 text-yellow-300 text-xs">待機中</Badge>
+                                                    )}
+                                                  </td>
+                                                </tr>
+                                              )
+                                            })}
+                                          </tbody>
+                                        </table>
+                                        <div className="mt-2 text-xs text-gray-400">
+                                          運用中: {userNfts.filter(n => isNftOperating(n.operation_start_date)).length}個 /
+                                          待機中: {userNfts.filter(n => !isNftOperating(n.operation_start_date)).length}個
+                                        </div>
+                                      </div>
                                     )}
                                   </div>
 

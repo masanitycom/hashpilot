@@ -1,0 +1,10585 @@
+[
+  {
+    "user_id": "ACBFBA",
+    "email": "gen.load.japan@gmail.com",
+    "operation_start_date": "2025-12-01",
+    "has_approved_nft": true,
+    "created_at": "2025-11-20 06:29:45.043332+00"
+  }
+]
+[
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-01",
+    "daily_profit": "-13.552"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-02",
+    "daily_profit": "13.294"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-03",
+    "daily_profit": "7.738"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-04",
+    "daily_profit": "5.813"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-05",
+    "daily_profit": "-14.067"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-06",
+    "daily_profit": "-5.091"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-07",
+    "daily_profit": "-0.639"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-08",
+    "daily_profit": "5.495"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-09",
+    "daily_profit": "15.450"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-10",
+    "daily_profit": "2.371"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-11",
+    "daily_profit": "-5.194"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-12",
+    "daily_profit": "0.717"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-13",
+    "daily_profit": "0.493"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-14",
+    "daily_profit": "-2.779"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-15",
+    "daily_profit": "-4.217"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-16",
+    "daily_profit": "1.609"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-17",
+    "daily_profit": "-0.880"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-18",
+    "daily_profit": "0.419"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-19",
+    "daily_profit": "-2.641"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-20",
+    "daily_profit": "3.814"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-21",
+    "daily_profit": "-2.012"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-22",
+    "daily_profit": "3.647"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-23",
+    "daily_profit": "-4.956"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-24",
+    "daily_profit": "-0.628"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-25",
+    "daily_profit": "1.884"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-26",
+    "daily_profit": "10.369"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-27",
+    "daily_profit": "3.769"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-28",
+    "daily_profit": "2.094"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-29",
+    "daily_profit": "0.628"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-30",
+    "daily_profit": "0.209"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  },
+  {
+    "date": "2025-12-31",
+    "daily_profit": "0.251"
+  }
+]
+[
+  {
+    "year": "2025",
+    "month": "12",
+    "total": "1989.680",
+    "days": 2635
+  }
+]
+[
+  {
+    "user_id": "ACBFBA",
+    "available_usdt": "4023.02",
+    "cum_usdt": "0.00",
+    "phase": "USDT",
+    "auto_nft_count": 0,
+    "manual_nft_count": 85,
+    "updated_at": "2026-01-01 03:32:49.528601+00"
+  }
+]
+[
+  {
+    "withdrawal_month": "2025-12-01",
+    "total_amount": "4023.020",
+    "personal_amount": "1989.680",
+    "referral_amount": "0",
+    "status": "on_hold",
+    "created_at": "2026-01-01 03:41:08.770096+00"
+  }
+]
+[
+  {
+    "total_daily_profit": "1989.680"
+  }
+]

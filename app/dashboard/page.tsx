@@ -24,6 +24,7 @@ import { AnnouncementsBanner } from "@/components/announcements-banner"
 import { DormantUserBanner } from "@/components/dormant-user-banner"
 import { RewardTaskPopup } from "@/components/reward-task-popup"
 import { CoinwUidPopup } from "@/components/coinw-uid-popup"
+import { NftListCard } from "@/components/nft-list-card"
 import Link from "next/link"
 import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
 
@@ -951,6 +952,11 @@ const DelayedContent = ({ userData, userStats, currentInvestment }: { userData: 
           <ReferralTreeOptimized userId={userData?.user_id || ""} />
         </div>
       )}
+
+      {/* 保有NFT一覧（運用開始日表示） */}
+      <div className="mb-6">
+        <NftListCard userId={userData?.user_id || ""} />
+      </div>
 
       {/* NFT買い取り申請リンク */}
       <div className="mb-6">
