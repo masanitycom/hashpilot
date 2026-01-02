@@ -132,7 +132,7 @@ export function NftListCard({ userId }: NftListCardProps) {
               <tr className="border-b border-gray-700">
                 <th className="text-left p-2 text-gray-400">NFT</th>
                 <th className="text-left p-2 text-gray-400">種類</th>
-                <th className="text-left p-2 text-gray-400">取得日</th>
+                <th className="text-left p-2 text-gray-400">承認日</th>
                 <th className="text-left p-2 text-gray-400">運用開始日</th>
                 <th className="text-left p-2 text-gray-400">状態</th>
               </tr>
@@ -190,9 +190,9 @@ export function NftListCard({ userId }: NftListCardProps) {
         <div className="mt-4 p-3 bg-gray-800/50 rounded-lg text-xs text-gray-400">
           <p className="mb-1">運用開始日のルール:</p>
           <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>毎月5日までに取得 → 当月15日より運用開始</li>
-            <li>毎月6日～20日に取得 → 翌月1日より運用開始</li>
-            <li>毎月21日～月末に取得 → 翌月15日より運用開始</li>
+            <li>毎月5日までに承認 → 当月15日より運用開始</li>
+            <li>毎月6日～20日に承認 → 翌月1日より運用開始</li>
+            <li>毎月21日～月末に承認 → 翌月15日より運用開始</li>
           </ul>
         </div>
       </CardContent>

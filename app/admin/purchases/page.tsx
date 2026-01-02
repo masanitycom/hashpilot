@@ -999,7 +999,7 @@ export default function AdminPurchasesPage() {
                                             <tr className="border-b border-gray-600">
                                               <th className="text-left p-2 text-gray-400">#</th>
                                               <th className="text-left p-2 text-gray-400">種類</th>
-                                              <th className="text-left p-2 text-gray-400">取得日</th>
+                                              <th className="text-left p-2 text-gray-400">承認日</th>
                                               <th className="text-left p-2 text-gray-400">運用開始日</th>
                                               <th className="text-left p-2 text-gray-400">状態</th>
                                             </tr>
