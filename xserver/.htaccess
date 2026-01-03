@@ -1,0 +1,4 @@
+SetEnvIf Request_URI ".*" Ngx_Cache_NoCacheMode=off
+SetEnvIf Request_URI ".*" Ngx_Cache_AllCacheMode
+
+ErrorDocument 404 https://hashpilot.info/404.html

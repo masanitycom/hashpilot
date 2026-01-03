@@ -366,8 +366,8 @@ export default function AdminYieldPage() {
 • NFT総数: ${result.details?.input?.total_nft_count || 0}個
 • NFT単価利益: $${((result.details?.input?.profit_per_nft || 0) * 0.7 * 0.6).toFixed(3)}
 • 個人利益配布: $${(result.details?.distribution?.total_distributed || 0).toFixed(2)}
-• 紹介報酬配布: $${(result.details?.distribution?.total_referral || 0).toFixed(2)}（${result.details?.distribution?.referral_count || 0}件）
-• NFT自動付与: ${result.details?.distribution?.auto_nft_count || 0}件`,
+• NFT自動付与: ${result.details?.distribution?.auto_nft_count || 0}件
+※ 紹介報酬は月末に月次処理で計算されます`,
         })
 
         setTotalProfitAmount("")
@@ -449,32 +449,20 @@ export default function AdminYieldPage() {
       const lastDayOfMonth = new Date(year, month, 0).getDate()
       const currentDay = targetDate.getDate()
 
-      // 月末の日利設定か、月初1日（前月分の設定）かをチェック
+      // 月末の日利設定かどうかをチェック
       const isMonthEnd = currentDay === lastDayOfMonth
-      const isFirstDayOfMonth = currentDay === 1
 
-      // 月末でも月初1日でもない場合はスキップ
-      if (!isMonthEnd && !isFirstDayOfMonth) {
-        console.log(`📅 ${settingDate}は月末でも月初でもありません`)
+      // 月末でない場合はスキップ
+      if (!isMonthEnd) {
+        console.log(`📅 ${settingDate}は月末ではありません。紹介報酬計算をスキップします。`)
         return
       }
 
-      // 月初1日の場合は、前月分の紹介報酬を計算
-      let targetYear = year
-      let targetMonth = month
+      // 月末最終日の日利設定 → その月の紹介報酬を計算
+      const targetYear = year
+      const targetMonth = month
 
-      if (isFirstDayOfMonth) {
-        // 前月を計算
-        if (month === 1) {
-          targetYear = year - 1
-          targetMonth = 12
-        } else {
-          targetMonth = month - 1
-        }
-        console.log(`📅 ${settingDate}は月初1日です。前月（${targetYear}年${targetMonth}月）の紹介報酬を自動計算します...`)
-      } else {
-        console.log(`📅 ${settingDate}は月末です。紹介報酬を自動計算します...`)
-      }
+      console.log(`📅 ${settingDate}は月末です。${targetYear}年${targetMonth}月の紹介報酬を自動計算します...`)
 
       // 月次紹介報酬を計算（targetYear/targetMonthを使用）
       const { data: monthlyResult, error: monthlyError } = await supabase.rpc('process_monthly_referral_reward', {
