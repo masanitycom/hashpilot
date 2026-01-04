@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download, Search, Zap, ArrowUp } from "lucide-react"
+import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download, Search, Zap, ArrowUp, ShoppingCart } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { sendApprovalEmailViaAuth } from "@/lib/send-approval-email"
 import { OperationStatus } from "@/components/operation-status"
@@ -746,49 +746,53 @@ export default function AdminPurchasesPage() {
 
   return (
     <div className="min-h-screen bg-black p-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto space-y-4">
+        {/* ヘッダー */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <ShoppingCart className="h-6 w-6 text-green-400" />
+              NFT購入・入金確認
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
+            <Button onClick={fetchPurchases} size="sm" variant="outline" className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              更新
+            </Button>
+            <Button
+              onClick={exportToCSV}
+              size="sm"
+              variant="outline"
+              className="bg-green-600 hover:bg-green-700 text-white border-green-600"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              CSV出力
+            </Button>
+            <Button
+              onClick={() => router.push("/admin/auto-nft")}
+              size="sm"
+              variant="outline"
+              className="bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              自動NFT付与履歴
+            </Button>
+            <Button
+              onClick={() => router.push("/admin")}
+              variant="outline"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+            >
+              管理者ダッシュボード
+            </Button>
+          </div>
+        </div>
+
         <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-white flex items-center">
-                <Shield className="w-5 h-5 mr-2" />
-                NFT購入・入金確認 - {currentUser?.email}
-              </CardTitle>
-              <div className="flex space-x-2">
-                <Button
-                  onClick={() => router.push("/admin")}
-                  variant="outline"
-                  size="sm"
-                  className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-                >
-                  管理者ダッシュボード
-                </Button>
-                <Button
-                  onClick={() => router.push("/admin/auto-nft")}
-                  size="sm"
-                  variant="outline"
-                  className="bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
-                >
-                  <Zap className="w-4 h-4 mr-2" />
-                  自動NFT付与履歴
-                </Button>
-                <Button
-                  onClick={exportToCSV}
-                  size="sm"
-                  variant="outline"
-                  className="bg-green-600 hover:bg-green-700 text-white border-green-600"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  CSV出力
-                </Button>
-                <Button onClick={fetchPurchases} size="sm">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  更新
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="mb-4 grid grid-cols-4 gap-4 text-center">
               <div className="bg-gray-700 p-3 rounded">
                 <div className="text-2xl font-bold text-white">
