@@ -895,32 +895,9 @@ export default function AdminYieldPage() {
             </h1>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant="destructive" className="text-sm">
-              本番モード
-            </Badge>
             <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
           </div>
         </div>
-
-        {/* 本番モード固定 */}
-        <Card className="border-2 bg-gray-800 border-green-500">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-400">
-              <Shield className="h-5 w-5" />
-              本番モード（固定）
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-green-300 space-y-2">
-              <p className="font-medium">
-                ✅ 本番モード: ユーザーの実際の残高に影響します
-              </p>
-              <p className="text-sm">
-                設定すると即座にユーザーの利益に反映されます
-              </p>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* 統計情報 */}
         {stats && (
