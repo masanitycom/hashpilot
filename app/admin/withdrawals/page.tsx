@@ -88,6 +88,9 @@ export default function AdminWithdrawalsPage() {
   const [selectedMonth, setSelectedMonth] = useState<string>("")
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState("")
+  const [channelFilter, setChannelFilter] = useState<"all" | "confirmed" | "not_confirmed">("all")
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "completed" | "on_hold">("all")
+  const [taskFilter, setTaskFilter] = useState<"all" | "completed" | "not_completed">("all")
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState("")
@@ -337,10 +340,23 @@ export default function AdminWithdrawalsPage() {
   }
 
   const filteredWithdrawals = withdrawals
-    .filter(w =>
-      w.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      w.email.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter(w => {
+      // 検索フィルター
+      if (searchTerm) {
+        const matchesSearch = w.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          w.email.toLowerCase().includes(searchTerm.toLowerCase())
+        if (!matchesSearch) return false
+      }
+      // CH紐付けフィルター
+      if (channelFilter === "confirmed" && !w.channel_linked_confirmed) return false
+      if (channelFilter === "not_confirmed" && w.channel_linked_confirmed) return false
+      // ステータスフィルター
+      if (statusFilter !== "all" && w.status !== statusFilter) return false
+      // タスク状況フィルター
+      if (taskFilter === "completed" && !w.task_completed) return false
+      if (taskFilter === "not_completed" && w.task_completed) return false
+      return true
+    })
     .sort((a, b) => Number(b.total_amount) - Number(a.total_amount))
 
   const getStatusBadge = (status: string) => {
@@ -531,8 +547,8 @@ export default function AdminWithdrawalsPage() {
         {/* 検索・フィルター */}
         <Card className="bg-gray-800 border-gray-700 mb-6">
           <CardContent className="p-4">
-            <div className="flex items-center space-x-4">
-              <div className="flex-1">
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex-1 min-w-[200px]">
                 <div className="relative">
                   <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
                   <Input
@@ -543,6 +559,34 @@ export default function AdminWithdrawalsPage() {
                   />
                 </div>
               </div>
+              <select
+                value={channelFilter}
+                onChange={(e) => setChannelFilter(e.target.value as "all" | "confirmed" | "not_confirmed")}
+                className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
+              >
+                <option value="all">CH紐付け: 全て</option>
+                <option value="confirmed">確認済み</option>
+                <option value="not_confirmed">未確認</option>
+              </select>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as "all" | "pending" | "completed" | "on_hold")}
+                className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
+              >
+                <option value="all">ステータス: 全て</option>
+                <option value="pending">送金待ち</option>
+                <option value="completed">送金完了</option>
+                <option value="on_hold">保留中</option>
+              </select>
+              <select
+                value={taskFilter}
+                onChange={(e) => setTaskFilter(e.target.value as "all" | "completed" | "not_completed")}
+                className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
+              >
+                <option value="all">タスク: 全て</option>
+                <option value="completed">完了</option>
+                <option value="not_completed">未完了</option>
+              </select>
             </div>
           </CardContent>
         </Card>
