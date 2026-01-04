@@ -266,6 +266,11 @@ export default function AdminWithdrawalsPage() {
       const successCount = results.filter((r: any) => r.out_success).length
       const failCount = results.filter((r: any) => !r.out_success).length
 
+      // 繰越元も完了になったケースを集計
+      const carryoverInfo = results
+        .filter((r: any) => r.out_success && r.out_error_message && r.out_error_message.includes('繰越元'))
+        .map((r: any) => `${r.out_user_id}: ${r.out_error_message}`)
+
       if (failCount > 0) {
         // 失敗したユーザーIDとエラーメッセージを表示
         const errors = results.filter((r: any) => !r.out_success).map((r: any) => {
@@ -275,7 +280,11 @@ export default function AdminWithdrawalsPage() {
         }).join('\n')
         alert(`出金完了処理結果:\n成功: ${successCount}件\n失敗: ${failCount}件\n\nエラー詳細:\n${errors}`)
       } else {
-        alert(`${successCount}件の出金を完了済みにしました（available_usdtから減算済み）`)
+        let message = `${successCount}件の出金を完了済みにしました（available_usdtから減算済み）`
+        if (carryoverInfo.length > 0) {
+          message += `\n\n📋 繰越元も完了:\n${carryoverInfo.join('\n')}`
+        }
+        alert(message)
       }
 
       setSelectedIds(new Set())
