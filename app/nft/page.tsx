@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { ShoppingCart, DollarSign, CheckCircle, AlertCircle, Loader2, ArrowLeft, Wallet } from "lucide-react"
+import { ShoppingCart, DollarSign, CheckCircle, AlertCircle, Loader2, Home, Wallet } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 
@@ -190,21 +190,28 @@ export default function NFTPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
       {/* ヘッダー */}
-      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  ダッシュボードに戻る
-                </Button>
+                <img
+                  src="/images/hash-pilot-logo.png"
+                  alt="HASH PILOT"
+                  className="h-8 rounded-lg"
+                />
               </Link>
-              <div>
-                <h1 className="text-xl font-bold text-white">NFT購入</h1>
-                <p className="text-sm text-gray-400">HASH PILOT NFTを購入してネットワークに参加</p>
+              <div className="flex items-center space-x-2">
+                <ShoppingCart className="h-5 w-5 text-green-400" />
+                <h1 className="text-lg font-bold text-white">NFT購入</h1>
               </div>
             </div>
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white px-2">
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">戻る</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

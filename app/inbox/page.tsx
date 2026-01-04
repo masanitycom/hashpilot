@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Mail, MailOpen, RefreshCw, X } from "lucide-react"
+import { Mail, MailOpen, RefreshCw, X, Home } from "lucide-react"
+import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 
 interface Email {
@@ -102,40 +103,50 @@ export default function InboxPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4">
-      <div className="max-w-4xl mx-auto">
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-white flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
-                受信箱
+    <div className="min-h-screen bg-gray-900">
+      {/* ヘッダー */}
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Link href="/dashboard">
+                <img
+                  src="/images/hash-pilot-logo.png"
+                  alt="HASH PILOT"
+                  className="h-8 rounded-lg"
+                />
+              </Link>
+              <div className="flex items-center space-x-2">
+                <Mail className="h-5 w-5 text-blue-400" />
+                <h1 className="text-lg font-bold text-white">受信箱</h1>
                 {unreadCount > 0 && (
-                  <Badge className="ml-2 bg-red-600">{unreadCount}件未読</Badge>
+                  <Badge className="bg-red-600 text-xs">{unreadCount}</Badge>
                 )}
-              </CardTitle>
-              <div className="flex space-x-2">
-                <Button
-                  onClick={() => fetchEmails(currentUser.email)}
-                  size="sm"
-                  variant="outline"
-                  className="bg-gray-700 text-white border-gray-600"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  更新
-                </Button>
-                <Button
-                  onClick={() => router.push("/dashboard")}
-                  size="sm"
-                  variant="outline"
-                  className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-                >
-                  ダッシュボード
-                </Button>
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => fetchEmails(currentUser.email)}
+                size="sm"
+                variant="ghost"
+                className="text-gray-300 hover:text-white px-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </Button>
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white px-2">
+                  <Home className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-1">戻る</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto p-4">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="pt-6">
             {emails.length === 0 ? (
               <div className="text-center py-12 text-gray-400">
                 <Mail className="w-16 h-16 mx-auto mb-4 opacity-50" />

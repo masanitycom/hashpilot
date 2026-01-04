@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Copy, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react"
+import { Copy, Home, CheckCircle, AlertCircle, DollarSign } from "lucide-react"
+import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { QRCodeSVG } from "qrcode.react"
 import Image from "next/image"
@@ -153,24 +154,29 @@ export default function NFTPaymentPage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <header className="bg-gray-800 shadow-sm border-b border-gray-700">
-        <div className="container mx-auto px-4 py-4">
+      {/* ヘッダー */}
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push("/nft-required")}
-                className="bg-gray-600 hover:bg-gray-700 text-white border-gray-600"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                戻る
-              </Button>
+            <div className="flex items-center space-x-3">
+              <Link href="/dashboard">
+                <img
+                  src="/images/hash-pilot-logo.png"
+                  alt="HASH PILOT"
+                  className="h-8 rounded-lg"
+                />
+              </Link>
               <div className="flex items-center space-x-2">
-                <Image src="/images/hash-pilot-logo.png" alt="HashPilot Logo" width={40} height={40} />
-                <span className="text-xl font-bold text-white">USDT送金手続き</span>
+                <DollarSign className="h-5 w-5 text-green-400" />
+                <h1 className="text-lg font-bold text-white">USDT送金</h1>
               </div>
             </div>
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white px-2">
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">戻る</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

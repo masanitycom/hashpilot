@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode, User as UserIcon, LogOut, Home, Settings, TrendingUp, Menu } from "lucide-react"
+import { Loader2, Edit, Save, X, Copy, Check, Share2, QrCode, User as UserIcon, LogOut, Home, Settings, TrendingUp } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { MonthlyWithdrawalAlert } from "@/components/monthly-withdrawal-alert"
 import Link from "next/link"
@@ -51,25 +51,12 @@ export default function ProfilePage() {
     nft_receive_address: "",
   })
   const [showQR, setShowQR] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [pendingCoinwChange, setPendingCoinwChange] = useState<CoinwChangeRequest | null>(null)
   const [rejectedCoinwChange, setRejectedCoinwChange] = useState<CoinwChangeRequest | null>(null)
 
   useEffect(() => {
     fetchProfile()
   }, [])
-
-  // モバイルメニューの外側クリックで閉じる
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuOpen && !(event.target as Element).closest('header')) {
-        setMobileMenuOpen(false)
-      }
-    }
-
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [mobileMenuOpen])
 
   const fetchProfile = async () => {
     try {
@@ -280,88 +267,40 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-      {/* Header */}
-      <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <Link href="/dashboard" className="flex items-center">
-                <img 
-                  src="/images/hash-pilot-logo.png" 
-                  alt="HashPilot"
-                  className="h-12 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+      {/* ヘッダー */}
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Link href="/dashboard">
+                <img
+                  src="/images/hash-pilot-logo.png"
+                  alt="HASH PILOT"
+                  className="h-8 rounded-lg"
                 />
               </Link>
-              <Badge variant="outline" className="hidden sm:block text-blue-400 border-blue-400/50">
-                Profile
-              </Badge>
+              <div className="flex items-center space-x-2">
+                <UserIcon className="h-5 w-5 text-blue-400" />
+                <h1 className="text-lg font-bold text-white">プロフィール</h1>
+              </div>
             </div>
-            
-            <nav className="hidden md:flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                size="sm"
+                className="text-red-400 hover:text-red-300 px-2"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">ログアウト</span>
+              </Button>
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-gray-700/50">
-                  <Home className="h-4 w-4 mr-2" />
-                  ダッシュボード
+                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white px-2">
+                  <Home className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-1">戻る</span>
                 </Button>
               </Link>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-gray-700/50">
-                <UserIcon className="h-4 w-4 mr-2" />
-                プロフィール
-              </Button>
-              <Button onClick={handleLogout} variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-red-900/20">
-                <LogOut className="h-4 w-4 mr-2" />
-                ログアウト
-              </Button>
-            </nav>
-
-            <div className="md:hidden">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-gray-300 hover:text-white hover:bg-gray-700/50"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
             </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div className={`md:hidden bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-          <div className="px-4 py-3 space-y-2">
-            <Link href="/dashboard">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Home className="h-4 w-4 mr-3" />
-                ダッシュボード
-              </Button>
-            </Link>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="w-full justify-start text-blue-400 bg-blue-900/20 cursor-default"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <UserIcon className="h-4 w-4 mr-3" />
-              プロフィール
-            </Button>
-            <Button 
-              onClick={() => {
-                handleLogout()
-                setMobileMenuOpen(false)
-              }}
-              variant="ghost" 
-              size="sm" 
-              className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors"
-            >
-              <LogOut className="h-4 w-4 mr-3" />
-              ログアウト
-            </Button>
           </div>
         </div>
       </header>

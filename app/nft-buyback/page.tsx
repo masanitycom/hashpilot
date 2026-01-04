@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import { Home, Coins } from "lucide-react"
+import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { NftBuybackRequest } from "@/components/nft-buyback-request"
 import { checkUserNFTPurchase } from "@/lib/check-nft-purchase"
@@ -79,21 +80,37 @@ export default function NftBuybackPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-      <div className="container mx-auto p-4 md:p-6 space-y-6">
-        {/* ヘッダー */}
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.push("/dashboard")}
-            className="text-gray-400 hover:text-white"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">NFT買い取り申請</h1>
-            <p className="text-gray-400">保有中のNFTを買い取り申請できます。手動購入NFTは1000ドル - (そのNFTの利益 ÷ 2)、自動購入NFTは500ドル - (そのNFTの利益 ÷ 2)で買い取り可能です。</p>
+      {/* ヘッダー */}
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Link href="/dashboard">
+                <img
+                  src="/images/hash-pilot-logo.png"
+                  alt="HASH PILOT"
+                  className="h-8 rounded-lg"
+                />
+              </Link>
+              <div className="flex items-center space-x-2">
+                <Coins className="h-5 w-5 text-yellow-400" />
+                <h1 className="text-lg font-bold text-white">NFT買取</h1>
+              </div>
+            </div>
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white px-2">
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">戻る</span>
+              </Button>
+            </Link>
           </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto p-4 md:p-6 space-y-6">
+        {/* 説明 */}
+        <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+          <p className="text-sm text-gray-300">手動購入NFTは1000ドル - (そのNFTの利益 ÷ 2)、自動購入NFTは500ドル - (そのNFTの利益 ÷ 2)で買い取り可能です。</p>
         </div>
 
         {/* NFT買い取り申請コンポーネント */}

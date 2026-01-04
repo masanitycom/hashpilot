@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Loader2, ArrowLeft, Calendar } from "lucide-react"
+import { Loader2, Home, Calendar } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
 
@@ -181,21 +181,35 @@ export default function ProfitHistoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
-        {/* ヘッダー */}
-        <div className="mb-6 flex items-center gap-4">
-          <Link href="/dashboard">
-            <Button variant="outline" size="sm" className="bg-gray-800 text-white border-gray-700 hover:bg-gray-700">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              ダッシュボードに戻る
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-blue-400" />
-            月別利益履歴
-          </h1>
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* ヘッダー */}
+      <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Link href="/dashboard">
+                <img
+                  src="/images/hash-pilot-logo.png"
+                  alt="HASH PILOT"
+                  className="h-8 rounded-lg"
+                />
+              </Link>
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-5 w-5 text-blue-400" />
+                <h1 className="text-lg font-bold text-white">利益履歴</h1>
+              </div>
+            </div>
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white px-2">
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">戻る</span>
+              </Button>
+            </Link>
+          </div>
         </div>
+      </header>
+
+      <div className="max-w-5xl mx-auto p-4 md:p-8">
 
         {/* エラー表示 */}
         {error && (
