@@ -243,11 +243,14 @@ export default function AdminDashboard() {
       <header className="bg-gray-800 shadow-lg border-b border-gray-700">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Shield className="w-8 h-8 text-blue-400" />
-              <div>
-                <h1 className="text-2xl font-bold text-white">管理者ダッシュボード</h1>
-                <p className="text-sm text-gray-400">ログイン中: {currentUser?.email}</p>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+              <div className="flex items-center gap-3">
+                <Shield className="w-8 h-8 text-blue-400" />
+                <div>
+                  <h1 className="text-2xl font-bold text-white">管理者ダッシュボード</h1>
+                  <p className="text-sm text-gray-400">ログイン中: {currentUser?.email}</p>
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-3">
