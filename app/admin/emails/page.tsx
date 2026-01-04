@@ -376,25 +376,31 @@ export default function AdminEmailsPage() {
 
   return (
     <div className="min-h-screen bg-black p-4">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto space-y-4">
+        {/* ヘッダー */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Mail className="h-6 w-6 text-blue-400" />
+              システムメール送信
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
+            <Button
+              onClick={() => router.push("/admin")}
+              variant="outline"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+            >
+              管理者ダッシュボード
+            </Button>
+          </div>
+        </div>
+
         <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-white flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
-                システムメール送信 - {currentUser?.email}
-              </CardTitle>
-              <Button
-                onClick={() => router.push("/admin")}
-                variant="outline"
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-              >
-                管理者ダッシュボード
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <Tabs defaultValue="broadcast" className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-gray-700">
                 <TabsTrigger value="broadcast" className="data-[state=active]:bg-blue-600">

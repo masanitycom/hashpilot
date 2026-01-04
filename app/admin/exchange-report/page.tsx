@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
-  ArrowLeft,
   Download,
   RefreshCw,
   TrendingUp,
@@ -351,23 +350,23 @@ export default function ExchangeReportPage() {
       <header className="bg-black border-b border-gray-700 sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  管理画面に戻る
-                </Button>
-              </Link>
-              <h1 className="text-2xl font-bold text-white">取引所入金報告</h1>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                <Building2 className="h-6 w-6 text-blue-400" />
+                取引所入金報告
+              </h1>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <Button onClick={fetchReports} variant="outline" size="sm" className="text-gray-300 border-gray-600">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 更新
               </Button>
-              <Button onClick={handleLogout} variant="ghost" size="sm" className="text-red-400 hover:text-red-300">
-                ログアウト
-              </Button>
+              <Link href="/admin">
+                <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                  管理者ダッシュボード
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

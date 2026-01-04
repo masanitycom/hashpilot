@@ -8,12 +8,12 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import {
   Loader2,
-  ArrowLeft,
   CheckCircle,
   XCircle,
   Clock,
   Search,
-  RefreshCw
+  RefreshCw,
+  CreditCard
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
@@ -242,15 +242,11 @@ export default function CoinwApprovalsPage() {
       <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  管理画面
-                </Button>
-              </Link>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
               <div>
-                <h1 className="text-xl font-bold text-white">
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <CreditCard className="h-5 w-5 text-purple-400" />
                   CoinW UID変更承認
                   {pendingCount > 0 && (
                     <Badge className="ml-2 bg-yellow-600">{pendingCount}件待ち</Badge>
@@ -259,15 +255,22 @@ export default function CoinwApprovalsPage() {
                 <p className="text-sm text-gray-400">ユーザーからのCoinW UID変更申請を承認・却下</p>
               </div>
             </div>
-            <Button
-              onClick={fetchChanges}
-              variant="outline"
-              size="sm"
-              className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
-            >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              更新
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={fetchChanges}
+                variant="outline"
+                size="sm"
+                className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                更新
+              </Button>
+              <Link href="/admin">
+                <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                  管理者ダッシュボード
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Shield, ArrowLeft, Settings, Save, RefreshCw, Copy } from "lucide-react"
+import { Settings, Save, RefreshCw, Copy } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -214,23 +214,21 @@ export default function AdminSettingsPage() {
       <header className="bg-gray-800 shadow-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Shield className="w-8 h-8 text-blue-400" />
-              <span className="text-xl font-bold text-white">HASH PILOT 管理者</span>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                <Settings className="h-6 w-6 text-gray-400" />
+                システム設定
+              </h1>
             </div>
-            <Button variant="outline" size="sm" onClick={() => router.push("/admin")}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              管理者ダッシュボードに戻る
+            <Button variant="outline" size="sm" onClick={() => router.push("/admin")} className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+              管理者ダッシュボード
             </Button>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">システム設定</h1>
-          <p className="text-gray-400">HASH PILOTシステムの基本設定</p>
-        </div>
 
         {message && (
           <Alert className="mb-6 bg-green-900 border-green-700">

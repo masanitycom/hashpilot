@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { RefreshCw, DollarSign, Users, CheckCircle, Clock, Calculator, Send, ArrowLeft } from "lucide-react"
+import { RefreshCw, DollarSign, Users, CheckCircle, Clock, Calculator, Send } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
 
@@ -218,15 +218,18 @@ export default function AdminRewardsPage() {
       <header className="bg-gray-800 shadow-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-gray-700">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  管理画面に戻る
-                </Button>
-              </Link>
-              <h1 className="text-2xl font-bold text-white">報酬管理</h1>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                <DollarSign className="h-6 w-6 text-green-400" />
+                報酬管理
+              </h1>
             </div>
+            <Link href="/admin">
+              <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                管理者ダッシュボード
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
-  ArrowLeft,
   Shield,
   AlertTriangle,
   Search,
@@ -315,22 +314,14 @@ export default function EmergencyInvestigationPage() {
       <div className="max-w-7xl mx-auto p-4 space-y-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button
-              onClick={() => router.push("/admin")}
-              variant="outline"
-              size="sm"
-              className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              管理者ダッシュボード
-            </Button>
-            <h1 className="text-3xl font-bold text-white flex items-center">
-              <AlertTriangle className="w-8 h-8 mr-3 text-red-400" />
+          <div className="flex items-center gap-4">
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <AlertTriangle className="h-6 w-6 text-red-400" />
               緊急調査: 異常設定分析
             </h1>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Button
               onClick={exportInvestigationData}
               variant="outline"
@@ -349,7 +340,14 @@ export default function EmergencyInvestigationPage() {
               <RefreshCw className="w-4 h-4 mr-2" />
               再調査
             </Button>
-            <Badge className="bg-red-600 text-white text-sm">{currentUser?.email}</Badge>
+            <Button
+              onClick={() => router.push("/admin")}
+              variant="outline"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+            >
+              管理者ダッシュボード
+            </Button>
           </div>
         </div>
 

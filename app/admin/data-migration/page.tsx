@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { ArrowLeft, Database, RefreshCw, AlertTriangle, CheckCircle, Play, Shield } from "lucide-react"
+import { Database, RefreshCw, AlertTriangle, CheckCircle, Play, Shield } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
 interface MigrationStatus {
@@ -399,29 +399,33 @@ export default function DataMigrationPage() {
       <div className="max-w-5xl mx-auto space-y-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-4">
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Database className="h-6 w-6 text-blue-400" />
+              データ移行
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
             <Button
-              onClick={() => router.push("/admin")}
+              onClick={fetchMigrationStatus}
+              disabled={loading}
               variant="outline"
               size="sm"
               className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              更新
+            </Button>
+            <Button
+              onClick={() => router.push("/admin")}
+              variant="outline"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+            >
               管理者ダッシュボード
             </Button>
-            <h1 className="text-3xl font-bold text-white flex items-center">
-              <Database className="w-8 h-8 mr-3 text-blue-400" />
-              データ移行
-            </h1>
           </div>
-          <Button
-            onClick={fetchMigrationStatus}
-            disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            更新
-          </Button>
         </div>
 
         {error && (

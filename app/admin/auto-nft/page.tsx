@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import {
   Loader2,
-  ArrowLeft,
   Gift,
   Search,
   Download,
@@ -242,21 +241,21 @@ export default function AdminAutoNftPage() {
       <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  管理画面
-                </Button>
-              </Link>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
               <div>
-                <h1 className="text-xl font-bold text-white flex items-center">
-                  <Gift className="h-6 w-6 mr-2 text-cyan-400" />
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Gift className="h-5 w-5 text-cyan-400" />
                   自動NFT付与履歴
                 </h1>
                 <p className="text-sm text-gray-400">紹介報酬$2,200到達による自動NFT付与の履歴</p>
               </div>
             </div>
+            <Link href="/admin">
+              <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                管理者ダッシュボード
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

@@ -10,16 +10,16 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Textarea } from "@/components/ui/textarea"
 import { supabase } from "@/lib/supabase"
-import { 
-  ArrowLeft, 
-  DollarSign, 
-  CheckCircle, 
-  XCircle, 
+import {
+  DollarSign,
+  CheckCircle,
+  XCircle,
   Loader2,
   Clock,
   AlertCircle,
   RefreshCw,
-  Copy
+  Copy,
+  Coins
 } from "lucide-react"
 
 interface BuybackRequest {
@@ -242,26 +242,32 @@ export default function AdminBuybackPage() {
       <div className="container mx-auto p-4 md:p-6 space-y-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.push("/admin")}
-              className="text-gray-400 hover:text-white"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <h1 className="text-2xl font-bold">NFT買い取り管理</h1>
+          <div className="flex items-center gap-4">
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Coins className="h-6 w-6 text-orange-400" />
+              NFT買い取り管理
+            </h1>
           </div>
-          <Button
-            onClick={fetchRequests}
-            variant="outline"
-            size="sm"
-            className="text-white bg-gray-700 border-gray-600 hover:bg-gray-600"
-          >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            更新
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={fetchRequests}
+              variant="outline"
+              size="sm"
+              className="text-white bg-gray-700 border-gray-600 hover:bg-gray-600"
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              更新
+            </Button>
+            <Button
+              onClick={() => router.push("/admin")}
+              variant="outline"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+            >
+              管理者ダッシュボード
+            </Button>
+          </div>
         </div>
 
         {/* 統計情報 */}

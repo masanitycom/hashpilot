@@ -321,32 +321,32 @@ export default function AdminReferralsPage() {
 
   return (
     <div className="min-h-screen bg-black p-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto space-y-4">
+        {/* ヘッダー */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Network className="h-6 w-6 text-purple-400" />
+              紹介関係管理
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
+            <Button onClick={fetchUsers} size="sm" className="bg-gray-700 hover:bg-gray-600 text-white">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              更新
+            </Button>
+            <Link href="/admin">
+              <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                管理者ダッシュボード
+              </Button>
+            </Link>
+          </div>
+        </div>
+
         <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-white flex items-center">
-                <Network className="w-5 h-5 mr-2" />
-                紹介関係管理 - {currentUser?.email}
-              </CardTitle>
-              <div className="flex space-x-2">
-                <Link href="/admin">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-                  >
-                    管理者ダッシュボード
-                  </Button>
-                </Link>
-                <Button onClick={fetchUsers} size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  更新
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="mb-6">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />

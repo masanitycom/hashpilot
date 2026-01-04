@@ -11,7 +11,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
-  ArrowLeft,
   Plus,
   Edit,
   Trash2,
@@ -214,23 +213,25 @@ export default function AnnouncementsAdminPage() {
         {/* ヘッダー */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <Link href="/admin">
-              <Button variant="outline" size="sm" className="bg-gray-800 text-white border-gray-600 hover:bg-gray-700">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                管理画面に戻る
-              </Button>
-            </Link>
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Megaphone className="h-6 w-6" />
+              <Megaphone className="h-6 w-6 text-yellow-400" />
               お知らせ管理
             </h1>
           </div>
-          {!showForm && (
-            <Button onClick={() => setShowForm(true)} className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="h-4 w-4 mr-2" />
-              新規作成
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {!showForm && (
+              <Button onClick={() => setShowForm(true)} className="bg-green-600 hover:bg-green-700">
+                <Plus className="h-4 w-4 mr-2" />
+                新規作成
+              </Button>
+            )}
+            <Link href="/admin">
+              <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                管理者ダッシュボード
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* メッセージ */}

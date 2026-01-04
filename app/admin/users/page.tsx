@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, Users, Search, Edit, Trash2, ArrowLeft, RefreshCw, Download, ArrowUp } from "lucide-react"
+import { Loader2, Users, Search, Edit, Trash2, RefreshCw, Download, ArrowUp } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
 
@@ -568,19 +568,17 @@ export default function AdminUsersPage() {
       <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  管理画面に戻る
-                </Button>
-              </Link>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
               <div>
-                <h1 className="text-xl font-bold text-white">ユーザー管理</h1>
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Users className="h-5 w-5 text-green-400" />
+                  ユーザー管理
+                </h1>
                 <p className="text-sm text-gray-400">全ユーザーの管理と編集</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <Button
                 onClick={fetchUsers}
                 variant="outline"
@@ -599,6 +597,11 @@ export default function AdminUsersPage() {
                 <Download className="h-4 w-4 mr-2" />
                 CSV出力
               </Button>
+              <Link href="/admin">
+                <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                  管理者ダッシュボード
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

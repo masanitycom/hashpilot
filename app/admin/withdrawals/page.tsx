@@ -9,14 +9,14 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Loader2,
-  ArrowLeft,
   DollarSign,
   Clock,
   CheckCircle,
   AlertCircle,
   Search,
   Download,
-  ArrowUp
+  ArrowUp,
+  Wallet
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
@@ -391,15 +391,11 @@ export default function AdminWithdrawalsPage() {
       <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  管理画面
-                </Button>
-              </Link>
+            <div className="flex items-center gap-4">
+              <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
               <div>
-                <h1 className="text-xl font-bold text-white">
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Wallet className="h-5 w-5 text-yellow-400" />
                   月末出金管理
                   {selectedMonth && (
                     <span className="text-blue-400 ml-2">
@@ -409,6 +405,13 @@ export default function AdminWithdrawalsPage() {
                 </h1>
                 <p className="text-sm text-gray-400">月末自動出金の処理と管理</p>
               </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link href="/admin">
+                <Button variant="outline" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600">
+                  管理者ダッシュボード
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

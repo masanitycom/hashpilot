@@ -19,7 +19,6 @@ import {
   InfoIcon,
   Trash2,
   Shield,
-  ArrowLeft,
   RefreshCw,
   Edit,
 } from "lucide-react"
@@ -891,23 +890,23 @@ export default function AdminYieldPage() {
       <div className="max-w-7xl mx-auto p-4 space-y-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-4">
+            <img src="/images/hash-pilot-logo.png" alt="HASH PILOT" className="h-10 rounded-lg shadow-lg" />
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Shield className="h-6 w-6 text-blue-400" />
+              日利設定
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
             <Button
               onClick={() => router.push("/admin")}
               variant="outline"
               size="sm"
-              className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
+              className="bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
               管理者ダッシュボード
             </Button>
-            <h1 className="text-3xl font-bold text-white flex items-center">
-              <Shield className="w-8 h-8 mr-3 text-blue-400" />
-              日利設定
-            </h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
           </div>
         </div>
 
