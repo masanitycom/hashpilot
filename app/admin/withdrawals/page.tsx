@@ -293,7 +293,7 @@ export default function AdminWithdrawalsPage() {
       "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計",
       "累計紹介報酬", "ロック額", "既払い紹介報酬", "払い出し可能額",
       "送金方法", "CoinW UID/送金先",
-      "CH紐付け", "ステータス", "タスク状況", "作成日", "完了日", "備考"
+      "CH紐付け", "タスク状況", "ステータス", "作成日", "完了日", "備考"
     ]
 
     // 出金レコードに保存されている個人利益・紹介報酬を使用
@@ -318,8 +318,8 @@ export default function AdminWithdrawalsPage() {
           w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
           w.withdrawal_address || "未設定",
           w.channel_linked_confirmed ? "確認済み" : "未確認",
-          w.status,
           w.task_completed ? "完了" : "未完了",
+          w.status,
           new Date(w.created_at).toLocaleDateString('ja-JP'),
           w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
           w.notes || ""
@@ -622,8 +622,8 @@ export default function AdminWithdrawalsPage() {
                     <th className="text-center py-3 px-2 text-gray-300">NFT数</th>
                     <th className="text-left py-3 px-2 text-gray-300">CoinW UID/送金先</th>
                     <th className="text-center py-3 px-2 text-gray-300">CH紐付け</th>
-                    <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
                     <th className="text-left py-3 px-2 text-gray-300">タスク状況</th>
+                    <th className="text-left py-3 px-2 text-gray-300">ステータス</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -732,15 +732,6 @@ export default function AdminWithdrawalsPage() {
                         )}
                       </td>
                       <td className="py-3 px-2">
-                        {getStatusBadge(withdrawal.status)}
-                        {withdrawal.status === 'not_created' && withdrawal.total_amount < 10 && (
-                          <div className="text-xs text-gray-500 mt-1">$10未満のため未作成</div>
-                        )}
-                        {withdrawal.status === 'not_created' && withdrawal.total_amount >= 10 && !withdrawal.withdrawal_method && (
-                          <div className="text-xs text-red-400 mt-1">送金先未設定</div>
-                        )}
-                      </td>
-                      <td className="py-3 px-2">
                         {withdrawal.task_completed ? (
                           <Badge className="bg-green-600 text-white">完了済み</Badge>
                         ) : withdrawal.status === 'not_created' ? (
@@ -752,6 +743,15 @@ export default function AdminWithdrawalsPage() {
                           <div className="text-xs text-gray-400 mt-1">
                             {new Date(withdrawal.task_completed_at).toLocaleDateString('ja-JP')}
                           </div>
+                        )}
+                      </td>
+                      <td className="py-3 px-2">
+                        {getStatusBadge(withdrawal.status)}
+                        {withdrawal.status === 'not_created' && withdrawal.total_amount < 10 && (
+                          <div className="text-xs text-gray-500 mt-1">$10未満のため未作成</div>
+                        )}
+                        {withdrawal.status === 'not_created' && withdrawal.total_amount >= 10 && !withdrawal.withdrawal_method && (
+                          <div className="text-xs text-red-400 mt-1">送金先未設定</div>
                         )}
                       </td>
                     </tr>
