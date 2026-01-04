@@ -70,9 +70,18 @@ export default function AdminPurchasesPage() {
   const [operationFilter, setOperationFilter] = useState<"all" | "operating" | "pre_operation">("all")
   const [userNfts, setUserNfts] = useState<NftDetail[]>([])
   const [loadingNfts, setLoadingNfts] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   useEffect(() => {
     checkAdminAccess()
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const checkAdminAccess = async () => {
@@ -1395,13 +1404,15 @@ export default function AdminPurchasesPage() {
         </Card>
 
         {/* トップに戻るボタン */}
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg z-50 transition-all"
-          title="トップに戻る"
-        >
-          <ArrowUp className="h-5 w-5" />
-        </button>
+        {showScrollTop && (
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-8 right-8 group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-4 rounded-2xl shadow-2xl z-50 transition-all duration-300 hover:scale-110 hover:shadow-blue-500/25"
+            title="トップに戻る"
+          >
+            <ArrowUp className="h-5 w-5 group-hover:-translate-y-1 transition-transform duration-200" />
+          </button>
+        )}
       </div>
     </div>
   )
