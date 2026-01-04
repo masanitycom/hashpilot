@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download, Search, Zap } from "lucide-react"
+import { CheckCircle, XCircle, Eye, RefreshCw, Shield, ExternalLink, Users, Copy, Edit, Download, Search, Zap, ArrowUp } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { sendApprovalEmailViaAuth } from "@/lib/send-approval-email"
 import { OperationStatus } from "@/components/operation-status"
@@ -1393,6 +1393,15 @@ export default function AdminPurchasesPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* トップに戻るボタン */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg z-50 transition-all"
+          title="トップに戻る"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
       </div>
     </div>
   )

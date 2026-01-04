@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, Users, Search, Edit, Trash2, ArrowLeft, RefreshCw, Download } from "lucide-react"
+import { Loader2, Users, Search, Edit, Trash2, ArrowLeft, RefreshCw, Download, ArrowUp } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
 
@@ -998,6 +998,15 @@ export default function AdminUsersPage() {
             </Card>
           </div>
         )}
+
+        {/* トップに戻るボタン */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg z-50 transition-all"
+          title="トップに戻る"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
       </div>
     </div>
   )
