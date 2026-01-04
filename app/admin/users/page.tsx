@@ -55,6 +55,7 @@ export default function AdminUsersPage() {
   const [error, setError] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
   const [distributionFilter, setDistributionFilter] = useState<"all" | "distributed" | "not_distributed">("all")
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "cancelled">("all")
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [editForm, setEditForm] = useState({
     coinw_uid: "",
@@ -77,7 +78,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     filterUsers()
-  }, [users, searchTerm, distributionFilter])
+  }, [users, searchTerm, distributionFilter, statusFilter])
 
   const checkAdminAuth = async () => {
     try {
@@ -222,6 +223,13 @@ export default function AdminUsersPage() {
       filtered = filtered.filter(user => user.nft_distributed === true)
     } else if (distributionFilter === "not_distributed") {
       filtered = filtered.filter(user => user.nft_distributed !== true)
+    }
+
+    // ステータスフィルター（解約済み/アクティブ）
+    if (statusFilter === "cancelled") {
+      filtered = filtered.filter(user => user.is_active_investor === false && user.operation_start_date)
+    } else if (statusFilter === "active") {
+      filtered = filtered.filter(user => user.is_active_investor !== false)
     }
 
     // 検索フィルター
@@ -621,6 +629,17 @@ export default function AdminUsersPage() {
                   <option value="all">NFT配布: 全て</option>
                   <option value="distributed">配布済み</option>
                   <option value="not_distributed">未配布</option>
+                </select>
+              </div>
+              <div>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "cancelled")}
+                  className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="all">ステータス: 全て</option>
+                  <option value="active">アクティブのみ</option>
+                  <option value="cancelled">解約済みのみ</option>
                 </select>
               </div>
               <Badge variant="outline" className="text-gray-300">

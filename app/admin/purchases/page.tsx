@@ -67,6 +67,7 @@ export default function AdminPurchasesPage() {
   const [newApprovalDate, setNewApprovalDate] = useState("")
   const [approvalChangeReason, setApprovalChangeReason] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const [operationFilter, setOperationFilter] = useState<"all" | "operating" | "pre_operation">("all")
   const [userNfts, setUserNfts] = useState<NftDetail[]>([])
   const [loadingNfts, setLoadingNfts] = useState(false)
 
@@ -206,6 +207,63 @@ export default function AdminPurchasesPage() {
     const startDate = new Date(operationStartDate)
     startDate.setHours(0, 0, 0, 0)
     return startDate <= today
+  }
+
+  // 承認日から運用開始日を計算（15日ルール）
+  const calculateOperationStartDate = (approvalDate: string | null): Date | null => {
+    if (!approvalDate) return null
+    const date = new Date(approvalDate)
+    const day = date.getDate()
+    const month = date.getMonth()
+    const year = date.getFullYear()
+
+    if (day <= 5) {
+      // 5日まで → 当月15日
+      return new Date(year, month, 15)
+    } else if (day <= 20) {
+      // 6日～20日 → 翌月1日
+      return new Date(year, month + 1, 1)
+    } else {
+      // 21日～月末 → 翌月15日
+      return new Date(year, month + 1, 15)
+    }
+  }
+
+  // 購入が運用中かどうかを判定
+  const isPurchaseOperating = (purchase: Purchase): boolean => {
+    if (!purchase.admin_approved || !purchase.admin_approved_at) return false
+    const operationStart = calculateOperationStartDate(purchase.admin_approved_at)
+    if (!operationStart) return false
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    operationStart.setHours(0, 0, 0, 0)
+    return operationStart <= today
+  }
+
+  // フィルタリング関数（統計とテーブルで共通使用）
+  const getFilteredPurchases = () => {
+    return purchases.filter(purchase => {
+      // 検索フィルター
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase()
+        const matchesSearch = (
+          purchase.user_id.toLowerCase().includes(term) ||
+          purchase.email.toLowerCase().includes(term) ||
+          (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
+          purchase.id.toLowerCase().includes(term) ||
+          (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
+        )
+        if (!matchesSearch) return false
+      }
+      // 運用フィルター
+      if (operationFilter === "operating") {
+        return isPurchaseOperating(purchase)
+      } else if (operationFilter === "pre_operation") {
+        if (!purchase.admin_approved) return true
+        return !isPurchaseOperating(purchase)
+      }
+      return true
+    })
   }
 
   const confirmPayment = async (purchaseId: string) => {
@@ -725,85 +783,33 @@ export default function AdminPurchasesPage() {
             <div className="mb-4 grid grid-cols-4 gap-4 text-center">
               <div className="bg-gray-700 p-3 rounded">
                 <div className="text-2xl font-bold text-white">
-                  {(() => {
-                    const filteredPurchases = purchases.filter(purchase => {
-                      if (!searchTerm) return true
-                      const term = searchTerm.toLowerCase()
-                      return (
-                        purchase.user_id.toLowerCase().includes(term) ||
-                        purchase.email.toLowerCase().includes(term) ||
-                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
-                        purchase.id.toLowerCase().includes(term) ||
-                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
-                      )
-                    })
-                    return filteredPurchases.length
-                  })()}
+                  {getFilteredPurchases().length}
                 </div>
-                <div className="text-sm text-gray-400">{searchTerm ? '検索結果' : '総購入数'}</div>
+                <div className="text-sm text-gray-400">{searchTerm || operationFilter !== "all" ? '検索結果' : '総購入数'}</div>
               </div>
               <div className="bg-yellow-900 p-3 rounded">
                 <div className="text-2xl font-bold text-yellow-400">
-                  {(() => {
-                    const filteredPurchases = purchases.filter(purchase => {
-                      if (!searchTerm) return true
-                      const term = searchTerm.toLowerCase()
-                      return (
-                        purchase.user_id.toLowerCase().includes(term) ||
-                        purchase.email.toLowerCase().includes(term) ||
-                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
-                        purchase.id.toLowerCase().includes(term) ||
-                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
-                      )
-                    })
-                    return filteredPurchases.filter((p) => p.payment_status === "payment_sent" && !p.admin_approved).length
-                  })()}
+                  {getFilteredPurchases().filter((p) => p.payment_status === "payment_sent" && !p.admin_approved).length}
                 </div>
                 <div className="text-sm text-yellow-200">入金確認待ち</div>
               </div>
               <div className="bg-green-900 p-3 rounded">
                 <div className="text-2xl font-bold text-green-400">
-                  {(() => {
-                    const filteredPurchases = purchases.filter(purchase => {
-                      if (!searchTerm) return true
-                      const term = searchTerm.toLowerCase()
-                      return (
-                        purchase.user_id.toLowerCase().includes(term) ||
-                        purchase.email.toLowerCase().includes(term) ||
-                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
-                        purchase.id.toLowerCase().includes(term) ||
-                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
-                      )
-                    })
-                    return filteredPurchases.filter((p) => p.admin_approved).length
-                  })()}
+                  {getFilteredPurchases().filter((p) => p.admin_approved).length}
                 </div>
                 <div className="text-sm text-green-200">入金確認済み</div>
               </div>
               <div className="bg-red-900 p-3 rounded">
                 <div className="text-2xl font-bold text-red-400">
-                  {(() => {
-                    const filteredPurchases = purchases.filter(purchase => {
-                      if (!searchTerm) return true
-                      const term = searchTerm.toLowerCase()
-                      return (
-                        purchase.user_id.toLowerCase().includes(term) ||
-                        purchase.email.toLowerCase().includes(term) ||
-                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
-                        purchase.id.toLowerCase().includes(term) ||
-                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
-                      )
-                    })
-                    return filteredPurchases.filter((p) => p.payment_status === "rejected").length
-                  })()}
+                  {getFilteredPurchases().filter((p) => p.payment_status === "rejected").length}
                 </div>
                 <div className="text-sm text-red-200">拒否</div>
               </div>
             </div>
 
-            {/* 検索バー */}
-            <div className="mb-4">
-              <div className="relative">
+            {/* 検索バーとフィルター */}
+            <div className="mb-4 flex items-center space-x-4">
+              <div className="relative flex-1">
                 <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
@@ -821,6 +827,15 @@ export default function AdminPurchasesPage() {
                   </button>
                 )}
               </div>
+              <select
+                value={operationFilter}
+                onChange={(e) => setOperationFilter(e.target.value as "all" | "operating" | "pre_operation")}
+                className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
+              >
+                <option value="all">運用: 全て</option>
+                <option value="operating">運用中のみ</option>
+                <option value="pre_operation">運用前のみ</option>
+              </select>
             </div>
 
             <div className="overflow-x-auto">
@@ -837,19 +852,7 @@ export default function AdminPurchasesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {purchases
-                    .filter(purchase => {
-                      if (!searchTerm) return true
-                      const term = searchTerm.toLowerCase()
-                      return (
-                        purchase.user_id.toLowerCase().includes(term) ||
-                        purchase.email.toLowerCase().includes(term) ||
-                        (purchase.coinw_uid && purchase.coinw_uid.toLowerCase().includes(term)) ||
-                        purchase.id.toLowerCase().includes(term) ||
-                        (purchase.full_name && purchase.full_name.toLowerCase().includes(term))
-                      )
-                    })
-                    .map((purchase) => (
+                  {getFilteredPurchases().map((purchase) => (
                     <tr key={purchase.id} className="border-b border-gray-700 hover:bg-gray-750">
                       <td className="p-2">
                         <div>
