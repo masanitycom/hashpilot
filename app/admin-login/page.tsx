@@ -203,7 +203,7 @@ export default function AdminLoginPage() {
               <Shield className="w-8 h-8 text-red-600" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-white">管理者ログイン（デバッグ版）</CardTitle>
+          <CardTitle className="text-2xl text-white">管理者ログイン</CardTitle>
           <CardDescription className="text-gray-300">HASH PILOT管理者専用ログイン</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -294,13 +294,6 @@ export default function AdminLoginPage() {
                   通常ログイン
                 </button>
               </div>
-            </div>
-
-            <div className="bg-yellow-900 border border-yellow-700 rounded-lg p-3">
-              <p className="text-yellow-200 text-xs">
-                <strong>デバッグ情報:</strong> このページは問題解決のためのデバッグ版です。
-                詳細なエラー情報とリクエスト内容を表示します。
-              </p>
             </div>
 
             <div className="bg-blue-900 border border-blue-700 rounded-lg p-3">
