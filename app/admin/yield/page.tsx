@@ -850,6 +850,18 @@ export default function AdminYieldPage() {
     }
   }
 
+  // 認証確認中はローディング表示
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-white">認証確認中...</p>
+        </div>
+      </div>
+    )
+  }
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
