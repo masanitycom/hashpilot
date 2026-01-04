@@ -764,7 +764,7 @@ export default function AdminPurchasesPage() {
                   管理者ダッシュボード
                 </Button>
                 <Button
-                  onClick={() => router.push("/admin/auto-nft-grants")}
+                  onClick={() => router.push("/admin/auto-nft")}
                   size="sm"
                   variant="outline"
                   className="bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
