@@ -313,12 +313,17 @@ export default function AdminWithdrawalsPage() {
         const lockAmount = w.phase === 'HOLD' ? 1100 : 0
         const withdrawableFromHold = w.phase === 'HOLD' ? Math.max(0, 1100 - withdrawnReferral) : 0
 
+        // HOLDユーザーは既払い分を引いた金額を表示
+        const displayReferralAmount = w.phase === 'HOLD'
+          ? Math.max(0, (w.referral_amount || 0) - withdrawnReferral)
+          : (w.referral_amount || 0)
+
         return [
           w.user_id,
           w.email,
           w.phase || '-',
           (w.personal_amount || 0).toFixed(3),
-          (w.referral_amount || 0).toFixed(3),
+          displayReferralAmount.toFixed(3),
           w.total_amount.toFixed(3),
           cumUsdt.toFixed(3),
           lockAmount.toFixed(3),
@@ -686,25 +691,36 @@ export default function AdminWithdrawalsPage() {
                       </td>
                       {/* 紹介報酬 */}
                       <td className="py-3 px-2 text-right">
-                        <span className={`${
-                          withdrawal.phase === 'USDT' ? 'text-orange-400' : 'text-gray-500'
-                        }`}>
-                          ${(withdrawal.referral_amount || 0).toFixed(2)}
-                        </span>
-                        {/* HOLDユーザーの詳細表示 */}
-                        {withdrawal.phase === 'HOLD' && withdrawal.cum_usdt >= 1100 && (
-                          <div className="text-xs mt-1 space-y-0.5">
-                            <div className="text-orange-400">
-                              🔒 ロック: $1,100.00
-                            </div>
-                            <div className="text-gray-400">
-                              既払: ${(withdrawal.withdrawn_referral_usdt || 0).toFixed(2)}
-                            </div>
-                            <div className="text-green-400 font-medium">
-                              払出可: ${Math.max(0, 1100 - (withdrawal.withdrawn_referral_usdt || 0)).toFixed(2)}
-                            </div>
-                          </div>
-                        )}
+                        {(() => {
+                          // HOLDユーザーは既払い分を引いた金額を表示
+                          const withdrawnReferral = withdrawal.withdrawn_referral_usdt || 0
+                          const displayAmount = withdrawal.phase === 'HOLD'
+                            ? Math.max(0, (withdrawal.referral_amount || 0) - withdrawnReferral)
+                            : (withdrawal.referral_amount || 0)
+                          return (
+                            <>
+                              <span className={`${
+                                withdrawal.phase === 'USDT' ? 'text-orange-400' : 'text-gray-500'
+                              }`}>
+                                ${displayAmount.toFixed(2)}
+                              </span>
+                              {/* HOLDユーザーの詳細表示 */}
+                              {withdrawal.phase === 'HOLD' && withdrawal.cum_usdt >= 1100 && (
+                                <div className="text-xs mt-1 space-y-0.5">
+                                  <div className="text-orange-400">
+                                    🔒 ロック: $1,100.00
+                                  </div>
+                                  <div className="text-gray-400">
+                                    既払: ${withdrawnReferral.toFixed(2)}
+                                  </div>
+                                  <div className="text-green-400 font-medium">
+                                    払出可: ${Math.max(0, 1100 - withdrawnReferral).toFixed(2)}
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )
+                        })()}
                       </td>
                       {/* 出金合計 */}
                       <td className="py-3 px-2 text-right">
