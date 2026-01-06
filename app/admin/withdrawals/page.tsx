@@ -225,8 +225,17 @@ export default function AdminWithdrawalsPage() {
       setWithdrawals(formattedData)
 
       // 統計情報を計算（出金レコードの personal_amount と referral_amount を使用）
+      // HOLDユーザーは既払い分を引いた金額で計算
       const personalProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.personal_amount || 0), 0)
-      const referralProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.referral_amount || 0), 0)
+      const referralProfitTotal = formattedData.reduce((sum, w) => {
+        const referralAmount = Number(w.referral_amount || 0)
+        const withdrawnReferral = Number(w.withdrawn_referral_usdt || 0)
+        // HOLDユーザーは既払い分を引く
+        const adjustedAmount = w.phase === 'HOLD'
+          ? Math.max(0, referralAmount - withdrawnReferral)
+          : referralAmount
+        return sum + adjustedAmount
+      }, 0)
       const totalAmount = formattedData.reduce((sum, w) => sum + Number(w.total_amount || 0), 0)
 
       const stats: MonthlyStats = {
