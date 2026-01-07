@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info, RotateCcw, Inbox } from "lucide-react"
+import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info, RotateCcw, Inbox, Trash2 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { AVAILABLE_TEMPLATE_VARIABLES } from "@/lib/email-template"
 
@@ -190,6 +190,28 @@ export default function AdminEmailsPage() {
     setSelectedReceivedEmail(email)
     if (!email.is_read) {
       await markAsRead(email.id)
+    }
+  }
+
+  // 受信メールを削除
+  const deleteReceivedEmail = async (emailId: string) => {
+    if (!confirm("このメールを削除しますか？")) return
+
+    try {
+      const { error } = await supabase
+        .from("received_emails")
+        .delete()
+        .eq("id", emailId)
+
+      if (error) throw error
+
+      // ローカルステートを更新
+      setReceivedEmails(prev => prev.filter(e => e.id !== emailId))
+      setSelectedReceivedEmail(null)
+      alert("メールを削除しました")
+    } catch (error: any) {
+      console.error("Error deleting email:", error)
+      alert("削除に失敗しました: " + error.message)
     }
   }
 
@@ -947,13 +969,23 @@ export default function AdminEmailsPage() {
 
                       {/* フッター */}
                       <div className="bg-gray-800 border-t border-gray-600 p-4 flex-shrink-0 flex justify-between items-center">
-                        <Button
-                          onClick={() => setSelectedReceivedEmail(null)}
-                          variant="outline"
-                          className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
-                        >
-                          閉じる
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => setSelectedReceivedEmail(null)}
+                            variant="outline"
+                            className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+                          >
+                            閉じる
+                          </Button>
+                          <Button
+                            onClick={() => deleteReceivedEmail(selectedReceivedEmail.id)}
+                            variant="outline"
+                            className="bg-red-900 text-red-300 border-red-700 hover:bg-red-800"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            削除
+                          </Button>
+                        </div>
                         <Button
                           onClick={() => {
                             alert("返信機能は準備中です")
