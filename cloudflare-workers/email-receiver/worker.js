@@ -19,13 +19,27 @@ export default {
       const subject = message.headers.get("subject") || "(件名なし)";
       const messageId = message.headers.get("message-id") || "";
 
-      // 送信者名を取得（From: "名前" <email@example.com> 形式の場合）
+      // 送信者名とメールアドレスを取得
       let fromName = "";
       let fromEmail = from;
-      const fromMatch = from.match(/^"?([^"<]+)"?\s*<?([^>]+)>?$/);
-      if (fromMatch) {
-        fromName = fromMatch[1].trim();
-        fromEmail = fromMatch[2].trim();
+
+      // パターン1: "名前" <email@example.com>
+      // パターン2: 名前 <email@example.com>
+      // パターン3: <email@example.com>
+      // パターン4: email@example.com
+      const emailRegex = /<([^>]+)>/;
+      const emailMatch = from.match(emailRegex);
+
+      if (emailMatch) {
+        // <email> 形式がある場合
+        fromEmail = emailMatch[1].trim();
+        // < より前の部分を名前として取得
+        const namePart = from.substring(0, from.indexOf('<')).trim();
+        fromName = namePart.replace(/^["']|["']$/g, ''); // 引用符を削除
+      } else {
+        // メールアドレスのみの場合
+        fromEmail = from.trim();
+        fromName = "";
       }
 
       // メール本文を取得
