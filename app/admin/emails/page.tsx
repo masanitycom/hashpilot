@@ -881,54 +881,81 @@ export default function AdminEmailsPage() {
 
                 {/* メール詳細モーダル */}
                 {selectedReceivedEmail && (
-                  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                    <Card className="bg-gray-800 border-gray-700 w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
-                      <CardHeader className="border-b border-gray-700 flex-shrink-0">
+                  <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+                    <Card className="bg-gray-900 border-gray-600 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+                      {/* ヘッダー */}
+                      <div className="bg-gray-800 border-b border-gray-600 p-6 flex-shrink-0">
                         <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="text-white">{selectedReceivedEmail.subject || "(件名なし)"}</CardTitle>
-                            <p className="text-sm text-gray-400 mt-1">
-                              From: {selectedReceivedEmail.from_name} &lt;{selectedReceivedEmail.from_email}&gt;
-                            </p>
-                            <p className="text-sm text-gray-400">
-                              To: {selectedReceivedEmail.to_email}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {new Date(selectedReceivedEmail.received_at).toLocaleString("ja-JP")}
-                            </p>
+                          <div className="flex-1">
+                            <h2 className="text-xl font-bold text-white mb-4">
+                              {selectedReceivedEmail.subject || "(件名なし)"}
+                            </h2>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-3">
+                                <span className="text-gray-400 w-16">From:</span>
+                                <span className="text-white font-medium">
+                                  {selectedReceivedEmail.from_name || selectedReceivedEmail.from_email}
+                                </span>
+                                <span className="text-gray-500 text-sm">
+                                  &lt;{selectedReceivedEmail.from_email}&gt;
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="text-gray-400 w-16">To:</span>
+                                <span className="text-orange-400 font-medium">{selectedReceivedEmail.to_email}</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="text-gray-400 w-16">Date:</span>
+                                <span className="text-gray-300">
+                                  {new Date(selectedReceivedEmail.received_at).toLocaleString("ja-JP")}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                           <Button
                             onClick={() => setSelectedReceivedEmail(null)}
-                            size="sm"
+                            size="lg"
                             variant="ghost"
-                            className="text-gray-400 hover:text-white"
+                            className="text-gray-400 hover:text-white hover:bg-gray-700 text-2xl px-3"
                           >
                             ✕
                           </Button>
                         </div>
-                      </CardHeader>
-                      <CardContent className="flex-1 overflow-auto p-4">
-                        {selectedReceivedEmail.body_html ? (
-                          <div
-                            className="prose prose-invert max-w-none"
-                            dangerouslySetInnerHTML={{ __html: selectedReceivedEmail.body_html }}
-                          />
-                        ) : (
-                          <pre className="text-white whitespace-pre-wrap font-sans">
-                            {selectedReceivedEmail.body_text}
-                          </pre>
-                        )}
-                      </CardContent>
-                      <div className="border-t border-gray-700 p-4 flex-shrink-0">
+                      </div>
+
+                      {/* 本文 */}
+                      <div className="flex-1 overflow-auto p-6 bg-gray-950">
+                        <div className="bg-white rounded-lg p-6 text-gray-900 min-h-[200px]">
+                          {selectedReceivedEmail.body_html ? (
+                            <div
+                              className="prose max-w-none"
+                              dangerouslySetInnerHTML={{ __html: selectedReceivedEmail.body_html }}
+                            />
+                          ) : (
+                            <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed">
+                              {selectedReceivedEmail.body_text}
+                            </pre>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* フッター */}
+                      <div className="bg-gray-800 border-t border-gray-600 p-4 flex-shrink-0 flex justify-between items-center">
+                        <Button
+                          onClick={() => setSelectedReceivedEmail(null)}
+                          variant="outline"
+                          className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+                        >
+                          閉じる
+                        </Button>
                         <Button
                           onClick={() => {
-                            // 返信機能（将来実装）
                             alert("返信機能は準備中です")
                           }}
-                          className="bg-orange-600 hover:bg-orange-700"
+                          className="bg-orange-600 hover:bg-orange-700 px-6"
                         >
                           <Send className="w-4 h-4 mr-2" />
-                          返信
+                          返信する
                         </Button>
                       </div>
                     </Card>

@@ -138,24 +138,65 @@ export default {
  */
 function decodeContent(content, fullPart) {
   const encoding = fullPart.match(/Content-Transfer-Encoding:\s*(\S+)/i);
+  const charsetMatch = fullPart.match(/charset=["']?([^"';\s]+)["']?/i);
+  const charset = charsetMatch ? charsetMatch[1].toLowerCase() : 'utf-8';
+
+  let decoded = content;
 
   if (encoding) {
     const enc = encoding[1].toLowerCase();
 
     if (enc === "base64") {
       try {
-        return atob(content.replace(/\s/g, ""));
+        // Base64デコード
+        const binaryStr = atob(content.replace(/\s/g, ""));
+        // UTF-8としてデコード
+        decoded = decodeUtf8(binaryStr);
       } catch (e) {
-        return content;
+        decoded = content;
       }
-    }
-
-    if (enc === "quoted-printable") {
-      return decodeQuotedPrintable(content);
+    } else if (enc === "quoted-printable") {
+      decoded = decodeQuotedPrintable(content);
+      // UTF-8バイト列をデコード
+      decoded = decodeUtf8Bytes(decoded);
     }
   }
 
-  return content.trim();
+  return decoded.trim();
+}
+
+/**
+ * バイナリ文字列をUTF-8としてデコード
+ */
+function decodeUtf8(binaryStr) {
+  try {
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++) {
+      bytes[i] = binaryStr.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+  } catch (e) {
+    return binaryStr;
+  }
+}
+
+/**
+ * Quoted-Printableデコード後のUTF-8バイト列をデコード
+ */
+function decodeUtf8Bytes(str) {
+  try {
+    // 文字列をバイト配列に変換
+    const bytes = [];
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      if (code < 256) {
+        bytes.push(code);
+      }
+    }
+    return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
+  } catch (e) {
+    return str;
+  }
 }
 
 /**
