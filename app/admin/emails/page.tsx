@@ -261,39 +261,21 @@ export default function AdminEmailsPage() {
         originalBodyHtml = selectedReceivedEmail.body_text.replace(/\n/g, "<br>")
       }
 
-      // HTML形式の引用付き本文を作成
-      const htmlBody = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }
-    .reply-content { margin-bottom: 24px; }
-    .quote-header { color: #666; font-size: 12px; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-top: 24px; margin-bottom: 12px; }
-    .quoted-content { border-left: 3px solid #ccc; padding-left: 16px; color: #555; margin-left: 8px; }
-    .signature { margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; color: #666; font-size: 12px; }
-  </style>
-</head>
-<body>
-  <div class="reply-content">
-    ${replyBodyHtml}
-  </div>
-
-  <div class="quote-header">
-    ${originalDate} ${originalSender} wrote:
-  </div>
-  <div class="quoted-content">
-    ${originalBodyHtml || "(本文なし)"}
-  </div>
-
-  <div class="signature">
-    --<br>
-    HASH PILOT NFT<br>
-    <a href="https://hashpilot.net">https://hashpilot.net</a>
-  </div>
-</body>
-</html>`
+      // HTML形式の引用付き本文を作成（シンプルなインライン形式）
+      const htmlBody = `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333;">
+<p>${replyBodyHtml}</p>
+<hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;">
+<p style="color: #666; font-size: 12px;">${originalDate} ${originalSender} wrote:</p>
+<blockquote style="border-left: 3px solid #ccc; padding-left: 16px; margin-left: 8px; color: #555;">
+${originalBodyHtml || "(本文なし)"}
+</blockquote>
+<hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;">
+<p style="color: #666; font-size: 12px;">
+--<br>
+HASH PILOT NFT<br>
+<a href="https://hashpilot.net" style="color: #3b82f6;">https://hashpilot.net</a>
+</p>
+</div>`
 
       // system_emailsに保存してEdge Functionで送信
       const { data: emailData, error: insertError } = await supabase
