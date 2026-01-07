@@ -1,0 +1,12 @@
+name = "hashpilot-email-receiver"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# 環境変数（Cloudflare Dashboardで設定）
+# [vars]
+# SUPABASE_URL = "https://soghqozaxfswtxxbgeer.supabase.co"
+# SUPABASE_SERVICE_KEY = "YOUR_SERVICE_KEY"
+
+# Email Routingトリガー
+# Cloudflare DashboardのEmail Routing設定で
+# support@hashpilot.biz をこのWorkerに紐付ける

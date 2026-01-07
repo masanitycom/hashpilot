@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info, RotateCcw } from "lucide-react"
+import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info, RotateCcw, Inbox } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { AVAILABLE_TEMPLATE_VARIABLES } from "@/lib/email-template"
 
@@ -33,6 +33,21 @@ interface UserSearchResult {
   full_name: string
 }
 
+interface ReceivedEmail {
+  id: string
+  message_id: string
+  from_email: string
+  from_name: string
+  to_email: string
+  subject: string
+  body_text: string
+  body_html: string
+  received_at: string
+  is_read: boolean
+  is_replied: boolean
+  replied_at: string | null
+}
+
 export default function AdminEmailsPage() {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -40,6 +55,13 @@ export default function AdminEmailsPage() {
   const [actionLoading, setActionLoading] = useState(false)
   const [resendingEmailId, setResendingEmailId] = useState<string | null>(null)
   const router = useRouter()
+
+  // 送信元アドレス選択
+  const [senderAddress, setSenderAddress] = useState("noreply@send.hashpilot.biz")
+  const SENDER_OPTIONS = [
+    { value: "noreply@send.hashpilot.biz", label: "noreply@send.hashpilot.biz（システム通知用）" },
+    { value: "support@hashpilot.biz", label: "support@hashpilot.biz（サポート用・返信可）" },
+  ]
 
   // 一斉メール送信フォーム
   const [subject, setSubject] = useState("")
@@ -59,6 +81,12 @@ export default function AdminEmailsPage() {
 
   // メール送信履歴
   const [emailHistory, setEmailHistory] = useState<EmailHistory[]>([])
+
+  // 受信メール
+  const [receivedEmails, setReceivedEmails] = useState<ReceivedEmail[]>([])
+  const [selectedReceivedEmail, setSelectedReceivedEmail] = useState<ReceivedEmail | null>(null)
+  const [inboxLoading, setInboxLoading] = useState(false)
+  const [showUnreadOnly, setShowUnreadOnly] = useState(false)
 
   useEffect(() => {
     checkAdminAccess()
@@ -121,6 +149,50 @@ export default function AdminEmailsPage() {
     }
   }
 
+  // 受信メール取得
+  const fetchReceivedEmails = async () => {
+    setInboxLoading(true)
+    try {
+      const { data, error } = await supabase.rpc("get_received_emails", {
+        p_limit: 50,
+        p_offset: 0,
+        p_unread_only: showUnreadOnly,
+      })
+
+      if (error) throw error
+      setReceivedEmails(data || [])
+    } catch (error: any) {
+      console.error("Error fetching received emails:", error)
+    } finally {
+      setInboxLoading(false)
+    }
+  }
+
+  // 受信メールを既読にする
+  const markAsRead = async (emailId: string) => {
+    try {
+      const { error } = await supabase.rpc("mark_received_email_as_read", {
+        p_email_id: emailId,
+      })
+      if (error) throw error
+
+      // ローカルステートを更新
+      setReceivedEmails(prev =>
+        prev.map(e => e.id === emailId ? { ...e, is_read: true } : e)
+      )
+    } catch (error: any) {
+      console.error("Error marking email as read:", error)
+    }
+  }
+
+  // メール詳細を開く
+  const openEmailDetail = async (email: ReceivedEmail) => {
+    setSelectedReceivedEmail(email)
+    if (!email.is_read) {
+      await markAsRead(email.id)
+    }
+  }
+
   const sendBroadcastEmail = async () => {
     if (!subject.trim() || !body.trim()) {
       alert("件名と本文を入力してください")
@@ -140,6 +212,7 @@ export default function AdminEmailsPage() {
         p_email_type: "broadcast",
         p_admin_email: currentUser.email,
         p_target_group: targetGroup,
+        p_from_email: senderAddress,
       })
 
       if (createError) throw createError
@@ -262,6 +335,7 @@ export default function AdminEmailsPage() {
         p_email_type: "individual",
         p_admin_email: currentUser.email,
         p_target_user_ids: userIdArray,
+        p_from_email: senderAddress,
       })
 
       if (createError) throw createError
@@ -402,7 +476,7 @@ export default function AdminEmailsPage() {
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
             <Tabs defaultValue="broadcast" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-gray-700">
+              <TabsList className="grid w-full grid-cols-4 bg-gray-700">
                 <TabsTrigger value="broadcast" className="data-[state=active]:bg-blue-600">
                   <Users className="w-4 h-4 mr-2" />
                   一斉送信
@@ -410,6 +484,15 @@ export default function AdminEmailsPage() {
                 <TabsTrigger value="individual" className="data-[state=active]:bg-green-600">
                   <User className="w-4 h-4 mr-2" />
                   個別送信
+                </TabsTrigger>
+                <TabsTrigger value="inbox" className="data-[state=active]:bg-orange-600" onClick={fetchReceivedEmails}>
+                  <Inbox className="w-4 h-4 mr-2" />
+                  受信箱
+                  {receivedEmails.filter(e => !e.is_read).length > 0 && (
+                    <Badge className="ml-1 bg-red-500 text-white text-xs px-1.5">
+                      {receivedEmails.filter(e => !e.is_read).length}
+                    </Badge>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger value="history" className="data-[state=active]:bg-purple-600">
                   <History className="w-4 h-4 mr-2" />
@@ -420,6 +503,27 @@ export default function AdminEmailsPage() {
               {/* 一斉送信タブ */}
               <TabsContent value="broadcast" className="space-y-4 mt-4">
                 <div className="space-y-4">
+                  <div>
+                    <Label className="text-white">送信元アドレス</Label>
+                    <Select value={senderAddress} onValueChange={setSenderAddress}>
+                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 border-gray-600">
+                        {SENDER_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {senderAddress === "support@hashpilot.biz" && (
+                      <p className="text-xs text-green-400 mt-1">
+                        ※ このアドレスはユーザーが返信可能です
+                      </p>
+                    )}
+                  </div>
+
                   <div>
                     <Label className="text-white">送信先グループ</Label>
                     <Select value={targetGroup} onValueChange={setTargetGroup}>
@@ -501,6 +605,27 @@ export default function AdminEmailsPage() {
               {/* 個別送信タブ */}
               <TabsContent value="individual" className="space-y-4 mt-4">
                 <div className="space-y-4">
+                  <div>
+                    <Label className="text-white">送信元アドレス</Label>
+                    <Select value={senderAddress} onValueChange={setSenderAddress}>
+                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 border-gray-600">
+                        {SENDER_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {senderAddress === "support@hashpilot.biz" && (
+                      <p className="text-xs text-green-400 mt-1">
+                        ※ このアドレスはユーザーが返信可能です
+                      </p>
+                    )}
+                  </div>
+
                   <div className="relative">
                     <Label className="text-white">送信先ユーザー検索</Label>
                     <Input
@@ -617,6 +742,154 @@ export default function AdminEmailsPage() {
                     {actionLoading ? "送信中..." : "個別送信"}
                   </Button>
                 </div>
+              </TabsContent>
+
+              {/* 受信箱タブ */}
+              <TabsContent value="inbox" className="mt-4">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-white text-lg font-semibold flex items-center gap-2">
+                      <Inbox className="w-5 h-5 text-orange-400" />
+                      受信メール
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <label className="flex items-center gap-2 text-sm text-gray-300">
+                        <input
+                          type="checkbox"
+                          checked={showUnreadOnly}
+                          onChange={(e) => setShowUnreadOnly(e.target.checked)}
+                          className="rounded"
+                        />
+                        未読のみ
+                      </label>
+                      <Button
+                        onClick={fetchReceivedEmails}
+                        size="sm"
+                        variant="outline"
+                        className="bg-gray-700 text-white border-gray-600"
+                        disabled={inboxLoading}
+                      >
+                        <RefreshCw className={`w-4 h-4 mr-2 ${inboxLoading ? "animate-spin" : ""}`} />
+                        更新
+                      </Button>
+                    </div>
+                  </div>
+
+                  {inboxLoading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
+                      <p className="mt-2 text-gray-400">読み込み中...</p>
+                    </div>
+                  ) : receivedEmails.length === 0 ? (
+                    <div className="text-center py-8 text-gray-400">
+                      <Inbox className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      受信メールがありません
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {receivedEmails.map((email) => (
+                        <Card
+                          key={email.id}
+                          onClick={() => openEmailDetail(email)}
+                          className={`cursor-pointer transition-colors ${
+                            email.is_read
+                              ? "bg-gray-700 border-gray-600 hover:bg-gray-650"
+                              : "bg-orange-900/30 border-orange-600 hover:bg-orange-900/50"
+                          }`}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  {!email.is_read && (
+                                    <span className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></span>
+                                  )}
+                                  <span className="text-white font-semibold truncate">
+                                    {email.from_name || email.from_email}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-400 truncate mt-1">
+                                  {email.from_email}
+                                </p>
+                                <p className="text-white mt-2 truncate">{email.subject || "(件名なし)"}</p>
+                                <p className="text-sm text-gray-400 mt-1 line-clamp-2">
+                                  {email.body_text?.substring(0, 100) || ""}
+                                </p>
+                              </div>
+                              <div className="text-right flex-shrink-0 ml-4">
+                                <p className="text-xs text-gray-400">
+                                  {new Date(email.received_at).toLocaleString("ja-JP")}
+                                </p>
+                                <div className="flex gap-1 mt-2 justify-end">
+                                  {email.is_replied && (
+                                    <Badge className="bg-green-600 text-xs">返信済み</Badge>
+                                  )}
+                                  <Badge className="bg-gray-600 text-xs">{email.to_email}</Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* メール詳細モーダル */}
+                {selectedReceivedEmail && (
+                  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                    <Card className="bg-gray-800 border-gray-700 w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+                      <CardHeader className="border-b border-gray-700 flex-shrink-0">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <CardTitle className="text-white">{selectedReceivedEmail.subject || "(件名なし)"}</CardTitle>
+                            <p className="text-sm text-gray-400 mt-1">
+                              From: {selectedReceivedEmail.from_name} &lt;{selectedReceivedEmail.from_email}&gt;
+                            </p>
+                            <p className="text-sm text-gray-400">
+                              To: {selectedReceivedEmail.to_email}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(selectedReceivedEmail.received_at).toLocaleString("ja-JP")}
+                            </p>
+                          </div>
+                          <Button
+                            onClick={() => setSelectedReceivedEmail(null)}
+                            size="sm"
+                            variant="ghost"
+                            className="text-gray-400 hover:text-white"
+                          >
+                            ✕
+                          </Button>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="flex-1 overflow-auto p-4">
+                        {selectedReceivedEmail.body_html ? (
+                          <div
+                            className="prose prose-invert max-w-none"
+                            dangerouslySetInnerHTML={{ __html: selectedReceivedEmail.body_html }}
+                          />
+                        ) : (
+                          <pre className="text-white whitespace-pre-wrap font-sans">
+                            {selectedReceivedEmail.body_text}
+                          </pre>
+                        )}
+                      </CardContent>
+                      <div className="border-t border-gray-700 p-4 flex-shrink-0">
+                        <Button
+                          onClick={() => {
+                            // 返信機能（将来実装）
+                            alert("返信機能は準備中です")
+                          }}
+                          className="bg-orange-600 hover:bg-orange-700"
+                        >
+                          <Send className="w-4 h-4 mr-2" />
+                          返信
+                        </Button>
+                      </div>
+                    </Card>
+                  </div>
+                )}
               </TabsContent>
 
               {/* 送信履歴タブ */}
