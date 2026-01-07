@@ -503,25 +503,47 @@ export default function AdminEmailsPage() {
               {/* 一斉送信タブ */}
               <TabsContent value="broadcast" className="space-y-4 mt-4">
                 <div className="space-y-4">
-                  <div>
-                    <Label className="text-white">送信元アドレス</Label>
-                    <Select value={senderAddress} onValueChange={setSenderAddress}>
-                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {SENDER_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {senderAddress === "support@hashpilot.biz" && (
-                      <p className="text-xs text-green-400 mt-1">
-                        ※ このアドレスはユーザーが返信可能です
-                      </p>
-                    )}
+                  {/* 送信元アドレス選択（目立つボタン形式） */}
+                  <div className="p-4 bg-gray-900 rounded-lg border-2 border-gray-600">
+                    <Label className="text-white text-lg font-bold mb-3 block">送信元アドレス</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setSenderAddress("noreply@send.hashpilot.biz")}
+                        className={`p-4 rounded-lg border-2 transition-all ${
+                          senderAddress === "noreply@send.hashpilot.biz"
+                            ? "bg-blue-600 border-blue-400 ring-2 ring-blue-400"
+                            : "bg-gray-700 border-gray-600 hover:border-gray-500"
+                        }`}
+                      >
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          {senderAddress === "noreply@send.hashpilot.biz" && (
+                            <span className="text-white text-xl">✓</span>
+                          )}
+                          <span className="text-white font-bold">システム通知用</span>
+                        </div>
+                        <p className="text-sm text-gray-300">noreply@send.hashpilot.biz</p>
+                        <p className="text-xs text-gray-400 mt-1">返信不可</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSenderAddress("support@hashpilot.biz")}
+                        className={`p-4 rounded-lg border-2 transition-all ${
+                          senderAddress === "support@hashpilot.biz"
+                            ? "bg-green-600 border-green-400 ring-2 ring-green-400"
+                            : "bg-gray-700 border-gray-600 hover:border-gray-500"
+                        }`}
+                      >
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          {senderAddress === "support@hashpilot.biz" && (
+                            <span className="text-white text-xl">✓</span>
+                          )}
+                          <span className="text-white font-bold">サポート用</span>
+                        </div>
+                        <p className="text-sm text-gray-300">support@hashpilot.biz</p>
+                        <p className="text-xs text-green-300 mt-1">返信可能</p>
+                      </button>
+                    </div>
                   </div>
 
                   <div>
@@ -605,25 +627,47 @@ export default function AdminEmailsPage() {
               {/* 個別送信タブ */}
               <TabsContent value="individual" className="space-y-4 mt-4">
                 <div className="space-y-4">
-                  <div>
-                    <Label className="text-white">送信元アドレス</Label>
-                    <Select value={senderAddress} onValueChange={setSenderAddress}>
-                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {SENDER_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {senderAddress === "support@hashpilot.biz" && (
-                      <p className="text-xs text-green-400 mt-1">
-                        ※ このアドレスはユーザーが返信可能です
-                      </p>
-                    )}
+                  {/* 送信元アドレス選択（目立つボタン形式） */}
+                  <div className="p-4 bg-gray-900 rounded-lg border-2 border-gray-600">
+                    <Label className="text-white text-lg font-bold mb-3 block">送信元アドレス</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setSenderAddress("noreply@send.hashpilot.biz")}
+                        className={`p-4 rounded-lg border-2 transition-all ${
+                          senderAddress === "noreply@send.hashpilot.biz"
+                            ? "bg-blue-600 border-blue-400 ring-2 ring-blue-400"
+                            : "bg-gray-700 border-gray-600 hover:border-gray-500"
+                        }`}
+                      >
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          {senderAddress === "noreply@send.hashpilot.biz" && (
+                            <span className="text-white text-xl">✓</span>
+                          )}
+                          <span className="text-white font-bold">システム通知用</span>
+                        </div>
+                        <p className="text-sm text-gray-300">noreply@send.hashpilot.biz</p>
+                        <p className="text-xs text-gray-400 mt-1">返信不可</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSenderAddress("support@hashpilot.biz")}
+                        className={`p-4 rounded-lg border-2 transition-all ${
+                          senderAddress === "support@hashpilot.biz"
+                            ? "bg-green-600 border-green-400 ring-2 ring-green-400"
+                            : "bg-gray-700 border-gray-600 hover:border-gray-500"
+                        }`}
+                      >
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          {senderAddress === "support@hashpilot.biz" && (
+                            <span className="text-white text-xl">✓</span>
+                          )}
+                          <span className="text-white font-bold">サポート用</span>
+                        </div>
+                        <p className="text-sm text-gray-300">support@hashpilot.biz</p>
+                        <p className="text-xs text-green-300 mt-1">返信可能</p>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="relative">
