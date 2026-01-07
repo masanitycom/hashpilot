@@ -263,7 +263,7 @@ ${selectedReceivedEmail.body_text || ""}`
           body: quotedBody,
           from_name: "HASHPILOT SUPPORT",
           from_email: "support@hashpilot.biz",
-          email_type: "reply",
+          email_type: "individual",
           sent_by: currentUser.email,
         })
         .select()
