@@ -88,6 +88,11 @@ export default function AdminEmailsPage() {
   const [inboxLoading, setInboxLoading] = useState(false)
   const [showUnreadOnly, setShowUnreadOnly] = useState(false)
 
+  // 返信機能
+  const [isReplyMode, setIsReplyMode] = useState(false)
+  const [replyBody, setReplyBody] = useState("")
+  const [replySending, setReplySending] = useState(false)
+
   useEffect(() => {
     checkAdminAccess()
   }, [])
@@ -212,6 +217,111 @@ export default function AdminEmailsPage() {
     } catch (error: any) {
       console.error("Error deleting email:", error)
       alert("削除に失敗しました: " + error.message)
+    }
+  }
+
+  // 返信を開始
+  const startReply = () => {
+    setIsReplyMode(true)
+    setReplyBody("")
+  }
+
+  // 返信をキャンセル
+  const cancelReply = () => {
+    setIsReplyMode(false)
+    setReplyBody("")
+  }
+
+  // 返信を送信
+  const sendReply = async () => {
+    if (!selectedReceivedEmail || !replyBody.trim()) {
+      alert("返信内容を入力してください")
+      return
+    }
+
+    if (!confirm(`${selectedReceivedEmail.from_email} に返信を送信しますか？`)) return
+
+    setReplySending(true)
+    try {
+      // 返信メールを作成
+      const replySubject = selectedReceivedEmail.subject?.startsWith("Re:")
+        ? selectedReceivedEmail.subject
+        : `Re: ${selectedReceivedEmail.subject || "(件名なし)"}`
+
+      // 引用付きの本文を作成
+      const quotedBody = `${replyBody}
+
+---
+${new Date(selectedReceivedEmail.received_at).toLocaleString("ja-JP")} ${selectedReceivedEmail.from_name || selectedReceivedEmail.from_email}:
+${selectedReceivedEmail.body_text || ""}`
+
+      // system_emailsに保存してEdge Functionで送信
+      const { data: emailData, error: insertError } = await supabase
+        .from("system_emails")
+        .insert({
+          subject: replySubject,
+          body: quotedBody,
+          from_name: "HASHPILOT SUPPORT",
+          from_email: "support@hashpilot.biz",
+          email_type: "reply",
+          sent_by: currentUser.email,
+        })
+        .select()
+        .single()
+
+      if (insertError) throw insertError
+
+      // 送信先を登録
+      const { error: recipientError } = await supabase
+        .from("email_recipients")
+        .insert({
+          email_id: emailData.id,
+          user_id: null,
+          to_email: selectedReceivedEmail.from_email,
+          status: "pending",
+        })
+
+      if (recipientError) throw recipientError
+
+      // Edge Functionでメール送信
+      const { data: sendResult, error: sendError } = await supabase.functions.invoke("send-system-email", {
+        body: { email_id: emailData.id },
+      })
+
+      if (sendError) throw sendError
+
+      // 受信メールに返信済みフラグを設定
+      await supabase
+        .from("received_emails")
+        .update({
+          is_replied: true,
+          replied_at: new Date().toISOString(),
+          reply_email_id: emailData.id,
+        })
+        .eq("id", selectedReceivedEmail.id)
+
+      // ローカルステートを更新
+      setReceivedEmails(prev =>
+        prev.map(e =>
+          e.id === selectedReceivedEmail.id
+            ? { ...e, is_replied: true, replied_at: new Date().toISOString() }
+            : e
+        )
+      )
+      setSelectedReceivedEmail({
+        ...selectedReceivedEmail,
+        is_replied: true,
+        replied_at: new Date().toISOString(),
+      })
+
+      alert("返信を送信しました")
+      setIsReplyMode(false)
+      setReplyBody("")
+    } catch (error: any) {
+      console.error("Reply send error:", error)
+      alert("返信の送信に失敗しました: " + error.message)
+    } finally {
+      setReplySending(false)
     }
   }
 
@@ -947,54 +1057,118 @@ export default function AdminEmailsPage() {
 
                       {/* 本文 */}
                       <div className="flex-1 overflow-auto p-6" style={{ backgroundColor: '#1a1a2e' }}>
-                        <div
-                          className="rounded-lg p-6 min-h-[200px]"
-                          style={{ backgroundColor: '#ffffff', color: '#000000' }}
-                        >
-                          {selectedReceivedEmail.body_html ? (
+                        {isReplyMode ? (
+                          /* 返信フォーム */
+                          <div className="space-y-4">
+                            <div className="rounded-lg p-4" style={{ backgroundColor: '#2d2d44' }}>
+                              <p className="text-gray-400 text-sm mb-2">返信先:</p>
+                              <p className="text-white font-medium">{selectedReceivedEmail.from_email}</p>
+                            </div>
+                            <div className="rounded-lg p-4" style={{ backgroundColor: '#2d2d44' }}>
+                              <p className="text-gray-400 text-sm mb-2">件名:</p>
+                              <p className="text-white">
+                                {selectedReceivedEmail.subject?.startsWith("Re:")
+                                  ? selectedReceivedEmail.subject
+                                  : `Re: ${selectedReceivedEmail.subject || "(件名なし)"}`}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-gray-400 text-sm mb-2">返信内容:</p>
+                              <Textarea
+                                value={replyBody}
+                                onChange={(e) => setReplyBody(e.target.value)}
+                                placeholder="返信内容を入力してください..."
+                                className="min-h-[200px] text-base"
+                                style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                              />
+                            </div>
                             <div
-                              style={{ color: '#000000' }}
-                              dangerouslySetInnerHTML={{ __html: selectedReceivedEmail.body_html }}
-                            />
-                          ) : (
-                            <pre
-                              className="whitespace-pre-wrap font-sans text-base leading-relaxed"
-                              style={{ color: '#000000', backgroundColor: '#ffffff' }}
+                              className="rounded-lg p-4 text-sm"
+                              style={{ backgroundColor: '#2d2d44', color: '#9ca3af' }}
                             >
-                              {selectedReceivedEmail.body_text}
-                            </pre>
-                          )}
-                        </div>
+                              <p className="mb-2">--- 以下は引用として追加されます ---</p>
+                              <p className="text-xs">
+                                {new Date(selectedReceivedEmail.received_at).toLocaleString("ja-JP")}{" "}
+                                {selectedReceivedEmail.from_name || selectedReceivedEmail.from_email}:
+                              </p>
+                              <p className="text-xs mt-1 line-clamp-3">
+                                {selectedReceivedEmail.body_text?.substring(0, 200)}...
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          /* メール本文表示 */
+                          <div
+                            className="rounded-lg p-6 min-h-[200px]"
+                            style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                          >
+                            {selectedReceivedEmail.body_html ? (
+                              <div
+                                style={{ color: '#000000' }}
+                                dangerouslySetInnerHTML={{ __html: selectedReceivedEmail.body_html }}
+                              />
+                            ) : (
+                              <pre
+                                className="whitespace-pre-wrap font-sans text-base leading-relaxed"
+                                style={{ color: '#000000', backgroundColor: '#ffffff' }}
+                              >
+                                {selectedReceivedEmail.body_text}
+                              </pre>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       {/* フッター */}
                       <div className="bg-gray-800 border-t border-gray-600 p-4 flex-shrink-0 flex justify-between items-center">
                         <div className="flex gap-2">
                           <Button
-                            onClick={() => setSelectedReceivedEmail(null)}
+                            onClick={() => {
+                              if (isReplyMode) {
+                                cancelReply()
+                              } else {
+                                setSelectedReceivedEmail(null)
+                              }
+                            }}
                             variant="outline"
                             className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
                           >
-                            閉じる
+                            {isReplyMode ? "キャンセル" : "閉じる"}
                           </Button>
-                          <Button
-                            onClick={() => deleteReceivedEmail(selectedReceivedEmail.id)}
-                            variant="outline"
-                            className="bg-red-900 text-red-300 border-red-700 hover:bg-red-800"
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            削除
-                          </Button>
+                          {!isReplyMode && (
+                            <Button
+                              onClick={() => deleteReceivedEmail(selectedReceivedEmail.id)}
+                              variant="outline"
+                              className="bg-red-900 text-red-300 border-red-700 hover:bg-red-800"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              削除
+                            </Button>
+                          )}
                         </div>
-                        <Button
-                          onClick={() => {
-                            alert("返信機能は準備中です")
-                          }}
-                          className="bg-orange-600 hover:bg-orange-700 px-6"
-                        >
-                          <Send className="w-4 h-4 mr-2" />
-                          返信する
-                        </Button>
+                        <div className="flex gap-2 items-center">
+                          {selectedReceivedEmail.is_replied && (
+                            <Badge className="bg-green-600 text-white">返信済み</Badge>
+                          )}
+                          {isReplyMode ? (
+                            <Button
+                              onClick={sendReply}
+                              disabled={replySending || !replyBody.trim()}
+                              className="bg-orange-600 hover:bg-orange-700 px-6"
+                            >
+                              <Send className="w-4 h-4 mr-2" />
+                              {replySending ? "送信中..." : "返信を送信"}
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={startReply}
+                              className="bg-orange-600 hover:bg-orange-700 px-6"
+                            >
+                              <Send className="w-4 h-4 mr-2" />
+                              返信する
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </Card>
                   </div>
