@@ -924,15 +924,21 @@ export default function AdminEmailsPage() {
                       </div>
 
                       {/* 本文 */}
-                      <div className="flex-1 overflow-auto p-6 bg-gray-950">
-                        <div className="bg-white rounded-lg p-6 text-gray-900 min-h-[200px]">
+                      <div className="flex-1 overflow-auto p-6" style={{ backgroundColor: '#1a1a2e' }}>
+                        <div
+                          className="rounded-lg p-6 min-h-[200px]"
+                          style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                        >
                           {selectedReceivedEmail.body_html ? (
                             <div
-                              className="prose max-w-none"
+                              style={{ color: '#000000' }}
                               dangerouslySetInnerHTML={{ __html: selectedReceivedEmail.body_html }}
                             />
                           ) : (
-                            <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed">
+                            <pre
+                              className="whitespace-pre-wrap font-sans text-base leading-relaxed"
+                              style={{ color: '#000000', backgroundColor: '#ffffff' }}
+                            >
                               {selectedReceivedEmail.body_text}
                             </pre>
                           )}
