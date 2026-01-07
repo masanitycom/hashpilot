@@ -248,19 +248,59 @@ export default function AdminEmailsPage() {
         ? selectedReceivedEmail.subject
         : `Re: ${selectedReceivedEmail.subject || "(件名なし)"}`
 
-      // 引用付きの本文を作成
-      const quotedBody = `${replyBody}
+      // 返信本文をHTMLに変換（改行を<br>に変換）
+      const replyBodyHtml = replyBody.replace(/\n/g, "<br>")
 
----
-${new Date(selectedReceivedEmail.received_at).toLocaleString("ja-JP")} ${selectedReceivedEmail.from_name || selectedReceivedEmail.from_email}:
-${selectedReceivedEmail.body_text || ""}`
+      // 元メールの日時
+      const originalDate = new Date(selectedReceivedEmail.received_at).toLocaleString("ja-JP")
+      const originalSender = selectedReceivedEmail.from_name || selectedReceivedEmail.from_email
+
+      // 元メールの本文（HTMLがあればHTML、なければテキストをHTMLに変換）
+      let originalBodyHtml = selectedReceivedEmail.body_html
+      if (!originalBodyHtml && selectedReceivedEmail.body_text) {
+        originalBodyHtml = selectedReceivedEmail.body_text.replace(/\n/g, "<br>")
+      }
+
+      // HTML形式の引用付き本文を作成
+      const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; }
+    .reply-content { margin-bottom: 24px; }
+    .quote-header { color: #666; font-size: 12px; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-top: 24px; margin-bottom: 12px; }
+    .quoted-content { border-left: 3px solid #ccc; padding-left: 16px; color: #555; margin-left: 8px; }
+    .signature { margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; color: #666; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="reply-content">
+    ${replyBodyHtml}
+  </div>
+
+  <div class="quote-header">
+    ${originalDate} ${originalSender} wrote:
+  </div>
+  <div class="quoted-content">
+    ${originalBodyHtml || "(本文なし)"}
+  </div>
+
+  <div class="signature">
+    --<br>
+    HASH PILOT NFT<br>
+    <a href="https://hashpilot.net">https://hashpilot.net</a>
+  </div>
+</body>
+</html>`
 
       // system_emailsに保存してEdge Functionで送信
       const { data: emailData, error: insertError } = await supabase
         .from("system_emails")
         .insert({
           subject: replySubject,
-          body: quotedBody,
+          body: htmlBody,
           from_name: "HASHPILOT SUPPORT",
           from_email: "support@hashpilot.biz",
           email_type: "individual",
