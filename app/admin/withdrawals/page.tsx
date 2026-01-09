@@ -47,6 +47,8 @@ interface WithdrawalRecord {
   withdrawn_referral_usdt?: number
   current_available_usdt?: number
   total_nft_count?: number
+  // 前月未送金情報
+  prev_month_unpaid?: { amount: number; status: string } | null
 }
 
 interface MonthlyStats {
@@ -54,8 +56,11 @@ interface MonthlyStats {
   personal_profit_total: number
   referral_profit_total: number
   pending_count: number
+  pending_amount: number
   completed_count: number
+  completed_amount: number
   on_hold_count: number
+  on_hold_amount: number
 }
 
 // デフォルトで前月を表示（月末出金は前月分のため）
@@ -164,8 +169,11 @@ export default function AdminWithdrawalsPage() {
           personal_profit_total: 0,
           referral_profit_total: 0,
           pending_count: 0,
+          pending_amount: 0,
           completed_count: 0,
-          on_hold_count: 0
+          completed_amount: 0,
+          on_hold_count: 0,
+          on_hold_amount: 0
         })
         setLoading(false)
         return
@@ -187,6 +195,22 @@ export default function AdminWithdrawalsPage() {
         .in("user_id", userIds)
 
       if (cycleError) throw cycleError
+
+      // STEP 3.5: 前月の未送金レコードを取得
+      const prevMonth = new Date(targetDate)
+      prevMonth.setMonth(prevMonth.getMonth() - 1)
+      const prevMonthStr = prevMonth.toISOString().slice(0, 10)
+
+      const { data: prevMonthData } = await supabase
+        .from("monthly_withdrawals")
+        .select("user_id, total_amount, status")
+        .eq("withdrawal_month", prevMonthStr)
+        .in("user_id", userIds)
+        .neq("status", "completed")
+
+      const prevMonthMap = new Map(
+        (prevMonthData || []).map(p => [p.user_id, { amount: p.total_amount, status: p.status }])
+      )
 
       // STEP 4: データを結合
       const formattedData = withdrawalData.map((withdrawal: any) => {
@@ -218,6 +242,8 @@ export default function AdminWithdrawalsPage() {
           referral_amount: withdrawal.referral_amount ?? 0,
           // 出金可能な紹介報酬（参考表示用）
           withdrawable_referral: withdrawableReferral,
+          // 前月未送金情報
+          prev_month_unpaid: prevMonthMap.get(withdrawal.user_id) || null,
         }
       })
 
@@ -238,13 +264,20 @@ export default function AdminWithdrawalsPage() {
       }, 0)
       const totalAmount = formattedData.reduce((sum, w) => sum + Number(w.total_amount || 0), 0)
 
+      const pendingWithdrawals = formattedData.filter(w => w.status === 'pending')
+      const completedWithdrawals = formattedData.filter(w => w.status === 'completed')
+      const onHoldWithdrawals = formattedData.filter(w => w.status === 'on_hold')
+
       const stats: MonthlyStats = {
         total_amount: totalAmount,
         personal_profit_total: personalProfitTotal,
         referral_profit_total: referralProfitTotal,
-        pending_count: formattedData.filter(w => w.status === 'pending').length,
-        completed_count: formattedData.filter(w => w.status === 'completed').length,
-        on_hold_count: formattedData.filter(w => w.status === 'on_hold').length,
+        pending_count: pendingWithdrawals.length,
+        pending_amount: pendingWithdrawals.reduce((sum, w) => sum + (w.total_amount || 0), 0),
+        completed_count: completedWithdrawals.length,
+        completed_amount: completedWithdrawals.reduce((sum, w) => sum + (w.total_amount || 0), 0),
+        on_hold_count: onHoldWithdrawals.length,
+        on_hold_amount: onHoldWithdrawals.reduce((sum, w) => sum + (w.total_amount || 0), 0),
       }
       setStats(stats)
 
@@ -309,6 +342,7 @@ export default function AdminWithdrawalsPage() {
   const exportCSV = () => {
     const headers = [
       "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計",
+      "前月未送金", "前月ステータス",
       "累計紹介報酬", "ロック額", "既払い紹介報酬", "払い出し可能額",
       "送金方法", "CoinW UID/送金先",
       "CH紐付け", "タスク状況", "ステータス", "作成日", "完了日", "備考"
@@ -327,6 +361,10 @@ export default function AdminWithdrawalsPage() {
           ? Math.max(0, (w.referral_amount || 0) - withdrawnReferral)
           : (w.referral_amount || 0)
 
+        // 前月未送金情報
+        const prevMonthAmount = w.prev_month_unpaid ? Number(w.prev_month_unpaid.amount).toFixed(2) : ""
+        const prevMonthStatus = w.prev_month_unpaid ? w.prev_month_unpaid.status : ""
+
         return [
           w.user_id,
           w.email,
@@ -334,6 +372,8 @@ export default function AdminWithdrawalsPage() {
           (w.personal_amount || 0).toFixed(3),
           displayReferralAmount.toFixed(3),
           w.total_amount.toFixed(3),
+          prevMonthAmount,
+          prevMonthStatus,
           cumUsdt.toFixed(3),
           lockAmount.toFixed(3),
           withdrawnReferral.toFixed(3),
@@ -499,7 +539,10 @@ export default function AdminWithdrawalsPage() {
                   <Clock className="h-6 w-6 text-yellow-400" />
                   <div>
                     <p className="text-xs text-yellow-300">送金待ち</p>
-                    <p className="text-xl font-bold text-yellow-400">{stats.pending_count}</p>
+                    <p className="text-xl font-bold text-yellow-400">
+                      ${stats.pending_amount.toFixed(2)}
+                    </p>
+                    <p className="text-xs text-yellow-300 mt-1">{stats.pending_count}人</p>
                   </div>
                 </div>
               </CardContent>
@@ -512,7 +555,10 @@ export default function AdminWithdrawalsPage() {
                   <CheckCircle className="h-6 w-6 text-emerald-400" />
                   <div>
                     <p className="text-xs text-emerald-300">送金完了</p>
-                    <p className="text-xl font-bold text-emerald-400">{stats.completed_count}</p>
+                    <p className="text-xl font-bold text-emerald-400">
+                      ${stats.completed_amount.toFixed(2)}
+                    </p>
+                    <p className="text-xs text-emerald-300 mt-1">{stats.completed_count}人</p>
                   </div>
                 </div>
               </CardContent>
@@ -524,8 +570,11 @@ export default function AdminWithdrawalsPage() {
                 <div className="flex items-center space-x-2">
                   <AlertCircle className="h-6 w-6 text-red-400" />
                   <div>
-                    <p className="text-xs text-red-300">保留中</p>
-                    <p className="text-xl font-bold text-red-400">{stats.on_hold_count}</p>
+                    <p className="text-xs text-red-300">保留中（タスク未完了）</p>
+                    <p className="text-xl font-bold text-red-400">
+                      ${stats.on_hold_amount.toFixed(2)}
+                    </p>
+                    <p className="text-xs text-red-300 mt-1">{stats.on_hold_count}人</p>
                   </div>
                 </div>
               </CardContent>
@@ -678,6 +727,13 @@ export default function AdminWithdrawalsPage() {
                           {withdrawal.is_pegasus_exchange && (
                             <div className="mt-1">
                               <Badge className="bg-yellow-600 text-white text-xs">🐴 ペガサス交換</Badge>
+                            </div>
+                          )}
+                          {withdrawal.prev_month_unpaid && (
+                            <div className="mt-1">
+                              <Badge className="bg-red-500 text-white text-xs">
+                                ⚠️ 前月未送金 ${Number(withdrawal.prev_month_unpaid.amount).toFixed(0)}
+                              </Badge>
                             </div>
                           )}
                         </div>
