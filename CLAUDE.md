@@ -1729,6 +1729,115 @@ WHERE nm.operation_start_date IS NOT NULL
 
 ---
 
+## 📬 管理者メール受信箱機能（2026年1月実装）
+
+### 概要
+`support@hashpilot.biz` 宛のメールを受信し、管理画面で閲覧・返信できる機能。
+
+### 構成要素
+
+**1. Cloudflare Email Worker**
+- ファイル: `cloudflare-workers/email-receiver/worker.js`
+- 役割: `support@hashpilot.biz` 宛メールを受信してSupabaseに保存
+- UTF-8デコード対応（Base64, Quoted-Printable）
+- 送信者名・メールアドレスの分離パース
+
+**2. データベーステーブル**
+- `received_emails`: 受信メール保存
+  - `from_email`, `from_name`: 送信者情報
+  - `subject`, `body_text`, `body_html`: メール内容
+  - `is_read`, `is_replied`: ステータス管理
+
+**3. RPC関数**
+- `save_received_email()`: Workerからメール保存
+- `get_received_emails()`: 管理者用受信一覧取得
+- `mark_received_email_as_read()`: 既読設定
+
+### 管理画面機能 (`/admin/emails`)
+
+**受信箱タブ:**
+- 受信メール一覧表示（未読/既読フィルター）
+- メール詳細モーダル（HTML本文表示対応）
+- 削除機能
+- 返信機能
+
+**送信元アドレス選択:**
+- `noreply@send.hashpilot.biz`: システム通知用（返信不可）
+- `support@hashpilot.biz`: サポート用（返信可能）
+
+### 返信機能
+
+**HTMLメール形式:**
+```html
+<div style="font-family: ...">
+  <p>[返信本文]</p>
+  <hr>
+  <p style="color: #666;">日時 送信者 wrote:</p>
+  <blockquote style="border-left: 3px solid #ccc;">
+    [元メール本文]
+  </blockquote>
+  <hr>
+  <p>--<br>HASH PILOT NFT<br>https://hashpilot.net</p>
+</div>
+```
+
+**処理フロー:**
+1. `system_emails` テーブルにHTML本文を保存
+2. `email_recipients` に送信先を登録
+3. `send-system-email` Edge Functionで送信
+4. `received_emails` の `is_replied` を `true` に更新
+
+### Cloudflare設定
+
+**Email Routing:**
+1. Cloudflare Dashboard → Email → Email Routing
+2. Email Workers で `hashpilot-email-receiver` を作成
+3. `support@hashpilot.biz` をWorkerにルーティング
+
+**Worker環境変数:**
+- `SUPABASE_URL`: Supabase URL
+- `SUPABASE_SERVICE_KEY`: Service Role Key
+
+### RLSポリシー
+
+```sql
+-- 管理者のみ受信メール閲覧可能
+CREATE POLICY "管理者のみ受信メール閲覧可能" ON received_emails
+FOR SELECT USING (
+  is_admin((auth.jwt() ->> 'email'::text), auth.uid())
+);
+
+-- 管理者のみ受信メール削除可能
+CREATE POLICY "管理者のみ受信メール削除可能" ON received_emails
+FOR DELETE USING (
+  is_admin((auth.jwt() ->> 'email'::text), auth.uid())
+);
+```
+
+### 関連ファイル
+
+- `cloudflare-workers/email-receiver/worker.js` - メール受信Worker
+- `app/admin/emails/page.tsx` - 管理画面（送受信）
+- `scripts/ADD-email-inbox-feature.sql` - DB設定スクリプト
+- `supabase/functions/send-system-email/index.ts` - メール送信Edge Function
+
+### トラブルシューティング
+
+**文字化け:**
+- Worker内の `decodeUtf8()`, `decodeQuotedPrintable()` でUTF-8デコード
+- `Content-Transfer-Encoding` に応じて処理
+
+**メールが届かない:**
+1. Cloudflare Email Routingの設定確認
+2. Worker環境変数（SUPABASE_URL, SUPABASE_SERVICE_KEY）確認
+3. Workerログでエラー確認
+
+**返信がプレーンテキスト:**
+- HTMLをインラインスタイルで作成
+- Edge Functionが `html` フィールドで送信
+
+---
+
 ## 🔒 外部プロジェクト使用テーブル（編集禁止）
 
 以下のテーブルは外部プロジェクト（hashokx）で使用しています。HASHPILOTでは一切触らないでください。
@@ -1741,4 +1850,4 @@ WHERE nm.operation_start_date IS NOT NULL
 
 ---
 
-最終更新: 2026年1月2日
+最終更新: 2026年1月9日
