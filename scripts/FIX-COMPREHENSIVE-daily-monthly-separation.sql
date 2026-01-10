@@ -636,16 +636,16 @@ $$;
 DO $$
 BEGIN
   RAISE NOTICE '=========================================';
-  RAISE NOTICE '✅ 包括的修正完了';
+  RAISE NOTICE '包括的修正完了';
   RAISE NOTICE '=========================================';
   RAISE NOTICE '';
-  RAISE NOTICE '【日次処理: process_daily_yield_v2】';
-  RAISE NOTICE '  - 個人利益配布（60%）のみ実行';
-  RAISE NOTICE '  - 紹介報酬計算: 削除（月末処理へ移行）';
-  RAISE NOTICE '  - NFT自動付与: 削除（月末処理へ移行）';
+  RAISE NOTICE '日次処理: process_daily_yield_v2';
+  RAISE NOTICE '  - 個人利益配布のみ実行';
+  RAISE NOTICE '  - 紹介報酬計算: 削除';
+  RAISE NOTICE '  - NFT自動付与: 削除';
   RAISE NOTICE '';
-  RAISE NOTICE '【月末処理: process_monthly_referral_reward】';
-  RAISE NOTICE '  - 紹介報酬計算（30%）';
+  RAISE NOTICE '月末処理: process_monthly_referral_reward';
+  RAISE NOTICE '  - 紹介報酬計算';
   RAISE NOTICE '  - cum_usdt更新';
   RAISE NOTICE '  - phase再計算';
   RAISE NOTICE '  - NFT自動付与（cum_usdt >= 2200）';
