@@ -28,21 +28,17 @@ WHERE phase IS NULL;
 -- ========================================
 -- STEP 3: 確認
 -- ========================================
-SELECT '=== 更新結果 ===' as section;
-
 SELECT
   user_id,
   TO_CHAR(withdrawal_month, 'YYYY-MM') as month,
-  phase as '出金時フェーズ',
+  phase as withdrawal_phase,
   personal_amount,
   referral_amount,
   total_amount,
   CASE
-    WHEN phase = 'HOLD' AND referral_amount > 0.01 THEN '⚠️ 要確認'
-    ELSE '✅'
-  END as check
+    WHEN phase = 'HOLD' AND referral_amount > 0.01 THEN 'CHECK'
+    ELSE 'OK'
+  END as status
 FROM monthly_withdrawals
 WHERE user_id IN ('59C23C', '177B83')
 ORDER BY user_id, withdrawal_month DESC;
-
-SELECT '✅ phaseカラム追加完了' as status;
