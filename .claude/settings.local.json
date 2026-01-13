@@ -5,7 +5,8 @@
       "Bash(nslookup:*)",
       "Bash(dig:*)",
       "Bash(npx tsc:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
