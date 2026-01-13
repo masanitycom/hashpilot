@@ -153,10 +153,9 @@ export default function AdminWithdrawalsPage() {
       console.log('=== Fetching withdrawals for:', targetDate)
 
       // STEP 1: 月間出金記録を取得（この月のレコードのみ）
-      // phaseカラムも取得（出金作成時のフェーズ）
       const { data: withdrawalData, error: withdrawalError } = await supabase
         .from("monthly_withdrawals")
-        .select("*, phase")
+        .select("*")
         .eq("withdrawal_month", targetDate)
         .order("total_amount", { ascending: false })
 
@@ -218,31 +217,11 @@ export default function AdminWithdrawalsPage() {
         const user = usersData?.find(u => u.user_id === withdrawal.user_id)
         const cycle = currentCycle?.find(c => c.user_id === withdrawal.user_id)
 
-        // 現在の残高情報
+        // 出金可能な紹介報酬を計算（USDTフェーズのみ）
         const cumUsdt = cycle?.cum_usdt || 0
         const withdrawnReferral = cycle?.withdrawn_referral_usdt || 0
-        const currentPhase = cycle?.phase || 'USDT'
-
-        // 出金作成時のフェーズ（保存されていれば使用、なければ推定）
-        let withdrawalPhase = withdrawal.phase
-        if (!withdrawalPhase) {
-          const personal = withdrawal.personal_amount ?? withdrawal.total_amount
-          const total = withdrawal.total_amount
-          const referral = withdrawal.referral_amount ?? 0
-
-          // 正しいロジック:
-          // 1. 紹介報酬があり、totalに含まれている → USDT
-          // 2. 紹介報酬があるが、totalに含まれていない → HOLD
-          // 3. 紹介報酬がない → 現在のフェーズを使用
-          if (referral > 0.01 && total > personal + 0.01) {
-            withdrawalPhase = 'USDT'
-          } else if (referral > 0.01 && Math.abs(total - personal) < 0.01) {
-            withdrawalPhase = 'HOLD'
-          } else {
-            // 紹介報酬がない場合は現在のフェーズを使用
-            withdrawalPhase = currentPhase
-          }
-        }
+        const phase = cycle?.phase || 'USDT'
+        const withdrawableReferral = phase === 'USDT' ? Math.max(0, cumUsdt - withdrawnReferral) : 0
 
         return {
           ...withdrawal,
@@ -256,13 +235,13 @@ export default function AdminWithdrawalsPage() {
           current_available_usdt: cycle?.available_usdt || 0,
           cum_usdt: cumUsdt,
           withdrawn_referral_usdt: withdrawnReferral,
-          current_phase: currentPhase,
-          // 出金作成時のフェーズ（これを表示に使用）
-          phase: withdrawalPhase,
+          phase: phase,
           total_nft_count: cycle?.total_nft_count || 0,
           // 出金レコードの個人利益・紹介報酬を使う（なければ後方互換）
           personal_amount: withdrawal.personal_amount ?? withdrawal.total_amount,
           referral_amount: withdrawal.referral_amount ?? 0,
+          // 出金可能な紹介報酬（参考表示用）
+          withdrawable_referral: withdrawableReferral,
           // 前月未送金情報
           prev_month_unpaid: prevMonthMap.get(withdrawal.user_id) || null,
         }
@@ -353,14 +332,22 @@ export default function AdminWithdrawalsPage() {
 
   const exportCSV = () => {
     const headers = [
-      "ユーザーID", "メールアドレス", "フェーズ",
-      "個人利益", "紹介報酬", "出金合計",
+      "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計",
       "前月未送金", "前月ステータス",
+      "累計紹介報酬", "ロック額", "既払い紹介報酬", "払い出し可能額",
       "送金方法", "CoinW UID/送金先",
       "CH紐付け", "タスク状況", "ステータス", "作成日", "完了日", "備考"
     ]
 
+    // 出金レコードに保存されている個人利益・紹介報酬を使用
     const csvData = filteredWithdrawals.map((w: any) => {
+        // 参考情報（現在のaffiliate_cycle値）
+        const cumUsdt = w.cum_usdt || 0
+        const withdrawnReferral = w.withdrawn_referral_usdt || 0
+        const lockAmount = w.phase === 'HOLD' ? 1100 : 0
+        const withdrawableFromHold = w.phase === 'HOLD' ? Math.max(0, 1100 - withdrawnReferral) : 0
+
+        // 前月未送金情報
         const prevMonthAmount = w.prev_month_unpaid ? Number(w.prev_month_unpaid.amount).toFixed(2) : ""
         const prevMonthStatus = w.prev_month_unpaid ? w.prev_month_unpaid.status : ""
 
@@ -373,6 +360,10 @@ export default function AdminWithdrawalsPage() {
           w.total_amount.toFixed(3),
           prevMonthAmount,
           prevMonthStatus,
+          cumUsdt.toFixed(3),
+          lockAmount.toFixed(3),
+          withdrawnReferral.toFixed(3),
+          withdrawableFromHold.toFixed(3),
           w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
           w.withdrawal_address || "未設定",
           w.channel_linked_confirmed ? "確認済み" : "未確認",
@@ -751,9 +742,15 @@ export default function AdminWithdrawalsPage() {
                       </td>
                       {/* 紹介報酬 */}
                       <td className="py-3 px-2 text-right">
-                        <span className={withdrawal.referral_amount > 0 ? "text-orange-400" : "text-gray-500"}>
+                        <span className="text-orange-400">
                           ${(withdrawal.referral_amount || 0).toFixed(2)}
                         </span>
+                        {/* HOLDユーザーはロック中を表示 */}
+                        {withdrawal.phase === 'HOLD' && withdrawal.cum_usdt >= 1100 && (
+                          <div className="text-xs mt-1 text-gray-400">
+                            🔒 次NFT用ロック中
+                          </div>
+                        )}
                       </td>
                       {/* 出金合計 */}
                       <td className="py-3 px-2 text-right">
