@@ -251,17 +251,8 @@ export default function AdminWithdrawalsPage() {
       setWithdrawals(formattedData)
 
       // 統計情報を計算（出金レコードの personal_amount と referral_amount を使用）
-      // HOLDユーザーは既払い分を引いた金額で計算
       const personalProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.personal_amount || 0), 0)
-      const referralProfitTotal = formattedData.reduce((sum, w) => {
-        const referralAmount = Number(w.referral_amount || 0)
-        const withdrawnReferral = Number(w.withdrawn_referral_usdt || 0)
-        // HOLDユーザーは既払い分を引く
-        const adjustedAmount = w.phase === 'HOLD'
-          ? Math.max(0, referralAmount - withdrawnReferral)
-          : referralAmount
-        return sum + adjustedAmount
-      }, 0)
+      const referralProfitTotal = formattedData.reduce((sum, w) => sum + Number(w.referral_amount || 0), 0)
       const totalAmount = formattedData.reduce((sum, w) => sum + Number(w.total_amount || 0), 0)
 
       const pendingWithdrawals = formattedData.filter(w => w.status === 'pending')
@@ -350,16 +341,11 @@ export default function AdminWithdrawalsPage() {
 
     // 出金レコードに保存されている個人利益・紹介報酬を使用
     const csvData = filteredWithdrawals.map((w: any) => {
-        // HOLDユーザーの払い出し可能額を計算
+        // 参考情報（現在のaffiliate_cycle値）
         const cumUsdt = w.cum_usdt || 0
         const withdrawnReferral = w.withdrawn_referral_usdt || 0
         const lockAmount = w.phase === 'HOLD' ? 1100 : 0
         const withdrawableFromHold = w.phase === 'HOLD' ? Math.max(0, 1100 - withdrawnReferral) : 0
-
-        // HOLDユーザーは既払い分を引いた金額を表示
-        const displayReferralAmount = w.phase === 'HOLD'
-          ? Math.max(0, (w.referral_amount || 0) - withdrawnReferral)
-          : (w.referral_amount || 0)
 
         // 前月未送金情報
         const prevMonthAmount = w.prev_month_unpaid ? Number(w.prev_month_unpaid.amount).toFixed(2) : ""
@@ -370,7 +356,7 @@ export default function AdminWithdrawalsPage() {
           w.email,
           w.phase || '-',
           (w.personal_amount || 0).toFixed(3),
-          displayReferralAmount.toFixed(3),
+          (w.referral_amount || 0).toFixed(3),
           w.total_amount.toFixed(3),
           prevMonthAmount,
           prevMonthStatus,
@@ -756,36 +742,15 @@ export default function AdminWithdrawalsPage() {
                       </td>
                       {/* 紹介報酬 */}
                       <td className="py-3 px-2 text-right">
-                        {(() => {
-                          // HOLDユーザーは既払い分を引いた金額を表示
-                          const withdrawnReferral = withdrawal.withdrawn_referral_usdt || 0
-                          const displayAmount = withdrawal.phase === 'HOLD'
-                            ? Math.max(0, (withdrawal.referral_amount || 0) - withdrawnReferral)
-                            : (withdrawal.referral_amount || 0)
-                          return (
-                            <>
-                              <span className={`${
-                                withdrawal.phase === 'USDT' ? 'text-orange-400' : 'text-gray-500'
-                              }`}>
-                                ${displayAmount.toFixed(2)}
-                              </span>
-                              {/* HOLDユーザーの詳細表示 */}
-                              {withdrawal.phase === 'HOLD' && withdrawal.cum_usdt >= 1100 && (
-                                <div className="text-xs mt-1 space-y-0.5">
-                                  <div className="text-orange-400">
-                                    🔒 ロック: $1,100.00
-                                  </div>
-                                  <div className="text-gray-400">
-                                    既払: ${withdrawnReferral.toFixed(2)}
-                                  </div>
-                                  <div className="text-green-400 font-medium">
-                                    払出可: ${Math.max(0, 1100 - withdrawnReferral).toFixed(2)}
-                                  </div>
-                                </div>
-                              )}
-                            </>
-                          )
-                        })()}
+                        <span className="text-orange-400">
+                          ${(withdrawal.referral_amount || 0).toFixed(2)}
+                        </span>
+                        {/* HOLDユーザーはロック中を表示 */}
+                        {withdrawal.phase === 'HOLD' && withdrawal.cum_usdt >= 1100 && (
+                          <div className="text-xs mt-1 text-gray-400">
+                            🔒 次NFT用ロック中
+                          </div>
+                        )}
                       </td>
                       {/* 出金合計 */}
                       <td className="py-3 px-2 text-right">

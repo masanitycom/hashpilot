@@ -4,7 +4,8 @@
       "Bash(node:*)",
       "Bash(nslookup:*)",
       "Bash(dig:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

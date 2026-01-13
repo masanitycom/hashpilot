@@ -33,6 +33,19 @@
 | `affiliate_cycle.available_usdt` | 出金可能額 | 日次+月末 |
 | `affiliate_cycle.cum_usdt` | 紹介報酬累計 | 月末処理のみ |
 
+### 🔧 RPC関数の状態（2026年1月13日確認）
+
+| 関数名 | 用途 | 使用状況 | NFT自動付与 |
+|--------|------|----------|-------------|
+| `process_daily_yield_v2` | 日次利益配布 | ✅ フロントエンド使用 | なし（正常） |
+| `process_monthly_referral_reward` | 月末紹介報酬 | ✅ フロントエンド使用 | nft_sequence設定済み |
+| `process_monthly_referral_profit` | 月末紹介報酬（旧） | ❌ 未使用 | nft_sequence設定済み |
+| `process_daily_yield_with_cycles` | V1日次処理 | ❌ 未使用（useV2=true） | - |
+
+**フロントエンド呼び出し（`app/admin/yield/page.tsx`）:**
+- 日次処理: `supabase.rpc('process_daily_yield_v2', ...)`
+- 月末処理: `supabase.rpc('process_monthly_referral_reward', ...)`
+
 ---
 
 ## 🚨 紹介報酬計算の絶対ルール（最重要）
