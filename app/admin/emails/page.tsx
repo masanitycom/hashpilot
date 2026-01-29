@@ -79,6 +79,11 @@ export default function AdminEmailsPage() {
   const [selectedUsers, setSelectedUsers] = useState<UserSearchResult[]>([])
   const [showSearchResults, setShowSearchResults] = useState(false)
 
+  // メールアドレス一括入力
+  const [bulkEmailInput, setBulkEmailInput] = useState("")
+  const [bulkInputLoading, setBulkInputLoading] = useState(false)
+  const [bulkInputResult, setBulkInputResult] = useState<{ found: number; notFound: string[] } | null>(null)
+
   // メール送信履歴
   const [emailHistory, setEmailHistory] = useState<EmailHistory[]>([])
 
@@ -461,6 +466,74 @@ HASH PILOT NFT<br>
   // ユーザー削除
   const removeSelectedUser = (userId: string) => {
     setSelectedUsers(selectedUsers.filter(u => u.user_id !== userId))
+  }
+
+  // メールアドレス一括追加
+  const processBulkEmails = async () => {
+    if (!bulkEmailInput.trim()) {
+      alert("メールアドレスを入力してください")
+      return
+    }
+
+    setBulkInputLoading(true)
+    setBulkInputResult(null)
+
+    try {
+      // 改行、カンマ、セミコロン、タブで分割してメールアドレスを抽出
+      const emails = bulkEmailInput
+        .split(/[\n\r,;\t]+/)
+        .map(e => e.trim().toLowerCase())
+        .filter(e => e && e.includes("@")) // 空行とメールアドレスでないものを除外
+
+      if (emails.length === 0) {
+        alert("有効なメールアドレスが見つかりません")
+        setBulkInputLoading(false)
+        return
+      }
+
+      // 重複を除去
+      const uniqueEmails = [...new Set(emails)]
+
+      // データベースから一括検索
+      const { data: foundUsers, error } = await supabase
+        .from("users")
+        .select("user_id, email, full_name")
+        .in("email", uniqueEmails)
+
+      if (error) throw error
+
+      // 見つかったユーザーを追加（既に選択済みは除外）
+      const newUsers: UserSearchResult[] = []
+      const foundEmails = new Set<string>()
+
+      for (const user of (foundUsers || [])) {
+        foundEmails.add(user.email.toLowerCase())
+        if (!selectedUsers.find(u => u.user_id === user.user_id)) {
+          newUsers.push(user)
+        }
+      }
+
+      // 見つからなかったメールアドレス
+      const notFoundEmails = uniqueEmails.filter(e => !foundEmails.has(e))
+
+      // 選択済みリストに追加
+      setSelectedUsers([...selectedUsers, ...newUsers])
+
+      // 結果を表示
+      setBulkInputResult({
+        found: newUsers.length,
+        notFound: notFoundEmails
+      })
+
+      // 入力欄をクリア
+      setBulkEmailInput("")
+
+    } catch (error: any) {
+      console.error("Bulk email processing error:", error)
+      alert("エラー: " + error.message)
+    } finally {
+      setBulkInputLoading(false)
+    }
   }
 
   const sendIndividualEmail = async () => {
@@ -874,6 +947,82 @@ HASH PILOT NFT<br>
                             </Badge>
                           ))}
                         </div>
+                        <Button
+                          onClick={() => setSelectedUsers([])}
+                          size="sm"
+                          variant="outline"
+                          className="text-red-400 border-red-600 hover:bg-red-900/30"
+                        >
+                          全てクリア
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* メールアドレス一括入力 */}
+                  <div className="p-4 bg-gray-900 rounded-lg border border-gray-600">
+                    <Label className="text-white font-bold mb-2 block">
+                      メールアドレス一括入力
+                      <span className="text-gray-400 font-normal text-sm ml-2">
+                        （スプレッドシートからコピペOK）
+                      </span>
+                    </Label>
+                    <Textarea
+                      value={bulkEmailInput}
+                      onChange={(e) => setBulkEmailInput(e.target.value)}
+                      placeholder={`メールアドレスを改行区切りで入力
+例:
+user1@example.com
+user2@example.com
+user3@example.com
+
+※スプレッドシートの列をそのまま貼り付けできます`}
+                      className="bg-gray-700 border-gray-600 text-white min-h-[120px] font-mono text-sm"
+                      rows={6}
+                    />
+                    <div className="flex items-center gap-3 mt-3">
+                      <Button
+                        onClick={processBulkEmails}
+                        disabled={bulkInputLoading || !bulkEmailInput.trim()}
+                        className="bg-purple-600 hover:bg-purple-700"
+                      >
+                        {bulkInputLoading ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                            検索中...
+                          </>
+                        ) : (
+                          <>
+                            <Users className="w-4 h-4 mr-2" />
+                            一括追加
+                          </>
+                        )}
+                      </Button>
+                      {bulkEmailInput && (
+                        <span className="text-gray-400 text-sm">
+                          {bulkEmailInput.split(/[\n\r,;\t]+/).filter(e => e.trim() && e.includes("@")).length} 件のメールアドレス
+                        </span>
+                      )}
+                    </div>
+
+                    {/* 一括追加の結果表示 */}
+                    {bulkInputResult && (
+                      <div className="mt-3 p-3 rounded-lg bg-gray-800 border border-gray-600">
+                        <p className="text-green-400 text-sm">
+                          {bulkInputResult.found} 名を追加しました
+                        </p>
+                        {bulkInputResult.notFound.length > 0 && (
+                          <div className="mt-2">
+                            <p className="text-yellow-400 text-sm">
+                              以下のメールアドレスは見つかりませんでした（{bulkInputResult.notFound.length}件）:
+                            </p>
+                            <div className="mt-1 text-xs text-gray-400 max-h-24 overflow-y-auto">
+                              {bulkInputResult.notFound.map((email, i) => (
+                                <div key={i}>{email}</div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
