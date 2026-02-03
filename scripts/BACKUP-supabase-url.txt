@@ -1,0 +1,13 @@
+# Supabase URL バックアップ
+# サービス停止時に変更、復旧時に戻す
+
+正しいURL: https://soghqozaxfswtxxbgeer.supabase.co
+
+# 停止手順:
+# 1. Vercel → Settings → Environment Variables
+# 2. NEXT_PUBLIC_SUPABASE_URL を適当な値に変更（例: https://stopped.invalid）
+# 3. Redeploy
+
+# 復旧手順:
+# 1. NEXT_PUBLIC_SUPABASE_URL を上記の正しいURLに戻す
+# 2. Redeploy

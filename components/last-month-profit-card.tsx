@@ -104,13 +104,13 @@ export function LastMonthProfitCard({ userId }: LastMonthProfitCardProps) {
         throw dailyError
       }
 
-      // 紹介報酬（user_referral_profit_monthly）
+      // 紹介報酬（monthly_referral_profit）
+      const yearMonth = `${lastMonthYear}-${String(lastMonthNum).padStart(2, '0')}`
       const { data: referralProfitData, error: referralError } = await supabase
-        .from('user_referral_profit_monthly')
+        .from('monthly_referral_profit')
         .select('profit_amount')
         .eq('user_id', userId)
-        .eq('year', lastMonthYear)
-        .eq('month', lastMonthNum)
+        .eq('year_month', yearMonth)
 
       if (referralError && referralError.code !== 'PGRST116') {
         throw referralError
