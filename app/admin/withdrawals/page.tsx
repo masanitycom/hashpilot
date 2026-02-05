@@ -61,6 +61,10 @@ interface MonthlyStats {
   completed_amount: number
   on_hold_count: number
   on_hold_amount: number
+  under_minimum_count: number
+  under_minimum_amount: number
+  negative_count: number
+  negative_amount: number
 }
 
 // デフォルトで前月を表示（月末出金は前月分のため）
@@ -94,7 +98,7 @@ export default function AdminWithdrawalsPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState("")
   const [channelFilter, setChannelFilter] = useState<"all" | "confirmed" | "not_confirmed">("all")
-  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "completed" | "on_hold">("all")
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "completed" | "on_hold" | "under_minimum" | "negative">("all")
   const [taskFilter, setTaskFilter] = useState<"all" | "completed" | "not_completed">("all")
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState(false)
@@ -173,7 +177,11 @@ export default function AdminWithdrawalsPage() {
           completed_count: 0,
           completed_amount: 0,
           on_hold_count: 0,
-          on_hold_amount: 0
+          on_hold_amount: 0,
+          under_minimum_count: 0,
+          under_minimum_amount: 0,
+          negative_count: 0,
+          negative_amount: 0
         })
         setLoading(false)
         return
@@ -267,6 +275,8 @@ export default function AdminWithdrawalsPage() {
       const pendingWithdrawals = formattedData.filter(w => w.status === 'pending')
       const completedWithdrawals = formattedData.filter(w => w.status === 'completed')
       const onHoldWithdrawals = formattedData.filter(w => w.status === 'on_hold')
+      const underMinimumWithdrawals = formattedData.filter(w => w.status === 'under_minimum')
+      const negativeWithdrawals = formattedData.filter(w => w.status === 'negative')
 
       const stats: MonthlyStats = {
         total_amount: totalAmount,
@@ -278,6 +288,10 @@ export default function AdminWithdrawalsPage() {
         completed_amount: completedWithdrawals.reduce((sum, w) => sum + (w.total_amount || 0), 0),
         on_hold_count: onHoldWithdrawals.length,
         on_hold_amount: onHoldWithdrawals.reduce((sum, w) => sum + (w.total_amount || 0), 0),
+        under_minimum_count: underMinimumWithdrawals.length,
+        under_minimum_amount: underMinimumWithdrawals.reduce((sum, w) => sum + (w.total_amount || 0), 0),
+        negative_count: negativeWithdrawals.length,
+        negative_amount: negativeWithdrawals.reduce((sum, w) => sum + (w.total_amount || 0), 0),
       }
       setStats(stats)
 
@@ -342,6 +356,7 @@ export default function AdminWithdrawalsPage() {
   const exportCSV = () => {
     const headers = [
       "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計",
+      "$10未満",
       "前月未送金", "前月ステータス",
       "累計紹介報酬", "ロック額", "既払い紹介報酬", "払い出し可能額",
       "送金方法", "CoinW UID/送金先",
@@ -372,6 +387,7 @@ export default function AdminWithdrawalsPage() {
           (w.personal_amount || 0).toFixed(3),
           displayReferralAmount.toFixed(3),
           w.total_amount.toFixed(3),
+          w.status === 'under_minimum' ? '○' : '',
           prevMonthAmount,
           prevMonthStatus,
           cumUsdt.toFixed(3),
@@ -430,6 +446,10 @@ export default function AdminWithdrawalsPage() {
         return <Badge className="bg-green-600 text-white">送金完了</Badge>
       case 'on_hold':
         return <Badge className="bg-red-600 text-white">保留中</Badge>
+      case 'under_minimum':
+        return <Badge className="bg-purple-600 text-white">$10未満</Badge>
+      case 'negative':
+        return <Badge className="bg-gray-600 text-white">マイナス</Badge>
       case 'not_created':
         return <Badge className="bg-gray-600 text-white">未作成</Badge>
       default:
@@ -579,6 +599,42 @@ export default function AdminWithdrawalsPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* $10未満 */}
+            {stats.under_minimum_count > 0 && (
+              <Card className="bg-purple-900/20 border-purple-700/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <DollarSign className="h-6 w-6 text-purple-400" />
+                    <div>
+                      <p className="text-xs text-purple-300">$10未満（出金対象外）</p>
+                      <p className="text-xl font-bold text-purple-400">
+                        ${stats.under_minimum_amount.toFixed(2)}
+                      </p>
+                      <p className="text-xs text-purple-300 mt-1">{stats.under_minimum_count}人</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* マイナス */}
+            {stats.negative_count > 0 && (
+              <Card className="bg-gray-800/50 border-gray-600/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <AlertCircle className="h-6 w-6 text-gray-400" />
+                    <div>
+                      <p className="text-xs text-gray-300">マイナス（出金対象外）</p>
+                      <p className="text-xl font-bold text-gray-400">
+                        ${stats.negative_amount.toFixed(2)}
+                      </p>
+                      <p className="text-xs text-gray-300 mt-1">{stats.negative_count}人</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
 
@@ -645,13 +701,15 @@ export default function AdminWithdrawalsPage() {
               </select>
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as "all" | "pending" | "completed" | "on_hold")}
+                onChange={(e) => setStatusFilter(e.target.value as "all" | "pending" | "completed" | "on_hold" | "under_minimum" | "negative")}
                 className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm"
               >
                 <option value="all">ステータス: 全て</option>
                 <option value="pending">送金待ち</option>
                 <option value="completed">送金完了</option>
                 <option value="on_hold">保留中</option>
+                <option value="under_minimum">$10未満</option>
+                <option value="negative">マイナス</option>
               </select>
               <select
                 value={taskFilter}
@@ -703,7 +761,10 @@ export default function AdminWithdrawalsPage() {
                 </thead>
                 <tbody>
                   {filteredWithdrawals.map((withdrawal: any) => (
-                    <tr key={withdrawal.id} className="border-b border-gray-700/50 hover:bg-gray-700/20">
+                    <tr key={withdrawal.id} className={`border-b border-gray-700/50 hover:bg-gray-700/20 ${
+                      withdrawal.status === 'under_minimum' ? 'bg-purple-900/10' :
+                      withdrawal.status === 'negative' ? 'bg-gray-800/50 opacity-60' : ''
+                    }`}>
                       <td className="py-3 px-2">
                         <Checkbox
                           checked={selectedIds.has(withdrawal.id)}
@@ -716,7 +777,7 @@ export default function AdminWithdrawalsPage() {
                             }
                             setSelectedIds(newSet)
                           }}
-                          disabled={withdrawal.status === 'not_created'}
+                          disabled={withdrawal.status === 'not_created' || withdrawal.status === 'under_minimum' || withdrawal.status === 'negative'}
                           className="border-2 border-white/70 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500 h-5 w-5 disabled:border-gray-600"
                         />
                       </td>

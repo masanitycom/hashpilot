@@ -277,13 +277,6 @@ export default function WithdrawalPage() {
               <div className="flex items-start space-x-3">
                 <span className="text-blue-400 font-bold">3.</span>
                 <div>
-                  <p className="font-medium text-white">最小出金額</p>
-                  <p>$10以上の報酬がある場合に自動出金されます。$10未満の場合は翌月に繰り越されます。</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <span className="text-blue-400 font-bold">4.</span>
-                <div>
                   <p className="font-medium text-white">送金先未設定の場合</p>
                   <p>CoinW UIDが設定されていない場合、出金は保留状態となり、設定完了後に送金されます。</p>
                 </div>
