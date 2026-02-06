@@ -724,7 +724,7 @@ confirm('NFT配布状況を「配布状況をリセット」しますか？')
    - `RESEND_API_KEY`: Resend APIキー
 
 ### 重要な注意事項
-- メール送信にはResend APIを使用（`noreply@send.hashpilot.biz`）
+- メール送信にはResend APIを使用（`noreply@hashpilot.biz`）
 - HTML形式のメール本文に対応
 - 送信失敗時は `email_recipients.error_message` に記録
 - RLS（Row Level Security）で権限制御済み
@@ -1855,7 +1855,7 @@ WHERE nm.operation_start_date IS NOT NULL
 - 返信機能
 
 **送信元アドレス選択:**
-- `noreply@send.hashpilot.biz`: システム通知用（返信不可）
+- `noreply@hashpilot.biz`: システム通知用（返信不可）
 - `support@hashpilot.biz`: サポート用（返信可能）
 
 ### 返信機能

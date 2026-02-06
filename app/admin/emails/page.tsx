@@ -57,9 +57,9 @@ export default function AdminEmailsPage() {
   const router = useRouter()
 
   // 送信元アドレス選択
-  const [senderAddress, setSenderAddress] = useState("noreply@send.hashpilot.biz")
+  const [senderAddress, setSenderAddress] = useState("noreply@hashpilot.biz")
   const SENDER_OPTIONS = [
-    { value: "noreply@send.hashpilot.biz", label: "noreply@send.hashpilot.biz（システム通知用）" },
+    { value: "noreply@hashpilot.biz", label: "noreply@hashpilot.biz（システム通知用）" },
     { value: "support@hashpilot.biz", label: "support@hashpilot.biz（サポート用・返信可）" },
   ]
 
@@ -736,20 +736,20 @@ HASH PILOT NFT<br>
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         type="button"
-                        onClick={() => setSenderAddress("noreply@send.hashpilot.biz")}
+                        onClick={() => setSenderAddress("noreply@hashpilot.biz")}
                         className={`p-4 rounded-lg border-2 transition-all ${
-                          senderAddress === "noreply@send.hashpilot.biz"
+                          senderAddress === "noreply@hashpilot.biz"
                             ? "bg-blue-600 border-blue-400 ring-2 ring-blue-400"
                             : "bg-gray-700 border-gray-600 hover:border-gray-500"
                         }`}
                       >
                         <div className="flex items-center justify-center gap-2 mb-2">
-                          {senderAddress === "noreply@send.hashpilot.biz" && (
+                          {senderAddress === "noreply@hashpilot.biz" && (
                             <span className="text-white text-xl">✓</span>
                           )}
                           <span className="text-white font-bold">システム通知用</span>
                         </div>
-                        <p className="text-sm text-gray-300">noreply@send.hashpilot.biz</p>
+                        <p className="text-sm text-gray-300">noreply@hashpilot.biz</p>
                         <p className="text-xs text-gray-400 mt-1">返信不可</p>
                       </button>
                       <button
@@ -860,20 +860,20 @@ HASH PILOT NFT<br>
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         type="button"
-                        onClick={() => setSenderAddress("noreply@send.hashpilot.biz")}
+                        onClick={() => setSenderAddress("noreply@hashpilot.biz")}
                         className={`p-4 rounded-lg border-2 transition-all ${
-                          senderAddress === "noreply@send.hashpilot.biz"
+                          senderAddress === "noreply@hashpilot.biz"
                             ? "bg-blue-600 border-blue-400 ring-2 ring-blue-400"
                             : "bg-gray-700 border-gray-600 hover:border-gray-500"
                         }`}
                       >
                         <div className="flex items-center justify-center gap-2 mb-2">
-                          {senderAddress === "noreply@send.hashpilot.biz" && (
+                          {senderAddress === "noreply@hashpilot.biz" && (
                             <span className="text-white text-xl">✓</span>
                           )}
                           <span className="text-white font-bold">システム通知用</span>
                         </div>
-                        <p className="text-sm text-gray-300">noreply@send.hashpilot.biz</p>
+                        <p className="text-sm text-gray-300">noreply@hashpilot.biz</p>
                         <p className="text-xs text-gray-400 mt-1">返信不可</p>
                       </button>
                       <button
