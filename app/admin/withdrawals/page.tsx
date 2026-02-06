@@ -258,11 +258,15 @@ export default function AdminWithdrawalsPage() {
       })
 
       // STEP 3.8: その月までの累計紹介報酬を取得
-      const { data: cumulativeReferralData } = await supabase
+      console.log('=== 累計計算 yearMonth:', yearMonth)
+      const { data: cumulativeReferralData, error: cumError } = await supabase
         .from("monthly_referral_profit")
-        .select("user_id, profit_amount")
+        .select("user_id, profit_amount, year_month")
         .lte("year_month", yearMonth)
         .in("user_id", userIds)
+
+      console.log('=== cumulativeReferralData:', cumulativeReferralData?.slice(0, 5))
+      if (cumError) console.error('累計取得エラー:', cumError)
 
       // ユーザーごとの累計紹介報酬を集計
       const cumulativeReferralMap = new Map<string, number>()
@@ -270,6 +274,7 @@ export default function AdminWithdrawalsPage() {
         const current = cumulativeReferralMap.get(r.user_id) || 0
         cumulativeReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
+      console.log('=== 累計Map例:', Array.from(cumulativeReferralMap.entries()).slice(0, 3))
 
       // ユーザーごとのNFT変動情報を計算
       const nftChangeMap = new Map<string, {
