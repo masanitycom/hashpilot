@@ -56,6 +56,8 @@ interface WithdrawalRecord {
   nft_change_date?: string | null  // 変動日
   auto_nft_count?: number   // 自動NFT数
   manual_nft_count?: number // 手動NFT数
+  // 当月の紹介報酬（monthly_referral_profitから）
+  monthly_referral_amount?: number
 }
 
 interface MonthlyStats {
@@ -238,6 +240,21 @@ export default function AdminWithdrawalsPage() {
         .in("user_id", userIds)
         .is("buyback_date", null)
 
+      // STEP 3.7: 当月の紹介報酬を取得（monthly_referral_profitから）
+      const yearMonth = `${monthStart.getFullYear()}-${String(monthStart.getMonth() + 1).padStart(2, '0')}`
+      const { data: monthlyReferralData } = await supabase
+        .from("monthly_referral_profit")
+        .select("user_id, profit_amount")
+        .eq("year_month", yearMonth)
+        .in("user_id", userIds)
+
+      // ユーザーごとの当月紹介報酬を集計
+      const monthlyReferralMap = new Map<string, number>()
+      ;(monthlyReferralData || []).forEach(r => {
+        const current = monthlyReferralMap.get(r.user_id) || 0
+        monthlyReferralMap.set(r.user_id, current + Number(r.profit_amount))
+      })
+
       // ユーザーごとのNFT変動情報を計算
       const nftChangeMap = new Map<string, {
         nft_start_count: number
@@ -283,6 +300,7 @@ export default function AdminWithdrawalsPage() {
         const user = usersData?.find(u => u.user_id === withdrawal.user_id)
         const cycle = currentCycle?.find(c => c.user_id === withdrawal.user_id)
         const nftChange = nftChangeMap.get(withdrawal.user_id)
+        const monthlyReferral = monthlyReferralMap.get(withdrawal.user_id) || 0
 
         // 出金可能な紹介報酬を計算（USDTフェーズのみ）
         const cumUsdt = cycle?.cum_usdt || 0
@@ -318,6 +336,8 @@ export default function AdminWithdrawalsPage() {
           nft_change_date: nftChange?.nft_change_date || null,
           auto_nft_count: nftChange?.auto_nft_count || 0,
           manual_nft_count: nftChange?.manual_nft_count || 0,
+          // 当月の紹介報酬（monthly_referral_profitから）
+          monthly_referral_amount: monthlyReferral,
         }
       })
 
@@ -895,43 +915,72 @@ export default function AdminWithdrawalsPage() {
                       {/* 紹介報酬 */}
                       <td className="py-3 px-2 text-right">
                         {(() => {
-                          // HOLDユーザーは既払い分を引いた金額を表示
+                          const monthlyReferral = withdrawal.monthly_referral_amount || 0
+                          const referralAmount = withdrawal.referral_amount || 0
+                          const cumUsdt = withdrawal.cum_usdt || 0
                           const withdrawnReferral = withdrawal.withdrawn_referral_usdt || 0
-                          const displayAmount = withdrawal.phase === 'HOLD'
-                            ? Math.max(0, (withdrawal.referral_amount || 0) - withdrawnReferral)
-                            : (withdrawal.referral_amount || 0)
+                          const phase = withdrawal.phase || 'USDT'
+                          const autoNftCount = withdrawal.auto_nft_count || 0
+
                           return (
-                            <>
-                              <span className={`${
-                                withdrawal.phase === 'USDT' ? 'text-orange-400' : 'text-gray-500'
-                              }`}>
-                                ${displayAmount.toFixed(2)}
-                              </span>
-                              {/* HOLDユーザーの詳細表示 */}
-                              {withdrawal.phase === 'HOLD' && withdrawal.cum_usdt >= 1100 && (
-                                <div className="text-xs mt-1 space-y-0.5">
-                                  <div className="text-orange-400">
-                                    🔒 ロック: $1,100.00
-                                  </div>
-                                  <div className="text-gray-400">
-                                    既払: ${withdrawnReferral.toFixed(2)}
-                                  </div>
-                                  <div className="text-green-400 font-medium">
-                                    払出可: ${Math.max(0, 1100 - withdrawnReferral).toFixed(2)}
-                                  </div>
+                            <div className="space-y-1">
+                              {/* 当月の紹介報酬（monthly_referral_profitから） */}
+                              <div className="text-blue-400 font-medium" title="当月紹介報酬">
+                                📊 ${monthlyReferral.toFixed(2)}
+                              </div>
+
+                              {/* 累計紹介報酬 */}
+                              <div className="text-xs text-purple-300" title="累計紹介報酬(cum_usdt)">
+                                累計: ${cumUsdt.toFixed(2)}
+                              </div>
+
+                              {/* 今回出金額（referral_amount） */}
+                              {referralAmount > 0 && (
+                                <div className="text-xs text-green-400 font-medium" title="今回出金する紹介報酬">
+                                  💵 出金: ${referralAmount.toFixed(2)}
                                 </div>
                               )}
-                            </>
+
+                              {/* HOLDの場合 */}
+                              {phase === 'HOLD' && (
+                                <div className="text-xs text-orange-300">
+                                  🔒 ロック中
+                                </div>
+                              )}
+
+                              {/* 既払いがある場合 */}
+                              {withdrawnReferral > 0 && (
+                                <div className="text-xs text-gray-400" title="既に出金済みの紹介報酬">
+                                  既払: ${withdrawnReferral.toFixed(2)}
+                                </div>
+                              )}
+
+                              {/* 自動NFT購入がある場合 */}
+                              {autoNftCount > 0 && (
+                                <div className="text-xs text-pink-300" title="自動NFT購入回数">
+                                  🤖 NFT{autoNftCount}回
+                                </div>
+                              )}
+                            </div>
                           )
                         })()}
                       </td>
                       {/* 出金合計 */}
                       <td className="py-3 px-2 text-right">
-                        <span className={`font-bold ${
-                          withdrawal.total_amount >= 10 ? 'text-blue-400' : 'text-gray-400'
-                        }`}>
-                          ${withdrawal.total_amount.toFixed(2)}
-                        </span>
+                        <div>
+                          <span className={`font-bold ${
+                            withdrawal.total_amount >= 10 ? 'text-blue-400' : 'text-gray-400'
+                          }`}>
+                            ${(withdrawal.total_amount || 0).toFixed(2)}
+                          </span>
+                          {/* 内訳表示 */}
+                          <div className="text-xs text-gray-400 mt-1">
+                            個人: ${(withdrawal.personal_amount || 0).toFixed(2)}
+                            {(withdrawal.referral_amount || 0) > 0 && (
+                              <span className="ml-1">+ 紹介: ${(withdrawal.referral_amount || 0).toFixed(2)}</span>
+                            )}
+                          </div>
+                        </div>
                       </td>
                       <td className="py-3 px-2 text-center">
                         <div className="space-y-1">
