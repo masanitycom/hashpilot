@@ -765,13 +765,16 @@ export default function AdminWithdrawalsPage() {
           <CardContent>
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-gray-300">対象月:</label>
-                <Input
-                  type="month"
+                <label className="text-sm text-gray-300 whitespace-nowrap">対象月:</label>
+                <select
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="bg-gray-700 border-gray-600 text-white"
-                />
+                  className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm min-w-[140px]"
+                >
+                  <option value="2026-01">2026年1月</option>
+                  <option value="2025-12">2025年12月</option>
+                  <option value="2025-11">2025年11月</option>
+                </select>
               </div>
 
               <Button
