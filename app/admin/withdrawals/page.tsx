@@ -258,22 +258,45 @@ export default function AdminWithdrawalsPage() {
         monthlyReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
 
-      // STEP 3.8: その月までの累計紹介報酬を取得（rangeで制限解除）
+      // STEP 3.8: その月までの累計紹介報酬を取得（月ごとに分割取得して1000件制限を回避）
       console.log('=== 累計計算 yearMonth:', yearMonth)
-      const { data: cumulativeReferralData, error: cumError } = await supabase
-        .from("monthly_referral_profit")
-        .select("user_id, profit_amount, year_month")
-        .lte("year_month", yearMonth)
-        .in("user_id", userIds)
-        .range(0, 9999)
 
-      console.log('=== cumulativeReferralData件数:', cumulativeReferralData?.length)
-      console.log('=== 5FAE2Cのデータ:', cumulativeReferralData?.filter(r => r.user_id === '5FAE2C'))
-      if (cumError) console.error('累計取得エラー:', cumError)
+      // 対象月のリストを生成（2025-11から選択月まで）
+      const targetMonths: string[] = []
+      const startMonth = new Date('2025-11-01')
+      const endMonth = new Date(targetDate)
+      let currentMonth = new Date(startMonth)
+      while (currentMonth <= endMonth) {
+        const ym = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}`
+        targetMonths.push(ym)
+        currentMonth.setMonth(currentMonth.getMonth() + 1)
+      }
+      console.log('=== 対象月:', targetMonths)
+
+      // 月ごとにデータを取得して結合
+      let allCumulativeData: { user_id: string; profit_amount: number; year_month: string }[] = []
+      for (const ym of targetMonths) {
+        const { data: monthData, error: monthError } = await supabase
+          .from("monthly_referral_profit")
+          .select("user_id, profit_amount, year_month")
+          .eq("year_month", ym)
+          .in("user_id", userIds)
+          .range(0, 4999)
+
+        if (monthError) {
+          console.error(`${ym}取得エラー:`, monthError)
+        } else if (monthData) {
+          console.log(`=== ${ym}の件数:`, monthData.length)
+          allCumulativeData = allCumulativeData.concat(monthData)
+        }
+      }
+
+      console.log('=== 累計データ合計件数:', allCumulativeData.length)
+      console.log('=== 5FAE2Cのデータ:', allCumulativeData.filter(r => r.user_id === '5FAE2C'))
 
       // ユーザーごとの累計紹介報酬を集計
       const cumulativeReferralMap = new Map<string, number>()
-      ;(cumulativeReferralData || []).forEach(r => {
+      allCumulativeData.forEach(r => {
         const current = cumulativeReferralMap.get(r.user_id) || 0
         cumulativeReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
