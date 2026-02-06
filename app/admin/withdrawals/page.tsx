@@ -258,38 +258,20 @@ export default function AdminWithdrawalsPage() {
         monthlyReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
 
-      // STEP 3.8: その月までの累計紹介報酬を取得（月ごとに分割取得して1000件制限を回避）
-      // 対象月のリストを生成（2025-11から選択月まで）
-      const targetMonths: string[] = []
-      const startMonth = new Date('2025-11-01')
-      const endMonth = new Date(targetDate)
-      let currentMonth = new Date(startMonth)
-      while (currentMonth <= endMonth) {
-        const ym = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}`
-        targetMonths.push(ym)
-        currentMonth.setMonth(currentMonth.getMonth() + 1)
+      // STEP 3.8: その月までの累計紹介報酬を取得（RPC関数でサーバーサイド集計、1000件制限回避）
+      const { data: cumulativeData, error: cumError } = await supabase.rpc('get_cumulative_referral', {
+        p_user_ids: userIds,
+        p_year_month: yearMonth
+      })
+
+      if (cumError) {
+        console.error('累計取得エラー:', cumError)
       }
 
-      // 月ごとにデータを取得して結合
-      let allCumulativeData: { user_id: string; profit_amount: number; year_month: string }[] = []
-      for (const ym of targetMonths) {
-        const { data: monthData } = await supabase
-          .from("monthly_referral_profit")
-          .select("user_id, profit_amount, year_month")
-          .eq("year_month", ym)
-          .in("user_id", userIds)
-          .range(0, 4999)
-
-        if (monthData) {
-          allCumulativeData = allCumulativeData.concat(monthData)
-        }
-      }
-
-      // ユーザーごとの累計紹介報酬を集計
+      // ユーザーごとの累計紹介報酬をMapに格納
       const cumulativeReferralMap = new Map<string, number>()
-      allCumulativeData.forEach(r => {
-        const current = cumulativeReferralMap.get(r.user_id) || 0
-        cumulativeReferralMap.set(r.user_id, current + Number(r.profit_amount))
+      ;(cumulativeData || []).forEach((r: { user_id: string; cumulative_amount: number }) => {
+        cumulativeReferralMap.set(r.user_id, Number(r.cumulative_amount))
       })
 
       // ユーザーごとのNFT変動情報を計算
