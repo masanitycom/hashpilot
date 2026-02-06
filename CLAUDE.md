@@ -1943,4 +1943,110 @@ FOR DELETE USING (
 
 ---
 
-最終更新: 2026年1月9日
+## 💰 月末出金の紹介報酬計算（2026年2月7日確定）
+
+### 🚨 最重要：referral_amount計算式
+
+`monthly_withdrawals.referral_amount`（今月出金できる紹介報酬）の計算は、**NFT自動購入の有無**と**フェーズ**の組み合わせで決まる。
+
+#### 計算式（4パターン）
+
+| NFT自動購入 | フェーズ | referral_amount計算式 |
+|-------------|----------|----------------------|
+| あり（auto_nft_count > 0） | USDT | `cum_usdt` |
+| あり（auto_nft_count > 0） | HOLD | `cum_usdt - 1100` |
+| なし（auto_nft_count = 0） | USDT | `cum_usdt - withdrawn_referral_usdt` |
+| なし（auto_nft_count = 0） | HOLD | `MAX(0, 1100 - withdrawn_referral_usdt)` |
+
+#### 計算ロジックの解説
+
+**NFT自動購入あり（auto_nft_count > 0）:**
+- NFT自動購入時に`cum_usdt`から$2,200が引かれ、$1,100が`available_usdt`に戻る
+- つまり`cum_usdt`は既に自動購入分がリセットされている
+- `withdrawn_referral_usdt`を引く必要はない（NFT購入でリセット済み）
+
+**NFT自動購入なし（auto_nft_count = 0）:**
+- `withdrawn_referral_usdt`（既に出金済みの紹介報酬累計）を引く必要がある
+- HOLDフェーズでも$1,100までは出金可能（$1,100 - 既払い = 残り出金可能額）
+
+#### SQL実装例
+
+```sql
+UPDATE monthly_withdrawals mw
+SET
+  referral_amount = CASE
+    -- NFT購入あり
+    WHEN ac.auto_nft_count > 0 THEN
+      CASE
+        WHEN ac.phase = 'USDT' THEN ROUND(GREATEST(0, ac.cum_usdt)::numeric, 2)
+        WHEN ac.phase = 'HOLD' THEN ROUND(GREATEST(0, ac.cum_usdt - 1100)::numeric, 2)
+        ELSE 0
+      END
+    -- NFT購入なし
+    ELSE
+      CASE
+        WHEN ac.phase = 'USDT' THEN ROUND(GREATEST(0, ac.cum_usdt - COALESCE(ac.withdrawn_referral_usdt, 0))::numeric, 2)
+        -- HOLDは$1100まで出金可能
+        WHEN ac.phase = 'HOLD' THEN ROUND(GREATEST(0, 1100 - COALESCE(ac.withdrawn_referral_usdt, 0))::numeric, 2)
+        ELSE 0
+      END
+  END,
+  total_amount = mw.personal_amount + [上記と同じCASE式]
+FROM affiliate_cycle ac
+WHERE mw.user_id = ac.user_id
+  AND mw.withdrawal_month = '対象月'
+  AND mw.status IN ('pending', 'on_hold');
+```
+
+#### 関連テーブル・カラム
+
+| テーブル.カラム | 説明 |
+|-----------------|------|
+| `affiliate_cycle.cum_usdt` | 紹介報酬累計（NFT自動購入で-$2,200） |
+| `affiliate_cycle.withdrawn_referral_usdt` | 出金済み紹介報酬の累計 |
+| `affiliate_cycle.auto_nft_count` | 自動NFT購入回数 |
+| `affiliate_cycle.phase` | USDT / HOLD |
+| `monthly_withdrawals.referral_amount` | 今月出金する紹介報酬 |
+| `monthly_withdrawals.personal_amount` | 今月の個人利益（日利合計） |
+| `monthly_withdrawals.total_amount` | 出金合計 = personal + referral |
+
+#### 修正用SQLスクリプト
+
+- `scripts/FIX-january-referral-hold-correct.sql` - 正しい計算式
+
+---
+
+## 📊 出金管理画面の表示仕様（2026年2月7日更新）
+
+### 紹介報酬列の表示
+
+| 表示項目 | 色 | データソース |
+|----------|-----|--------------|
+| 当月紹介報酬 | 青 | `monthly_referral_profit`（その月のyear_month） |
+| 累計 | 紫 | `monthly_referral_profit`（その月以前の合計） |
+| 出金額 | 緑 | `monthly_withdrawals.referral_amount` |
+| HOLD | オレンジ | `affiliate_cycle.phase = 'HOLD'`の場合 |
+| NFT回数 | ピンク | `auto_nft_count > 0`の場合 |
+
+### 累計紹介報酬の計算
+
+```typescript
+// その月までの累計を計算（monthly_referral_profitから）
+const { data: cumulativeReferralData } = await supabase
+  .from("monthly_referral_profit")
+  .select("user_id, profit_amount")
+  .lte("year_month", yearMonth)  // 選択月以前
+  .in("user_id", userIds)
+```
+
+**注意:** `affiliate_cycle.cum_usdt`は現在値のため、月を切り替えても同じ値になる。
+月別の累計を表示するには`monthly_referral_profit`から計算する必要がある。
+
+### 出金合計列の表示
+
+- メイン: `total_amount`
+- 内訳: `個人: $XX.XX + 紹介: $XX.XX`
+
+---
+
+最終更新: 2026年2月7日
