@@ -265,7 +265,8 @@ export default function AdminWithdrawalsPage() {
         .lte("year_month", yearMonth)
         .in("user_id", userIds)
 
-      console.log('=== cumulativeReferralData:', cumulativeReferralData?.slice(0, 5))
+      console.log('=== cumulativeReferralData件数:', cumulativeReferralData?.length)
+      console.log('=== 5FAE2Cのデータ:', cumulativeReferralData?.filter(r => r.user_id === '5FAE2C'))
       if (cumError) console.error('累計取得エラー:', cumError)
 
       // ユーザーごとの累計紹介報酬を集計
@@ -275,6 +276,7 @@ export default function AdminWithdrawalsPage() {
         cumulativeReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
       console.log('=== 累計Map例:', Array.from(cumulativeReferralMap.entries()).slice(0, 3))
+      console.log('=== 5FAE2C累計:', cumulativeReferralMap.get('5FAE2C'))
 
       // ユーザーごとのNFT変動情報を計算
       const nftChangeMap = new Map<string, {
