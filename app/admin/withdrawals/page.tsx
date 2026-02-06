@@ -58,6 +58,8 @@ interface WithdrawalRecord {
   manual_nft_count?: number // 手動NFT数
   // 当月の紹介報酬（monthly_referral_profitから）
   monthly_referral_amount?: number
+  // その月までの累計紹介報酬
+  cumulative_referral_amount?: number
 }
 
 interface MonthlyStats {
@@ -255,6 +257,20 @@ export default function AdminWithdrawalsPage() {
         monthlyReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
 
+      // STEP 3.8: その月までの累計紹介報酬を取得
+      const { data: cumulativeReferralData } = await supabase
+        .from("monthly_referral_profit")
+        .select("user_id, profit_amount")
+        .lte("year_month", yearMonth)
+        .in("user_id", userIds)
+
+      // ユーザーごとの累計紹介報酬を集計
+      const cumulativeReferralMap = new Map<string, number>()
+      ;(cumulativeReferralData || []).forEach(r => {
+        const current = cumulativeReferralMap.get(r.user_id) || 0
+        cumulativeReferralMap.set(r.user_id, current + Number(r.profit_amount))
+      })
+
       // ユーザーごとのNFT変動情報を計算
       const nftChangeMap = new Map<string, {
         nft_start_count: number
@@ -301,6 +317,7 @@ export default function AdminWithdrawalsPage() {
         const cycle = currentCycle?.find(c => c.user_id === withdrawal.user_id)
         const nftChange = nftChangeMap.get(withdrawal.user_id)
         const monthlyReferral = monthlyReferralMap.get(withdrawal.user_id) || 0
+        const cumulativeReferral = cumulativeReferralMap.get(withdrawal.user_id) || 0
 
         // 出金可能な紹介報酬を計算（USDTフェーズのみ）
         const cumUsdt = cycle?.cum_usdt || 0
@@ -338,6 +355,8 @@ export default function AdminWithdrawalsPage() {
           manual_nft_count: nftChange?.manual_nft_count || 0,
           // 当月の紹介報酬（monthly_referral_profitから）
           monthly_referral_amount: monthlyReferral,
+          // その月までの累計紹介報酬
+          cumulative_referral_amount: cumulativeReferral,
         }
       })
 
@@ -916,9 +935,8 @@ export default function AdminWithdrawalsPage() {
                       <td className="py-3 px-2 text-right">
                         {(() => {
                           const monthlyReferral = withdrawal.monthly_referral_amount || 0
+                          const cumulativeReferral = withdrawal.cumulative_referral_amount || 0
                           const referralAmount = withdrawal.referral_amount || 0
-                          const cumUsdt = withdrawal.cum_usdt || 0
-                          const withdrawnReferral = withdrawal.withdrawn_referral_usdt || 0
                           const phase = withdrawal.phase || 'USDT'
                           const autoNftCount = withdrawal.auto_nft_count || 0
 
@@ -926,32 +944,25 @@ export default function AdminWithdrawalsPage() {
                             <div className="space-y-1">
                               {/* 当月の紹介報酬（monthly_referral_profitから） */}
                               <div className="text-blue-400 font-medium" title="当月紹介報酬">
-                                📊 ${monthlyReferral.toFixed(2)}
+                                ${monthlyReferral.toFixed(2)}
                               </div>
 
-                              {/* 累計紹介報酬 */}
-                              <div className="text-xs text-purple-300" title="累計紹介報酬(cum_usdt)">
-                                累計: ${cumUsdt.toFixed(2)}
+                              {/* その月までの累計紹介報酬 */}
+                              <div className="text-xs text-purple-300" title="この月までの累計紹介報酬">
+                                累計: ${cumulativeReferral.toFixed(2)}
                               </div>
 
                               {/* 今回出金額（referral_amount） */}
                               {referralAmount > 0 && (
                                 <div className="text-xs text-green-400 font-medium" title="今回出金する紹介報酬">
-                                  💵 出金: ${referralAmount.toFixed(2)}
+                                  出金: ${referralAmount.toFixed(2)}
                                 </div>
                               )}
 
                               {/* HOLDの場合 */}
                               {phase === 'HOLD' && (
                                 <div className="text-xs text-orange-300">
-                                  🔒 ロック中
-                                </div>
-                              )}
-
-                              {/* 既払いがある場合 */}
-                              {withdrawnReferral > 0 && (
-                                <div className="text-xs text-gray-400" title="既に出金済みの紹介報酬">
-                                  既払: ${withdrawnReferral.toFixed(2)}
+                                  🔒 HOLD
                                 </div>
                               )}
 
