@@ -249,7 +249,7 @@ export default function AdminWithdrawalsPage() {
         .select("user_id, profit_amount")
         .eq("year_month", yearMonth)
         .in("user_id", userIds)
-        .limit(5000)
+        .range(0, 4999)
 
       // ユーザーごとの当月紹介報酬を集計
       const monthlyReferralMap = new Map<string, number>()
@@ -258,14 +258,14 @@ export default function AdminWithdrawalsPage() {
         monthlyReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
 
-      // STEP 3.8: その月までの累計紹介報酬を取得（制限を10000件に）
+      // STEP 3.8: その月までの累計紹介報酬を取得（rangeで制限解除）
       console.log('=== 累計計算 yearMonth:', yearMonth)
       const { data: cumulativeReferralData, error: cumError } = await supabase
         .from("monthly_referral_profit")
         .select("user_id, profit_amount, year_month")
         .lte("year_month", yearMonth)
         .in("user_id", userIds)
-        .limit(10000)
+        .range(0, 9999)
 
       console.log('=== cumulativeReferralData件数:', cumulativeReferralData?.length)
       console.log('=== 5FAE2Cのデータ:', cumulativeReferralData?.filter(r => r.user_id === '5FAE2C'))
