@@ -921,15 +921,33 @@ export default function AdminWithdrawalsPage() {
                           )}
                         </div>
                       </td>
-                      {/* フェーズ表示 */}
+                      {/* フェーズ表示（その月の累計から計算） */}
                       <td className="py-3 px-2 text-center">
-                        {withdrawal.phase === 'USDT' ? (
-                          <Badge className="bg-green-600 text-white">💰 USDT</Badge>
-                        ) : withdrawal.phase === 'HOLD' ? (
-                          <Badge className="bg-orange-600 text-white">🔒 HOLD</Badge>
-                        ) : (
-                          <Badge className="bg-gray-600 text-white">-</Badge>
-                        )}
+                        {(() => {
+                          const cumulative = withdrawal.cumulative_referral_amount || 0
+                          // 累計 % 2200 でフェーズ判定
+                          const remainder = cumulative % 2200
+                          const calculatedPhase = remainder >= 1100 ? 'HOLD' : 'USDT'
+                          const cycleCount = Math.floor(cumulative / 2200)
+
+                          return calculatedPhase === 'USDT' ? (
+                            <div>
+                              <Badge className="bg-green-600 text-white">💰 USDT</Badge>
+                              {cycleCount > 0 && (
+                                <div className="text-xs text-gray-400 mt-1">
+                                  {cycleCount}サイクル完了
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div>
+                              <Badge className="bg-orange-600 text-white">🔒 HOLD</Badge>
+                              <div className="text-xs text-gray-400 mt-1">
+                                ${(1100 - (remainder - 1100)).toFixed(0)}でNFT
+                              </div>
+                            </div>
+                          )
+                        })()}
                       </td>
                       {/* 個人利益 */}
                       <td className="py-3 px-2 text-right">
@@ -943,7 +961,6 @@ export default function AdminWithdrawalsPage() {
                           const monthlyReferral = withdrawal.monthly_referral_amount || 0
                           const cumulativeReferral = withdrawal.cumulative_referral_amount || 0
                           const referralAmount = withdrawal.referral_amount || 0
-                          const phase = withdrawal.phase || 'USDT'
                           const autoNftCount = withdrawal.auto_nft_count || 0
 
                           return (
@@ -962,13 +979,6 @@ export default function AdminWithdrawalsPage() {
                               {referralAmount > 0 && (
                                 <div className="text-xs text-green-400 font-medium" title="今回出金する紹介報酬">
                                   出金: ${referralAmount.toFixed(2)}
-                                </div>
-                              )}
-
-                              {/* HOLDの場合 */}
-                              {phase === 'HOLD' && (
-                                <div className="text-xs text-orange-300">
-                                  🔒 HOLD
                                 </div>
                               )}
 
