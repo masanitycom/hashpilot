@@ -49,6 +49,13 @@ interface WithdrawalRecord {
   total_nft_count?: number
   // 前月未送金情報
   prev_month_unpaid?: { amount: number; status: string } | null
+  // NFT変動情報
+  nft_start_count?: number  // 月初NFT数
+  nft_end_count?: number    // 月末NFT数
+  nft_added_count?: number  // 月中追加数
+  nft_change_date?: string | null  // 変動日
+  auto_nft_count?: number   // 自動NFT数
+  manual_nft_count?: number // 手動NFT数
 }
 
 interface MonthlyStats {
@@ -220,10 +227,62 @@ export default function AdminWithdrawalsPage() {
         (prevMonthData || []).map(p => [p.user_id, { amount: p.total_amount, status: p.status }])
       )
 
+      // STEP 3.6: NFT情報を取得（月中変動検出用）
+      const monthStart = new Date(targetDate)
+      const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0)
+      const monthEndStr = monthEnd.toISOString().split('T')[0]
+
+      const { data: nftData } = await supabase
+        .from("nft_master")
+        .select("user_id, nft_type, operation_start_date, acquired_date")
+        .in("user_id", userIds)
+        .is("buyback_date", null)
+
+      // ユーザーごとのNFT変動情報を計算
+      const nftChangeMap = new Map<string, {
+        nft_start_count: number
+        nft_end_count: number
+        nft_added_count: number
+        nft_change_date: string | null
+        auto_nft_count: number
+        manual_nft_count: number
+      }>()
+
+      userIds.forEach(userId => {
+        const userNfts = (nftData || []).filter(n => n.user_id === userId)
+        const nftBeforeMonth = userNfts.filter(n =>
+          n.operation_start_date && new Date(n.operation_start_date) < monthStart
+        ).length
+        const nftAddedDuringMonth = userNfts.filter(n =>
+          n.operation_start_date &&
+          new Date(n.operation_start_date) >= monthStart &&
+          new Date(n.operation_start_date) <= monthEnd
+        )
+        const autoNftCount = userNfts.filter(n => n.nft_type === 'auto').length
+        const manualNftCount = userNfts.filter(n => n.nft_type === 'manual').length
+
+        // 月中追加の最初の日付を取得
+        const firstAdditionDate = nftAddedDuringMonth.length > 0
+          ? nftAddedDuringMonth
+              .map(n => n.operation_start_date)
+              .sort()[0]
+          : null
+
+        nftChangeMap.set(userId, {
+          nft_start_count: nftBeforeMonth,
+          nft_end_count: userNfts.length,
+          nft_added_count: nftAddedDuringMonth.length,
+          nft_change_date: firstAdditionDate,
+          auto_nft_count: autoNftCount,
+          manual_nft_count: manualNftCount
+        })
+      })
+
       // STEP 4: データを結合
       const formattedData = withdrawalData.map((withdrawal: any) => {
         const user = usersData?.find(u => u.user_id === withdrawal.user_id)
         const cycle = currentCycle?.find(c => c.user_id === withdrawal.user_id)
+        const nftChange = nftChangeMap.get(withdrawal.user_id)
 
         // 出金可能な紹介報酬を計算（USDTフェーズのみ）
         const cumUsdt = cycle?.cum_usdt || 0
@@ -252,6 +311,13 @@ export default function AdminWithdrawalsPage() {
           withdrawable_referral: withdrawableReferral,
           // 前月未送金情報
           prev_month_unpaid: prevMonthMap.get(withdrawal.user_id) || null,
+          // NFT変動情報
+          nft_start_count: nftChange?.nft_start_count || 0,
+          nft_end_count: nftChange?.nft_end_count || 0,
+          nft_added_count: nftChange?.nft_added_count || 0,
+          nft_change_date: nftChange?.nft_change_date || null,
+          auto_nft_count: nftChange?.auto_nft_count || 0,
+          manual_nft_count: nftChange?.manual_nft_count || 0,
         }
       })
 
@@ -357,6 +423,7 @@ export default function AdminWithdrawalsPage() {
     const headers = [
       "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計",
       "$10未満",
+      "月初NFT", "月末NFT", "NFT変動日", "自動NFT", "手動NFT",
       "前月未送金", "前月ステータス",
       "累計紹介報酬", "ロック額", "既払い紹介報酬", "払い出し可能額",
       "送金方法", "CoinW UID/送金先",
@@ -380,6 +447,11 @@ export default function AdminWithdrawalsPage() {
         const prevMonthAmount = w.prev_month_unpaid ? Number(w.prev_month_unpaid.amount).toFixed(2) : ""
         const prevMonthStatus = w.prev_month_unpaid ? w.prev_month_unpaid.status : ""
 
+        // NFT変動情報
+        const nftChangeDate = w.nft_change_date
+          ? new Date(w.nft_change_date).toLocaleDateString('ja-JP')
+          : ""
+
         return [
           w.user_id,
           w.email,
@@ -388,6 +460,11 @@ export default function AdminWithdrawalsPage() {
           displayReferralAmount.toFixed(3),
           w.total_amount.toFixed(3),
           w.status === 'under_minimum' ? '○' : '',
+          w.nft_start_count || 0,
+          w.nft_end_count || 0,
+          nftChangeDate,
+          w.auto_nft_count || 0,
+          w.manual_nft_count || 0,
           prevMonthAmount,
           prevMonthStatus,
           cumUsdt.toFixed(3),
@@ -752,7 +829,7 @@ export default function AdminWithdrawalsPage() {
                     <th className="text-right py-3 px-2 text-gray-300">個人利益</th>
                     <th className="text-right py-3 px-2 text-gray-300">紹介報酬</th>
                     <th className="text-right py-3 px-2 text-gray-300">出金合計</th>
-                    <th className="text-center py-3 px-2 text-gray-300">NFT数</th>
+                    <th className="text-center py-3 px-2 text-gray-300">NFT変動</th>
                     <th className="text-left py-3 px-2 text-gray-300">CoinW UID/送金先</th>
                     <th className="text-center py-3 px-2 text-gray-300">CH紐付け</th>
                     <th className="text-left py-3 px-2 text-gray-300">タスク状況</th>
@@ -857,9 +934,29 @@ export default function AdminWithdrawalsPage() {
                         </span>
                       </td>
                       <td className="py-3 px-2 text-center">
-                        <span className="text-blue-400">
-                          {withdrawal.total_nft_count || 0}
-                        </span>
+                        <div className="space-y-1">
+                          {/* NFT変動表示 */}
+                          {withdrawal.nft_added_count > 0 ? (
+                            <div className="flex flex-col items-center">
+                              <Badge className="bg-yellow-600 text-white text-xs">
+                                ⚠️ {withdrawal.nft_start_count}→{withdrawal.nft_end_count}
+                              </Badge>
+                              <span className="text-xs text-yellow-400">
+                                ({withdrawal.nft_change_date ? new Date(withdrawal.nft_change_date).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' }) : ''})
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-blue-400">
+                              {withdrawal.nft_end_count || withdrawal.total_nft_count || 0}枚
+                            </span>
+                          )}
+                          {/* 自動NFT表示 */}
+                          {withdrawal.auto_nft_count > 0 && (
+                            <div className="text-xs text-purple-400">
+                              🤖 自動{withdrawal.auto_nft_count}
+                            </div>
+                          )}
+                        </div>
                       </td>
                       <td className="py-3 px-2">
                         <div className="text-white">
