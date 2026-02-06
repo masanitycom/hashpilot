@@ -2030,17 +2030,54 @@ WHERE mw.user_id = ac.user_id
 
 ### 累計紹介報酬の計算
 
+#### 🚨 Supabaseの1000件制限に注意
+
+Supabaseはデフォルトで1000件までしかデータを返さない。`.limit()`や`.range()`では回避できない（プロジェクト設定で制限されている）。
+
+**問題:**
 ```typescript
-// その月までの累計を計算（monthly_referral_profitから）
-const { data: cumulativeReferralData } = await supabase
+// ❌ これだと1000件で切り捨てられる
+const { data } = await supabase
   .from("monthly_referral_profit")
-  .select("user_id, profit_amount")
-  .lte("year_month", yearMonth)  // 選択月以前
+  .lte("year_month", yearMonth)
   .in("user_id", userIds)
+// 12月・1月のデータが取得できない
 ```
 
+**解決策: 月ごとに分割取得**
+```typescript
+// ✅ 月ごとに分けて取得して結合
+const targetMonths = ['2025-11', '2025-12', '2026-01'] // 動的に生成
+
+let allData: any[] = []
+for (const ym of targetMonths) {
+  const { data: monthData } = await supabase
+    .from("monthly_referral_profit")
+    .select("user_id, profit_amount, year_month")
+    .eq("year_month", ym)  // 月ごとにフィルター
+    .in("user_id", userIds)
+    .range(0, 4999)
+
+  if (monthData) {
+    allData = allData.concat(monthData)
+  }
+}
+
+// ユーザーごとに累計を計算
+const cumulativeMap = new Map<string, number>()
+allData.forEach(r => {
+  const current = cumulativeMap.get(r.user_id) || 0
+  cumulativeMap.set(r.user_id, current + Number(r.profit_amount))
+})
+```
+
+**なぜこれで解決するか:**
+- 1ヶ月分のデータは1000件未満
+- 月ごとに取得すれば全データを取得可能
+- 結合後に累計を計算
+
 **注意:** `affiliate_cycle.cum_usdt`は現在値のため、月を切り替えても同じ値になる。
-月別の累計を表示するには`monthly_referral_profit`から計算する必要がある。
+月別の累計を表示するには`monthly_referral_profit`から月ごとに分割取得して計算する必要がある。
 
 ### 出金合計列の表示
 

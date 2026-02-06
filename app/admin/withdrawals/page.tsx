@@ -259,8 +259,6 @@ export default function AdminWithdrawalsPage() {
       })
 
       // STEP 3.8: その月までの累計紹介報酬を取得（月ごとに分割取得して1000件制限を回避）
-      console.log('=== 累計計算 yearMonth:', yearMonth)
-
       // 対象月のリストを生成（2025-11から選択月まで）
       const targetMonths: string[] = []
       const startMonth = new Date('2025-11-01')
@@ -271,28 +269,21 @@ export default function AdminWithdrawalsPage() {
         targetMonths.push(ym)
         currentMonth.setMonth(currentMonth.getMonth() + 1)
       }
-      console.log('=== 対象月:', targetMonths)
 
       // 月ごとにデータを取得して結合
       let allCumulativeData: { user_id: string; profit_amount: number; year_month: string }[] = []
       for (const ym of targetMonths) {
-        const { data: monthData, error: monthError } = await supabase
+        const { data: monthData } = await supabase
           .from("monthly_referral_profit")
           .select("user_id, profit_amount, year_month")
           .eq("year_month", ym)
           .in("user_id", userIds)
           .range(0, 4999)
 
-        if (monthError) {
-          console.error(`${ym}取得エラー:`, monthError)
-        } else if (monthData) {
-          console.log(`=== ${ym}の件数:`, monthData.length)
+        if (monthData) {
           allCumulativeData = allCumulativeData.concat(monthData)
         }
       }
-
-      console.log('=== 累計データ合計件数:', allCumulativeData.length)
-      console.log('=== 5FAE2Cのデータ:', allCumulativeData.filter(r => r.user_id === '5FAE2C'))
 
       // ユーザーごとの累計紹介報酬を集計
       const cumulativeReferralMap = new Map<string, number>()
@@ -300,8 +291,6 @@ export default function AdminWithdrawalsPage() {
         const current = cumulativeReferralMap.get(r.user_id) || 0
         cumulativeReferralMap.set(r.user_id, current + Number(r.profit_amount))
       })
-      console.log('=== 累計Map例:', Array.from(cumulativeReferralMap.entries()).slice(0, 3))
-      console.log('=== 5FAE2C累計:', cumulativeReferralMap.get('5FAE2C'))
 
       // ユーザーごとのNFT変動情報を計算
       const nftChangeMap = new Map<string, {

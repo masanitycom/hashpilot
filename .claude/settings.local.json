@@ -6,7 +6,9 @@
       "Bash(dig:*)",
       "Bash(npx tsc:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(grep:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
