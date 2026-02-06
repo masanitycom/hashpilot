@@ -10,7 +10,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info, RotateCcw, Inbox, Trash2 } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Mail, Send, History, Users, User, RefreshCw, Shield, Eye, Info, RotateCcw, Inbox, Trash2, FileText } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { AVAILABLE_TEMPLATE_VARIABLES } from "@/lib/email-template"
 
@@ -86,6 +87,8 @@ export default function AdminEmailsPage() {
 
   // メール送信履歴
   const [emailHistory, setEmailHistory] = useState<EmailHistory[]>([])
+  const [selectedEmailDetail, setSelectedEmailDetail] = useState<{ subject: string; body: string; from_email: string; created_at: string } | null>(null)
+  const [emailDetailLoading, setEmailDetailLoading] = useState(false)
 
   // 受信メール
   const [receivedEmails, setReceivedEmails] = useState<ReceivedEmail[]>([])
@@ -640,6 +643,26 @@ HASH PILOT NFT<br>
       alert(`再送信エラー: ${error.message}`)
     } finally {
       setResendingEmailId(null)
+    }
+  }
+
+  // メール詳細を取得
+  const fetchEmailDetail = async (emailId: string) => {
+    setEmailDetailLoading(true)
+    try {
+      const { data, error } = await supabase
+        .from("system_emails")
+        .select("subject, body, from_email, created_at")
+        .eq("id", emailId)
+        .single()
+
+      if (error) throw error
+      setSelectedEmailDetail(data)
+    } catch (error: any) {
+      console.error("Email detail fetch error:", error)
+      alert("メール詳細の取得に失敗しました")
+    } finally {
+      setEmailDetailLoading(false)
     }
   }
 
@@ -1407,6 +1430,16 @@ user3@example.com
                                 <div className="text-xs text-gray-400 mt-1">
                                   送信: {email.sent_count} / 失敗: {email.failed_count} / 既読: {email.read_count}
                                 </div>
+                                {/* 詳細ボタン */}
+                                <Button
+                                  onClick={() => fetchEmailDetail(email.email_id)}
+                                  size="sm"
+                                  variant="outline"
+                                  className="mt-2 mr-2 border-gray-500 text-gray-300 hover:bg-gray-600"
+                                >
+                                  <FileText className="w-3 h-3 mr-1" />
+                                  詳細
+                                </Button>
                                 {/* 未送信がある場合は再送信ボタンを表示 */}
                                 {(email.pending_count > 0 || email.total_recipients - email.sent_count - email.failed_count > 0) && (
                                   <Button
@@ -1442,6 +1475,49 @@ user3@example.com
           </CardContent>
         </Card>
       </div>
+
+      {/* メール詳細モーダル */}
+      <Dialog open={!!selectedEmailDetail} onOpenChange={() => setSelectedEmailDetail(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] bg-gray-800 border-gray-700 overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center">
+              <FileText className="w-5 h-5 mr-2" />
+              メール詳細
+            </DialogTitle>
+          </DialogHeader>
+          {emailDetailLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          ) : selectedEmailDetail && (
+            <div className="flex-1 overflow-auto">
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-gray-400">件名</Label>
+                  <p className="text-white font-semibold">{selectedEmailDetail.subject}</p>
+                </div>
+                <div className="flex space-x-4">
+                  <div>
+                    <Label className="text-gray-400">送信元</Label>
+                    <p className="text-gray-300">{selectedEmailDetail.from_email}</p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400">送信日時</Label>
+                    <p className="text-gray-300">{new Date(selectedEmailDetail.created_at).toLocaleString("ja-JP")}</p>
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-gray-400">本文</Label>
+                  <div
+                    className="mt-2 p-4 bg-white rounded-lg overflow-auto max-h-[400px]"
+                    dangerouslySetInnerHTML={{ __html: selectedEmailDetail.body }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
