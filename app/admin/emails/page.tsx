@@ -609,8 +609,9 @@ HASH PILOT NFT<br>
       let totalFailed = 0
       let batchNumber = 1
       const totalBatches = Math.ceil(pendingCount / BATCH_SIZE)
+      const maxIterations = totalBatches + 5 // 安全マージン
 
-      while (true) {
+      while (batchNumber <= maxIterations) {
         console.log(`再送信バッチ ${batchNumber}/${totalBatches} 送信中...`)
 
         const { data: sendResult, error: sendError } = await supabase.functions.invoke("send-system-email", {
@@ -625,7 +626,14 @@ HASH PILOT NFT<br>
         totalSent += sendResult.sent_count || 0
         totalFailed += sendResult.failed_count || 0
 
+        // 送信するものがなくなったら終了
         if (sendResult.sent_count === 0 && sendResult.failed_count === 0) {
+          break
+        }
+
+        // 全て失敗の場合も終了（無限ループ防止）
+        if (sendResult.sent_count === 0 && sendResult.failed_count > 0) {
+          console.log("全て失敗のため終了")
           break
         }
 
@@ -636,7 +644,11 @@ HASH PILOT NFT<br>
         }
       }
 
-      alert(`再送信完了\n${totalSent}件送信成功、${totalFailed}件失敗`)
+      if (batchNumber > maxIterations) {
+        alert(`最大バッチ数に達しました\n${totalSent}件送信成功、${totalFailed}件失敗`)
+      } else {
+        alert(`再送信完了\n${totalSent}件送信成功、${totalFailed}件失敗`)
+      }
       fetchEmailHistory(currentUser.email)
     } catch (error: any) {
       console.error("Resend error:", error)
