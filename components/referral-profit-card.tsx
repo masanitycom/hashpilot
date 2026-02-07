@@ -164,7 +164,7 @@ export function ReferralProfitCard({
     }
   }
 
-  // monthly_referral_profitテーブル（V2）から月次紹介報酬を取得
+  // monthly_referral_profitテーブルから月次紹介報酬を取得
   const getActualReferralProfits = async (userId: string, level: number, monthStart: string, monthEnd: string, yesterdayStr: string) => {
     console.log(`📊 Fetching actual referral profits for level ${level}...`)
 
@@ -177,31 +177,33 @@ export function ReferralProfitCard({
     const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1
     const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear
 
-    // 今月のデータ（月末処理済みの場合）- user_referral_profit_monthlyを使用
+    // YYYY-MM形式で年月を作成
+    const currentMonthStr = `${currentYear}-${String(currentMonth).padStart(2, '0')}`
+    const lastMonthStr = `${lastMonthYear}-${String(lastMonth).padStart(2, '0')}`
+
+    // 今月のデータ（月末処理済みの場合）- monthly_referral_profitを使用
     const { data: currentMonthData, error: currentMonthError } = await supabase
-      .from('user_referral_profit_monthly')
+      .from('monthly_referral_profit')
       .select('profit_amount')
       .eq('user_id', userId)
       .eq('referral_level', level)
-      .eq('year', currentYear)
-      .eq('month', currentMonth)
+      .eq('year_month', currentMonthStr)
 
     // 先月のデータ（今月がまだ月末処理されていない場合のフォールバック）
     const { data: lastMonthData, error: lastMonthError } = await supabase
-      .from('user_referral_profit_monthly')
+      .from('monthly_referral_profit')
       .select('profit_amount')
       .eq('user_id', userId)
       .eq('referral_level', level)
-      .eq('year', lastMonthYear)
-      .eq('month', lastMonth)
+      .eq('year_month', lastMonthStr)
 
     if (currentMonthError && lastMonthError) {
-      console.error(`❌ Error fetching level ${level} monthly referral profits`)
+      console.error(`❌ Error fetching level ${level} monthly referral profits`, currentMonthError, lastMonthError)
       return { yesterday: 0, monthly: 0 }
     }
 
-    console.log(`✅ Level ${level} current month data (${currentYear}-${currentMonth}):`, currentMonthData)
-    console.log(`✅ Level ${level} last month data (${lastMonthYear}-${lastMonth}):`, lastMonthData)
+    console.log(`✅ Level ${level} current month data (${currentMonthStr}):`, currentMonthData)
+    console.log(`✅ Level ${level} last month data (${lastMonthStr}):`, lastMonthData)
 
     let monthly = 0
 
