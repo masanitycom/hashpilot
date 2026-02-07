@@ -25,7 +25,10 @@ import {
   Mail,
   Megaphone,
   Gift,
+  AlertTriangle,
+  X,
 } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { supabase } from "@/lib/supabase"
 
 interface AdminStats {
@@ -42,6 +45,9 @@ interface AdminStats {
   newRegistrations: number
   newPurchases: number
   pendingApprovals: number
+  pendingBuybacks: number
+  pendingBuybackAmount: number
+  pendingCoinwChanges: number
 }
 
 export default function AdminDashboard() {
@@ -59,11 +65,16 @@ export default function AdminDashboard() {
     newRegistrations: 12,
     newPurchases: 3,
     pendingApprovals: 2,
+    pendingBuybacks: 0,
+    pendingBuybackAmount: 0,
+    pendingCoinwChanges: 0,
   })
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [lastUpdate, setLastUpdate] = useState(new Date())
+  const [showBuybackAlert, setShowBuybackAlert] = useState(true)
+  const [showCoinwAlert, setShowCoinwAlert] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -184,6 +195,21 @@ export default function AdminDashboard() {
       // 今日の新規購入
       const newPurchases = purchasesData?.filter((p) => p.created_at.startsWith(today)).length || 3
 
+      // 保留中の買取申請を取得
+      const { data: buybackData } = await supabase
+        .from("buyback_requests")
+        .select("total_buyback_amount")
+        .eq("status", "pending")
+      const pendingBuybacks = buybackData?.length || 0
+      const pendingBuybackAmount = buybackData?.reduce((sum, b) => sum + (b.total_buyback_amount || 0), 0) || 0
+
+      // 保留中のCoinW UID変更申請を取得
+      const { data: coinwData } = await supabase
+        .from("coinw_uid_changes")
+        .select("id")
+        .eq("status", "pending")
+      const pendingCoinwChanges = coinwData?.length || 0
+
       setStats({
         totalRevenue,
         totalRevenueExcludingFee,
@@ -198,6 +224,9 @@ export default function AdminDashboard() {
         newRegistrations,
         newPurchases,
         pendingApprovals: pendingPurchases,
+        pendingBuybacks,
+        pendingBuybackAmount,
+        pendingCoinwChanges,
       })
 
       setLastUpdate(new Date())
@@ -273,6 +302,61 @@ export default function AdminDashboard() {
       </header>
 
       <main className="container mx-auto px-6 py-8">
+        {/* 緊急通知アラート */}
+        {stats.pendingBuybacks > 0 && showBuybackAlert && (
+          <Alert className="mb-6 bg-orange-900/50 border-orange-600 animate-pulse">
+            <AlertTriangle className="h-5 w-5 text-orange-400" />
+            <AlertDescription className="flex items-center justify-between">
+              <div className="text-orange-200">
+                <span className="font-bold text-orange-400">NFT買取申請 {stats.pendingBuybacks}件</span>
+                <span className="ml-2">（総額: ${stats.pendingBuybackAmount.toLocaleString()}）が保留中です</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href="/admin/buyback">
+                  <Button size="sm" className="bg-orange-600 hover:bg-orange-700 text-white">
+                    確認する
+                  </Button>
+                </Link>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowBuybackAlert(false)}
+                  className="text-orange-400 hover:text-orange-300"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {stats.pendingCoinwChanges > 0 && showCoinwAlert && (
+          <Alert className="mb-6 bg-teal-900/50 border-teal-600">
+            <CreditCard className="h-5 w-5 text-teal-400" />
+            <AlertDescription className="flex items-center justify-between">
+              <div className="text-teal-200">
+                <span className="font-bold text-teal-400">CoinW UID変更申請 {stats.pendingCoinwChanges}件</span>
+                <span className="ml-2">が保留中です</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href="/admin/coinw-approvals">
+                  <Button size="sm" className="bg-teal-600 hover:bg-teal-700 text-white">
+                    確認する
+                  </Button>
+                </Link>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowCoinwAlert(false)}
+                  className="text-teal-400 hover:text-teal-300"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* 統計サマリー */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-gradient-to-br from-green-500 to-green-600 border-0 text-white shadow-lg">
@@ -462,14 +546,21 @@ export default function AdminDashboard() {
 
           {/* CoinW UID承認 */}
           <Link href="/admin/coinw-approvals">
-            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+            <Card className={`bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group ${stats.pendingCoinwChanges > 0 ? 'ring-2 ring-teal-500 ring-opacity-50' : ''}`}>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
                   <div className="p-3 bg-teal-600 rounded-lg group-hover:bg-teal-700 transition-colors">
                     <CreditCard className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-white font-semibold">CoinW UID承認</h3>
+                    <h3 className="text-white font-semibold flex items-center gap-2">
+                      CoinW UID承認
+                      {stats.pendingCoinwChanges > 0 && (
+                        <Badge className="bg-teal-600 text-white text-xs">
+                          {stats.pendingCoinwChanges}件
+                        </Badge>
+                      )}
+                    </h3>
                     <p className="text-gray-400 text-sm">UID変更申請の承認</p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
@@ -480,15 +571,26 @@ export default function AdminDashboard() {
 
           {/* NFT買い取り管理 */}
           <Link href="/admin/buyback">
-            <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group">
+            <Card className={`bg-gray-800 border-gray-700 hover:bg-gray-750 transition-all cursor-pointer group ${stats.pendingBuybacks > 0 ? 'ring-2 ring-orange-500 ring-opacity-50' : ''}`}>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-purple-600 rounded-lg group-hover:bg-purple-700 transition-colors">
+                  <div className={`p-3 rounded-lg transition-colors ${stats.pendingBuybacks > 0 ? 'bg-orange-600 group-hover:bg-orange-700' : 'bg-purple-600 group-hover:bg-purple-700'}`}>
                     <Coins className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-white font-semibold">NFT買い取り管理</h3>
-                    <p className="text-gray-400 text-sm">買い取り申請処理</p>
+                    <h3 className="text-white font-semibold flex items-center gap-2">
+                      NFT買い取り管理
+                      {stats.pendingBuybacks > 0 && (
+                        <Badge className="bg-orange-600 text-white text-xs animate-pulse">
+                          {stats.pendingBuybacks}件
+                        </Badge>
+                      )}
+                    </h3>
+                    <p className="text-gray-400 text-sm">
+                      {stats.pendingBuybacks > 0
+                        ? `保留中: $${stats.pendingBuybackAmount.toLocaleString()}`
+                        : '買い取り申請処理'}
+                    </p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                 </div>
