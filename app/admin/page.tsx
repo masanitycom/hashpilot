@@ -195,13 +195,13 @@ export default function AdminDashboard() {
       // 今日の新規購入
       const newPurchases = purchasesData?.filter((p) => p.created_at.startsWith(today)).length || 3
 
-      // 保留中の買取申請を取得
-      const { data: buybackData } = await supabase
-        .from("buyback_requests")
-        .select("total_buyback_amount")
-        .eq("status", "pending")
+      // 保留中の買取申請を取得（RPC関数経由でRLSを回避）
+      const { data: buybackData } = await supabase.rpc(
+        "get_all_buyback_requests",
+        { p_status: "pending" }
+      )
       const pendingBuybacks = buybackData?.length || 0
-      const pendingBuybackAmount = buybackData?.reduce((sum, b) => sum + (b.total_buyback_amount || 0), 0) || 0
+      const pendingBuybackAmount = buybackData?.reduce((sum: number, b: any) => sum + (b.total_buyback_amount || 0), 0) || 0
 
       // 保留中のCoinW UID変更申請を取得
       const { data: coinwData } = await supabase
