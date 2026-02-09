@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -64,8 +64,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     try {
       const timestamp = Date.now()
 
-      // nft_masterテーブルから直接カウント（buyback_date IS NULLの買い取り前NFTのみ）
-      const { data: nftMasterData, error: nftError } = await supabase
+      // nft_masterチE�Eブルから直接カウント！Euyback_date IS NULLの買ぁE��り前NFTのみ�E�E      const { data: nftMasterData, error: nftError } = await supabase
         .from("nft_master")
         .select("nft_type")
         .eq("user_id", userId)
@@ -73,8 +72,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
       if (nftError) throw nftError
 
-      // 手動購入NFTと自動購入NFTを集計
-      const manualCount = nftMasterData?.filter(nft => nft.nft_type === 'manual').length || 0
+      // 手動購入NFTと自動購入NFTを集訁E      const manualCount = nftMasterData?.filter(nft => nft.nft_type === 'manual').length || 0
       const autoCount = nftMasterData?.filter(nft => nft.nft_type === 'auto').length || 0
       const totalCount = manualCount + autoCount
 
@@ -84,8 +82,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         total_nft_count: totalCount
       }
 
-      // デバッグ: 取得したデータをコンソールに出力
-      console.log('🔍 NftBuybackRequest - Fetched data:', {
+      // チE��チE��: 取得したデータをコンソールに出劁E      console.log('🔍 NftBuybackRequest - Fetched data:', {
         userId,
         timestamp: new Date(timestamp).toISOString(),
         data,
@@ -155,8 +152,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
     setCalculatingAmount(true)
     try {
-      // バックエンドで正確な買い取り額を計算
-      const { data, error } = await supabase.rpc('calculate_buyback_preview', {
+      // バックエンドで正確な買ぁE��り額を計箁E      const { data, error } = await supabase.rpc('calculate_buyback_preview', {
         p_user_id: userId,
         p_manual_nft_count: manualCount,
         p_auto_nft_count: autoCount
@@ -173,7 +169,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
       }
     } catch (error) {
       console.error('Error calculating buyback amount:', error)
-      // エラー時は最大額を表示
+      // エラー時�E最大額を表示
       const maxBuyback = (1000 * manualCount) + (500 * autoCount)
       setBuybackAmount({
         manual: 0,
@@ -187,21 +183,21 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
   const handleSubmit = async () => {
     if (!transactionId) {
-      setMessage({ type: "error", text: "トランザクションIDを入力してください" })
+      setMessage({ type: "error", text: "トランザクションIDを�E力してください" })
       return
     }
 
     if (!walletAddress) {
-      setMessage({ type: "error", text: "ウォレットアドレスを入力してください" })
+      setMessage({ type: "error", text: "ウォレチE��アドレスを�E力してください" })
       return
     }
 
     if (manualCount === 0 && autoCount === 0) {
-      setMessage({ type: "error", text: "買い取り数量を入力してください" })
+      setMessage({ type: "error", text: "買ぁE��り数量を入力してください" })
       return
     }
 
-    // 保有数を超えていないかチェック
+    // 保有数を趁E��てぁE��ぁE��チェチE��
     if (manualCount > (nftData?.manual_nft_count || 0)) {
       setMessage({ type: "error", text: `手動購入NFTの保有数は${nftData?.manual_nft_count}枚です` })
       return
@@ -221,33 +217,24 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         p_manual_nft_count: manualCount,
         p_auto_nft_count: autoCount,
         p_wallet_address: walletAddress,
-        p_wallet_type: "USDT-BEP20"
+        p_wallet_type: "USDT-BEP20",
+        p_transaction_id: transactionId
       })
 
       if (error) throw error
 
       if (data && data[0]?.success) {
-        // トランザクションIDをbuyback_requestsに保存
-        const requestId = data[0].request_id
-        if (requestId) {
-          await supabase
-            .from("buyback_requests")
-            .update({ transaction_id: transactionId })
-            .eq("id", requestId)
-        }
-
         setMessage({
           type: "success",
-          text: `買い取り申請が完了しました。買い取り額: $${data[0].total_buyback_amount}`
+          text: `買ぁE��り申請が完亁E��ました。買ぁE��り顁E $${data[0].total_buyback_amount}`
         })
 
-        // フォームをリセット
+        // フォームをリセチE��
         setManualCount(0)
         setAutoCount(0)
         setTransactionId("")
 
-        // データを再取得
-        fetchNftData()
+        // チE�Eタを�E取征E        fetchNftData()
         fetchBuybackHistory()
       } else {
         throw new Error(data?.[0]?.message || "申請に失敗しました")
@@ -260,7 +247,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
   }
 
   const handleCancel = async (requestId: string) => {
-    if (!confirm("管理者にキャンセル依頼を送信しますか？")) {
+    if (!confirm("管琁E��E��キャンセル依頼を送信しますか�E�E)) {
       return
     }
 
@@ -268,14 +255,14 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     setMessage(null)
 
     try {
-      // システムログにキャンセル依頼を記録
+      // シスチE��ログにキャンセル依頼を記録
       const { error: logError } = await supabase
         .from("system_logs")
         .insert({
           log_type: "INFO",
           operation: "buyback_cancel_request",
           user_id: userId,
-          message: `ユーザー${userId}が買い取り申請のキャンセルを依頼しました`,
+          message: `ユーザー${userId}が買ぁE��り申請�Eキャンセルを依頼しました`,
           details: {
             request_id: requestId,
             requested_at: new Date().toISOString()
@@ -288,7 +275,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
       setMessage({ 
         type: "success", 
-        text: "キャンセル依頼を送信しました。管理者が確認してキャンセル処理を行います。" 
+        text: "キャンセル依頼を送信しました。管琁E��E��確認してキャンセル処琁E��行います、E 
       })
       
     } catch (error: any) {
@@ -303,9 +290,9 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
       case "pending":
         return <span className="text-yellow-400">申請中</span>
       case "processing":
-        return <span className="text-blue-400">処理中</span>
+        return <span className="text-blue-400">処琁E��</span>
       case "completed":
-        return <span className="text-green-400">完了</span>
+        return <span className="text-green-400">完亁E/span>
       case "cancelled":
         return <span className="text-red-400">キャンセル</span>
       default:
@@ -337,32 +324,32 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
   return (
     <div className="space-y-6">
-      {/* STEP 1: 買い取り申請フォーム（常に表示） */}
+      {/* STEP 1: 買ぁE��り申請フォーム�E�常に表示�E�E*/}
       <Card className="bg-gray-900/50 border-gray-700">
         <CardHeader>
           <CardTitle className="text-white flex items-center space-x-2">
             <span className="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">1</span>
-            <span>買い取り申請</span>
+            <span>買ぁE��り申諁E/span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-            {/* 現在の保有状況 */}
+            {/* 現在の保有状況E*/}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-800/50 rounded-lg p-4">
                 <div className="text-sm text-gray-400">手動購入NFT</div>
-                <div className="text-2xl font-bold text-white">{nftData.manual_nft_count}枚</div>
-                <div className="text-xs text-gray-400 mt-2">買い取り単価: 1000ドル - (NFTの利益 ÷ 2)</div>
+                <div className="text-2xl font-bold text-white">{nftData.manual_nft_count}极E/div>
+                <div className="text-xs text-gray-400 mt-2">買ぁE��り単価: 1000ドル - (NFTの利盁E÷ 2)</div>
               </div>
               <div className="bg-gray-800/50 rounded-lg p-4">
                 <div className="text-sm text-gray-400">自動購入NFT</div>
-                <div className="text-2xl font-bold text-white">{nftData.auto_nft_count}枚</div>
-                <div className="text-xs text-gray-400 mt-2">買い取り単価: 500ドル - (NFTの利益 ÷ 2)</div>
+                <div className="text-2xl font-bold text-white">{nftData.auto_nft_count}极E/div>
+                <div className="text-xs text-gray-400 mt-2">買ぁE��り単価: 500ドル - (NFTの利盁E÷ 2)</div>
               </div>
             </div>
 
-          {/* 買い取り選択ボタン */}
+          {/* 買ぁE��り選択�Eタン */}
           <div className="space-y-4">
-            <div className="text-sm text-gray-400 mb-2">買い取りするNFTを選択してください</div>
+            <div className="text-sm text-gray-400 mb-2">買ぁE��りするNFTを選択してください</div>
 
             {(nftData.manual_nft_count > 0 || nftData.auto_nft_count > 0) && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -380,7 +367,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                     }`}
                   >
                     <span className="text-lg font-bold">手動NFT全て</span>
-                    <span className="text-xs text-gray-300">{nftData.manual_nft_count}枚を買い取り</span>
+                    <span className="text-xs text-gray-300">{nftData.manual_nft_count}枚を買ぁE��めE/span>
                   </Button>
                 )}
                 {nftData.auto_nft_count > 0 && (
@@ -397,7 +384,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                     }`}
                   >
                     <span className="text-lg font-bold">自動NFT全て</span>
-                    <span className="text-xs text-gray-300">{nftData.auto_nft_count}枚を買い取り</span>
+                    <span className="text-xs text-gray-300">{nftData.auto_nft_count}枚を買ぁE��めE/span>
                   </Button>
                 )}
                 {nftData.manual_nft_count > 0 && nftData.auto_nft_count > 0 && (
@@ -414,14 +401,14 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                     }`}
                   >
                     <span className="text-lg font-bold">全NFT一括</span>
-                    <span className="text-xs text-gray-300">合計{nftData.total_nft_count}枚を買い取り</span>
+                    <span className="text-xs text-gray-300">合訁EnftData.total_nft_count}枚を買ぁE��めE/span>
                   </Button>
                 )}
               </div>
             )}
 
             <div>
-              <Label htmlFor="wallet" className="text-white">送金先ウォレットアドレス</Label>
+              <Label htmlFor="wallet" className="text-white">送E��先ウォレチE��アドレス</Label>
               <Input
                 id="wallet"
                 type="text"
@@ -431,31 +418,29 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                 className="bg-gray-800 border-gray-700 text-white"
               />
               <div className="mt-2 text-xs text-red-400 font-semibold">
-                ⚠️ 誤ったアドレスを入力された場合の責任は一切負いかねます。必ずご自身のウォレットアドレスをご確認の上、正確に入力してください。
-              </div>
+                ⚠�E�E誤ったアドレスを�E力された場合�E責任は一刁E��ぁE��ねます。忁E��ご�E身のウォレチE��アドレスをご確認�E上、正確に入力してください、E              </div>
             </div>
 
-            {/* 買い取り額 */}
+            {/* 買ぁE��り顁E*/}
             {(manualCount > 0 || autoCount > 0) && (
               <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-4">
                 <div className="text-sm text-blue-400 mb-2 flex items-center gap-2">
-                  買い取り金額
-                  {calculatingAmount && <Loader2 className="h-4 w-4 animate-spin" />}
+                  買ぁE��り��顁E                  {calculatingAmount && <Loader2 className="h-4 w-4 animate-spin" />}
                 </div>
                 <div className="space-y-2 text-white">
                   {manualCount > 0 && buybackAmount.manual > 0 && (
                     <div className="text-sm text-gray-300">
-                      手動NFT {manualCount}枚: ${buybackAmount.manual.toLocaleString()}
+                      手動NFT {manualCount}极E ${buybackAmount.manual.toLocaleString()}
                     </div>
                   )}
                   {autoCount > 0 && buybackAmount.auto > 0 && (
                     <div className="text-sm text-gray-300">
-                      自動NFT {autoCount}枚: ${buybackAmount.auto.toLocaleString()}
+                      自動NFT {autoCount}极E ${buybackAmount.auto.toLocaleString()}
                     </div>
                   )}
                   <div className="border-t border-gray-700 pt-2 mt-2">
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-lg">買い取り合計</span>
+                      <span className="font-bold text-lg">買ぁE��り合訁E/span>
                       <span className="font-bold text-2xl text-yellow-400">
                         {calculatingAmount ? (
                           <Loader2 className="h-6 w-6 animate-spin inline" />
@@ -465,8 +450,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                       </span>
                     </div>
                     <div className="text-xs text-gray-400 mt-2">
-                      ※ 各NFTの累積利益を差し引いた実際の買い取り金額です
-                    </div>
+                      ※ 各NFTの累積利益を差し引いた実際の買ぁE��り��額でぁE                    </div>
                   </div>
                 </div>
               </div>
@@ -495,11 +479,10 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         <CardContent className="space-y-4">
           <div className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4">
             <div className="text-sm text-yellow-400 mb-2 font-semibold">
-              ⚠️ 必ず以下のアドレスにNFTを返却してください
+              ⚠�E�E忁E��以下�EアドレスにNFTを返却してください
             </div>
             <div className="text-xs text-gray-300 mb-3">
-              買い取り申請の前に、保有しているNFTを下記アドレスに返却する必要があります
-            </div>
+              買ぁE��り申請�E前に、保有してぁE��NFTを下記アドレスに返却する忁E��がありまぁE            </div>
           </div>
 
           <div>
@@ -519,12 +502,12 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                 {copied ? (
                   <>
                     <Check className="h-4 w-4 mr-1" />
-                    コピー済み
+                    コピ�E済み
                   </>
                 ) : (
                   <>
                     <Copy className="h-4 w-4 mr-1" />
-                    コピー
+                    コピ�E
                   </>
                 )}
               </Button>
@@ -533,12 +516,12 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         </CardContent>
       </Card>
 
-      {/* STEP 3: トランザクションID入力 */}
+      {/* STEP 3: トランザクションID入劁E*/}
       <Card className="bg-gray-900/50 border-gray-700">
         <CardHeader>
           <CardTitle className="text-white flex items-center space-x-2">
             <span className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">3</span>
-            <span>トランザクションIDを入力してください</span>
+            <span>トランザクションIDを�E力してください</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -553,11 +536,11 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
               className="bg-gray-800 border-gray-700 text-white font-mono"
             />
             <div className="mt-2 text-xs text-gray-400">
-              NFTを返却した際のトランザクションIDを入力してください
+              NFTを返却した際�EトランザクションIDを�E力してください
             </div>
           </div>
 
-          {/* 買い取り申請ボタン（全て入力後のみ表示） */}
+          {/* 買ぁE��り申請�Eタン�E��Eて入力後�Eみ表示�E�E*/}
           {transactionId && walletAddress && (manualCount > 0 || autoCount > 0) && (
             <Button
               onClick={handleSubmit}
@@ -567,10 +550,10 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  処理中...
+                  処琁E��...
                 </>
               ) : (
-                "買い取り申請"
+                "買ぁE��り申諁E
               )}
             </Button>
           )}
@@ -581,7 +564,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
       {history.length > 0 && (
         <Card className="bg-gray-900/50 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white">買い取り申請履歴</CardTitle>
+            <CardTitle className="text-white">買ぁE��り申請履歴</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -591,8 +574,8 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                     <th className="text-left p-2 text-gray-400">申請日</th>
                     <th className="text-left p-2 text-gray-400">手動NFT</th>
                     <th className="text-left p-2 text-gray-400">自動NFT</th>
-                    <th className="text-left p-2 text-gray-400">買い取り額</th>
-                    <th className="text-left p-2 text-gray-400">ステータス</th>
+                    <th className="text-left p-2 text-gray-400">買ぁE��り顁E/th>
+                    <th className="text-left p-2 text-gray-400">スチE�Eタス</th>
                     <th className="text-center p-2 text-gray-400">アクション</th>
                   </tr>
                 </thead>
@@ -602,8 +585,8 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
                       <td className="p-2 text-white">
                         {new Date(request.request_date).toLocaleDateString()}
                       </td>
-                      <td className="p-2 text-white">{request.manual_nft_count}枚</td>
-                      <td className="p-2 text-white">{request.auto_nft_count}枚</td>
+                      <td className="p-2 text-white">{request.manual_nft_count}极E/td>
+                      <td className="p-2 text-white">{request.auto_nft_count}极E/td>
                       <td className="p-2 text-yellow-400">${request.total_buyback_amount}</td>
                       <td className="p-2">{getStatusBadge(request.status)}</td>
                       <td className="p-2 text-center">
