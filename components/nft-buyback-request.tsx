@@ -64,7 +64,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
     try {
       const timestamp = Date.now()
 
-      // nft_masterチE�Eブルから直接カウント！Euyback_date IS NULLの買ぁE��り前NFTのみ�E�E      const { data: nftMasterData, error: nftError } = await supabase
+      const { data: nftMasterData, error: nftError } = await supabase
         .from("nft_master")
         .select("nft_type")
         .eq("user_id", userId)
@@ -72,7 +72,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
       if (nftError) throw nftError
 
-      // 手動購入NFTと自動購入NFTを集訁E      const manualCount = nftMasterData?.filter(nft => nft.nft_type === 'manual').length || 0
+      const manualCount = nftMasterData?.filter(nft => nft.nft_type === 'manual').length || 0
       const autoCount = nftMasterData?.filter(nft => nft.nft_type === 'auto').length || 0
       const totalCount = manualCount + autoCount
 
@@ -143,7 +143,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
 
     setCalculatingAmount(true)
     try {
-      // バックエンドで正確な買ぁE��り額を計箁E      const { data, error } = await supabase.rpc('calculate_buyback_preview', {
+      const { data, error } = await supabase.rpc('calculate_buyback_preview', {
         p_user_id: userId,
         p_manual_nft_count: manualCount,
         p_auto_nft_count: autoCount
@@ -225,7 +225,7 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         setAutoCount(0)
         setTransactionId("")
 
-        // チE�Eタを�E取征E        fetchNftData()
+        fetchNftData()
         fetchBuybackHistory()
       } else {
         throw new Error(data?.[0]?.message || "申請に失敗しました")
