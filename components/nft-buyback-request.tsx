@@ -82,15 +82,6 @@ export function NftBuybackRequest({ userId }: NftBuybackRequestProps) {
         total_nft_count: totalCount
       }
 
-      // チE��チE��: 取得したデータをコンソールに出劁E      console.log('🔍 NftBuybackRequest - Fetched data:', {
-        userId,
-        timestamp: new Date(timestamp).toISOString(),
-        data,
-        manual_nft_count: data.manual_nft_count,
-        auto_nft_count: data.auto_nft_count,
-        total_nft_count: data.total_nft_count
-      })
-
       setNftData(data)
     } catch (error) {
       console.error("Error fetching NFT data:", error)
