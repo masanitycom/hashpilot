@@ -37,6 +37,27 @@ interface WithdrawalData {
   has_data: boolean
 }
 
+// 現在月または前月かどうかをチェックするヘルパー関数
+const isRecentMonth = (withdrawalMonth: string): boolean => {
+  const now = new Date()
+  const currentYear = now.getFullYear()
+  const currentMonth = now.getMonth() + 1 // 0-indexed to 1-indexed
+  const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1
+  const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear
+
+  // withdrawal_monthからYYYY-MMを抽出
+  const monthStr = withdrawalMonth.substring(0, 7) // "YYYY-MM"
+  const [yearStr, monthNumStr] = monthStr.split('-')
+  const wYear = parseInt(yearStr, 10)
+  const wMonth = parseInt(monthNumStr, 10)
+
+  // 現在月または前月のみtrue
+  const isCurrentMonth = wYear === currentYear && wMonth === currentMonth
+  const isPrevMonth = wYear === prevYear && wMonth === prevMonth
+
+  return isCurrentMonth || isPrevMonth
+}
+
 export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   const [withdrawalData, setWithdrawalData] = useState<WithdrawalData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -50,11 +71,15 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
   }, [userId])
 
   // タスク未完了の出金申請がある場合は自動的にポップアップ表示
+  // ただし、現在月または前月の出金のみ対象（古い月のループ防止）
   useEffect(() => {
     if (withdrawalData?.pending_withdrawals) {
-      const hasUncompletedTask = withdrawalData.pending_withdrawals.some(
-        w => w.status === 'on_hold' && !w.task_completed
+      const hasUncompletedTask = withdrawalData.pending_withdrawals.some(w =>
+        w.status === 'on_hold' &&
+        !w.task_completed &&
+        isRecentMonth(w.withdrawal_month)
       )
+
       if (hasUncompletedTask) {
         setShowTaskPopup(true)
       }
@@ -240,7 +265,7 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
                     <span>紹介報酬:</span>
                     <span className="text-blue-400">${Number(withdrawal.referral_amount || 0).toFixed(2)}</span>
                   </div>
-                  {withdrawal.status === 'on_hold' && !withdrawal.task_completed && (
+                  {withdrawal.status === 'on_hold' && !withdrawal.task_completed && isRecentMonth(withdrawal.withdrawal_month) && (
                     <Button
                       onClick={() => setShowTaskPopup(true)}
                       size="sm"
@@ -248,6 +273,11 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
                     >
                       タスクを開始
                     </Button>
+                  )}
+                  {withdrawal.status === 'on_hold' && !withdrawal.task_completed && !isRecentMonth(withdrawal.withdrawal_month) && (
+                    <div className="mt-2 text-xs text-gray-500">
+                      ※ 古い月のタスクは自動完了処理待ちです
+                    </div>
                   )}
                 </div>
               </div>
