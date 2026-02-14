@@ -81,16 +81,22 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
 
   const getPhaseInfo = (nextAction: string) => {
     if (nextAction === 'nft') {
+      // HOLDフェーズ中（cum_usdt >= 1100）→ 次はNFT購入
       return {
-        label: "🎯 NFT購入フェーズ",
-        description: "次の1100ドルでNFT自動購入",
-        color: "bg-purple-600",
+        label: "🔒 HOLDフェーズ",
+        currentPhase: "HOLD",
+        nextPhase: "NFT購入",
+        description: "$1,100到達でNFT自動購入",
+        color: "bg-orange-600",
         icon: <Target className="h-4 w-4" />
       }
     } else {
+      // USDTフェーズ中（cum_usdt < 1100）→ 次はHOLD
       return {
-        label: "💰 USDT受取フェーズ", 
-        description: "次の1100ドルはUSDT受取",
+        label: "💰 USDT受取フェーズ",
+        currentPhase: "USDT",
+        nextPhase: "HOLD",
+        description: "紹介報酬はUSDTとして受取可能",
         color: "bg-green-600",
         icon: <DollarSign className="h-4 w-4" />
       }
@@ -104,19 +110,18 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
   }
 
   const getNextMilestone = (currentProfit: number, nextAction: string) => {
-    // マイナス利益の場合は0として扱う
     const effectiveProfit = Math.max(0, currentProfit)
     const remaining = 1100 - effectiveProfit
     if (remaining <= 0) {
       return {
         target: 1100,
-        label: nextAction === 'nft' ? "NFT購入準備完了" : "USDT受取準備完了",
+        label: nextAction === 'nft' ? "NFT購入準備完了" : "HOLDフェーズまで到達済み",
         remaining: 0
       }
     } else {
       return {
         target: 1100,
-        label: nextAction === 'nft' ? "NFT購入まで" : "USDT受取まで",
+        label: nextAction === 'nft' ? "NFT自動購入まで" : "HOLDフェーズまで",
         remaining: remaining
       }
     }
@@ -164,7 +169,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
             <span className="text-white text-sm font-medium">{phaseInfo.label}</span>
           </div>
           <Badge className={phaseInfo.color}>
-            次: {cycleData.next_action.toUpperCase()}
+            {phaseInfo.currentPhase}
           </Badge>
         </div>
 
@@ -173,7 +178,7 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
         {/* 進捗バー */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-400">次の1100ドルまでの進捗</span>
+            <span className="text-gray-400">{phaseInfo.nextPhase}までの進捗</span>
             <span className="text-white">${cycleData.remaining_profit.toFixed(2)} / $1,100</span>
           </div>
           <div className="relative">
