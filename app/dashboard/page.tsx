@@ -383,11 +383,10 @@ export default function OptimizedDashboardPage() {
 
       const { data, error } = await supabase
         .from("monthly_withdrawals")
-        .select("id, task_completed, status")
+        .select("id, task_completed, status, withdrawal_month")
         .eq("user_id", userId)
         .eq("status", "on_hold")
         .eq("task_completed", false)
-        .limit(1)
 
       console.log('[RewardTask] Query result:', { data, error })
 
@@ -397,8 +396,28 @@ export default function OptimizedDashboardPage() {
       }
 
       if (data && data.length > 0) {
-        console.log("[RewardTask] Pending reward task found, showing popup:", data)
-        setShowRewardTaskPopup(true)
+        // 現在月または前月のみポップアップ表示（古い月のループ防止）
+        const now = new Date()
+        const currentYear = now.getFullYear()
+        const currentMonth = now.getMonth() + 1
+        const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1
+        const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear
+
+        const hasRecentTask = data.some((w: any) => {
+          const monthStr = (w.withdrawal_month || '').substring(0, 7)
+          const [yearStr, monthNumStr] = monthStr.split('-')
+          const wYear = parseInt(yearStr, 10)
+          const wMonth = parseInt(monthNumStr, 10)
+          return (wYear === currentYear && wMonth === currentMonth) ||
+                 (wYear === prevYear && wMonth === prevMonth)
+        })
+
+        if (hasRecentTask) {
+          console.log("[RewardTask] Recent pending reward task found, showing popup")
+          setShowRewardTaskPopup(true)
+        } else {
+          console.log("[RewardTask] Only old month tasks found, skipping popup")
+        }
       } else {
         console.log("[RewardTask] No pending tasks found")
       }
@@ -421,8 +440,24 @@ export default function OptimizedDashboardPage() {
       }
 
       if (data && data.length > 0 && data[0].has_pending_task) {
-        console.log("[ReferralRewardTask] Pending task found:", data[0])
-        setShowReferralRewardTaskPopup(true)
+        // 現在月または前月のみポップアップ表示（古い月のループ防止）
+        const now = new Date()
+        const currentYear = now.getFullYear()
+        const currentMonth = now.getMonth() + 1
+        const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1
+        const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear
+
+        const taskYear = data[0].year
+        const taskMonth = data[0].month
+        const isRecent = (taskYear === currentYear && taskMonth === currentMonth) ||
+                         (taskYear === prevYear && taskMonth === prevMonth)
+
+        if (isRecent) {
+          console.log("[ReferralRewardTask] Recent pending task found:", data[0])
+          setShowReferralRewardTaskPopup(true)
+        } else {
+          console.log("[ReferralRewardTask] Old month task found, skipping popup:", data[0])
+        }
       } else {
         console.log("[ReferralRewardTask] No pending tasks found")
       }
