@@ -53,12 +53,15 @@ export function CycleStatusCard({ userId }: CycleStatusCardProps) {
       const manualNfts = cycleInfo?.manual_nft_count || 0
       const autoNfts = cycleInfo?.auto_nft_count || 0
 
-      // 1100ドルサイクル計算
-      // マイナス利益の場合は0として扱う（フェーズ変更を防ぐ）
+      // $2200サイクル計算
+      // cum_usdtは既にNFT自動購入分($2200)が引かれた後の値
+      // phase判定: cum_usdt < 1100 → USDT(受取可能), cum_usdt >= 1100 → HOLD(NFT購入待ち)
       const effectiveProfit = Math.max(0, cumUsdt)
-      const cyclesCompleted = Math.floor(effectiveProfit / 1100)
-      const remainingProfit = effectiveProfit % 1100
-      const nextAction = cyclesCompleted % 2 === 0 ? 'usdt' : 'nft'
+      // USDTフェーズ: 進捗 = cum_usdt (0→1100)
+      // HOLDフェーズ: 進捗 = cum_usdt - 1100 (0→1100)
+      const isHoldPhase = effectiveProfit >= 1100
+      const remainingProfit = isHoldPhase ? (effectiveProfit - 1100) : effectiveProfit
+      const nextAction = isHoldPhase ? 'nft' : 'usdt'
 
       setCycleData({
         next_action: nextAction,

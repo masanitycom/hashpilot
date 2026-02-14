@@ -210,7 +210,7 @@ export default function AdminWithdrawalsPage() {
       // STEP 3: 現在の残高を取得（参考情報）
       const { data: currentCycle, error: cycleError } = await supabase
         .from("affiliate_cycle")
-        .select("user_id, available_usdt, cum_usdt, phase, total_nft_count, withdrawn_referral_usdt")
+        .select("user_id, available_usdt, cum_usdt, phase, total_nft_count, withdrawn_referral_usdt, auto_nft_count")
         .in("user_id", userIds)
 
       if (cycleError) throw cycleError
@@ -322,11 +322,14 @@ export default function AdminWithdrawalsPage() {
         const monthlyReferral = monthlyReferralMap.get(withdrawal.user_id) || 0
         const cumulativeReferral = cumulativeReferralMap.get(withdrawal.user_id) || 0
 
-        // 出金可能な紹介報酬を計算（USDTフェーズのみ）
+        // 出金可能な紹介報酬を統一計算式で計算
         const cumUsdt = cycle?.cum_usdt || 0
         const withdrawnReferral = cycle?.withdrawn_referral_usdt || 0
         const phase = cycle?.phase || 'USDT'
-        const withdrawableReferral = phase === 'USDT' ? Math.max(0, cumUsdt - withdrawnReferral) : 0
+        const autoNftCountForCalc = cycle?.auto_nft_count || 0
+        // 統一式: (auto_nft_count × 1100 + LEAST(cum_usdt, 1100)) - withdrawn_referral_usdt
+        const totalPayoutEver = autoNftCountForCalc * 1100 + Math.min(Math.max(cumUsdt, 0), 1100)
+        const withdrawableReferral = Math.max(0, totalPayoutEver - withdrawnReferral)
 
         return {
           ...withdrawal,
@@ -474,11 +477,13 @@ export default function AdminWithdrawalsPage() {
 
     // 出金レコードに保存されている個人利益・紹介報酬を使用
     const csvData = filteredWithdrawals.map((w: any) => {
-        // HOLDユーザーの払い出し可能額を計算
+        // 統一計算式で払い出し可能額を計算
         const cumUsdt = w.cum_usdt || 0
         const withdrawnReferral = w.withdrawn_referral_usdt || 0
-        const lockAmount = w.phase === 'HOLD' ? 1100 : 0
-        const withdrawableFromHold = w.phase === 'HOLD' ? Math.max(0, 1100 - withdrawnReferral) : 0
+        const csvAutoNft = w.auto_nft_count || 0
+        const csvTotalPayout = csvAutoNft * 1100 + Math.min(Math.max(cumUsdt, 0), 1100)
+        const lockAmount = w.phase === 'HOLD' ? Math.max(0, cumUsdt - 1100) : 0
+        const withdrawableFromHold = Math.max(0, csvTotalPayout - withdrawnReferral)
 
         // HOLDユーザーは既払い分を引いた金額を表示
         const displayReferralAmount = w.phase === 'HOLD'
@@ -925,10 +930,11 @@ export default function AdminWithdrawalsPage() {
                       <td className="py-3 px-2 text-center">
                         {(() => {
                           const cumulative = withdrawal.cumulative_referral_amount || 0
-                          // 累計 % 2200 でフェーズ判定
-                          const remainder = cumulative % 2200
-                          const calculatedPhase = remainder >= 1100 ? 'HOLD' : 'USDT'
-                          const cycleCount = Math.floor(cumulative / 2200)
+                          const displayAutoNft = withdrawal.auto_nft_count || 0
+                          // 正しい計算: cum_usdt = 累計 - (auto_nft_count × 2200)
+                          const displayCumUsdt = Math.max(0, cumulative - displayAutoNft * 2200)
+                          const calculatedPhase = displayCumUsdt >= 1100 ? 'HOLD' : 'USDT'
+                          const cycleCount = displayAutoNft
 
                           return calculatedPhase === 'USDT' ? (
                             <div>

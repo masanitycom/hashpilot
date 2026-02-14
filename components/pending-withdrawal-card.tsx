@@ -28,6 +28,7 @@ interface CycleData {
   phase: string
   cum_usdt: number
   withdrawn_referral_usdt: number
+  auto_nft_count: number
 }
 
 interface WithdrawalData {
@@ -119,7 +120,7 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
       // affiliate_cycleからフェーズ情報を取得
       const { data: cycleData, error: cycleError } = await supabase
         .from("affiliate_cycle")
-        .select("phase, cum_usdt, withdrawn_referral_usdt")
+        .select("phase, cum_usdt, withdrawn_referral_usdt, auto_nft_count")
         .eq("user_id", userId)
         .single()
 
@@ -222,26 +223,32 @@ export function PendingWithdrawalCard({ userId }: PendingWithdrawalCardProps) {
         ) : (
           <div className="space-y-3">
             {/* HOLDフェーズの場合の情報表示 */}
-            {withdrawalData.cycle_data?.phase === 'HOLD' && withdrawalData.cycle_data.cum_usdt >= 1100 && (
-              <div className="border border-orange-500/50 bg-orange-900/30 rounded-lg p-3 mb-3">
-                <div className="text-sm font-medium text-orange-400 mb-2">🔒 HOLDフェーズ</div>
-                <div className="text-xs text-gray-300 space-y-1">
-                  <div className="flex justify-between">
-                    <span>ロック中:</span>
-                    <span className="text-orange-400">$1,100.00</span>
+            {withdrawalData.cycle_data?.phase === 'HOLD' && withdrawalData.cycle_data.cum_usdt >= 1100 && (() => {
+              const cd = withdrawalData.cycle_data!
+              const autoNftCount = cd.auto_nft_count || 0
+              const totalPayoutEver = autoNftCount * 1100 + Math.min(Math.max(cd.cum_usdt, 0), 1100)
+              const withdrawableReferral = Math.max(0, totalPayoutEver - (cd.withdrawn_referral_usdt || 0))
+              return (
+                <div className="border border-orange-500/50 bg-orange-900/30 rounded-lg p-3 mb-3">
+                  <div className="text-sm font-medium text-orange-400 mb-2">🔒 HOLDフェーズ</div>
+                  <div className="text-xs text-gray-300 space-y-1">
+                    <div className="flex justify-between">
+                      <span>ロック中:</span>
+                      <span className="text-orange-400">${(cd.cum_usdt - 1100).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>既払い出し:</span>
+                      <span className="text-gray-400">${(cd.withdrawn_referral_usdt || 0).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-gray-700 pt-1 mt-1">
+                      <span className="font-medium">払い出し可能:</span>
+                      <span className="text-green-400 font-bold">${withdrawableReferral.toFixed(2)}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>既払い出し:</span>
-                    <span className="text-gray-400">${(withdrawalData.cycle_data.withdrawn_referral_usdt || 0).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between border-t border-gray-700 pt-1 mt-1">
-                    <span className="font-medium">払い出し可能:</span>
-                    <span className="text-green-400 font-bold">${Math.max(0, 1100 - (withdrawalData.cycle_data.withdrawn_referral_usdt || 0)).toFixed(2)}</span>
-                  </div>
+                  <p className="text-xs text-gray-500 mt-2">※次のNFT購入のため一部がロックされています</p>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">※次のNFT購入のため$1,100がロックされています</p>
-              </div>
-            )}
+              )
+            })()}
 
             {/* 保留中の出金 */}
             {withdrawalData.pending_withdrawals.map((withdrawal) => (
