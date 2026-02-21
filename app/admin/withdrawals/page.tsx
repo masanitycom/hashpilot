@@ -949,7 +949,7 @@ export default function AdminWithdrawalsPage() {
                             <div>
                               <Badge className="bg-orange-600 text-white">🔒 HOLD</Badge>
                               <div className="text-xs text-gray-400 mt-1">
-                                ${(1100 - (remainder - 1100)).toFixed(0)}でNFT
+                                ${(2200 - displayCumUsdt).toFixed(0)}でNFT
                               </div>
                             </div>
                           )
