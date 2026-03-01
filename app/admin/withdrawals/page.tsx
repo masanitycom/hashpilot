@@ -80,15 +80,12 @@ interface MonthlyStats {
 
 // デフォルトで前月を表示（月末出金は前月分のため）
 const getDefaultMonth = () => {
-  // 日本時間で現在の日付を取得
   const now = new Date()
   const jstDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
 
-  // 前月を計算
   const year = jstDate.getFullYear()
-  const month = jstDate.getMonth() // 0-indexed (0=1月, 11=12月)
+  const month = jstDate.getMonth() // 0-indexed
 
-  // 前月の年と月を計算
   let lastYear = year
   let lastMonth = month - 1
   if (lastMonth < 0) {
@@ -96,9 +93,36 @@ const getDefaultMonth = () => {
     lastYear = year - 1
   }
 
-  // YYYY-MM形式で返す
   const monthStr = String(lastMonth + 1).padStart(2, '0')
   return `${lastYear}-${monthStr}`
+}
+
+// 月プルダウンの選択肢を動的に生成（2025年11月〜現在月）
+const getMonthOptions = () => {
+  const now = new Date()
+  const jstDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }))
+  const currentYear = jstDate.getFullYear()
+  const currentMonth = jstDate.getMonth() // 0-indexed
+
+  const options: { value: string; label: string }[] = []
+  let y = currentYear
+  let m = currentMonth // 0-indexed: current month
+
+  // 現在月から2025年11月まで降順に生成
+  while (y > 2025 || (y === 2025 && m >= 10)) { // m=10 is November (0-indexed)
+    const monthStr = String(m + 1).padStart(2, '0')
+    options.push({
+      value: `${y}-${monthStr}`,
+      label: `${y}年${m + 1}月`
+    })
+    m--
+    if (m < 0) {
+      m = 11
+      y--
+    }
+  }
+
+  return options
 }
 
 export default function AdminWithdrawalsPage() {
@@ -776,9 +800,9 @@ export default function AdminWithdrawalsPage() {
                   onChange={(e) => setSelectedMonth(e.target.value)}
                   className="bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2 text-sm min-w-[140px]"
                 >
-                  <option value="2026-01">2026年1月</option>
-                  <option value="2025-12">2025年12月</option>
-                  <option value="2025-11">2025年11月</option>
+                  {getMonthOptions().map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
                 </select>
               </div>
 
