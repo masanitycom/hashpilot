@@ -15,6 +15,7 @@ interface TreeNode {
   totalAmount: number
   children: TreeNode[]
   expanded?: boolean
+  channelLinkedConfirmed?: boolean
 }
 
 interface Props {
@@ -42,7 +43,7 @@ export function AdminReferralTreeSimple({ userId }: Props) {
       // 全ユーザーデータを取得
       const { data: allUsers, error: fetchError } = await supabase
         .from("users")
-        .select("user_id, email, total_purchases, referrer_user_id")
+        .select("user_id, email, total_purchases, referrer_user_id, channel_linked_confirmed")
         .order("created_at", { ascending: true })
       
       if (fetchError) throw fetchError
@@ -100,7 +101,8 @@ export function AdminReferralTreeSimple({ userId }: Props) {
           personalInvestment,
           subtreeTotal,
           totalAmount,
-          children
+          children,
+          channelLinkedConfirmed: user.channel_linked_confirmed ?? false
         }
         
         console.log(`[DEBUG] ${user.user_id} 完了: children=${children.length}, total=$${totalAmount}`)
@@ -189,6 +191,11 @@ export function AdminReferralTreeSimple({ userId }: Props) {
                       <div className="font-semibold text-white">{node.user_id}</div>
                       <div className="text-sm text-gray-300">{node.email}</div>
                     </div>
+                    {node.channelLinkedConfirmed ? (
+                      <Badge className="bg-cyan-600 text-white text-xs">CH確認済</Badge>
+                    ) : (
+                      <Badge className="bg-gray-600 text-white text-xs">CH未確認</Badge>
+                    )}
                   </div>
                   {hasChildren && (
                     <div className="text-xs text-gray-400">
