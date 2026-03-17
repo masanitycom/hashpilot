@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Users, Shield, RefreshCw, Search, TrendingUp, Network } from "lucide-react"
+import { Users, Shield, RefreshCw, Search, TrendingUp, Network, Download } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { UnifiedReferralCalculator } from "@/lib/unified-referral-calculator"
 import { AdminReferralTreeFixed } from "@/components/admin-referral-tree-fixed"
@@ -146,6 +146,136 @@ export default function AdminReferralsPage() {
       setError(`ユーザーデータの取得に失敗しました: ${error.message}`)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const exportReferralTreeCSV = async () => {
+    try {
+      // 全ユーザーデータを取得
+      const { data: allUsers, error: fetchError } = await supabase
+        .from("users")
+        .select("user_id, email, full_name, total_purchases, referrer_user_id, has_approved_nft, coinw_uid, channel_linked_confirmed")
+        .order("created_at", { ascending: true })
+
+      if (fetchError || !allUsers) {
+        alert("データ取得に失敗しました")
+        return
+      }
+
+      // ユーザーIDでマップを作成
+      const userMap = new Map(allUsers.map(u => [u.user_id, u]))
+
+      // ルートユーザー（紹介者なし）を取得
+      const rootUsers = allUsers.filter(u => !u.referrer_user_id || !userMap.has(u.referrer_user_id))
+
+      // ツリーを深さ優先で走査してCSV行を生成
+      const csvRows: string[][] = []
+
+      const traverse = (userId: string, level: number, visited: Set<string>) => {
+        if (visited.has(userId)) return
+        visited.add(userId)
+
+        const user = userMap.get(userId)
+        if (!user) return
+
+        const personalInvestment = Math.floor(user.total_purchases / 1100) * 1000
+        const children = allUsers.filter(u => u.referrer_user_id === userId)
+        const indent = "　".repeat(level) // 全角スペースでインデント
+        const referrer = user.referrer_user_id ? userMap.get(user.referrer_user_id) : null
+
+        csvRows.push([
+          String(level),
+          indent + user.user_id,
+          user.user_id,
+          user.email,
+          user.full_name || "",
+          user.referrer_user_id || "",
+          referrer?.email || "",
+          String(personalInvestment),
+          String(Math.floor(user.total_purchases)),
+          String(children.length),
+          user.has_approved_nft ? "○" : "",
+          user.coinw_uid || "",
+          user.channel_linked_confirmed ? "○" : "",
+        ])
+
+        // 子ノードを再帰的に処理
+        for (const child of children) {
+          traverse(child.user_id, level + 1, visited)
+        }
+      }
+
+      const visited = new Set<string>()
+      for (const root of rootUsers) {
+        traverse(root.user_id, 0, visited)
+      }
+
+      // 未処理のユーザーも追加（循環参照などで漏れたもの）
+      for (const user of allUsers) {
+        if (!visited.has(user.user_id)) {
+          const personalInvestment = Math.floor(user.total_purchases / 1100) * 1000
+          const children = allUsers.filter(u => u.referrer_user_id === user.user_id)
+          const referrer = user.referrer_user_id ? userMap.get(user.referrer_user_id) : null
+          csvRows.push([
+            "?",
+            user.user_id,
+            user.user_id,
+            user.email,
+            user.full_name || "",
+            user.referrer_user_id || "",
+            referrer?.email || "",
+            String(personalInvestment),
+            String(Math.floor(user.total_purchases)),
+            String(children.length),
+            user.has_approved_nft ? "○" : "",
+            user.coinw_uid || "",
+            user.channel_linked_confirmed ? "○" : "",
+          ])
+        }
+      }
+
+      // CSVヘッダー
+      const headers = [
+        "レベル",
+        "階層表示",
+        "ユーザーID",
+        "メール",
+        "氏名",
+        "紹介者ID",
+        "紹介者メール",
+        "個人投資額($)",
+        "購入額($)",
+        "直接紹介者数",
+        "NFT購入済",
+        "CoinW UID",
+        "CH確認済",
+      ]
+
+      // BOM付きUTF-8でCSV生成
+      const escapeCsv = (val: string) => {
+        if (val.includes(",") || val.includes('"') || val.includes("\n") || val.includes("　")) {
+          return '"' + val.replace(/"/g, '""') + '"'
+        }
+        return val
+      }
+
+      const csvContent = "\uFEFF" + [headers, ...csvRows].map(row => row.map(escapeCsv).join(",")).join("\n")
+
+      // ダウンロード
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      const now = new Date()
+      const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`
+      link.download = `紹介ツリー_${dateStr}.csv`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    } catch (error: any) {
+      console.error("CSV export error:", error)
+      alert(`CSV出力に失敗しました: ${error.message}`)
     }
   }
 
@@ -333,6 +463,10 @@ export default function AdminReferralsPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-blue-600 text-white text-sm">{currentUser?.email}</Badge>
+            <Button onClick={exportReferralTreeCSV} size="sm" className="bg-green-700 hover:bg-green-600 text-white">
+              <Download className="w-4 h-4 mr-2" />
+              CSV出力
+            </Button>
             <Button onClick={fetchUsers} size="sm" className="bg-gray-700 hover:bg-gray-600 text-white">
               <RefreshCw className="w-4 h-4 mr-2" />
               更新
