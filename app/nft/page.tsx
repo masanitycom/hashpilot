@@ -185,7 +185,7 @@ export default function NFTPage() {
     )
   }
 
-  const currentNFTCount = Math.floor((userData?.total_purchases || 0) / OPERATION_AMOUNT)
+  const currentNFTCount = Math.floor((userData?.total_purchases || 0) / TOTAL_PAYMENT)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">
