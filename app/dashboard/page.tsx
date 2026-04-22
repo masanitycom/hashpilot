@@ -24,6 +24,7 @@ import { AnnouncementsBanner } from "@/components/announcements-banner"
 import { DormantUserBanner } from "@/components/dormant-user-banner"
 import { RewardTaskPopup } from "@/components/reward-task-popup"
 import { CoinwUidPopup } from "@/components/coinw-uid-popup"
+import { TermsAgreementPopup } from "@/components/terms-agreement-popup"
 import { NftListCard } from "@/components/nft-list-card"
 import Link from "next/link"
 import { checkUserNFTPurchase, redirectIfNoNFT } from "@/lib/check-nft-purchase"
@@ -42,6 +43,7 @@ interface UserData {
   is_operation_only: boolean
   is_active_investor: boolean
   has_approved_nft: boolean
+  terms_agreed_at: string | null
 }
 
 interface UserStats {
@@ -846,6 +848,14 @@ export default function OptimizedDashboardPage() {
         <CoinwUidPopup
           userId={userData.user_id}
           coinwUid={userData.coinw_uid}
+        />
+      )}
+
+      {/* 利用規約への同意ポップアップ（初回のみ、DB保存で二度と表示しない、z-index=200で最優先） */}
+      {userData && (
+        <TermsAgreementPopup
+          userId={userData.user_id}
+          termsAgreedAt={userData.terms_agreed_at}
         />
       )}
     </div>

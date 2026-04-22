@@ -1,0 +1,262 @@
+"use client"
+
+import { useEffect, useRef, useState } from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { AlertTriangle, ChevronDown } from "lucide-react"
+import { supabase } from "@/lib/supabase"
+
+interface TermsAgreementPopupProps {
+  userId: string
+  termsAgreedAt: string | null
+}
+
+const STORAGE_KEY_PREFIX = "terms_agreed_v1_"
+
+export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPopupProps) {
+  const [isMounted, setIsMounted] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [scrolledToBottom, setScrolledToBottom] = useState(false)
+  const [check1, setCheck1] = useState(false)
+  const [check2, setCheck2] = useState(false)
+  const [check3, setCheck3] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setIsMounted(true)
+    if (typeof window === "undefined" || !userId) return
+
+    // DBに同意日時があれば絶対に表示しない（キャッシュクリアでも再表示されない）
+    if (termsAgreedAt) {
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, termsAgreedAt)
+      return
+    }
+
+    // DBに記録がない場合のみ表示（localStorageは初回表示のチラつき防止用）
+    const localAgreed = localStorage.getItem(`${STORAGE_KEY_PREFIX}${userId}`)
+    if (!localAgreed) {
+      setIsVisible(true)
+    }
+  }, [userId, termsAgreedAt])
+
+  useEffect(() => {
+    if (!isVisible) return
+    const el = scrollRef.current
+    if (!el) return
+
+    const checkBottom = () => {
+      const threshold = 8
+      const reachedBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= threshold
+      if (reachedBottom) setScrolledToBottom(true)
+    }
+
+    checkBottom()
+    el.addEventListener("scroll", checkBottom)
+    return () => el.removeEventListener("scroll", checkBottom)
+  }, [isVisible])
+
+  const scrollToBottom = () => {
+    const el = scrollRef.current
+    if (!el) return
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
+  }
+
+  const handleAgree = async () => {
+    if (typeof window === "undefined" || saving) return
+    setSaving(true)
+    const now = new Date().toISOString()
+
+    try {
+      const { data: { user: authUser } } = await supabase.auth.getUser()
+      if (authUser) {
+        const { error } = await supabase
+          .from("users")
+          .update({ terms_agreed_at: now })
+          .eq("id", authUser.id)
+
+        if (error) {
+          console.error("[TermsAgreement] DB保存失敗:", error)
+          // DB保存失敗時もlocalStorageには記録して、とりあえず閉じる
+        }
+      }
+    } catch (e) {
+      console.error("[TermsAgreement] DB保存例外:", e)
+    }
+
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, now)
+    setSaving(false)
+    setIsVisible(false)
+  }
+
+  if (!isMounted || !isVisible) return null
+
+  const allChecked = check1 && check2 && check3
+  const canAgree = scrolledToBottom && allChecked
+
+  return (
+    <div className="fixed inset-0 bg-black/90 z-[200] flex items-center justify-center p-2 sm:p-4">
+      <div className="w-full max-w-2xl max-h-[95vh] flex flex-col">
+        <Card className="bg-gray-900 border-red-500 border-2 shadow-2xl flex flex-col max-h-[95vh]">
+          <CardContent className="p-0 flex flex-col min-h-0">
+            <div className="p-4 sm:p-6 border-b border-gray-700 flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-white" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-white font-bold text-lg sm:text-xl">
+                  重要事項説明およびシステム利用規約への同意
+                </h2>
+                <p className="text-gray-400 text-xs sm:text-sm mt-1">
+                  下までお読みいただき、全ての項目にチェックしてください
+                </p>
+              </div>
+            </div>
+
+            <div
+              ref={scrollRef}
+              className="overflow-y-auto px-4 sm:px-6 py-4 text-gray-200 text-sm leading-relaxed flex-1"
+              style={{ maxHeight: "55vh" }}
+            >
+              <p className="mb-4">
+                本サービス（以下「本システム」）のご利用に際し、以下の内容を十分にご確認ください。ユーザーが本システムにサインインしたことをもって、本規約の全てに同意したものとみなされます。
+              </p>
+
+              <h3 className="text-white font-bold mt-5 mb-2">1. 本システムの立場（システム提供者としての明示）</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  <span className="font-semibold text-white">非開発者・非運用者の明示:</span>{" "}
+                  当方は本システムという「場（プラットフォーム）」および「技術基盤」の提供者であり、本システム内で稼働する具体的な運用ロジック、アルゴリズムの開発者ではありません。
+                </li>
+                <li>
+                  <span className="font-semibold text-white">非登録業者の明示:</span>{" "}
+                  当方は金融商品取引法上の登録業者（投資助言・代理業、投資運用業等）ではありません。特定の金融商品の勧誘、売買の指示、または資産の運用代行を行う立場にはありません。
+                </li>
+              </ul>
+
+              <h3 className="text-white font-bold mt-5 mb-2">2. NFTの性質とリスクに関する同意</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  <span className="font-semibold text-white">非金融商品:</span>{" "}
+                  本システムを通じて購入または運用されるNFTは、特定の収益を保証する有価証券ではなく、デジタルデータとしての価値を有するものです。
+                </li>
+                <li>
+                  <span className="font-semibold text-white">価格変動リスク:</span>{" "}
+                  NFTの資産価値は市場動向、ブロックチェーン技術の変化、およびその他の外部要因により激しく変動し、購入価格を大幅に下回る、あるいは無価値になる可能性があります。
+                </li>
+                <li>
+                  <span className="font-semibold text-white">元本および利益の非保証:</span>{" "}
+                  過去の運用実績やシミュレーションは将来の成果を約束するものではなく、いかなる場合も元本保証および利益の保証は存在しません。
+                </li>
+              </ul>
+
+              <h3 className="text-white font-bold mt-5 mb-2">3. 免責事項（責任の所在）</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  <span className="font-semibold text-white">自己責任の原則:</span>{" "}
+                  本システムを利用したNFTの購入、保持、運用設定、およびその結果生じる一切の損害（直接的・間接的を問わず）について、ユーザーは全責任を負うものとし、当方は一切の賠償責任を負いません。
+                </li>
+                <li>
+                  <span className="font-semibold text-white">技術的免責:</span>{" "}
+                  ブロックチェーンネットワークの遅延、スマートコントラクトのバグ、ハッキング、システムメンテナンス、またはAPIの仕様変更に起因する損失について、当方は補償いたしません。
+                </li>
+                <li>
+                  <span className="font-semibold text-white">第三者ロジックの免責:</span>{" "}
+                  本システム上で第三者が提供するロジックや戦略を利用する場合、その内容の妥当性や結果について当方は一切関与せず、保証も行いません。
+                </li>
+              </ul>
+
+              <h3 className="text-white font-bold mt-5 mb-2">4. 禁止事項</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  <span className="font-semibold text-white">不正行為の禁止:</span>{" "}
+                  システムの脆弱性を突く行為、リバースエンジニアリング、およびアカウントの第三者への貸与・譲渡を固く禁じます。
+                </li>
+                <li>
+                  <span className="font-semibold text-white">日本国内法遵守:</span>{" "}
+                  ユーザーは、自身の居住国の法律（特に日本の金融商品取引法、出資法等）を遵守し、自身の判断で利用するものとします。
+                </li>
+              </ul>
+
+              <div className="mt-6 p-3 bg-green-900/40 border border-green-600 rounded-lg text-green-200 text-sm">
+                最後までお読みいただきありがとうございます。下のチェック項目にご同意ください。
+              </div>
+            </div>
+
+            {!scrolledToBottom && (
+              <button
+                type="button"
+                onClick={scrollToBottom}
+                className="mx-4 sm:mx-6 my-2 flex items-center justify-center gap-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500 text-blue-200 text-sm py-2 rounded-lg transition"
+              >
+                <ChevronDown className="w-4 h-4 animate-bounce" />
+                下までスクロールして続きを読む
+              </button>
+            )}
+
+            <div className="p-4 sm:p-6 border-t border-gray-700 space-y-3">
+              <div
+                className={`space-y-2 transition-opacity ${
+                  scrolledToBottom ? "opacity-100" : "opacity-50 pointer-events-none"
+                }`}
+              >
+                <label className="flex items-start gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={check1}
+                    onChange={(e) => setCheck1(e.target.checked)}
+                    disabled={!scrolledToBottom}
+                    className="mt-1 w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-blue-500 cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-gray-200 text-sm">
+                    私は、本システムが投資助言や運用代行を行うものではなく、単なるシステム提供であると理解しました。
+                  </span>
+                </label>
+                <label className="flex items-start gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={check2}
+                    onChange={(e) => setCheck2(e.target.checked)}
+                    disabled={!scrolledToBottom}
+                    className="mt-1 w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-blue-500 cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-gray-200 text-sm">
+                    私は、NFTの価値が消失するリスクを理解し、余剰資金の範囲内で自己責任において利用することに同意します。
+                  </span>
+                </label>
+                <label className="flex items-start gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={check3}
+                    onChange={(e) => setCheck3(e.target.checked)}
+                    disabled={!scrolledToBottom}
+                    className="mt-1 w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-blue-500 cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-gray-200 text-sm">
+                    私は、本システムの利用に関し、運営者に対して一切の損害賠償請求を行わないことを誓約します。
+                  </span>
+                </label>
+              </div>
+
+              <Button
+                onClick={handleAgree}
+                disabled={!canAgree || saving}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:text-gray-400 text-white font-bold py-3 text-base"
+              >
+                {saving
+                  ? "保存中..."
+                  : !scrolledToBottom
+                    ? "下までスクロールしてください"
+                    : !allChecked
+                      ? "全ての項目にチェックしてください"
+                      : "同意して続ける"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
