@@ -42,8 +42,12 @@ export function AnnouncementsBanner() {
     }
   }
 
-  const toggle = (id: number) => {
-    setExpandedId((current) => (current === id ? null : id))
+  const open = (id: number) => {
+    setExpandedId(id)
+  }
+
+  const close = () => {
+    setExpandedId(null)
   }
 
   // URLをリンクに変換
@@ -92,8 +96,11 @@ export function AnnouncementsBanner() {
           >
             <button
               type="button"
-              onClick={() => toggle(announcement.id)}
-              className="w-full text-left hover:bg-white/5 transition-colors"
+              onClick={() => open(announcement.id)}
+              disabled={isOpen}
+              className={`w-full text-left transition-colors ${
+                isOpen ? 'cursor-default' : 'hover:bg-white/5'
+              }`}
               aria-expanded={isOpen}
             >
               <div className="p-4 flex items-start gap-3">
@@ -110,14 +117,12 @@ export function AnnouncementsBanner() {
                     })}
                   </div>
                 </div>
-                <div className="flex-shrink-0 flex items-center gap-1 text-gray-200 text-sm">
-                  <span className="hidden sm:inline">
-                    {isOpen ? '閉じる' : '詳細を見る'}
-                  </span>
-                  <ChevronDown
-                    className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                  />
-                </div>
+                {!isOpen && (
+                  <div className="flex-shrink-0 flex items-center gap-1 text-gray-200 text-sm bg-white/10 px-3 py-1 rounded-lg border border-white/20">
+                    <span>詳細を見る</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </div>
+                )}
               </div>
             </button>
 
@@ -127,13 +132,13 @@ export function AnnouncementsBanner() {
                   <div className="text-white text-base font-medium whitespace-pre-wrap break-words">
                     {formatContent(announcement.content)}
                   </div>
-                  <div className="mt-4 flex justify-end">
+                  <div className="mt-4 flex justify-center">
                     <button
                       type="button"
-                      onClick={() => setExpandedId(null)}
-                      className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 rounded-lg border border-white/30 transition-colors"
+                      onClick={close}
+                      className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg border-2 border-red-400 shadow-lg transition-colors"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-5 w-5" />
                       閉じる
                     </button>
                   </div>
