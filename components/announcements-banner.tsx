@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Megaphone } from "lucide-react"
+import { Megaphone, ChevronDown, X } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 
 interface Announcement {
@@ -17,6 +16,7 @@ interface Announcement {
 export function AnnouncementsBanner() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [loading, setLoading] = useState(true)
+  const [expandedId, setExpandedId] = useState<number | null>(null)
 
   useEffect(() => {
     fetchAnnouncements()
@@ -42,8 +42,11 @@ export function AnnouncementsBanner() {
     }
   }
 
+  const toggle = (id: number) => {
+    setExpandedId((current) => (current === id ? null : id))
+  }
 
-  // URLをリンクに変換する関数
+  // URLをリンクに変換
   const linkifyText = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g
     return text.split(urlRegex).map((part, index) => {
@@ -55,6 +58,7 @@ export function AnnouncementsBanner() {
             target="_blank"
             rel="noopener noreferrer"
             className="text-cyan-300 hover:text-cyan-200 underline font-bold"
+            onClick={(e) => e.stopPropagation()}
           >
             {part}
           </a>
@@ -64,7 +68,6 @@ export function AnnouncementsBanner() {
     })
   }
 
-  // 改行を<br>に変換
   const formatContent = (content: string) => {
     return content.split('\n').map((line, index, array) => (
       <span key={index}>
@@ -80,33 +83,66 @@ export function AnnouncementsBanner() {
 
   return (
     <div className="space-y-3 mb-6">
-      {announcements.map((announcement) => (
-        <Card
-          key={announcement.id}
-          className="bg-gradient-to-r from-blue-900 to-purple-900 border-blue-500"
-        >
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <Megaphone className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-1" />
-              <div className="flex-1 min-w-0">
-                <h3 className="text-white font-bold text-lg mb-2">
-                  {announcement.title}
-                </h3>
-                <div className="text-white text-base font-medium whitespace-pre-wrap break-words">
-                  {formatContent(announcement.content)}
+      {announcements.map((announcement) => {
+        const isOpen = expandedId === announcement.id
+        return (
+          <Card
+            key={announcement.id}
+            className="bg-gradient-to-r from-blue-900 to-purple-900 border-blue-500 overflow-hidden"
+          >
+            <button
+              type="button"
+              onClick={() => toggle(announcement.id)}
+              className="w-full text-left hover:bg-white/5 transition-colors"
+              aria-expanded={isOpen}
+            >
+              <div className="p-4 flex items-start gap-3">
+                <Megaphone className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-1" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-white font-bold text-lg">
+                    {announcement.title}
+                  </h3>
+                  <div className="text-xs text-gray-300 mt-1">
+                    {new Date(announcement.created_at).toLocaleDateString('ja-JP', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-300 mt-3">
-                  {new Date(announcement.created_at).toLocaleDateString('ja-JP', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+                <div className="flex-shrink-0 flex items-center gap-1 text-gray-200 text-sm">
+                  <span className="hidden sm:inline">
+                    {isOpen ? '閉じる' : '詳細を見る'}
+                  </span>
+                  <ChevronDown
+                    className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                  />
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </button>
+
+            {isOpen && (
+              <CardContent className="pt-0 pb-4 px-4">
+                <div className="border-t border-white/20 pt-4">
+                  <div className="text-white text-base font-medium whitespace-pre-wrap break-words">
+                    {formatContent(announcement.content)}
+                  </div>
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedId(null)}
+                      className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 rounded-lg border border-white/30 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                      閉じる
+                    </button>
+                  </div>
+                </div>
+              </CardContent>
+            )}
+          </Card>
+        )
+      })}
     </div>
   )
 }
