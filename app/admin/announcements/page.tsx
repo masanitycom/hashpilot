@@ -28,6 +28,7 @@ interface Announcement {
   content: string
   is_active: boolean
   priority: number
+  show_date: boolean
   created_at: string
 }
 
@@ -41,6 +42,7 @@ export default function AnnouncementsAdminPage() {
     title: "",
     content: "",
     priority: 0,
+    show_date: true,
   })
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const router = useRouter()
@@ -110,6 +112,7 @@ export default function AnnouncementsAdminPage() {
             title: formData.title,
             content: formData.content,
             priority: formData.priority,
+            show_date: formData.show_date,
             updated_at: new Date().toISOString(),
           })
           .eq("id", editingId)
@@ -124,6 +127,7 @@ export default function AnnouncementsAdminPage() {
             title: formData.title,
             content: formData.content,
             priority: formData.priority,
+            show_date: formData.show_date,
             is_active: true,
           })
 
@@ -132,7 +136,7 @@ export default function AnnouncementsAdminPage() {
       }
 
       // フォームをリセット
-      setFormData({ title: "", content: "", priority: 0 })
+      setFormData({ title: "", content: "", priority: 0, show_date: true })
       setShowForm(false)
       setEditingId(null)
       await fetchAnnouncements()
@@ -167,6 +171,7 @@ export default function AnnouncementsAdminPage() {
       title: announcement.title,
       content: announcement.content,
       priority: announcement.priority,
+      show_date: announcement.show_date ?? true,
     })
     setShowForm(true)
   }
@@ -192,7 +197,7 @@ export default function AnnouncementsAdminPage() {
   const cancelEdit = () => {
     setShowForm(false)
     setEditingId(null)
-    setFormData({ title: "", content: "", priority: 0 })
+    setFormData({ title: "", content: "", priority: 0, show_date: true })
   }
 
   if (loading) {
@@ -295,6 +300,19 @@ export default function AnnouncementsAdminPage() {
                   />
                 </div>
 
+                <div className="flex items-center gap-2 p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
+                  <input
+                    type="checkbox"
+                    id="show_date"
+                    checked={formData.show_date}
+                    onChange={(e) => setFormData({ ...formData, show_date: e.target.checked })}
+                    className="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                  <Label htmlFor="show_date" className="text-gray-300 cursor-pointer select-none">
+                    日付をユーザー画面に表示する（チェックを外すと非表示）
+                  </Label>
+                </div>
+
                 <div className="flex gap-2">
                   <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
                     {editingId ? "更新" : "作成"}
@@ -336,6 +354,11 @@ export default function AnnouncementsAdminPage() {
                         {announcement.priority > 0 && (
                           <Badge variant="outline" className="text-yellow-400 border-yellow-400">
                             優先度: {announcement.priority}
+                          </Badge>
+                        )}
+                        {announcement.show_date === false && (
+                          <Badge variant="outline" className="text-gray-400 border-gray-500">
+                            日付非表示
                           </Badge>
                         )}
                       </div>

@@ -10,6 +10,7 @@ interface Announcement {
   title: string
   content: string
   priority: number
+  show_date: boolean
   created_at: string
 }
 
@@ -109,13 +110,15 @@ export function AnnouncementsBanner() {
                   <h3 className="text-white font-bold text-lg">
                     {announcement.title}
                   </h3>
-                  <div className="text-xs text-gray-300 mt-1">
-                    {new Date(announcement.created_at).toLocaleDateString('ja-JP', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </div>
+                  {announcement.show_date !== false && (
+                    <div className="text-xs text-gray-300 mt-1">
+                      {new Date(announcement.created_at).toLocaleDateString('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                  )}
                 </div>
                 {!isOpen && (
                   <div className="flex-shrink-0 flex items-center gap-1 text-gray-200 text-sm bg-white/10 px-3 py-1 rounded-lg border border-white/20">
