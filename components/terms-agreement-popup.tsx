@@ -21,7 +21,9 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
   const [check2, setCheck2] = useState(false)
   const [check3, setCheck3] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -46,14 +48,34 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
     if (!el) return
 
     const checkBottom = () => {
-      const threshold = 8
+      const threshold = 30
       const reachedBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= threshold
       if (reachedBottom) setScrolledToBottom(true)
     }
 
     checkBottom()
-    el.addEventListener("scroll", checkBottom)
+    el.addEventListener("scroll", checkBottom, { passive: true })
     return () => el.removeEventListener("scroll", checkBottom)
+  }, [isVisible])
+
+  useEffect(() => {
+    if (!isVisible) return
+    const sentinel = sentinelRef.current
+    const root = scrollRef.current
+    if (!sentinel || !root) return
+    if (typeof IntersectionObserver === "undefined") return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setScrolledToBottom(true)
+        }
+      },
+      { root, threshold: 0.1 }
+    )
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
   }, [isVisible])
 
   const scrollToBottom = () => {
@@ -65,28 +87,46 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
   const handleAgree = async () => {
     if (typeof window === "undefined" || saving) return
     setSaving(true)
+    setErrorMsg(null)
     const now = new Date().toISOString()
 
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser()
-      if (authUser) {
-        const { error } = await supabase
-          .from("users")
-          .update({ terms_agreed_at: now })
-          .eq("id", authUser.id)
+      const authResult = await Promise.race([
+        supabase.auth.getUser(),
+        new Promise<never>((_, reject) =>
+          setTimeout(
+            () => reject(new Error("通信がタイムアウトしました。電波の良い場所で再度お試しください。")),
+            15000
+          )
+        ),
+      ])
 
-        if (error) {
-          console.error("[TermsAgreement] DB保存失敗:", error)
-          // DB保存失敗時もlocalStorageには記録して、とりあえず閉じる
-        }
+      const authUser = (authResult as any)?.data?.user
+      if (!authUser) {
+        throw new Error("ログイン情報を取得できませんでした。一度ログアウトしてから再度お試しください。")
       }
-    } catch (e) {
-      console.error("[TermsAgreement] DB保存例外:", e)
-    }
 
-    localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, now)
-    setSaving(false)
-    setIsVisible(false)
+      const { error: dbError } = await supabase
+        .from("users")
+        .update({ terms_agreed_at: now })
+        .eq("id", authUser.id)
+
+      if (dbError) {
+        throw new Error(`保存に失敗しました（${dbError.message}）。もう一度お試しください。`)
+      }
+
+      // DB保存成功時のみキャッシュに記録し、ポップアップを閉じる
+      // ※失敗時はlocalStorageに残さないことで、別端末でループせず正しく再表示される
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, now)
+      setIsVisible(false)
+    } catch (e: any) {
+      console.error("[TermsAgreement] 保存失敗:", e)
+      setErrorMsg(
+        e?.message || "保存に失敗しました。通信環境をご確認の上、もう一度お試しください。"
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (!isMounted || !isVisible) return null
@@ -183,6 +223,7 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
               <div className="mt-6 p-3 bg-green-900/40 border border-green-600 rounded-lg text-green-200 text-sm">
                 最後までお読みいただきありがとうございます。下のチェック項目にご同意ください。
               </div>
+              <div ref={sentinelRef} aria-hidden="true" />
             </div>
 
             {!scrolledToBottom && (
@@ -240,6 +281,12 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
                 </label>
               </div>
 
+              {errorMsg && (
+                <div className="p-3 bg-red-900/40 border border-red-500 rounded-lg text-red-100 text-sm whitespace-pre-wrap">
+                  {errorMsg}
+                </div>
+              )}
+
               <Button
                 onClick={handleAgree}
                 disabled={!canAgree || saving}
@@ -251,7 +298,9 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
                     ? "下までスクロールしてください"
                     : !allChecked
                       ? "全ての項目にチェックしてください"
-                      : "同意して続ける"}
+                      : errorMsg
+                        ? "もう一度試す"
+                        : "同意して続ける"}
               </Button>
             </div>
           </CardContent>
