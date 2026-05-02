@@ -856,6 +856,7 @@ export default function OptimizedDashboardPage() {
         <TermsAgreementPopup
           userId={userData.user_id}
           termsAgreedAt={userData.terms_agreed_at}
+          userEmail={userData.email}
         />
       )}
     </div>

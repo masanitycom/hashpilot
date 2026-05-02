@@ -9,11 +9,38 @@ import { supabase } from "@/lib/supabase"
 interface TermsAgreementPopupProps {
   userId: string
   termsAgreedAt: string | null
+  userEmail?: string | null
 }
 
 const STORAGE_KEY_PREFIX = "terms_agreed_v1_"
 
-export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPopupProps) {
+async function logTermsEvent(payload: {
+  user_id?: string
+  user_email?: string | null
+  auth_uid?: string | null
+  event: string
+  error_message?: string | null
+  rows_affected?: number | null
+  context?: Record<string, unknown>
+}) {
+  try {
+    const ua = typeof navigator !== "undefined" ? navigator.userAgent : null
+    await supabase.from("terms_agreement_log").insert({
+      user_id: payload.user_id ?? null,
+      user_email: payload.user_email ?? null,
+      auth_uid: payload.auth_uid ?? null,
+      event: payload.event,
+      error_message: payload.error_message ?? null,
+      rows_affected: payload.rows_affected ?? null,
+      user_agent: ua,
+      context: payload.context ?? null,
+    })
+  } catch {
+    // ログ書き込み失敗は本処理に影響させない
+  }
+}
+
+export function TermsAgreementPopup({ userId, termsAgreedAt, userEmail }: TermsAgreementPopupProps) {
   const [isMounted, setIsMounted] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [scrolledToBottom, setScrolledToBottom] = useState(false)
@@ -71,7 +98,7 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
           setScrolledToBottom(true)
         }
       },
-      { root, threshold: 0.1 }
+      { root, threshold: 0, rootMargin: "0px 0px 50px 0px" }
     )
 
     observer.observe(sentinel)
@@ -82,6 +109,9 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
     const el = scrollRef.current
     if (!el) return
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
+    // 「下までスクロールして続きを読む」ボタン押下時は、検知が外れる端末でも
+    // 確実にチェックボックスを有効化できるよう直接フラグを立てる
+    setScrolledToBottom(true)
   }
 
   const handleAgree = async () => {
@@ -89,6 +119,15 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
     setSaving(true)
     setErrorMsg(null)
     const now = new Date().toISOString()
+
+    let authUid: string | null = null
+
+    void logTermsEvent({
+      user_id: userId,
+      user_email: userEmail,
+      event: "attempt",
+      context: { now },
+    })
 
     try {
       const authResult = await Promise.race([
@@ -102,25 +141,71 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
       ])
 
       const authUser = (authResult as any)?.data?.user
+      authUid = authUser?.id ?? null
+
       if (!authUser) {
+        void logTermsEvent({
+          user_id: userId,
+          user_email: userEmail,
+          event: "auth_failed",
+          error_message: "supabase.auth.getUser returned no user",
+        })
         throw new Error("ログイン情報を取得できませんでした。一度ログアウトしてから再度お試しください。")
       }
 
-      const { error: dbError } = await supabase
+      const { data: updated, error: dbError } = await supabase
         .from("users")
         .update({ terms_agreed_at: now })
         .eq("id", authUser.id)
+        .select("id, terms_agreed_at")
 
       if (dbError) {
+        void logTermsEvent({
+          user_id: userId,
+          user_email: userEmail,
+          auth_uid: authUid,
+          event: "update_failed",
+          error_message: dbError.message,
+          context: { code: dbError.code, details: dbError.details, hint: dbError.hint },
+        })
         throw new Error(`保存に失敗しました（${dbError.message}）。もう一度お試しください。`)
       }
 
+      const rowCount = updated?.length ?? 0
+      if (rowCount === 0) {
+        void logTermsEvent({
+          user_id: userId,
+          user_email: userEmail,
+          auth_uid: authUid,
+          event: "no_rows",
+          rows_affected: 0,
+          error_message: "UPDATE matched 0 rows (auth.id != public.users.id?)",
+        })
+        throw new Error(
+          "ユーザー情報の更新先が見つかりませんでした。サポートまでご連絡ください。"
+        )
+      }
+
+      void logTermsEvent({
+        user_id: userId,
+        user_email: userEmail,
+        auth_uid: authUid,
+        event: "success",
+        rows_affected: rowCount,
+      })
+
       // DB保存成功時のみキャッシュに記録し、ポップアップを閉じる
-      // ※失敗時はlocalStorageに残さないことで、別端末でループせず正しく再表示される
       localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, now)
       setIsVisible(false)
     } catch (e: any) {
       console.error("[TermsAgreement] 保存失敗:", e)
+      void logTermsEvent({
+        user_id: userId,
+        user_email: userEmail,
+        auth_uid: authUid,
+        event: "unexpected_error",
+        error_message: e?.message || String(e),
+      })
       setErrorMsg(
         e?.message || "保存に失敗しました。通信環境をご確認の上、もう一度お試しください。"
       )
@@ -223,7 +308,7 @@ export function TermsAgreementPopup({ userId, termsAgreedAt }: TermsAgreementPop
               <div className="mt-6 p-3 bg-green-900/40 border border-green-600 rounded-lg text-green-200 text-sm">
                 最後までお読みいただきありがとうございます。下のチェック項目にご同意ください。
               </div>
-              <div ref={sentinelRef} aria-hidden="true" />
+              <div ref={sentinelRef} aria-hidden="true" className="h-1 w-full" />
             </div>
 
             {!scrolledToBottom && (
