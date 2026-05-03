@@ -488,10 +488,32 @@ export default function AdminWithdrawalsPage() {
     }
   }
 
-  const exportCSV = () => {
+  const exportCSV = async () => {
+    // CH紐付け確認状態は最新値をDBから直接取得（stale state対策）
+    const userIdsForCsv = filteredWithdrawals.map((w: any) => w.user_id)
+    const { data: latestUserData } = await supabase
+      .from("users")
+      .select("user_id, channel_linked_confirmed")
+      .in("user_id", userIdsForCsv)
+
+    const latestChannelMap = new Map<string, boolean>()
+    ;(latestUserData || []).forEach((u: any) => {
+      latestChannelMap.set(u.user_id, u.channel_linked_confirmed === true)
+    })
+
+    // ステータスを日本語化
+    const statusToJa = (s: string) => {
+      switch (s) {
+        case 'pending': return '保留中'
+        case 'on_hold': return 'タスク待ち'
+        case 'completed': return '完了'
+        case 'not_created': return '未作成'
+        default: return s || ''
+      }
+    }
+
     const headers = [
       "ユーザーID", "メールアドレス", "フェーズ", "個人利益", "紹介報酬", "出金合計",
-      "$10未満",
       "月初NFT", "月末NFT", "NFT変動日", "自動NFT", "手動NFT",
       "前月未送金", "前月ステータス",
       "累計紹介報酬", "ロック額", "既払い紹介報酬", "払い出し可能額",
@@ -509,6 +531,9 @@ export default function AdminWithdrawalsPage() {
         const lockAmount = w.phase === 'HOLD' ? Math.max(0, cumUsdt - 1100) : 0
         const withdrawableFromHold = Math.max(0, csvTotalPayout - withdrawnReferral)
 
+        // 累計紹介報酬: UIと同じ「その月までの累計（monthly_referral_profitベース）」を使用
+        const cumulativeReferralForCsv = w.cumulative_referral_amount || 0
+
         // HOLDユーザーは既払い分を引いた金額を表示
         const displayReferralAmount = w.phase === 'HOLD'
           ? Math.max(0, (w.referral_amount || 0) - withdrawnReferral)
@@ -516,12 +541,22 @@ export default function AdminWithdrawalsPage() {
 
         // 前月未送金情報
         const prevMonthAmount = w.prev_month_unpaid ? Number(w.prev_month_unpaid.amount).toFixed(2) : ""
-        const prevMonthStatus = w.prev_month_unpaid ? w.prev_month_unpaid.status : ""
+        const prevMonthStatus = w.prev_month_unpaid ? statusToJa(w.prev_month_unpaid.status) : ""
 
         // NFT変動情報
         const nftChangeDate = w.nft_change_date
           ? new Date(w.nft_change_date).toLocaleDateString('ja-JP')
           : ""
+
+        // CH紐付け: 最新DB値を使用（stale state対策）
+        const latestChannelConfirmed = latestChannelMap.has(w.user_id)
+          ? latestChannelMap.get(w.user_id)
+          : w.channel_linked_confirmed
+
+        // タスク状況: 未作成（not_created）の場合は "-"
+        const taskStatusText = w.status === 'not_created'
+          ? '-'
+          : (w.task_completed ? '完了済み' : '未完了')
 
         return [
           w.user_id,
@@ -530,7 +565,6 @@ export default function AdminWithdrawalsPage() {
           (w.personal_amount || 0).toFixed(3),
           displayReferralAmount.toFixed(3),
           w.total_amount.toFixed(3),
-          w.status === 'under_minimum' ? '○' : '',
           w.nft_start_count || 0,
           w.nft_end_count || 0,
           nftChangeDate,
@@ -538,15 +572,15 @@ export default function AdminWithdrawalsPage() {
           w.manual_nft_count || 0,
           prevMonthAmount,
           prevMonthStatus,
-          cumUsdt.toFixed(3),
+          cumulativeReferralForCsv.toFixed(3),
           lockAmount.toFixed(3),
           withdrawnReferral.toFixed(3),
           withdrawableFromHold.toFixed(3),
           w.withdrawal_method === 'coinw' ? 'CoinW' : w.withdrawal_method === 'bep20' ? 'BEP20' : "未設定",
           w.withdrawal_address || "未設定",
-          w.channel_linked_confirmed ? "確認済み" : "未確認",
-          w.task_completed ? "完了" : "未完了",
-          w.status,
+          latestChannelConfirmed ? "確認済み" : "未確認",
+          taskStatusText,
+          statusToJa(w.status),
           new Date(w.created_at).toLocaleDateString('ja-JP'),
           w.completed_at ? new Date(w.completed_at).toLocaleDateString('ja-JP') : "",
           w.notes || ""
