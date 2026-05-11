@@ -220,9 +220,18 @@ export function TermsAgreementPopup({ userId, termsAgreedAt, userEmail }: TermsA
   const canAgree = scrolledToBottom && allChecked
 
   return (
-    <div className="fixed inset-0 bg-black/90 z-[200] flex items-center justify-center p-2 sm:p-4">
-      <div className="w-full max-w-2xl max-h-[95vh] flex flex-col">
-        <Card className="bg-gray-900 border-red-500 border-2 shadow-2xl flex flex-col max-h-[95vh]">
+    <div
+      className="fixed inset-0 bg-black/90 z-[200] flex items-center justify-center p-2 sm:p-4"
+      style={{
+        paddingTop: "max(0.5rem, env(safe-area-inset-top))",
+        paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))",
+      }}
+    >
+      <div className="w-full max-w-2xl flex flex-col" style={{ maxHeight: "calc(100dvh - 1rem)" }}>
+        <Card
+          className="bg-gray-900 border-red-500 border-2 shadow-2xl flex flex-col"
+          style={{ maxHeight: "calc(100dvh - 1rem)" }}
+        >
           <CardContent className="p-0 flex flex-col min-h-0">
             <div className="p-4 sm:p-6 border-b border-gray-700 flex items-start gap-3">
               <div className="flex-shrink-0">
@@ -243,7 +252,7 @@ export function TermsAgreementPopup({ userId, termsAgreedAt, userEmail }: TermsA
             <div
               ref={scrollRef}
               className="overflow-y-auto px-4 sm:px-6 py-4 text-gray-200 text-sm leading-relaxed flex-1"
-              style={{ maxHeight: "55vh" }}
+              style={{ maxHeight: "55dvh" }}
             >
               <p className="mb-4">
                 本サービス（以下「本システム」）のご利用に際し、以下の内容を十分にご確認ください。ユーザーが本システムにサインインしたことをもって、本規約の全てに同意したものとみなされます。
