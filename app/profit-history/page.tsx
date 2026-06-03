@@ -12,8 +12,11 @@ interface MonthlyProfit {
   year: number
   month: number
   personalProfit: number
-  referralProfit: number
-  totalProfit: number
+  referralProfit: number       // 発生額（monthly_referral_profit）
+  totalProfit: number          // 発生額の合計
+  withdrawalAmount: number     // 今月のお支払い予定額（monthly_withdrawals.total_amount）
+  withdrawnReferral: number    // 今月の出金紹介報酬（monthly_withdrawals.referral_amount）
+  hasWithdrawal: boolean       // monthly_withdrawals レコードが存在するか
 }
 
 export default function ProfitHistoryPage() {
@@ -88,6 +91,17 @@ export default function ProfitHistoryPage() {
         throw referralError
       }
 
+      // 月末出金記録（monthly_withdrawals）- お支払い予定額算出用
+      const { data: withdrawalData, error: withdrawalError } = await supabase
+        .from('monthly_withdrawals')
+        .select('withdrawal_month, total_amount, referral_amount')
+        .eq('user_id', uid)
+        .order('withdrawal_month', { ascending: true })
+
+      if (withdrawalError && withdrawalError.code !== 'PGRST116') {
+        throw withdrawalError
+      }
+
       // 月別に集計
       const monthlyMap = new Map<string, MonthlyProfit>()
 
@@ -105,7 +119,10 @@ export default function ProfitHistoryPage() {
             month,
             personalProfit: 0,
             referralProfit: 0,
-            totalProfit: 0
+            totalProfit: 0,
+            withdrawalAmount: 0,
+            withdrawnReferral: 0,
+            hasWithdrawal: false
           })
         }
 
@@ -126,12 +143,41 @@ export default function ProfitHistoryPage() {
             month,
             personalProfit: 0,
             referralProfit: 0,
-            totalProfit: 0
+            totalProfit: 0,
+            withdrawalAmount: 0,
+            withdrawnReferral: 0,
+            hasWithdrawal: false
           })
         }
 
         const monthData = monthlyMap.get(key)!
         monthData.referralProfit += parseFloat(record.profit_amount)
+      })
+
+      // 月末出金データを集計
+      withdrawalData?.forEach(record => {
+        const [yearStr, monthStr] = record.withdrawal_month.split('-')
+        const year = parseInt(yearStr)
+        const month = parseInt(monthStr)
+        const key = `${year}-${month}`
+
+        if (!monthlyMap.has(key)) {
+          monthlyMap.set(key, {
+            year,
+            month,
+            personalProfit: 0,
+            referralProfit: 0,
+            totalProfit: 0,
+            withdrawalAmount: 0,
+            withdrawnReferral: 0,
+            hasWithdrawal: false
+          })
+        }
+
+        const monthData = monthlyMap.get(key)!
+        monthData.withdrawalAmount = parseFloat(record.total_amount) || 0
+        monthData.withdrawnReferral = parseFloat(record.referral_amount) || 0
+        monthData.hasWithdrawal = true
       })
 
       // 合計を計算
@@ -235,6 +281,7 @@ export default function ProfitHistoryPage() {
             {monthlyProfits.map((profit) => {
               const now = new Date()
               const isCurrentMonth = profit.year === now.getFullYear() && profit.month === (now.getMonth() + 1)
+              const lockedReferral = Math.max(0, profit.referralProfit - profit.withdrawnReferral)
 
               return (
                 <Card key={`${profit.year}-${profit.month}`} className="bg-gray-800 border-gray-700">
@@ -243,45 +290,89 @@ export default function ProfitHistoryPage() {
                       {profit.year}年{profit.month}月
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <CardContent className="space-y-4">
+                    {/* お支払い予定額（上段、メイン） */}
+                    <div className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 border border-blue-500/30 rounded-lg p-5">
+                      <div className="text-xs text-blue-300 mb-2">💰 お支払い予定額</div>
+                      {profit.hasWithdrawal ? (
+                        <>
+                          <div className={`text-3xl font-bold ${
+                            profit.withdrawalAmount >= 0 ? "text-blue-300" : "text-red-400"
+                          }`}>
+                            ${profit.withdrawalAmount.toFixed(2)}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-2">
+                            （個人利益 + 出金可能な紹介報酬）
+                          </div>
+                        </>
+                      ) : isCurrentMonth ? (
+                        <>
+                          <div className="text-2xl font-bold text-gray-500">--</div>
+                          <div className="text-xs text-gray-400 mt-2">
+                            月末集計後に確定
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="text-2xl font-bold text-gray-500">--</div>
+                          <div className="text-xs text-gray-400 mt-2">
+                            お支払いデータなし
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* 収支詳細（下段） */}
+                    <div className="bg-gray-900/50 rounded-lg p-4 space-y-3">
+                      <div className="text-xs text-gray-400">📊 収支詳細</div>
+
                       {/* 個人利益 */}
-                      <div className="bg-gray-900/50 rounded-lg p-4">
-                        <div className="text-xs text-gray-400 mb-2">個人利益</div>
-                        <div className={`text-2xl font-bold ${
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-300">個人利益</span>
+                        <span className={`text-lg font-bold ${
                           profit.personalProfit >= 0 ? "text-blue-400" : "text-red-400"
                         }`}>
                           ${profit.personalProfit.toFixed(3)}
-                        </div>
+                        </span>
                       </div>
 
-                      {/* 紹介報酬 */}
-                      <div className="bg-gray-900/50 rounded-lg p-4">
-                        <div className="text-xs text-gray-400 mb-2">紹介報酬</div>
-                        {isCurrentMonth ? (
-                          <div className="text-center py-1">
-                            <div className="text-sm text-gray-400 mb-1">月末集計後に表示</div>
-                            <div className="text-2xl font-bold text-gray-500">--</div>
-                          </div>
-                        ) : (
-                          <div className={`text-2xl font-bold ${
-                            profit.referralProfit >= 0 ? "text-green-400" : "text-red-400"
-                          }`}>
-                            ${profit.referralProfit.toFixed(3)}
+                      {/* 紹介報酬（発生額） */}
+                      <div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-300">紹介報酬（発生額）</span>
+                          {isCurrentMonth ? (
+                            <span className="text-sm text-gray-500">月末集計後</span>
+                          ) : (
+                            <span className={`text-lg font-bold ${
+                              profit.referralProfit >= 0 ? "text-green-400" : "text-red-400"
+                            }`}>
+                              ${profit.referralProfit.toFixed(3)}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* 内訳: 出金・ロック */}
+                        {!isCurrentMonth && profit.referralProfit > 0 && (
+                          <div className="ml-4 mt-2 space-y-1 text-xs">
+                            <div className="flex justify-between text-gray-400">
+                              <span>🟢 今月出金</span>
+                              <span className="text-green-400">${profit.withdrawnReferral.toFixed(2)}</span>
+                            </div>
+                            {lockedReferral > 0 && (
+                              <div className="flex justify-between text-gray-400">
+                                <span>🔒 ロック中</span>
+                                <span className="text-orange-400">${lockedReferral.toFixed(2)}</span>
+                              </div>
+                            )}
+                            {lockedReferral > 0 && (
+                              <div className="text-gray-500 italic mt-1">
+                                ※ ロック分は次回NFT自動付与時または将来の出金で順次開放されます
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
-
-                      {/* 合計 */}
-                      <div className="bg-gray-900/50 rounded-lg p-4">
-                        <div className="text-xs text-gray-400 mb-2">合計利益</div>
-                        <div className={`text-2xl font-bold ${
-                          profit.totalProfit >= 0 ? "text-purple-400" : "text-red-400"
-                        }`}>
-                          ${profit.totalProfit.toFixed(3)}
-                        </div>
-                      </div>
-                  </div>
+                    </div>
                 </CardContent>
               </Card>
               )

@@ -136,6 +136,62 @@ AND (u.is_pegasus_exchange = FALSE OR u.is_pegasus_exchange IS NULL)
 - tkpuraimu@gmail.com（2/1運用開始）
 - shinmisoo311@gmail.com（2/1運用開始）
 - zakaishi2326@gmail.com（ペガサス7枚中2枚補填、NFT1枚のみ運用中、もう1枚はoperation_start_date=NULL）
+- kazushigesomeya@gmail.com（6/15運用開始、9NFT全枚をペガサス交換で運用対象に変換 2026-05-23実施）
+
+---
+
+## 🔄 ペガサス交換処理（既存ペガサスNFT→運用対象NFT変換）
+
+### 概要
+元ペガサスユーザーが「ペガサス交換」で運用対象に変わるケースの標準手順。
+新規NFT作成ではなく**既存NFTの属性変更**で対応する。
+
+### 実行前の必須チェック
+1. ユーザーの現状（`is_pegasus_exchange`, `operation_start_date`, NFT枚数）
+2. 既存NFTの `nft_master.is_pegasus` の状態
+3. `affiliate_cycle` の枚数
+4. **過去データ汚染チェック**: `nft_daily_profit` / `monthly_referral_profit` / `monthly_withdrawals` が空であること
+5. `calculate_operation_start_date(承認日)` の戻り値が想定通りか
+
+### 変更内容（4箇所）
+
+| テーブル | カラム | 変更内容 |
+|----------|--------|----------|
+| `users` | `is_pegasus_exchange` | `true` → `false`（日利・紹介報酬の対象に） |
+| `users` | `operation_start_date` | 承認日から計算した運用開始日に |
+| `nft_master` | `is_pegasus` | すべての保有NFTを `true` → `false` |
+| `nft_master` | `acquired_date` | 承認日に更新（トリガーが`operation_start_date`を自動再計算） |
+| `nft_master` | `operation_start_date` | 明示的に新OSDをセット（トリガーと整合） |
+| `purchases` | `admin_approved_at` | 承認日に更新 |
+| `affiliate_cycle` | `manual_nft_count` / `total_nft_count` | 念のため再計算 |
+
+### ⛔ 禁止事項
+
+- **`approve_user_nft` 関数は使わない**: OSD上書きバグの原因。直接UPDATEで対応する
+- **新規NFTを作らない**: `total_purchases` の二重計上や `nft_sequence` 衝突の原因
+- **トランザクション(`BEGIN...COMMIT`)で必ず囲む**: 途中エラー時にROLLBACK可能に
+- **過去データ汚染チェックを必ず入れる**: 過去のペガサス除外バグで誤配布されている場合に検知
+
+### 標準スクリプト（参考実装）
+
+- `scripts/CHECK-kazushigesomeya-current-state.sql` - 事前確認テンプレート
+- `scripts/FIX-81B308-pegasus-exchange-9NFT.sql` - 本処理テンプレート（トランザクション保護＋汚染チェック付き）
+- `scripts/CHECK-81B308-after-fix.sql` - 事後検証テンプレート
+- `scripts/CHECK-81B308-upline-affiliate-eligibility.sql` - 上位ライン紹介報酬受給資格チェック
+
+### 事後確認の必須項目
+
+1. **4テーブル整合性**: users / nft_master / affiliate_cycle / purchases すべて期待通り
+2. **NFT個別確認**: 全保有NFTが `is_pegasus=false`, OSD=新運用開始日, acquired_date=承認日
+3. **上位ライン受給資格**: L1〜L3各階層が紹介報酬を受け取れる状態か確認
+4. **特例ユーザーリスト更新**: 上記「特例ユーザー」セクションにエントリ追加
+
+### 自動で動くもの（実施後）
+
+- **運用開始日以降**: `process_daily_yield_v2` がNFTごとの `operation_start_date` で判定して日利配布
+- **月末**: `process_monthly_referral_reward` で紹介報酬を上位3階層に配布
+- **月末**: `process_monthly_withdrawals` で出金レコード自動作成
+- **cum_usdt≥$2,200**: NFT自動付与
 
 ---
 

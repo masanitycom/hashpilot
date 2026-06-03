@@ -82,17 +82,21 @@ serve(async (req) => {
     }))
 
     // V2データを整形
-    // profit_per_nft（1NFTあたりの利益$）を1000で割って%に変換
-    // 例: profit_per_nft = 18.24$ → 18.24 / 1000 * 100 = 1.824%
+    // profit_per_nftはグロス利益（マージン控除前）なので、
+    // ユーザー受取率に変換: gross × (1 - fee_rate) × 0.6
+    // 例: profit_per_nft = 18.24$, fee_rate = 0.3
+    //     → 18.24 × 0.7 × 0.6 = 7.66$ → 7.66 / 1000 * 100 = 0.766%
     const v2Formatted = (v2Data || []).map(item => {
       const profitPerNft = parseFloat(item.profit_per_nft || '0')
-      const userRatePercent = (profitPerNft / 1000) * 100 // 1NFT=$1000として%計算
+      const feeRate = parseFloat(item.fee_rate || '0.3')
+      const userProfitPerNft = profitPerNft * (1 - feeRate) * 0.6
+      const userRatePercent = (userProfitPerNft / 1000) * 100
       return {
         date: item.date,
-        yield_rate: parseFloat(item.daily_pnl || '0'), // 金額
-        user_rate: userRatePercent / 100, // 小数形式（0.01824）
-        margin_rate: parseFloat(item.fee_rate || '0.3'),
-        profit_percentage: userRatePercent.toFixed(3), // %表示（1.824）
+        yield_rate: parseFloat(item.daily_pnl || '0'), // 金額（net pnl）
+        user_rate: userRatePercent / 100, // 小数形式
+        margin_rate: feeRate,
+        profit_percentage: userRatePercent.toFixed(3), // %表示（ユーザー受取率）
         created_at: item.created_at,
         source: 'v2'
       }
