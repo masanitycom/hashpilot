@@ -48,8 +48,11 @@ interface YieldStats {
   total_distributed: number
 }
 
+// 日利は通常「前日分」を設定するため、デフォルトの日付を前日にする
+const getYesterdayStr = () => new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+
 export default function AdminYieldPage() {
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0])
+  const [date, setDate] = useState(getYesterdayStr())
   const [yieldRate, setYieldRate] = useState("")
   const [marginRate, setMarginRate] = useState("30")
   const [totalProfitAmount, setTotalProfitAmount] = useState("")
@@ -370,7 +373,7 @@ export default function AdminYieldPage() {
         })
 
         setTotalProfitAmount("")
-        setDate(new Date().toISOString().split("T")[0])
+        setDate(getYesterdayStr())
         fetchHistory()
         fetchStats()
 
@@ -419,7 +422,7 @@ export default function AdminYieldPage() {
         })
 
         setYieldRate("")
-        setDate(new Date().toISOString().split("T")[0])
+        setDate(getYesterdayStr())
         fetchHistory()
         fetchStats()
 
@@ -562,179 +565,46 @@ export default function AdminYieldPage() {
     })
   }
 
+  // V2日利の削除（残高も正しく戻す admin_cancel_yield_v2 を使用）
   const handleCancel = async (cancelDate: string) => {
-    if (!confirm(`${cancelDate}の日利設定をキャンセルしますか？この操作は取り消せません。`)) {
+    if (!confirm(`${cancelDate}の日利設定を削除しますか？\n\nこの日に配布した個人利益（available_usdt）も自動で戻します。この操作は取り消せません。`)) {
       return
     }
 
     try {
-      // まず管理者用RPC関数を試す
-      try {
-        const { data: rpcResult, error: rpcError } = await supabase.rpc("admin_cancel_yield_posting", {
-          p_date: cancelDate
-        })
-
-        if (!rpcError && rpcResult && rpcResult.length > 0) {
-          const result = rpcResult[0]
-          if (result.success) {
-            setMessage({
-              type: "success",
-              text: result.message,
-            })
-
-            setTimeout(() => {
-              fetchHistory()
-              fetchStats()
-            }, 500)
-            return
-          }
-        }
-        
-        console.warn("RPC関数エラー、直接削除に切り替え:", rpcError)
-      } catch (rpcFallbackError) {
-        console.warn("RPC関数使用不可、直接削除に切り替え:", rpcFallbackError)
-      }
-
-      // RPC関数が失敗した場合の直接削除
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) {
-        throw new Error("ユーザー認証が必要です")
-      }
-
-      // V2テーブルから削除（V2を優先）
-      const { data: existingDataV2, error: checkExistErrorV2 } = await supabase
-        .from("daily_yield_log_v2")
-        .select("*")
-        .eq("date", cancelDate)
-
-      console.log("V2削除対象データ:", existingDataV2)
-
-      if (existingDataV2 && existingDataV2.length > 0) {
-        // V2テーブルの関連データを削除
-        const [deleteV2Log, deleteNftProfit, deleteReferralProfit] = await Promise.all([
-          supabase.from("daily_yield_log_v2").delete().eq("date", cancelDate),
-          supabase.from("nft_daily_profit").delete().eq("date", cancelDate),
-          supabase.from("user_referral_profit").delete().eq("date", cancelDate)
-        ])
-
-        console.log("V2削除結果:", { deleteV2Log, deleteNftProfit, deleteReferralProfit })
-
-        if (!deleteV2Log.error) {
-          setMessage({
-            type: "success",
-            text: `${cancelDate}の日利設定をキャンセルしました（V2）`,
-          })
-          setTimeout(() => {
-            fetchHistory()
-            fetchStats()
-          }, 500)
-          return
-        } else {
-          console.error("V2削除エラー:", deleteV2Log.error)
-        }
-      }
-
-      // V1テーブルからも削除を試みる（フォールバック）
-      const { data: existingData, error: checkExistError } = await supabase
-        .from("daily_yield_log")
-        .select("*")
-        .eq("date", cancelDate)
-
-      console.log("削除対象データ:", existingData)
-      
-      if (checkExistError) {
-        throw new Error(`データ確認エラー: ${checkExistError.message}`)
-      }
-
-      if (!existingData || existingData.length === 0) {
-        throw new Error("削除対象のデータが見つかりません")
-      }
-
-      // IDを使用して削除を試みる
-      const targetId = existingData[0].id
-      console.log("削除対象ID:", targetId)
-
-      // IDで削除を試みる
-      const { data: deleteByIdData, error: deleteByIdError } = await supabase
-        .from("daily_yield_log")
-        .delete()
-        .eq("id", targetId)
-        .select()
-
-      if (deleteByIdError) {
-        console.error("ID削除エラー:", deleteByIdError)
-        
-        // 日付で削除を試みる
-        const { data: yieldData, error: deleteYieldError } = await supabase
-          .from("daily_yield_log")
-          .delete()
-          .eq("date", cancelDate)
-          .select()
-
-        if (deleteYieldError) {
-          console.error("daily_yield_log削除エラー:", deleteYieldError)
-          throw new Error(`日利設定の削除に失敗: ${deleteYieldError.message}`)
-        }
-        console.log("日付削除結果:", yieldData)
-      } else {
-        console.log("ID削除成功:", deleteByIdData)
-      }
-
-      // user_daily_profitから削除
-      const { data: profitExisting, error: profitCheckError } = await supabase
-        .from("user_daily_profit")
-        .select("count")
-        .eq("date", cancelDate)
-
-      console.log("削除対象profit数:", profitExisting)
-
-      const { data: profitData, error: deleteProfitError } = await supabase
-        .from("user_daily_profit")
-        .delete()
-        .eq("date", cancelDate)
-        .select()
-
-      if (deleteProfitError) {
-        console.warn("user_daily_profit削除エラー:", deleteProfitError)
-      } else {
-        console.log("削除されたprofit:", profitData?.length || 0)
-      }
-
-      // 削除後の再確認
-      const { data: remainingData, error: finalCheckError } = await supabase
-        .from("daily_yield_log")
-        .select("*")
-        .eq("date", cancelDate)
-
-      console.log("削除後の残存データ:", remainingData)
-
-      if (!finalCheckError && remainingData && remainingData.length > 0) {
-        // 3000%の異常値の場合は特別な処理
-        if (remainingData[0].margin_rate && parseFloat(remainingData[0].margin_rate) > 1) {
-          console.error("異常値データの削除に失敗。管理者に連絡してください。")
-          throw new Error("3000%の異常値データは手動削除が必要です。Supabaseダッシュボードから削除してください。")
-        }
-        throw new Error("データの削除に失敗しました。権限を確認してください。")
-      }
-
-      const deletedCount = (deleteByIdData?.length || 0) + (profitData?.length || 0)
-      setMessage({
-        type: "success",
-        text: `${cancelDate}の日利設定をキャンセルしました（${deletedCount}件削除）`,
+      const { data: rpcResult, error: rpcError } = await supabase.rpc("admin_cancel_yield_v2", {
+        p_date: cancelDate,
       })
 
-      // 少し待ってから再取得
+      if (rpcError) {
+        throw new Error(rpcError.message)
+      }
+
+      const result = Array.isArray(rpcResult) ? rpcResult[0] : rpcResult
+
+      if (!result?.success) {
+        // 自動NFT付与がある日など、安全のため中止されたケース
+        setMessage({
+          type: "warning",
+          text: result?.message || "削除できませんでした。",
+        })
+        return
+      }
+
+      setMessage({
+        type: "success",
+        text: result.message,
+      })
+
       setTimeout(() => {
         fetchHistory()
         fetchStats()
       }, 500)
-      
     } catch (error: any) {
-      console.error("キャンセルエラー:", error)
+      console.error("削除エラー:", error)
       setMessage({
         type: "error",
-        text: error.message || "キャンセルに失敗しました",
+        text: `削除に失敗しました: ${error.message}`,
       })
     }
   }
@@ -1369,7 +1239,11 @@ export default function AdminYieldPage() {
                                   <Button
                                     variant="destructive"
                                     size="sm"
-                                    onClick={() => handleForceDelete(item.id, item.date)}
+                                    onClick={() =>
+                                      item.system === "V2"
+                                        ? handleCancel(item.date)
+                                        : handleForceDelete(item.id, item.date)
+                                    }
                                     className="h-8 px-2 bg-red-600 hover:bg-red-700 text-white"
                                   >
                                     <Trash2 className="h-3 w-3 mr-1" />
