@@ -9,9 +9,15 @@
 -- 【巻き戻す内容】
 --   1. available_usdt … その日 nft_daily_profit で各ユーザーに加算した分を減算
 --      （記録された実配布額そのものなので常に正確）
---   2. cum_usdt … プラス日のストック分（profit_per_nft × 保有NFT数 × 10%）を減算
---      ※ process_daily_yield_v2 のSTEP3と同じロジックで再計算
---   3. nft_daily_profit / daily_yield_log_v2 の該当日レコードを削除
+--   2. nft_daily_profit / daily_yield_log_v2 の該当日レコードを削除
+--
+-- 【重要：cum_usdt は触らない】
+--   現行デプロイの process_daily_yield_v2 は available_usdt への個人利益加算と
+--   nft_daily_profit の書き込みのみで、cum_usdt には一切加算していない
+--   （紹介報酬・ストック・NFT自動付与はすべて月末処理。CLAUDE.md準拠）。
+--   実データでも cum_usdt = SUM(monthly_referral_profit) と一致することを確認済み。
+--   よって削除時に cum_usdt を巻き戻すと、月末に貯めた紹介報酬残高を誤って
+--   減らしてしまう。日次の削除では cum_usdt を絶対に触らないこと。
 --
 -- 【安全ガード】
 --   その日に自動NFT付与（nft_master.nft_type='auto'）が発生している場合は
@@ -67,30 +73,9 @@ BEGIN
   )
   SELECT COUNT(*), COALESCE(SUM(total), 0) INTO v_users_reverted, v_total_reverted FROM upd;
 
-  -- 2) cum_usdt を戻す（プラス日のストック分のみ。STEP3と同じ計算）
-  IF COALESCE(v_log.distribution_stock, 0) > 0 THEN
-    UPDATE affiliate_cycle ac
-    SET cum_usdt = ac.cum_usdt - (v_log.profit_per_nft * cnt.n * 0.10),
-        updated_at = NOW()
-    FROM (
-      SELECT nm.user_id, COUNT(*) AS n
-      FROM nft_master nm
-      INNER JOIN users u ON nm.user_id = u.user_id
-      WHERE nm.buyback_date IS NULL
-        AND u.has_approved_nft = TRUE
-        AND nm.operation_start_date IS NOT NULL
-        AND nm.operation_start_date <= p_date
-        AND (u.is_pegasus_exchange = FALSE OR u.is_pegasus_exchange IS NULL)
-        AND NOT EXISTS (
-          SELECT 1 FROM buyback_requests br
-          WHERE br.user_id = nm.user_id AND br.status = 'pending'
-        )
-      GROUP BY nm.user_id
-    ) cnt
-    WHERE ac.user_id = cnt.user_id;
-  END IF;
+  -- ※ cum_usdt は日次処理で加算していないため、ここでは絶対に触らない（上記コメント参照）
 
-  -- 3) 明細とログを削除
+  -- 2) 明細とログを削除
   DELETE FROM nft_daily_profit WHERE date = p_date;
   DELETE FROM user_referral_profit WHERE date = p_date;  -- 廃止済みだが念のため
   DELETE FROM daily_yield_log_v2 WHERE date = p_date;
