@@ -19,7 +19,9 @@ import {
   AlertCircle,
   RefreshCw,
   Copy,
-  Coins
+  Coins,
+  Pencil,
+  Save
 } from "lucide-react"
 
 interface BuybackRequest {
@@ -55,6 +57,10 @@ export default function AdminBuybackPage() {
   const [filter, setFilter] = useState<"all" | "pending" | "completed" | "cancelled">("pending")
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [adminUser, setAdminUser] = useState<any>(null)
+  // 送金先アドレスの編集（ユーザーから「アドレスを変えたい」と連絡が来るケース用）
+  const [editingAddress, setEditingAddress] = useState(false)
+  const [newAddress, setNewAddress] = useState("")
+  const [savingAddress, setSavingAddress] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -176,9 +182,7 @@ export default function AdminBuybackPage() {
         })
 
         // モーダルをクリア
-        setSelectedRequest(null)
-        setTransactionHash("")
-        setAdminNotes("")
+        closeModal()
 
         // リストを更新
         fetchRequests()
@@ -189,6 +193,87 @@ export default function AdminBuybackPage() {
       setMessage({ type: "error", text: error.message || "処理中にエラーが発生しました" })
     } finally {
       setProcessingId(null)
+    }
+  }
+
+  const openRequest = (request: BuybackRequest) => {
+    setSelectedRequest(request)
+    setTransactionHash("")
+    setAdminNotes("")
+    setEditingAddress(false)
+    setNewAddress(request.wallet_address)
+  }
+
+  const closeModal = () => {
+    setSelectedRequest(null)
+    setTransactionHash("")
+    setAdminNotes("")
+    setEditingAddress(false)
+    setNewAddress("")
+  }
+
+  // 送金先アドレスの変更（pendingの申請のみ。wallet_typeは変更しない）
+  const saveWalletAddress = async () => {
+    if (!selectedRequest || !adminUser) return
+
+    const trimmed = newAddress.trim()
+
+    if (!trimmed) {
+      setMessage({ type: "error", text: "送金先アドレスを入力してください" })
+      return
+    }
+
+    if (trimmed === selectedRequest.wallet_address) {
+      setEditingAddress(false)
+      return
+    }
+
+    // サーバー側でも同じ検証をしているが、往復する前に弾く
+    if (selectedRequest.wallet_type === "CoinW") {
+      if (!/^[0-9]{5,20}$/.test(trimmed)) {
+        setMessage({ type: "error", text: "CoinW UIDは5〜20桁の数字で入力してください" })
+        return
+      }
+    } else if (!/^0x[0-9a-fA-F]{40}$/.test(trimmed)) {
+      setMessage({ type: "error", text: "USDT-BEP20アドレスの形式が正しくありません（0x + 16進40桁）" })
+      return
+    }
+
+    if (!confirm(`送金先アドレスを変更します。よろしいですか？\n\n変更前: ${selectedRequest.wallet_address}\n変更後: ${trimmed}`)) {
+      return
+    }
+
+    setSavingAddress(true)
+    setMessage(null)
+
+    try {
+      const { data, error } = await supabase.rpc("admin_update_buyback_wallet_address", {
+        p_request_id: selectedRequest.id,
+        p_wallet_address: trimmed,
+        p_admin_email: adminUser.email,
+      })
+
+      if (error) throw error
+
+      const result = Array.isArray(data) ? data[0] : data
+
+      if (result?.status !== "SUCCESS" && result?.status !== "NO_CHANGE") {
+        throw new Error(result?.message || "変更に失敗しました")
+      }
+
+      // 画面上の値も更新（再取得を待たずに反映）
+      setSelectedRequest({ ...selectedRequest, wallet_address: trimmed })
+      setRequests((prev) =>
+        prev.map((r) => (r.id === selectedRequest.id ? { ...r, wallet_address: trimmed } : r))
+      )
+      setEditingAddress(false)
+      setMessage({ type: "success", text: result?.message || "送金先アドレスを変更しました" })
+
+      fetchRequests()
+    } catch (error: any) {
+      setMessage({ type: "error", text: error.message || "変更中にエラーが発生しました" })
+    } finally {
+      setSavingAddress(false)
     }
   }
 
@@ -467,7 +552,7 @@ export default function AdminBuybackPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => setSelectedRequest(request)}
+                              onClick={() => openRequest(request)}
                               className="text-white bg-yellow-600 border-yellow-600 hover:bg-yellow-700"
                             >
                               処理
@@ -524,20 +609,83 @@ export default function AdminBuybackPage() {
                 </div>
 
                 <div>
-                  <div className="text-sm text-gray-400 mb-1">送金先アドレス</div>
-                  <div className="flex items-center space-x-2">
-                    <code className="bg-gray-800 p-2 rounded text-xs text-white flex-1 overflow-x-auto">
-                      {selectedRequest.wallet_address}
-                    </code>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => copyToClipboard(selectedRequest.wallet_address)}
-                      className="text-gray-400 hover:text-white"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
+                  <div className="text-sm text-gray-400 mb-1">
+                    送金先アドレス
+                    <span className="ml-2 text-xs text-gray-500">
+                      ({selectedRequest.wallet_type || "USDT-BEP20"})
+                    </span>
                   </div>
+
+                  {editingAddress ? (
+                    <div className="space-y-2">
+                      <Input
+                        value={newAddress}
+                        onChange={(e) => setNewAddress(e.target.value)}
+                        placeholder={selectedRequest.wallet_type === "CoinW" ? "CoinW UID（数字）" : "0x..."}
+                        className="bg-gray-800 border-yellow-700 text-white font-mono text-xs"
+                        disabled={savingAddress}
+                      />
+                      <div className="text-xs text-gray-500">
+                        変更前: <span className="font-mono break-all">{selectedRequest.wallet_address}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          size="sm"
+                          onClick={saveWalletAddress}
+                          disabled={savingAddress}
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                        >
+                          {savingAddress ? (
+                            <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                          ) : (
+                            <Save className="h-4 w-4 mr-1" />
+                          )}
+                          保存
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setEditingAddress(false)
+                            setNewAddress(selectedRequest.wallet_address)
+                          }}
+                          disabled={savingAddress}
+                          className="bg-gray-700 text-white border-gray-600 hover:bg-gray-800"
+                        >
+                          キャンセル
+                        </Button>
+                      </div>
+                      <div className="text-xs text-yellow-500">
+                        ※ 送金先を間違えると資金は戻りません。ユーザー本人からの依頼であることを確認してください。
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <code className="bg-gray-800 p-2 rounded text-xs text-white flex-1 overflow-x-auto break-all">
+                        {selectedRequest.wallet_address}
+                      </code>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => copyToClipboard(selectedRequest.wallet_address)}
+                        className="text-gray-400 hover:text-white"
+                        title="コピー"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setNewAddress(selectedRequest.wallet_address)
+                          setEditingAddress(true)
+                        }}
+                        className="text-yellow-400 hover:text-yellow-300"
+                        title="送金先アドレスを変更"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 {selectedRequest.transaction_id && (
@@ -585,9 +733,15 @@ export default function AdminBuybackPage() {
                 </div>
 
                 <div className="space-y-3 pt-4">
+                  {editingAddress && (
+                    <div className="text-xs text-yellow-500 text-center">
+                      送金先アドレスの編集中は処理できません。保存またはキャンセルしてください。
+                    </div>
+                  )}
+
                   <Button
                     onClick={() => processRequest("complete")}
-                    disabled={processingId === selectedRequest.id || !transactionHash}
+                    disabled={processingId === selectedRequest.id || !transactionHash || editingAddress}
                     className="w-full bg-green-600 hover:bg-green-700 text-white"
                   >
                     {processingId === selectedRequest.id ? (
@@ -600,7 +754,7 @@ export default function AdminBuybackPage() {
 
                   <Button
                     onClick={() => processRequest("cancel")}
-                    disabled={processingId === selectedRequest.id}
+                    disabled={processingId === selectedRequest.id || editingAddress}
                     className="w-full text-white bg-red-600 border-red-600 hover:bg-red-700"
                   >
                     {processingId === selectedRequest.id ? (
@@ -612,13 +766,9 @@ export default function AdminBuybackPage() {
                   </Button>
 
                   <Button
-                    onClick={() => {
-                      setSelectedRequest(null)
-                      setTransactionHash("")
-                      setAdminNotes("")
-                    }}
+                    onClick={closeModal}
                     className="w-full bg-gray-700 text-white border-gray-600 hover:bg-gray-800 hover:text-white"
-                    disabled={processingId === selectedRequest.id}
+                    disabled={processingId === selectedRequest.id || savingAddress}
                   >
                     閉じる
                   </Button>
