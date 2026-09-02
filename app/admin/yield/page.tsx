@@ -23,6 +23,7 @@ import {
   Edit,
 } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { fetchUnsettledWithdrawals } from "@/components/admin-unsettled-withdrawal-alert"
 
 interface YieldHistory {
   id: string
@@ -332,6 +333,34 @@ export default function AdminYieldPage() {
 
       if (selectedDate > today) {
         throw new Error(`❌ 未来の日付（${date}）には設定できません。今日は ${today.toISOString().split('T')[0]} です。`)
+      }
+
+      // ========== 重要：前月分の送金完了処理チェック ==========
+      // 月末日の日利を入れると月末処理（紹介報酬＋月末出金）が自動で走る。
+      // 前月分の出金が pending（送金済みだが未完了処理）のまま残っていると、
+      // available_usdt が減っていないため翌月分の出金額に前月分が上乗せされ、
+      // 二重払いになる。月末日の入力だけをブロックする。
+      const monthEndOfSelected = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0)
+      const isMonthEndInput = selectedDate.getDate() === monthEndOfSelected.getDate()
+
+      if (isMonthEndInput) {
+        // 「設定しようとしている月」より前の月の pending を見る
+        // （今日の日付ではなく設定対象日を基準にすることで、月をまたいで
+        //   入力した場合でも自分自身の月を誤検知しない）
+        const selectedMonthStart = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-01`
+        const unsettled = await fetchUnsettledWithdrawals(selectedMonthStart)
+        if (unsettled.totalCount > 0) {
+          const detail = unsettled.months
+            .map((m) => `${m.month.slice(0, 4)}年${m.month.slice(5, 7)}月分: ${m.count}件 / $${m.amount.toFixed(2)}`)
+            .join("\n  ")
+          throw new Error(
+            `❌ 前月以前の送金完了処理が終わっていないため、月末日（${date}）の日利は設定できません。\n\n` +
+            `【未完了の出金】\n  ${detail}\n\n` +
+            `月末日の日利を入れると月末処理が自動で走ります。この状態で実行すると ` +
+            `available_usdt から前月分が引かれていないため、翌月分の出金額に前月分が上乗せされ二重払いになります。\n\n` +
+            `→ 出金管理画面（/admin/withdrawals）で該当月を「完了済みにする」を実行してから、もう一度設定してください。`
+          )
+        }
       }
 
       if (useV2) {

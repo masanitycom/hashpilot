@@ -2,6 +2,142 @@
 
 ## 🐛 重要なバグ修正履歴
 
+### 7月分の送金完了処理漏れによる8月分への上乗せ（2026年9月2日修正）
+
+**問題:**
+- 2026年7月分の月末出金を8月頭に実送金したが、管理画面の「完了済みにする」を実行し忘れた
+- `available_usdt` から7月分が引かれないまま、9/1に8/31の日利を投入
+- 月末処理が自動実行され、**8月分の出金レコードに7月分が丸ごと上乗せ**された
+- そのまま送金していれば7月分の二重払いになっていた
+
+**発覚時の状態:**
+| 対象 | 件数 | 合計 |
+|------|------|------|
+| 7月分（未完了） | 434 | $15,943.59 |
+| 8月分（自動作成） | 434 | $30,222.63 |
+
+- 8月分は 2026-09-01 07:37:07 の単一タイムスタンプで自動作成されていた
+- 全ユーザーで `available_usdt == 8月分 total_amount` を確認（`total_amount = available_usdt 全額` の仕様どおり）
+
+**原因:**
+月末処理は月末日の日利入力で自動発火する（`app/admin/yield/page.tsx`）。
+`process_monthly_withdrawals` は `total_amount` を `available_usdt` 全額で作るため、
+前月分が減算されていないと翌月分にそのまま乗る。
+
+**修正内容:**
+1. 事務が7月分の実送金分（428件 $14,786.89）を完了処理
+2. 8月分の `total_amount` を `available_usdt` で上書き（$30,222.63 → **$15,435.74**）
+3. `referral_amount` を4パターン式で再計算（`LEAST(total_amount, ...)` で丸め）
+4. 未送金6名（CoinW UID未設定・不正）に繰越理由を notes 記録し `on_hold` に統一
+
+**検証:**
+```
+8月レコード合計 $30,222.63 − 7月完了額 $14,786.89 = $15,435.74
+対象者の available_usdt 合計                      = $15,435.74  ← 完全一致
+```
+`check_monthly_integrity(2026, 8)` は出金漏れ・紹介報酬漏れともにOK。
+available_usdt整合性のNG 9名は全員既知のユーザーで新規なし。
+
+**⚠️ 重要: 8月分レコードを削除して作り直してはいけない**
+- 新規レコードは必ず `status='on_hold'` / `task_completed=false` で作られる
+- `monthly_reward_tasks` への INSERT は `ON CONFLICT (user_id, year, month) DO NOTHING`
+- → タスク完了済みユーザー（当時36件）はタスク行が残るためポップアップが出ず、
+  `on_hold` のまま永久に `pending` へ進めなくなる
+- 必ず **total_amount の上書き**で修正する
+
+**再発防止:**
+- `components/admin-unsettled-withdrawal-alert.tsx` - 前月以前に未清算レコード
+  （`completed` でなく notes も空）があれば警告。20日以降は全画面モーダル
+- `app/admin/layout.tsx` - 全管理画面に表示
+- `app/admin/yield/page.tsx` - 未清算があれば**月末日の日利入力をブロック**
+
+判定に `pending` だけを使ってはいけない。7月分は434件中428件を送金しており、
+`on_hold`（タスク未完了）にも送金する運用のため検知漏れする。
+意図的に送金しないユーザーは notes に「翌月分に繰越」と書く運用とし、
+notes に「繰越」を含むものだけを除外する。「notes が空でないもの」を除外条件にすると、
+修正スクリプトが書き込んだ notes まで警告対象から外れてしまう
+（8月分の修正で全434件に notes が入ったため）。
+
+**関連スクリプト:**
+- `scripts/CHECK-july-august-reconcile.sql` - 7月/8月の突き合わせ
+- `scripts/CHECK-identify-remitted-subset.sql` - 実送金レコードの特定
+- `scripts/CHECK-after-july-completion.sql` - 完了処理直後の検証
+- `scripts/FIX-august-withdrawal-remove-july-overlap.sql` - 8月分の修正（本体）
+- `scripts/CHECK-july-unremitted-6users.sql` - 未送金6名の理由確認
+- `scripts/FIX-july-unremitted-6users-carryover-note.sql` - 繰越理由の記録
+
+**サブサイト（hashpilotsub）:**
+同様の事象が発生。実送金額 $172.75。月末処理は Edge Function
+`sync-yield-from-main` の `runMonthEnd()` から cron で自動実行されるため、
+管理画面のガードは効かない。引き継ぎは `HANDOFF-2026-09-02-withdrawal-settlement.md`。
+
+---
+
+
+### 3月分の月末出金・紹介報酬の漏れ（2026年4月11日修正）
+
+**問題:**
+- 5ユーザーの3月出金レコードが作成されなかった
+- 紹介報酬も4名＋Level2/3含め計8件が漏れた（合計$304.03）
+
+**影響ユーザー:**
+
+出金レコード漏れ（5名）:
+| ユーザー | 出金額 |
+|----------|--------|
+| 7D5A07 | $490.60 |
+| A512FF | $262.57 |
+| C703A5 | $75.94 |
+| 694677 | $2.71 |
+| 23176C | $2.71 |
+
+紹介報酬漏れ（5名、$304.03）:
+| ユーザー | 補填額 | Level |
+|----------|--------|-------|
+| 7D5A07 | $6.91 | L1 |
+| 04FF0C | $138.20 | L1 |
+| A512FF | $55.28 | L1 |
+| 230F31 | $69.10 | L2 |
+| 1F85EE | $34.54 | L3 |
+
+**原因:**
+1. **承認日の手動変更**: 3名（7D5A07, A512FF, C703A5）のNFT承認日が後から変更されていた
+   - 実際の承認は3/27〜3/30だが、承認日を3/4〜3/8に書き換えた
+   - これにより`affiliate_cycle`が再更新され、月末処理で漏れた
+2. **新規ユーザー**: 2名（694677, 23176C）は3月に初回購入でaffiliate_cycleが新規作成された
+3. **紹介報酬**: `approve_user_nft`のOSD上書きバグにより`users.operation_start_date`が未来日に変更され、紹介報酬計算から除外
+
+**共通点:**
+- 全5名が3月中に`approve_user_nft`によりaffiliate_cycleが更新/新規作成された
+- 正常だった他のユーザーは2月出金完了バッチが最後のaffiliate_cycle更新だった
+
+**追加発見:**
+- 7D5A07とA512FFの`available_usdt`が過大（過去の出金完了時に減算されていなかった）
+  - 7D5A07: $1,598.60 → 正しい値$518.39に修正
+  - A512FF: $737.44 → 正しい値$274.48に修正
+  - 原因: 過去の`complete_withdrawals_batch`が`available_usdt`をリセット方式で計算していた時期あり
+
+**修正内容:**
+- 出金レコード5名を手動作成
+- 紹介報酬8件を手動補填、cum_usdt/available_usdt更新
+- `process_monthly_withdrawals`に検証パス（二重チェック）追加
+- `process_monthly_withdrawals`のtotal_amountをavailable_usdt全額に修正
+- `check_monthly_integrity`関数を新規作成（4項目の自動整合性チェック）
+- NFT購入ページの保有数表示バグ修正（$1,000→$1,100で割る）
+
+**⚠️ 教訓: 承認日の手動変更は極力避けること**
+- 承認日を変更するとaffiliate_cycleが再更新され、月末処理で予期しない漏れが発生する
+- やむを得ず変更する場合は、月末処理後に`check_monthly_integrity`で検証すること
+
+**関連スクリプト:**
+- `scripts/FIX-march-missing-withdrawal-5users.sql`
+- `scripts/FIX-march-missing-referral-all.sql`
+- `scripts/FIX-7D5A07-march-referral-and-approve-bug.sql`
+- `scripts/FIX-process-monthly-withdrawals-with-verification.sql`
+- `scripts/CREATE-monthly-integrity-check.sql`
+
+---
+
 ### 運用開始日未設定ユーザーへの誤配布（2025年11月13日修正）
 
 **問題:**
@@ -473,4 +609,4 @@ WHERE u.has_approved_nft = true
 
 ---
 
-最終更新: 2026年3月1日
+最終更新: 2026年9月2日
