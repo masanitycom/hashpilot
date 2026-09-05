@@ -260,11 +260,36 @@ export default function AdminWithdrawalsPage() {
       const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0)
       const monthEndStr = monthEnd.toISOString().split('T')[0]
 
-      const { data: nftData } = await supabase
-        .from("nft_master")
-        .select("user_id, nft_type, operation_start_date, acquired_date")
-        .in("user_id", userIds)
-        .is("buyback_date", null)
+      // ⚠️ Supabaseはデフォルトで1000件しか返さないため、必ずページ分割で全件取得する。
+      // 434ユーザー分のNFTは1000枚を超える（91枚保有のユーザー等がいる）。
+      // 分割していないと1000枚目以降が捨てられ、NFT枚数が過少表示される。
+      // 2026-09-05に発覚: 月末NFT合計がちょうど1000、26名が0枚表示、
+      // A512FFが8枚→6枚と表示されていた。
+      const nftData: Array<{
+        user_id: string
+        nft_type: string
+        operation_start_date: string | null
+        acquired_date: string | null
+      }> = []
+      const NFT_PAGE_SIZE = 1000
+      for (let from = 0; ; from += NFT_PAGE_SIZE) {
+        const { data: nftPage, error: nftPageError } = await supabase
+          .from("nft_master")
+          .select("user_id, nft_type, operation_start_date, acquired_date")
+          .in("user_id", userIds)
+          .is("buyback_date", null)
+          .order("user_id", { ascending: true })
+          .order("nft_sequence", { ascending: true })
+          .range(from, from + NFT_PAGE_SIZE - 1)
+
+        if (nftPageError) {
+          console.error("NFT取得エラー:", nftPageError)
+          break
+        }
+        if (!nftPage || nftPage.length === 0) break
+        nftData.push(...nftPage)
+        if (nftPage.length < NFT_PAGE_SIZE) break
+      }
 
       // STEP 3.7: 当月の紹介報酬を取得（monthly_referral_profitから）
       const yearMonth = `${monthStart.getFullYear()}-${String(monthStart.getMonth() + 1).padStart(2, '0')}`
