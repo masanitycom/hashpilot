@@ -95,7 +95,7 @@ export default function PreRegisterPage() {
     e.preventDefault()
 
     if (!coinwUid.trim()) {
-      setError("CoinW UIDを入力してください")
+      setError("登録口座 UIDを入力してください")
       return
     }
 
@@ -168,10 +168,10 @@ export default function PreRegisterPage() {
                 <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">
                   1
                 </div>
-                <h3 className="text-xl font-semibold text-white">CoinW 無料登録</h3>
+                <h3 className="text-xl font-semibold text-white">Airdrop受取口座 無料登録</h3>
               </div>
 
-              <p className="text-blue-200 text-sm mb-4">まずはCoinWの無料アカウントを作成してください。</p>
+              <p className="text-blue-200 text-sm mb-4">以下からAirdrop受取口座の無料登録を進めてください。</p>
 
               <Button
                 type="button"
@@ -181,16 +181,16 @@ export default function PreRegisterPage() {
                 onClick={() => window.open("https://www.coinw.com/ja_JP/register?r=3722480", "_blank")}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                CoinWで無料登録
+                Airdrop受取口座登録
               </Button>
 
               <p className="text-red-400 text-xs mb-3">
-                ※既にCoinWのアカウントをお持ちの方も上記リンクから新規登録が必要になります。
+                （既に口座をお持ちの方も、新規登録が必要になります。）
               </p>
 
               <div className="space-y-2">
                 <Label htmlFor="coinw-uid" className="text-blue-200 text-sm font-medium">
-                  CoinW UID <span className="text-red-400">*</span>
+                  登録口座 UID <span className="text-red-400">*</span>
                 </Label>
                 <Input
                   id="coinw-uid"
@@ -204,7 +204,7 @@ export default function PreRegisterPage() {
                   autoComplete="off"
                 />
                 <p className="text-xs text-blue-300">
-                  CoinWアプリ → 右下「資産」→ 右上「設定」→「アカウント情報」で確認できます
+                  アプリを開く→左上のドットの四角をタップ→上部にUIDが表示されます。
                 </p>
               </div>
             </div>
