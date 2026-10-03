@@ -361,6 +361,36 @@ export default function AdminYieldPage() {
             `→ 出金管理画面（/admin/withdrawals）で該当月を「完了済みにする」を実行してから、もう一度設定してください。`
           )
         }
+
+        // ========== 重要：月内の未入力日チェック ==========
+        // 月の途中に日利が未入力の日が残ったまま月末日を入れると、その日の分が
+        // 抜けた状態で紹介報酬と出金レコードが確定してしまう。
+        // （2026年9月分で発生。9/27が未入力のまま9/30を入力 → 月末処理が走り、
+        //   後から9/27を入れても紹介報酬・出金額に反映されなかった）
+        const yieldLogTable = useV2 ? "daily_yield_log_v2" : "daily_yield_log"
+        const { data: enteredRows, error: enteredError } = await supabase
+          .from(yieldLogTable)
+          .select("date")
+          .gte("date", selectedMonthStart)
+          .lt("date", date)
+        if (enteredError) {
+          throw new Error(`❌ 月内の入力状況を確認できませんでした: ${enteredError.message}`)
+        }
+        const enteredDates = new Set((enteredRows ?? []).map((r: any) => String(r.date).slice(0, 10)))
+        const missingDates: string[] = []
+        for (let day = 1; day < monthEndOfSelected.getDate(); day++) {
+          const d = `${selectedMonthStart.slice(0, 8)}${String(day).padStart(2, "0")}`
+          if (!enteredDates.has(d)) missingDates.push(d)
+        }
+        if (missingDates.length > 0) {
+          throw new Error(
+            `❌ この月に日利が未入力の日があるため、月末日（${date}）の日利は設定できません。\n\n` +
+            `【未入力の日】\n  ${missingDates.join("\n  ")}\n\n` +
+            `月末日の日利を入れると月末処理（紹介報酬・出金レコード作成）が自動で走ります。` +
+            `未入力の日が残っていると、その日の分が抜けたまま金額が確定してしまいます。\n\n` +
+            `→ 先に未入力の日の日利を設定してから、最後に月末日を設定してください。`
+          )
+        }
       }
 
       if (useV2) {

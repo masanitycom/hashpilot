@@ -2,6 +2,49 @@
 
 ## 🐛 重要なバグ修正履歴
 
+### 月内に未入力の日があるまま月末処理が走った（2026年10月3日修正）
+
+**問題:**
+9/27の日利が未入力のまま 9/30 の日利を入力（10/1）し、月末処理が自動実行された。
+9/27 は 10/2 に後から入力したが、**9月の紹介報酬と出金レコードには反映されなかった**。
+
+- 管理画面の「月間合計 (NFT単価)」は $11.242、1枚保有ユーザーの9月個人利益は $10.68
+  （差 $0.563 = 9/27 の1枚あたり配布額）
+- 日利そのもの（`nft_daily_profit` / `available_usdt`）は正しく配布されていた
+
+**影響と修正（本サイト）:**
+| 項目 | 内容 |
+|------|------|
+| 紹介報酬の不足 | 190名 $178.47（うち出金可能 $138.02、残りはHOLD） |
+| 出金レコード | 409件 $14,036.34 → **$14,707.97** |
+
+**サブサイト:** 紹介報酬のみ不足（4名 $3.23）。出金合計 $283.67 → $286.91。
+出金レコードの個人利益は 10/3 の作り直しで反映済みだった。
+
+**修正方式: 差額のみ加算**
+- `process_monthly_referral_reward(…, p_overwrite => true)` は使わない
+  （`monthly_referral_profit` を消して入れ直すが、`cum_usdt` には丸ごと再加算されるため二重になる）
+- 出金レコードは作り直さず上乗せ（タスク完了済みユーザーが `on_hold` で詰むため）
+- 10月の日利が入った後だったので `available_usdt` での上書きも不可。
+  検証は「`available_usdt` − 10月の日利 = 出金合計」で行った（不一致0件）
+
+**再発防止:**
+月末日の日利を入れるとき、その月に未入力の日があればブロックする。
+- `app/admin/yield/page.tsx`（本サイト・サブ共通）
+- サブの `supabase/functions/sync-yield-from-main/index.ts`（cron 経由の月末処理。
+  `blocked_missing_days` を返して中断）
+
+**関連スクリプト:**
+- `scripts/CHECK-sept-927-late-yield-impact.sql` - 影響確認
+- `scripts/FIX-sept-927-late-yield-referral-and-withdrawal.sql` - 本サイト修正（実行済み）
+- サブ: `scripts/FIX-sept-927-late-yield-referral-sub.sql`（実行済み）
+
+**バックアップ:** `backup_monthly_withdrawals_202609_before927` /
+`backup_monthly_referral_profit_202609_before927` / `backup_affiliate_cycle_20261003_before927`、
+差額の記録は `fix_sept927_mrp_delta` / `fix_sept927_user_delta`
+
+---
+
 ### 出金管理CSVのNFT枚数が過少表示（2026年9月5日修正）
 
 **問題:**
@@ -793,4 +836,4 @@ WHERE u.has_approved_nft = true
 
 ---
 
-最終更新: 2026年9月5日
+最終更新: 2026年10月3日
